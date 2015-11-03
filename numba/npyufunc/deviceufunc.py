@@ -801,6 +801,7 @@ class UFuncEngine(object):
         self.sout = tuple(outputs)
         self.nin = len(self.sin)
         self.nout = len(self.sout)
+        self.implicit_outputs = False
         if len(self.types) != self.nin + self.nout:
             raise TypeError("invalid number of types")
 
@@ -865,7 +866,43 @@ class UFuncEngine(object):
         self.outer_output_shapes = tuple(outer)
 
     def _allocate_output(self):
-        raise NotImplementedError
+        assert not self.outputs, "expect no explicit output arguments"
+        assert len(self.output_shapes) == len(self.outputs)
+        inner_shapes = self._determine_inner_shape_for_implicit_output()
+        loop_shape = _multi_broadcast((1,), *self.outer_input_shapes)
+
+        self.inner_output_shapes = tuple(inner_shapes)
+        self.outer_output_shapes = tuple([loop_shape]) * self.nout
+
+        outputs = []
+        output_shapes = []
+        for outer, inner, dtype in zip(self.outer_output_shapes,
+                                       self.inner_output_shapes,
+                                       self.types[self.nin:]):
+            shape = outer + inner
+            output_shapes.append(shape)
+            outputs.append(self._make_output_array(shape, dtype))
+
+        self.output_shapes = tuple(output_shapes)
+        self.outputs = tuple(outputs)
+        self.implicit_outputs = True
+
+    def _determine_inner_shape_for_implicit_output(self):
+        inner_shapes = []
+        for num, sout in enumerate(self.sout, start=1):
+            shape = []
+            for sym in sout:
+                try:
+                    sha = self.symbols[sym]
+                except KeyError:
+                    msg = ("cannot infer shape for output arg #{0} because of "
+                           "missing symbol {1}")
+                    raise TypeError(msg.format(num, sym))
+                else:
+                    shape.append(sha)
+            inner_shapes.append(tuple(shape))
+
+        return inner_shapes
 
     def _associate_symbol_values(self, symvalues, symbols, shapes):
         outerlist = []
@@ -917,3 +954,6 @@ class UFuncEngine(object):
 
     def _asarray(self, value, dtype):
         return np.asarray(value, dtype=dtype)
+
+    def _make_output_array(self, shape, dtype):
+        return np.zeros(shape, dtype=dtype)
