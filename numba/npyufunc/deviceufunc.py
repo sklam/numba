@@ -790,3 +790,130 @@ class GUFuncCallSteps(object):
 
     def device_array(self, shape, dtype):
         raise NotImplementedError
+
+
+class UFuncEngine(object):
+    def __init__(self, types, signature):
+        self.types = tuple(types)
+        self.signature = signature
+        inputs, outputs = parse_signature(signature)
+        self.sin = tuple(inputs)
+        self.sout = tuple(outputs)
+        self.nin = len(self.sin)
+        self.nout = len(self.sout)
+        if len(self.types) != self.nin + self.nout:
+            raise TypeError("invalid number of types")
+
+    def schedule(self, args, kwargs):
+        # Process arguments
+        self._prepare_arguments(args, kwargs)
+        self._match_signature()
+        self._compute_output_shape()
+        # Determine broadcasting
+        outer_shapes = self.outer_input_shapes + self.outer_output_shapes
+        inner_shapes = self.inner_input_shapes + self.inner_output_shapes
+        self.loop_shape = _multi_broadcast((1,), *outer_shapes)
+        self.broadcasted_shapes = tuple([self.loop_shape + s
+                                         for s in inner_shapes])
+        # Cast to arrays of the right type
+        values = [self._asarray(v, dtype=ty)
+                  for ty, v in zip(self.types, self.inputs + self.outputs)]
+
+        # Broadcast
+        self.kernel_args = self._broadcast(values, self.broadcasted_shapes)
+
+    def _prepare_arguments(self, args, kwargs):
+        inputs = args[:self.nin]
+        outputs = args[self.nin:]
+        if len(inputs) != self.nin:
+            raise TypeError("invalid number of inputs")
+
+        if 'out' in kwargs:
+            if not outputs:
+                outputs = [kwargs.pop('out')]
+            else:
+                raise TypeError("output already specified but `out` is defined")
+
+        if outputs and len(outputs) != self.nout:
+            raise TypeError("Invalid number of outputs")
+
+        self.inputs = tuple(inputs)
+        self.outputs = tuple(outputs)
+        self.input_shapes = [self._get_shape(i) for i in self.inputs]
+        self.output_shapes = [self._get_shape(i) for i in self.outputs]
+
+    def _match_signature(self):
+        symbols = {}
+        inner, outer = self._associate_symbol_values(symbols, self.sin,
+                                                     self.input_shapes)
+        self.symbols = symbols
+        self.inner_input_shapes = tuple(inner)
+        self.outer_input_shapes = tuple(outer)
+
+    def _compute_output_shape(self):
+        if self.outputs:
+            self._adjust_existing_output()
+        else:
+            self._allocate_output()
+
+    def _adjust_existing_output(self):
+        assert self.outputs, "expect explicit output arguments"
+        assert len(self.output_shapes) == len(self.outputs)
+        inner, outer = self._associate_symbol_values(self.symbols, self.sout,
+                                                     self.output_shapes)
+        self.inner_output_shapes = tuple(inner)
+        self.outer_output_shapes = tuple(outer)
+
+    def _allocate_output(self):
+        raise NotImplementedError
+
+    def _associate_symbol_values(self, symvalues, symbols, shapes):
+        outerlist = []
+        innerlist = []
+
+        for num, (syms, shape) in enumerate(zip(symbols, shapes), start=1):
+            sym_stack = list(reversed(syms))
+            shape_stack = list(reversed(shape))
+
+            while sym_stack and shape_stack:
+                sym = sym_stack.pop()
+                val = shape_stack.pop()
+                got = symvalues.get(sym, val)
+                if got != val:
+                    raise TypeError("symbol {0} mismatch in arg #{1}".format(
+                        sym, num))
+                symvalues[sym] = got
+
+            if sym_stack:
+                raise TypeError(("arg #{0} has invalid shape for signature "
+                                 "{1}").format(num, syms))
+
+            outer = tuple([x for x in reversed(shape_stack)])
+            outerlist.append(outer)
+            innerlist.append(tuple(shape[len(outer):]))
+
+        return innerlist, outerlist
+
+    # ------- can override ---------
+
+    def _get_shape(self, value):
+        return getattr(value, 'shape', ())
+
+    def _broadcast(self, arrays, shapes):
+        out = []
+        for arr, shape in zip(arrays, shapes):
+            if arr.shape != shape:
+                arr = self._broadcast_reshape(arr, shape)
+            out.append(arr)
+
+        return out
+
+    def _broadcast_reshape(self, arr, shape):
+        if hasattr(arr, 'reshape'):
+            return arr.reshape(shape)
+        else:
+            msg = "type {0} does not have .reshape()".format(type(arr))
+            raise TypeError(msg)
+
+    def _asarray(self, value, dtype):
+        return np.asarray(value, dtype=dtype)
