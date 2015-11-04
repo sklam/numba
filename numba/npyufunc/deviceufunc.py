@@ -940,10 +940,37 @@ class UFuncEngine(object):
         out = []
         for arr, shape in zip(arrays, shapes):
             if arr.shape != shape:
-                arr = self._broadcast_reshape(arr, shape)
+                if arr.size == np.prod(shape):
+                    # not change in size
+                    arr = self._broadcast_reshape(arr, shape)
+                else:
+                    # size will change
+                    if isinstance(arr, np.ndarray):
+                        # use stride trick
+                        rev_strides = []
+                        rev_got_shape = list(reversed(arr.shape))
+                        rev_exp_shape = list(reversed(shape))
+                        rev_got_strides = list(reversed(arr.strides))
+                        while rev_got_shape and rev_exp_shape:
+                            got = rev_got_shape.pop()
+                            exp = rev_exp_shape.pop()
+                            got_stride = rev_got_strides.pop()
+                            if got == exp:
+                            # TODO
+                            raise
+
+
+                        return np.lib.stride_tricks.as_strided(arr, shape,
+                                                               strides)
+                    else:
+                        return self._broadcast_as_strided(arr, shape)
             out.append(arr)
 
         return out
+
+    def _broadcast_as_strided(self, arr, shape):
+        msg = "no broadcast by strides-trick on {0}"
+        raise NotImplementedError(msg.format(type(arr)))
 
     def _broadcast_reshape(self, arr, shape):
         if hasattr(arr, 'reshape'):
