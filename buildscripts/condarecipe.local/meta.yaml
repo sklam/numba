@@ -36,6 +36,8 @@ test:
     - argparse       [py26]
     - unittest2      [py26]
     - jinja2
+    - {{ 'cudatoolkit' if environ.get('HAS_CUDA', False) else 'python' }}
+    - {{ 'libhlc' if environ.get('HAS_HSA', False) else 'python' }}
   files:
     - mandel.py
   commands:
