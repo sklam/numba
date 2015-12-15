@@ -5,9 +5,7 @@ the targets to choose their representation.
 from __future__ import print_function, division, absolute_import
 
 import struct
-import weakref
-
-import numpy
+import inspect
 
 # All abstract types are exposed through this module
 from .abstracttypes import *
@@ -1439,28 +1437,6 @@ class ClassType(Opaque):
         self.instance_type = self.instance_type_class(self, struct, jitmethods)
 
 
-class DeferredType(Type):
-    def __init__(self):
-        self._define = None
-        name = "{0}#{1}".format(type(self).__name__, id(self))
-        super(DeferredType, self).__init__(name)
-
-    def get(self):
-        if self._define is None:
-            raise RuntimeError("deferred type not defined")
-        return self._define
-
-    def define(self, typ):
-        if self._define is not None:
-            raise TypeError("deferred type already defined")
-        if not isinstance(typ, Type):
-            raise TypeError("arg is not a Type; got: {0}".format(type(typ)))
-        self._define = typ
-
-    def unify(self, typingctx, other):
-        return typingctx.unify_pairs(self.get(), other)
-
-
 class ClassDataType(Type):
     def __init__(self, classtyp):
         self.class_type = classtyp
@@ -1631,7 +1607,6 @@ def promote_numeric_type(ty):
 
     return res
 
-deferred_type = DeferredType
 
 __all__ = '''
 int8
@@ -1683,5 +1658,4 @@ c16
 optional
 ffi_forced_object
 ffi
-deferred_type
 '''.split()
