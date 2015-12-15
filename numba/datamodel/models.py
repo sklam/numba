@@ -392,42 +392,20 @@ class CompositeModel(DataModel):
 
 class StructModel(CompositeModel):
     def __init__(self, dmm, fe_type, members):
-        assert isinstance(fe_type, types.Type)
         super(StructModel, self).__init__(dmm, fe_type)
         if members:
             self._fields, self._members = zip(*members)
         else:
             self._fields = self._members = ()
-        self.typename = "struct.{0}{1}".format(type(fe_type).__name__,
-                                               id(fe_type))
-
-    def _define(self):
-        self._define_value_type()
-        self._define_data_type()
-
-    def _define_value_type(self):
-        value_type = self.get_value_type()
-        if value_type.is_opaque:
-            value_type.set_body(*[t.get_value_type() for t in self._models])
-
-    def _define_data_type(self):
-        data_type = self.get_data_type()
-        if data_type.is_opaque:
-            data_type.set_body(*[t.get_data_type() for t in self._models])
-
-    @property
-    def _models(self):
-        return tuple([self._dmm.lookup(t) for t in self._members])
+        self._models = tuple([self._dmm.lookup(t) for t in self._members])
 
     def get_value_type(self):
-        return ir.global_context.get_identified_type(self.typename + '.value')
-        # elems = [t.get_value_type() for t in self._models]
-        # return ir.LiteralStructType(elems)
+        elems = [t.get_value_type() for t in self._models]
+        return ir.LiteralStructType(elems)
 
     def get_data_type(self):
-        # elems = [t.get_data_type() for t in self._models]
-        # return ir.LiteralStructType(elems)
-        return ir.global_context.get_identified_type(self.typename + '.data')
+        elems = [t.get_data_type() for t in self._models]
+        return ir.LiteralStructType(elems)
 
     def get_argument_type(self):
         return tuple([t.get_argument_type() for t in self._models])
@@ -436,7 +414,6 @@ class StructModel(CompositeModel):
         return self.get_data_type()
 
     def _as(self, methname, builder, value):
-        self._define()
         extracted = []
         for i, dm in enumerate(self._models):
             extracted.append(getattr(dm, methname)(builder,
@@ -444,7 +421,6 @@ class StructModel(CompositeModel):
         return tuple(extracted)
 
     def _from(self, methname, builder, value):
-        self._define()
         struct = ir.Constant(self.get_value_type(), ir.Undefined)
 
         for i, (dm, val) in enumerate(zip(self._models, value)):
@@ -482,13 +458,11 @@ class StructModel(CompositeModel):
 
         See notes in `as_data()`
         """
-        self._define()
         vals = [builder.extract_value(value, [i])
                 for i in range(len(self._members))]
         return self._from("from_data", builder, vals)
 
     def load_from_data_pointer(self, builder, ptr, align=None):
-        self._define()
         values = []
         for i, model in enumerate(self._models):
             elem_ptr = cgutils.gep_inbounds(builder, ptr, 0, i)
@@ -534,7 +508,6 @@ class StructModel(CompositeModel):
         -------
         Extracted value
         """
-        self._define()
         if isinstance(pos, str):
             pos = self.get_field_position(pos)
         return builder.extract_value(val, [pos],
@@ -558,14 +531,12 @@ class StructModel(CompositeModel):
         -------
         A new LLVM struct with the value inserted
         """
-        self._define()
         if isinstance(pos, str):
             pos = self.get_field_position(pos)
         return builder.insert_value(stval, val, [pos],
                                     name="inserted." + self._fields[pos])
 
     def get_field_position(self, field):
-        self._define()
         try:
             return self._fields.index(field)
         except ValueError:
@@ -585,7 +556,6 @@ class StructModel(CompositeModel):
         pos: int or str
             field index or field name
         """
-        self._define()
         if isinstance(pos, str):
             pos = self.get_field_position(pos)
         return self._members[pos]
@@ -599,11 +569,9 @@ class StructModel(CompositeModel):
         pos: int or str
             field index or field name
         """
-        self._define()
         return self._models[pos]
 
     def traverse(self, builder, value):
-        self._define()
         if value.type != self.get_value_type():
             args = self.get_value_type(), value.type
             raise TypeError("expecting {0} but got {1}".format(*args))
@@ -612,7 +580,6 @@ class StructModel(CompositeModel):
         return out
 
     def inner_types(self):
-        self._define()
         types = []
         for dm in self._models:
             types += dm.traverse_types()
