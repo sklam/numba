@@ -84,6 +84,7 @@ class Type(object):
     def __init__(self, name, param=False):
         self.name = name
         self.is_parametric = param
+        self._has_resolved_deferred = False
 
     @property
     def key(self):
@@ -185,6 +186,16 @@ class Type(object):
 
     def cast_python_value(self, args):
         raise NotImplementedError
+
+    def resolve_deferred(self):
+        if not self._has_resolved_deferred:
+            self._has_resolved_deferred = True
+            return self._resolve_deferred()
+        else:
+            return True
+
+    def _resolve_deferred(self):
+        return self
 
 
 class Dummy(Type):

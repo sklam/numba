@@ -1,8 +1,7 @@
 from __future__ import absolute_import, print_function
 import ctypes
 import numpy as np
-from numba import (float32, float64, int16, int32, boolean, deferred_type,
-                   optional)
+from numba import (float32, float64, int16, int32, boolean, optional)
 from numba import njit
 from numba import unittest_support as unittest
 from numba.jitclass import jitclass
