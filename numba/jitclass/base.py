@@ -234,7 +234,6 @@ class ClassBuilder(object):
                 super(ClassAttribute, self).__init__(context)
 
             def generic_resolve(self, instance, attr):
-                print("resolve", instance, attr)
                 if attr in instance.struct:
                     return instance.struct[attr]
 
@@ -321,7 +320,8 @@ def attr_impl(context, builder, typ, value, attr):
                                     [value])
         return imputils.impl_ret_new_ref(context, builder, cres.signature, out)
 
-    raise AssertionError('attribute {0!r} not implemented'.format(attr))
+    raise NotImplementedError('attribute {0!r} not implemented'.format(attr))
+
 
 def imp_dtor(context, module, instance_type):
     llvoidptr = context.get_value_type(types.voidptr)
