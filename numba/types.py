@@ -1404,11 +1404,12 @@ class ClassInstanceType(Type):
     mutable = True
     name_prefix = "instance"
 
-    def __init__(self, class_type, struct, jitmethods):
+    def __init__(self, class_type, struct, jitmethods, jitprops):
         self.class_type = class_type
         self.struct = struct
         parameters = tuple((k, v) for k, v in self.struct.items())
         self.jitmethods = jitmethods
+        self.jitprops = jitprops
         self.methods = dict((k, v.py_func) for k, v in self.jitmethods.items())
         name = "{0}.{1}!{2}".format(self.name_prefix,
                                     self.class_type.name,
@@ -1431,12 +1432,13 @@ class ClassType(Opaque):
     name_prefix = "jitclass"
     instance_type_class = ClassInstanceType
 
-    def __init__(self, class_def, struct, jitmethods):
+    def __init__(self, class_def, struct, jitmethods, jitprops):
         self.class_def = class_def
         name = "{0}.{1}#{2}".format(self.name_prefix, class_def.__name__,
                                     id(class_def))
         super(ClassType, self).__init__(name)
-        self.instance_type = self.instance_type_class(self, struct, jitmethods)
+        self.instance_type = self.instance_type_class(self, struct, jitmethods,
+                                                      jitprops)
 
 
 class DeferredType(Type):
