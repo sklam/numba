@@ -586,10 +586,9 @@ class StructModel(CompositeModel):
         return types
 
 
-class OpaqueStructModel(CompositeModel):
+class OpaqueStructModel(StructModel):
     def __init__(self, dmm, fe_type, members):
-        assert isinstance(fe_type, types.Type)
-        super(StructModel, self).__init__(dmm, fe_type)
+        CompositeModel.__init__(self, dmm, fe_type)
         if members:
             self._fields, self._members = zip(*members)
         else:

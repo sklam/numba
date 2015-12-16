@@ -12,6 +12,8 @@ from .abstracttypes import *
 from . import npdatetime, utils
 from .typeconv import Conversion
 
+import numba
+
 
 class Boolean(Type):
 
@@ -1411,7 +1413,15 @@ class deferred(object):
         self.name = name
 
     def resolve_deferred(self):
-        return self.scope[self.name]
+        print(list(self.scope.keys()))
+        resolved = numba.typeof(self.scope[self.name])
+        if isinstance(resolved, ClassType):
+            resolved = resolved.instance_type
+        print("====== Resove", resolved)
+        return resolved
+
+    def __repr__(self):
+        return "<deferred {0!r}>".format(self.name)
 
 
 class ClassInstanceType(Type):

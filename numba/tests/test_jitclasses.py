@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function
 import ctypes
 import numpy as np
-from numba import (float32, float64, int16, int32, boolean, optional)
+from numba import float32, float64, int16, int32, boolean, optional, deferred
 from numba import njit
 from numba import unittest_support as unittest
 from numba.jitclass import jitclass
@@ -157,11 +157,10 @@ class TestJitClass(TestCase, MemoryLeakMixin):
         self.assertFalse(Foo(False).val)
 
     def test_deferred_type(self):
-        node_type = deferred_type()
-
         spec = OrderedDict()
         spec['data'] = float32
-        spec['next'] = optional(node_type)
+        here = deferred('LinkedNode')
+        spec['next'] = optional(here)
 
         @njit
         def get_data(node):
@@ -176,8 +175,6 @@ class TestJitClass(TestCase, MemoryLeakMixin):
             def get_next_data(self):
                 # use deferred type as argument
                 return get_data(self.next)
-
-        node_type.define(LinkedNode.class_type.instance_type)
 
         first = LinkedNode(123, None)
         self.assertEqual(first.data, 123)

@@ -192,7 +192,7 @@ class Type(object):
             self._has_resolved_deferred = True
             return self._resolve_deferred()
         else:
-            return True
+            return self
 
     def _resolve_deferred(self):
         return self

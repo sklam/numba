@@ -10,6 +10,7 @@ from numba.typing import templates
 from numba.datamodel import default_manager, models
 from numba.targets import imputils
 from numba import cgutils
+from numba.typing.typeof import typeof_impl
 from llvmlite import ir as llvmir
 from numba.six import exec_
 from . import boxing
@@ -18,7 +19,7 @@ from . import boxing
 ##############################################################################
 # Data model
 
-class InstanceModel(models.StructModel):
+class InstanceModel(models.OpaqueStructModel):
     def __init__(self, dmm, fe_typ):
         cls_data_ty = types.ClassDataType(fe_typ)
         # MemInfoPointer uses the `dtype` attribute to traverse for nested
@@ -36,6 +37,7 @@ class InstanceModel(models.StructModel):
 class InstanceDataModel(models.StructModel):
     def __init__(self, dmm, fe_typ):
         clsty = fe_typ.class_type
+        print("*******", clsty._has_resolved_deferred)
         members = list(clsty.struct.items())
         super(InstanceDataModel, self).__init__(dmm, fe_typ, members)
 
@@ -88,7 +90,14 @@ class JitClassType(type):
         return False
 
     def __call__(cls, *args, **kwargs):
+        cls.class_type.instance_type.resolve_deferred()
         return cls._ctor(*args, **kwargs)
+
+
+
+@typeof_impl.register(JitClassType)
+def typeof_jitclass(val, c):
+    return val.class_type
 
 
 ##############################################################################

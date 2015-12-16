@@ -22,6 +22,8 @@ class DataModelManager(object):
     def lookup(self, fetype):
         """Returns the corresponding datamodel given the frontend-type instance
         """
+        if not isinstance(fetype, types.Type):
+            raise TypeError("not a instance of Type")
         handler = self._handlers[type(fetype)]
         return handler(self, fetype)
 
