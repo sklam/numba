@@ -191,8 +191,13 @@ class _EnvReloader(object):
         # Disable jit for debugging
         DISABLE_JIT = _readenv("NUMBA_DISABLE_JIT", int, 0)
 
+        # CUDA Configs
+
         # Enable CUDA simulator
         ENABLE_CUDASIM = _readenv("NUMBA_ENABLE_CUDASIM", int, 0)
+
+        # CUDA logging level
+        CUDA_LOG_LEVEL = _readenv("NUMBA_CUDA_LOG_LEVEL", str, '')
 
         # HSA Configs
 
@@ -203,7 +208,7 @@ class _EnvReloader(object):
         NUMBA_DEFAULT_NUM_THREADS = max(1, multiprocessing.cpu_count())
 
         # Numba thread pool size (defaults to number of CPUs on the system).
-        NUMBA_NUM_THREADS = _readenv("NUMBA_NUM_THREADS", int, 
+        NUMBA_NUM_THREADS = _readenv("NUMBA_NUM_THREADS", int,
                                      NUMBA_DEFAULT_NUM_THREADS)
 
         # Inject the configuration values into the module globals

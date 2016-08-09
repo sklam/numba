@@ -19,6 +19,7 @@ import weakref
 import functools
 import copy
 import warnings
+import logging
 from ctypes import (c_int, byref, c_size_t, c_char, c_char_p, addressof,
                     c_void_p, c_float)
 import contextlib
@@ -35,6 +36,21 @@ from numba.utils import longint as long
 
 VERBOSE_JIT_LOG = int(os.environ.get('NUMBAPRO_VERBOSE_CU_JIT_LOG', 1))
 MIN_REQUIRED_CC = (2, 0)
+
+
+class _DebugLog(object):
+    def __init__(self):
+        self._logger = logging.getLogger(__name__)
+        lvl = config.CUDA_LOG_LEVEL
+        if hasattr(logging, lvl):
+            self._logger.setLevel(getattr(logging, lvl))
+            handler = logging.StreamHandler(sys.stderr)
+            fmt = '== CUDA - %(levelname)5s -- %(message)s'
+            handler.setFormatter(logging.Formatter(fmt=fmt))
+            self._logger.addHandler(handler)
+
+
+_logger = _DebugLog()._logger
 
 
 class DeadMemoryError(RuntimeError):
@@ -187,6 +203,7 @@ class Driver(object):
     def initialize(self):
         self.is_initialized = True
         try:
+            _logger.info('init')
             self.cuInit(0)
         except CudaAPIError as e:
             self.initialization_error = e
@@ -224,6 +241,7 @@ class Driver(object):
 
         @functools.wraps(libfn)
         def safe_cuda_api_call(*args):
+            _logger.debug('call driver api: %s', libfn.__name__)
             retcode = libfn(*args)
             self._check_error(fname, retcode)
 
@@ -255,6 +273,7 @@ class Driver(object):
         if retcode != enums.CUDA_SUCCESS:
             errname = ERROR_MAP.get(retcode, "UNKNOWN_CUDA_ERROR")
             msg = "Call to %s results in %s" % (fname, errname)
+            _logger.error(msg)
             raise CudaAPIError(retcode, msg)
 
     def get_device(self, devnum=0):
@@ -429,6 +448,9 @@ class Device(object):
         return ctx
 
     def release_primary_context(self):
+        """
+        Release reference to primary context
+        """
         driver.cuDevicePrimaryCtxRelease(self.id)
         self.primary_context = None
 
@@ -448,6 +470,25 @@ def met_requirement_for_device(device):
                                (device, MIN_REQUIRED_CC))
 
 
+class _PendingDeallocs(object):
+    MAX_PENDING_DEALLOCS = 10
+
+    def __init__(self):
+        self._cons = []
+
+    def add_item(self, dtor, handle, size):
+        _logger.info('add pending dealloc: %s %s bytes', dtor.__name__, size)
+        self._cons.append((dtor, handle, size))
+        if len(self._cons) > self.MAX_PENDING_DEALLOCS:
+            self.clear()
+
+    def clear(self):
+        for dtor, handle, size in self._cons:
+            _logger.info('dealloc: %s %s bytes', dtor.__name__, size)
+            dtor(handle)
+        self._cons.clear()
+
+
 class Context(object):
     """
     This object wraps a CUDA Context resource.
@@ -455,34 +496,16 @@ class Context(object):
     Contexts should not be constructed directly by user code.
     """
 
-    def __init__(self, device, handle, finalizer=None):
+    def __init__(self, device, handle):
         self.device = device
         self.handle = handle
-        self.external_finalizer = finalizer
         self.trashing = TrashService("cuda.device%d.context%x.trash" %
                                      (self.device.id, self.handle.value))
         self.allocations = utils.UniqueDict()
+        self.deallocations = _PendingDeallocs()
         self.modules = utils.UniqueDict()
-        utils.finalize(self, self._make_finalizer())
         # For storing context specific data
         self.extras = {}
-
-    def _make_finalizer(self):
-        """
-        Make a finalizer function that doesn't keep a reference to this object.
-        """
-        allocations = self.allocations
-        modules = self.modules
-        trashing = self.trashing
-        external_finalizer = self.external_finalizer
-
-        def finalize():
-            allocations.clear()
-            modules.clear()
-            trashing.clear()
-            if external_finalizer is not None:
-                external_finalizer()
-        return finalize
 
     def reset(self):
         """
@@ -492,6 +515,7 @@ class Context(object):
         self.allocations.clear()
         self.modules.clear()
         # Clear trash
+        self.deallocations.clear()
         self.trashing.clear()
 
     def get_memory_info(self):
@@ -553,10 +577,20 @@ class Context(object):
         assert popped.value == self.handle.value
 
     def memalloc(self, bytesize):
-        self.trashing.service()
         ptr = drvapi.cu_device_ptr()
-        driver.cuMemAlloc(byref(ptr), bytesize)
-        _memory_finalizer = _make_mem_finalizer(driver.cuMemFree)
+        try:
+            driver.cuMemAlloc(byref(ptr), bytesize)
+        except CudaAPIError as e:
+            # is out-of-memory?
+            if e.code == enums.CUDA_ERROR_OUT_OF_MEMORY:
+                # clear pending deallocations
+                self.deallocations.clear()
+                # try again
+                driver.cuMemAlloc(byref(ptr), bytesize)
+            else:
+                raise
+
+        _memory_finalizer = _make_mem_finalizer(driver.cuMemFree, bytesize)
         mem = MemoryPointer(weakref.proxy(self), ptr, bytesize,
                             _memory_finalizer(self, ptr))
         self.allocations[ptr.value] = mem
@@ -710,18 +744,16 @@ def load_module_image(context, image):
                   _module_finalizer(context, handle))
 
 
-def _make_mem_finalizer(dtor):
+def _make_mem_finalizer(dtor, bytesize=None):
     def mem_finalize(context, handle):
-        trashing = context.trashing
         allocations = context.allocations
+        deallocations = context.deallocations
 
         def core():
-            def cleanup():
-                if allocations:
-                    del allocations[handle.value]
-                dtor(handle)
+            if allocations:
+                del allocations[handle.value]
 
-            trashing.add_trash(cleanup)
+            deallocations.add_item(dtor, handle, size=bytesize)
 
         return core
 
