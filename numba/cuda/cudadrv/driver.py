@@ -359,7 +359,6 @@ class Device(object):
         driver.cuDeviceGet(byref(got_devnum), devnum)
         assert devnum == got_devnum.value, "Driver returned another device"
         self.id = got_devnum.value
-        self.trashing = trashing = TrashService("cuda.device%d.trash" % self.id)
         self.attributes = {}
         # Read compute capability
         cc_major = c_int()
@@ -372,11 +371,7 @@ class Device(object):
         buf = (c_char * bufsz)()
         driver.cuDeviceGetName(buf, bufsz, self.id)
         self.name = buf.value
-
-        def finalizer():
-            trashing.clear()
-
-        utils.finalize(self, finalizer)
+        self.primary_context = None
 
     @property
     def COMPUTE_CAPABILITY(self):
@@ -415,36 +410,36 @@ class Device(object):
     def __ne__(self, other):
         return not (self == other)
 
-    def create_context(self):
-        """Create a CUDA context.
+    def get_primary_context(self):
         """
+        Returns the primary context for the device.
+        Note: it is not pushed to the CPU thread.
+        """
+        if self.primary_context is not None:
+            return self.primary_context
+
         met_requirement_for_device(self)
 
-        flags = 0
-        if self.CAN_MAP_HOST_MEMORY:
-            flags |= enums.CU_CTX_MAP_HOST
+        # create primary context
+        hctx = drvapi.cu_context()
+        driver.cuDevicePrimaryCtxRetain(byref(hctx), self.id)
 
-        # Clean up any trash
-        self.trashing.service()
-
-        # Create new context
-        handle = drvapi.cu_context()
-        driver.cuCtxCreate(byref(handle), flags, self.id)
-
-        ctx = Context(weakref.proxy(self), handle,
-                      _context_finalizer(self.trashing, handle))
-
+        ctx = Context(weakref.proxy(self), hctx)
+        self.primary_context = ctx
         return ctx
 
+    def release_primary_context(self):
+        driver.cuDevicePrimaryCtxRelease(self.id)
+        self.primary_context = None
+
     def reset(self):
-        self.trashing.clear()
-
-
-def _context_finalizer(trashing, ctxhandle):
-    def core():
-        trashing.add_trash(lambda: driver.cuCtxDestroy(ctxhandle))
-
-    return core
+        try:
+            if self.primary_context is not None:
+                self.primary_context.reset()
+            self.release_primary_context()
+        finally:
+            # reset at the driver level
+            driver.cuDevicePrimaryCtxReset(self.id)
 
 
 def met_requirement_for_device(device):
