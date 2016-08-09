@@ -24,7 +24,7 @@ from ctypes import (c_int, byref, c_size_t, c_char, c_char_p, addressof,
                     c_void_p, c_float)
 import contextlib
 import numpy as np
-from collections import namedtuple
+from collections import namedtuple, deque
 
 from numba import utils, servicelib, mviewbuf
 from .error import CudaSupportError, CudaDriverError
@@ -474,7 +474,7 @@ class _PendingDeallocs(object):
     MAX_PENDING_DEALLOCS = 10
 
     def __init__(self):
-        self._cons = []
+        self._cons = deque()
 
     def add_item(self, dtor, handle, size):
         _logger.info('add pending dealloc: %s %s bytes', dtor.__name__, size)
@@ -483,10 +483,10 @@ class _PendingDeallocs(object):
             self.clear()
 
     def clear(self):
-        for dtor, handle, size in self._cons:
+        while self._cons:
+            [dtor, handle, size] = self._cons.popleft()
             _logger.info('dealloc: %s %s bytes', dtor.__name__, size)
             dtor(handle)
-        self._cons.clear()
 
 
 class Context(object):
@@ -511,6 +511,7 @@ class Context(object):
         """
         Clean up all owned resources in this context.
         """
+        _logger.info('reset context of device %s', self.device.id)
         # Free owned resources
         self.allocations.clear()
         self.modules.clear()
