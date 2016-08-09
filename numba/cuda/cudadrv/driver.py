@@ -2,7 +2,7 @@
 CUDA driver bridge implementation
 
 NOTE:
-The new driver implementation uses a "trashing service" that help prevents a
+The new driver implementation uses a *_PendingDeallocs* that help prevents a
 crashing the system (particularly OSX) when the CUDA context is corrupted at
 resource deallocation.  The old approach ties resource management directly
 into the object destructor; thus, at corruption of the CUDA context,
@@ -26,7 +26,7 @@ import contextlib
 import numpy as np
 from collections import namedtuple, deque
 
-from numba import utils, servicelib, mviewbuf
+from numba import utils, mviewbuf
 from .error import CudaSupportError, CudaDriverError
 from .drvapi import API_PROTOTYPES
 from .drvapi import cu_occupancy_b2d_size
@@ -316,45 +316,6 @@ class Driver(object):
 driver = Driver()
 
 
-class TrashService(servicelib.Service):
-    """
-    We need this to enqueue things to be removed.  There are times when you
-    want to disable deallocation because that would break asynchronous work
-    queues.
-    """
-    CLEAN_LIMIT = 20
-
-    def add_trash(self, item):
-        self.trash.append(item)
-
-    def process(self, _arg):
-        self.trash = []
-        yield
-        while True:
-            count = 0
-            # Clean the trash
-            assert self.CLEAN_LIMIT > count
-            while self.trash and count < self.CLEAN_LIMIT:
-                cb = self.trash.pop()
-                # Invoke callback
-                cb()
-                count += 1
-            yield
-
-    def clear(self):
-        while self.trash:
-            cb = self.trash.pop()
-            cb()
-
-    @contextlib.contextmanager
-    def defer_cleanup(self):
-        orig = self.enabled
-        self.enabled = False
-        yield
-        self.enabled = orig
-        self.service()
-
-
 def _build_reverse_device_attrs():
     prefix = "CU_DEVICE_ATTRIBUTE_"
     map = utils.UniqueDict()
@@ -476,7 +437,7 @@ class _PendingDeallocs(object):
     def __init__(self):
         self._cons = deque()
 
-    def add_item(self, dtor, handle, size):
+    def add_item(self, dtor, handle, size='?'):
         _logger.info('add pending dealloc: %s %s bytes', dtor.__name__, size)
         self._cons.append((dtor, handle, size))
         if len(self._cons) > self.MAX_PENDING_DEALLOCS:
@@ -499,8 +460,6 @@ class Context(object):
     def __init__(self, device, handle):
         self.device = device
         self.handle = handle
-        self.trashing = TrashService("cuda.device%d.context%x.trash" %
-                                     (self.device.id, self.handle.value))
         self.allocations = utils.UniqueDict()
         self.deallocations = _PendingDeallocs()
         self.modules = utils.UniqueDict()
@@ -517,7 +476,6 @@ class Context(object):
         self.modules.clear()
         # Clear trash
         self.deallocations.clear()
-        self.trashing.clear()
 
     def get_memory_info(self):
         """Returns (free, total) memory in bytes in the context.
@@ -610,8 +568,6 @@ class Context(object):
         return mem.own()
 
     def memhostalloc(self, bytesize, mapped=False, portable=False, wc=False):
-        self.trashing.service()
-
         pointer = c_void_p()
         flags = 0
         if mapped:
@@ -641,14 +597,12 @@ class Context(object):
             self.allocations[mem.handle.value] = mem
             return mem.own()
         else:
-            finalizer = _pinnedalloc_finalizer(self.trashing, pointer)
+            finalizer = _pinnedalloc_finalizer(self.deallocations, pointer)
             mem = PinnedMemory(weakref.proxy(self), owner, pointer, bytesize,
                                finalizer=finalizer)
             return mem
 
     def mempin(self, owner, pointer, size, mapped=False):
-        self.trashing.service()
-
         if isinstance(pointer, (int, long)):
             pointer = c_void_p(pointer)
 
@@ -681,7 +635,7 @@ class Context(object):
             return mem.own()
         else:
             mem = PinnedMemory(weakref.proxy(self), owner, pointer, size,
-                               finalizer=_pinned_finalizer(self.trashing,
+                               finalizer=_pinned_finalizer(self.deallocations,
                                                            pointer))
             return mem
 
@@ -695,32 +649,27 @@ class Context(object):
         return self.create_module_image(image)
 
     def create_module_image(self, image):
-        self.trashing.service()
         module = load_module_image(self, image)
         self.modules[module.handle.value] = module
         return weakref.proxy(module)
 
     def unload_module(self, module):
         del self.modules[module.handle.value]
-        self.trashing.service()
 
     def create_stream(self):
-        self.trashing.service()
         handle = drvapi.cu_stream()
         driver.cuStreamCreate(byref(handle), 0)
         return Stream(weakref.proxy(self), handle,
-                      _stream_finalizer(self.trashing, handle))
+                      _stream_finalizer(self.allocations, handle))
 
     def create_event(self, timing=True):
-        self.trashing.service()
-
         handle = drvapi.cu_event()
         flags = 0
         if not timing:
             flags |= enums.CU_EVENT_DISABLE_TIMING
         driver.cuEventCreate(byref(handle), flags)
         return Event(weakref.proxy(self), handle,
-                     finalizer=_event_finalizer(self.trashing, handle))
+                     finalizer=_event_finalizer(self.deallocations, handle))
 
     def synchronize(self):
         driver.cuCtxSynchronize()
@@ -788,53 +737,49 @@ def _make_mem_finalizer(dtor, bytesize):
     return mem_finalize
 
 
-def _pinnedalloc_finalizer(trashing, handle):
+def _pinnedalloc_finalizer(deallocs, handle):
     def core():
-        trashing.add_trash(lambda: driver.cuMemFreeHost(handle))
+        deallocs.add_item(driver.cuMemFreeHost, handle)
 
     return core
 
 
-def _pinned_finalizer(trashing, handle):
+def _pinned_finalizer(deallocs, handle):
     def core():
-        trashing.add_trash(lambda: driver.cuMemHostUnregister(handle))
+        deallocs.add_item(driver.cuMemHostUnregister, handle)
 
     return core
 
 
-def _event_finalizer(trashing, handle):
+def _event_finalizer(deallocs, handle):
     def core():
-        trashing.add_trash(lambda: driver.cuEventDestroy(handle))
+        deallocs.add_item(driver.cuEventDestroy, handle)
 
     return core
 
 
-def _stream_finalizer(trashing, handle):
+def _stream_finalizer(deallocs, handle):
     def core():
-        trashing.add_trash(lambda: driver.cuStreamDestroy(handle))
+        deallocs.add_item(driver.cuStreamDestroy, handle)
 
     return core
 
 
 def _module_finalizer(context, handle):
-    trashing = context.trashing
+    dealloc = context.deallocations
     modules = context.modules
 
     def core():
-        def cleanup():
-            # All modules are owned by their parent Context.
-            # A Module is either released by a call to
-            # Context.unload_module, which clear the handle (pointer) mapping
-            # (checked by the following assertion), or, by Context.reset().
-            # Both releases the sole reference to the Module and trigger the
-            # finalizer for the Module instance.  The actual call to
-            # cuModuleUnload is deferred to the trashing service to avoid
-            # further corruption of the CUDA context if a fatal error has
-            # occurred in the CUDA driver.
-            assert handle.value not in modules
+        shutting_down = utils.shutting_down  # early bind
+
+        def module_unload(handle):
+            # If we are not shutting down, we must be called due to
+            # Context.reset() of Context.unload_module().  Both must have
+            # cleared the module reference from the context.
+            assert shutting_down() or handle.value not in modules
             driver.cuModuleUnload(handle)
 
-        trashing.add_trash(cleanup)
+        dealloc.add_item(module_unload, handle)
 
     return core
 
