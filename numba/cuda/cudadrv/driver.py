@@ -577,19 +577,31 @@ class Context(object):
         driver.cuCtxPopCurrent(byref(popped))
         assert popped.value == self.handle.value
 
-    def memalloc(self, bytesize):
-        ptr = drvapi.cu_device_ptr()
+    def _attempt_allocation(self, allocator):
+        """
+        Attempt allocation by calling *allocator*.  If a out-of-memory error
+        is raised, the pending deallocations are flushed and the allocation
+        is retried.  If it fails in the second attempt, the error is reraised.
+        """
         try:
-            driver.cuMemAlloc(byref(ptr), bytesize)
+            allocator()
         except CudaAPIError as e:
             # is out-of-memory?
             if e.code == enums.CUDA_ERROR_OUT_OF_MEMORY:
                 # clear pending deallocations
                 self.deallocations.clear()
                 # try again
-                driver.cuMemAlloc(byref(ptr), bytesize)
+                allocator()
             else:
                 raise
+
+    def memalloc(self, bytesize):
+        ptr = drvapi.cu_device_ptr()
+
+        def allocator():
+            driver.cuMemAlloc(byref(ptr), bytesize)
+
+        self._attempt_allocation(allocator)
 
         _memory_finalizer = _make_mem_finalizer(driver.cuMemFree, bytesize)
         mem = MemoryPointer(weakref.proxy(self), ptr, bytesize,
@@ -609,11 +621,19 @@ class Context(object):
         if wc:
             flags |= enums.CU_MEMHOSTALLOC_WRITECOMBINED
 
-        driver.cuMemHostAlloc(byref(pointer), bytesize, flags)
+        def allocator():
+            driver.cuMemHostAlloc(byref(pointer), bytesize, flags)
+
+        if mapped:
+            self._attempt_allocation(allocator)
+        else:
+            allocator()
+
         owner = None
 
         if mapped:
-            _hostalloc_finalizer = _make_mem_finalizer(driver.cuMemFreeHost)
+            _hostalloc_finalizer = _make_mem_finalizer(driver.cuMemFreeHost,
+                                                       bytesize)
             finalizer = _hostalloc_finalizer(self, pointer)
             mem = MappedMemory(weakref.proxy(self), owner, pointer,
                                bytesize, finalizer=finalizer)
@@ -643,10 +663,17 @@ class Context(object):
         if mapped:
             flags |= enums.CU_MEMHOSTREGISTER_DEVICEMAP
 
-        driver.cuMemHostRegister(pointer, size, flags)
+        def allocator():
+            driver.cuMemHostRegister(pointer, size, flags)
 
         if mapped:
-            _mapped_finalizer = _make_mem_finalizer(driver.cuMemHostUnregister)
+            self._attempt_allocation(allocator)
+        else:
+            allocator()
+
+        if mapped:
+            _mapped_finalizer = _make_mem_finalizer(driver.cuMemHostUnregister,
+                                                    size)
             finalizer = _mapped_finalizer(self, pointer)
             mem = MappedMemory(weakref.proxy(self), owner, pointer, size,
                                finalizer=finalizer)
@@ -745,7 +772,7 @@ def load_module_image(context, image):
                   _module_finalizer(context, handle))
 
 
-def _make_mem_finalizer(dtor, bytesize=None):
+def _make_mem_finalizer(dtor, bytesize):
     def mem_finalize(context, handle):
         allocations = context.allocations
         deallocations = context.deallocations
