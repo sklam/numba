@@ -108,12 +108,7 @@ class _Runtime(object):
     def current_context(self):
         """Return the active gpu context
         """
-        top = self.context_stack.top
-        # integrity check
-        assert driver.get_context().value == top.handle.value, (
-            "An unmanaged CUDA context is active."
-        )
-        return top
+        return self.context_stack.top
 
     def _get_or_create_context(self, gpu):
         """Try to use a already created context for the given gpu.  If none
