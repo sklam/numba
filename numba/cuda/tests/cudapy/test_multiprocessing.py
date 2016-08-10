@@ -4,7 +4,6 @@ import multiprocessing as mp
 import numpy as np
 
 from numba import cuda
-from numba.cuda.cudadrv.error import CudaDriverError
 from numba import unittest_support as unittest
 from numba.cuda.testing import skip_on_cudasim
 
@@ -13,6 +12,7 @@ is_unix = sys.platform.startswith('linux') or sys.platform.startswith('darwin')
 
 
 def fork_test(q):
+    from numba.cuda.cudadrv.error import CudaDriverError
     try:
         cuda.to_device(np.arange(1))
     except CudaDriverError as e:
@@ -26,14 +26,18 @@ class TestMultiprocessing(unittest.TestCase):
     @unittest.skipUnless(has_mp_get_context, 'requires mp.get_context')
     @unittest.skipUnless(is_unix, 'requires Unix')
     def test_fork(self):
+        """
+        Test fork detection.
+        """
         cuda.current_context()  # force cuda initialize
+        # fork in process that also uses CUDA
         ctx = mp.get_context('fork')
         q = ctx.Queue()
         proc = ctx.Process(target=fork_test, args=[q])
         proc.start()
         exc = q.get()
         proc.join()
-
+        # there should be an exception raised in the child process
         self.assertIsNotNone(exc)
         self.assertIn('CUDA initialized before forking', str(exc))
 
