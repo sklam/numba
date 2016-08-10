@@ -1,9 +1,10 @@
 import numpy as np
 
 from numba import cuda
-from numba.cuda.testing import unittest
+from numba.cuda.testing import unittest, skip_on_cudasim
 
 
+@skip_on_cudasim("defer_cleanup has no effect in CUDASIM")
 class TestDeferCleanup(unittest.TestCase):
     def test_basic(self):
         harr = np.arange(5)
@@ -43,6 +44,13 @@ class TestDeferCleanup(unittest.TestCase):
 
         deallocs.clear()
         self.assertEqual(len(deallocs), 0)
+
+
+class TestDeferCleanupAvail(unittest.TestCase):
+    def test_context_manager(self):
+        # just make sure the API is available
+        with cuda.defer_cleanup():
+            pass
 
 
 if __name__ == '__main__':
