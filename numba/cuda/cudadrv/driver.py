@@ -436,6 +436,7 @@ class _PendingDeallocs(object):
 
     def __init__(self):
         self._cons = deque()
+        self._disable_count = 0
 
     def add_item(self, dtor, handle, size='?'):
         _logger.info('add pending dealloc: %s %s bytes', dtor.__name__, size)
@@ -444,10 +445,25 @@ class _PendingDeallocs(object):
             self.clear()
 
     def clear(self):
-        while self._cons:
-            [dtor, handle, size] = self._cons.popleft()
-            _logger.info('dealloc: %s %s bytes', dtor.__name__, size)
-            dtor(handle)
+        if not self.is_disabled:
+            while self._cons:
+                [dtor, handle, size] = self._cons.popleft()
+                _logger.info('dealloc: %s %s bytes', dtor.__name__, size)
+                dtor(handle)
+
+    @contextlib.contextmanager
+    def disable(self):
+        self._disable_count += 1
+        yield
+        self._disable_count -= 1
+        assert self._disable_count >= 0
+
+    @property
+    def is_disabled(self):
+        return self._disable_count > 0
+
+    def __len__(self):
+        return len(self._cons)
 
 
 class Context(object):
