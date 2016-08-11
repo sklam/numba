@@ -38,19 +38,21 @@ VERBOSE_JIT_LOG = int(os.environ.get('NUMBAPRO_VERBOSE_CU_JIT_LOG', 1))
 MIN_REQUIRED_CC = (2, 0)
 
 
-class _DebugLog(object):
-    def __init__(self):
-        self._logger = logging.getLogger(__name__)
-        lvl = config.CUDA_LOG_LEVEL
-        if hasattr(logging, lvl):
-            self._logger.setLevel(getattr(logging, lvl))
-            handler = logging.StreamHandler(sys.stderr)
-            fmt = '== CUDA - %(levelname)5s -- %(message)s'
-            handler.setFormatter(logging.Formatter(fmt=fmt))
-            self._logger.addHandler(handler)
+def _make_logger():
+    logger = logging.getLogger(__name__)
+    lvl = str(config.CUDA_LOG_LEVEL).upper()
+    lvl = getattr(logging, lvl, None)
+    if not isinstance(lvl, int):
+        lvl = logging.CRITICAL
+    logger.setLevel(lvl)
+    handler = logging.StreamHandler(sys.stderr)
+    fmt = '== CUDA [%(relativeCreated)d] %(levelname)5s -- %(message)s'
+    handler.setFormatter(logging.Formatter(fmt=fmt))
+    logger.addHandler(handler)
+    return logger
 
 
-_logger = _DebugLog()._logger
+_logger = _make_logger()
 
 
 class DeadMemoryError(RuntimeError):
@@ -277,6 +279,8 @@ class Driver(object):
             if retcode == enums.CUDA_ERROR_NOT_INITIALIZED:
                 # Detect forking
                 if _getpid() != self.pid:
+                    msg = 'pid %s forked from pid %s after CUDA driver init'
+                    _logger.critical(msg, _getpid(), self.pid)
                     raise CudaDriverError("CUDA initialized before forking")
             raise CudaAPIError(retcode, msg)
 
