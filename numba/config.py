@@ -158,16 +158,10 @@ class _EnvReloader(object):
         # Dump type annotation in html format
         HTML = _readenv("NUMBA_DUMP_HTML", str, None)
 
-        # Disable CUDA support
-        DISABLE_CUDA = _readenv("NUMBA_DISABLE_CUDA", int, int(MACHINE_BITS==32))
-
         # Allow interpreter fallback so that Numba @jit decorator will never fail
         # Use for migrating from old numba (<0.12) which supported closure, and other
         # yet-to-be-supported features.
         COMPATIBILITY_MODE = _readenv("NUMBA_COMPATIBILITY_MODE", int, 0)
-
-        # Force CUDA compute capability to a specific version
-        FORCE_CUDA_CC = _readenv("NUMBA_FORCE_CUDA_CC", _parse_cc, None)
 
         # x86-64 specific
         # Enable AVX on supported platforms where it won't degrade performance.
@@ -193,11 +187,25 @@ class _EnvReloader(object):
 
         # CUDA Configs
 
+        # Force CUDA compute capability to a specific version
+        FORCE_CUDA_CC = _readenv("NUMBA_FORCE_CUDA_CC", _parse_cc, None)
+
+        # Disable CUDA support
+        DISABLE_CUDA = _readenv("NUMBA_DISABLE_CUDA", int, int(MACHINE_BITS==32))
+
         # Enable CUDA simulator
         ENABLE_CUDASIM = _readenv("NUMBA_ENABLE_CUDASIM", int, 0)
 
         # CUDA logging level
         CUDA_LOG_LEVEL = _readenv("NUMBA_CUDA_LOG_LEVEL", str, '')
+
+        # Maximum number of pending CUDA deallocations (default: 10)
+        CUDA_DEALLOCS_COUNT = _readenv("NUMBA_CUDA_MAX_PENDING_DEALLOCS_COUNT",
+                                       int, 10)
+
+        # Maximum ratio of pending CUDA deallocations to capacity (default: 0.2)
+        CUDA_DEALLOCS_RATIO = _readenv("NUMBA_CUDA_MAX_PENDING_DEALLOCS_RATIO",
+                                       float, 0.2)
 
         # HSA Configs
 

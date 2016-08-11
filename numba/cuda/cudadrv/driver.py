@@ -431,17 +431,32 @@ def met_requirement_for_device(device):
                                (device, MIN_REQUIRED_CC))
 
 
-class _PendingDeallocs(object):
-    MAX_PENDING_DEALLOCS = 10
+class _SizeNotSet(object):
+    def __str__(self):
+        return '?'
 
-    def __init__(self):
+    def __int__(self):
+        return 0
+
+_SizeNotSet = _SizeNotSet()
+
+
+class _PendingDeallocs(object):
+    MAX_PENDING_DEALLOCS_COUNT = config.CUDA_DEALLOCS_COUNT
+    PENDING_DEALLOCS_RATIO = config.CUDA_DEALLOCS_RATIO
+
+    def __init__(self, capacity):
         self._cons = deque()
         self._disable_count = 0
+        self._size = 0
+        self._max_pending_bytes = int(capacity * self.PENDING_DEALLOCS_RATIO)
 
-    def add_item(self, dtor, handle, size='?'):
+    def add_item(self, dtor, handle, size=_SizeNotSet):
         _logger.info('add pending dealloc: %s %s bytes', dtor.__name__, size)
         self._cons.append((dtor, handle, size))
-        if len(self._cons) > self.MAX_PENDING_DEALLOCS:
+        self._size += int(size)
+        if (len(self._cons) > self.MAX_PENDING_DEALLOCS_COUNT or
+                self._size > self._max_pending_bytes):
             self.clear()
 
     def clear(self):
@@ -450,6 +465,7 @@ class _PendingDeallocs(object):
                 [dtor, handle, size] = self._cons.popleft()
                 _logger.info('dealloc: %s %s bytes', dtor.__name__, size)
                 dtor(handle)
+            self._size = 0
 
     @contextlib.contextmanager
     def disable(self):
@@ -466,6 +482,9 @@ class _PendingDeallocs(object):
         return len(self._cons)
 
 
+_MemoryInfo = namedtuple("_MemoryInfo", "free,total")
+
+
 class Context(object):
     """
     This object wraps a CUDA Context resource.
@@ -477,7 +496,8 @@ class Context(object):
         self.device = device
         self.handle = handle
         self.allocations = utils.UniqueDict()
-        self.deallocations = _PendingDeallocs()
+        # *deallocations* is lazily initialized on context push
+        self.deallocations = None
         self.modules = utils.UniqueDict()
         # For storing context specific data
         self.extras = {}
@@ -499,7 +519,7 @@ class Context(object):
         free = c_size_t()
         total = c_size_t()
         driver.cuMemGetInfo(byref(free), byref(total))
-        return free.value, total.value
+        return _MemoryInfo(free=free.value, total=total.value)
 
     def get_active_blocks_per_multiprocessor(self, func, blocksize, memsize, flags=None):
         """Return occupancy of a function.
@@ -541,6 +561,9 @@ class Context(object):
         Pushes this context on the current CPU Thread.
         """
         driver.cuCtxPushCurrent(self.handle)
+        # setup *deallocations* as the context becomes active for the first time
+        if self.deallocations is None:
+            self.deallocations = _PendingDeallocs(self.get_memory_info().total)
 
     def pop(self):
         """
