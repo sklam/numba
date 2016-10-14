@@ -128,6 +128,7 @@ class ConstraintNetwork(object):
                     constraint(typeinfer)
                 except TypingError as e:
                     errors.append(e)
+                    constraint.set_typing_error(typeinfer, str(e))
                 except Exception:
                     msg = "Internal error at {con}:\n{sep}\n{err}{sep}\n"
                     e = TypingError(msg.format(con=constraint,
@@ -138,21 +139,26 @@ class ConstraintNetwork(object):
         return errors
 
 
-class Propagate(object):
+class Constraint(object):
+    def set_typing_error(self, typeinfer, error):
+        typeinfer.add_type(self.target, types.Untyped(error), loc=self.loc)
+
+
+class Propagate(Constraint):
     """
     A simple constraint for direct propagation of types for assignments.
     """
 
     def __init__(self, dst, src, loc):
-        self.dst = dst
+        self.target = dst
         self.src = src
         self.loc = loc
 
     def __call__(self, typeinfer):
         with new_error_context("typing of assignment at {0}", self.loc):
-            typeinfer.copy_type(self.src, self.dst, loc=self.loc)
+            typeinfer.copy_type(self.src, self.target, loc=self.loc)
             # If `dst` is refined, notify us
-            typeinfer.refine_map[self.dst] = self
+            typeinfer.refine_map[self.target] = self
 
     def refine(self, typeinfer, target_type):
         # Do not back-propagate to locked variables (e.g. constants)
@@ -160,10 +166,10 @@ class Propagate(object):
                            loc=self.loc)
 
 
-class ArgConstraint(object):
+class ArgConstraint(Constraint):
 
     def __init__(self, dst, src, loc):
-        self.dst = dst
+        self.target = dst
         self.src = src
         self.loc = loc
 
@@ -176,10 +182,10 @@ class ArgConstraint(object):
             ty = src.getone()
             if isinstance(ty, types.Omitted):
                 ty = typeinfer.context.resolve_value_type(ty.value)
-            typeinfer.add_type(self.dst, ty, loc=self.loc)
+            typeinfer.add_type(self.target, ty, loc=self.loc)
 
 
-class BuildTupleConstraint(object):
+class BuildTupleConstraint(Constraint):
     def __init__(self, target, items, loc):
         self.target = target
         self.items = items
@@ -199,7 +205,7 @@ class BuildTupleConstraint(object):
                 typeinfer.add_type(self.target, tup, loc=self.loc)
 
 
-class _BuildContainerConstraint(object):
+class _BuildContainerConstraint(Constraint):
 
     def __init__(self, target, items, loc):
         self.target = target
@@ -233,7 +239,7 @@ class BuildSetConstraint(_BuildContainerConstraint):
 
 
 
-class ExhaustIterConstraint(object):
+class ExhaustIterConstraint(Constraint):
     def __init__(self, target, count, iterator, loc):
         self.target = target
         self.count = count
@@ -258,7 +264,7 @@ class ExhaustIterConstraint(object):
                     typeinfer.add_type(self.target, tup, loc=self.loc)
 
 
-class PairFirstConstraint(object):
+class PairFirstConstraint(Constraint):
     def __init__(self, target, pair, loc):
         self.target = target
         self.pair = pair
@@ -275,7 +281,7 @@ class PairFirstConstraint(object):
                 typeinfer.add_type(self.target, tp.first_type, loc=self.loc)
 
 
-class PairSecondConstraint(object):
+class PairSecondConstraint(Constraint):
     def __init__(self, target, pair, loc):
         self.target = target
         self.pair = pair
@@ -292,7 +298,7 @@ class PairSecondConstraint(object):
                 typeinfer.add_type(self.target, tp.second_type, loc=self.loc)
 
 
-class StaticGetItemConstraint(object):
+class StaticGetItemConstraint(Constraint):
     def __init__(self, target, value, index, index_var, loc):
         self.target = target
         self.value = value
@@ -351,7 +357,7 @@ def fold_arg_vars(typevars, args, vararg, kws):
     return pos_args, kw_args
 
 
-class CallConstraint(object):
+class CallConstraint(Constraint):
     """Constraint for calling functions.
     Perform case analysis foreach combinations of argument types.
     """
@@ -431,7 +437,7 @@ class IntrinsicCallConstraint(CallConstraint):
             self.resolve(typeinfer, typeinfer.typevars, fnty=self.func)
 
 
-class GetAttrConstraint(object):
+class GetAttrConstraint(Constraint):
     def __init__(self, target, attr, value, loc, inst):
         self.target = target
         self.attr = attr
@@ -464,7 +470,7 @@ class GetAttrConstraint(object):
             value=self.value, attr=self.attr)
 
 
-class SetItemConstraint(object):
+class SetItemConstraint(Constraint):
     def __init__(self, target, index, value, loc):
         self.target = target
         self.index = index
@@ -491,7 +497,7 @@ class SetItemConstraint(object):
         return self.signature
 
 
-class StaticSetItemConstraint(object):
+class StaticSetItemConstraint(Constraint):
     def __init__(self, target, index, index_var, value, loc):
         self.target = target
         self.index = index
@@ -521,7 +527,7 @@ class StaticSetItemConstraint(object):
         return self.signature
 
 
-class DelItemConstraint(object):
+class DelItemConstraint(Constraint):
     def __init__(self, target, index, loc):
         self.target = target
         self.index = index
@@ -546,7 +552,7 @@ class DelItemConstraint(object):
         return self.signature
 
 
-class SetAttrConstraint(object):
+class SetAttrConstraint(Constraint):
     def __init__(self, target, attr, value, loc):
         self.target = target
         self.attr = attr
@@ -574,7 +580,7 @@ class SetAttrConstraint(object):
         return self.signature
 
 
-class PrintConstraint(object):
+class PrintConstraint(Constraint):
     def __init__(self, args, vararg, loc):
         self.args = args
         self.vararg = vararg
@@ -1010,7 +1016,7 @@ class TypeInferer(object):
             # Resume propagation in parent frame
             return_type = frame.typeinfer.return_types_from_partial()
             # No known return type
-            if return_type is None:
+            if isinstance(return_type, types.Untyped):
                 raise TypingError("cannot type infer runaway recursion")
 
             sig = typing.signature(return_type, *args)

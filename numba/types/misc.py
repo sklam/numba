@@ -31,6 +31,19 @@ class Undefined(Dummy):
         return False
 
 
+class Untyped(Dummy):
+    def __init__(self, error):
+        super(Untyped, self).__init__(name='Untyped')
+        self.error = error
+
+    @property
+    def key(self):
+        return self.error
+
+    def can_convert_to(self, typingctx, other):
+        return Conversion.safe
+
+
 class RawPointer(Opaque):
     """
     A raw pointer without any specific meaning.
