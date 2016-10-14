@@ -129,13 +129,14 @@ class ConstraintNetwork(object):
                 except TypingError as e:
                     errors.append(e)
                     constraint.set_typing_error(typeinfer, str(e))
-                except Exception:
+                except Exception as e:
                     msg = "Internal error at {con}:\n{sep}\n{err}{sep}\n"
                     e = TypingError(msg.format(con=constraint,
                                                err=traceback.format_exc(),
                                                sep='--%<' +'-' * 65),
                                     loc=constraint.loc)
                     errors.append(e)
+                    constraint.set_typing_error(typeinfer, str(e))
         return errors
 
 
@@ -748,7 +749,7 @@ class TypeInferer(object):
         # unify return types
         return cloned._unify_return_types(rettypes)
 
-    def propagate(self, raise_errors=True):
+    def propagate(self, raise_errors=False):
         newtoken = self.get_state_token()
         oldtoken = None
         # Since the number of types are finite, the typesets will eventually
@@ -1016,7 +1017,7 @@ class TypeInferer(object):
             # Resume propagation in parent frame
             return_type = frame.typeinfer.return_types_from_partial()
             # No known return type
-            if isinstance(return_type, types.Untyped):
+            if return_type is None: # or isinstance(return_type, types.Untyped):
                 raise TypingError("cannot type infer runaway recursion")
 
             sig = typing.signature(return_type, *args)

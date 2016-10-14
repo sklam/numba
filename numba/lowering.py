@@ -37,6 +37,15 @@ def _rebuild_env(modname, consts):
 _VarArgItem = namedtuple("_VarArgItem", ("vararg", "index"))
 
 
+class UntypedError(LoweringError):
+    def __init__(self, untyped, loc):
+        super(UntypedError, self).__init__(untyped, loc=loc)
+        self.untyped = untyped
+
+    def get_runtime_msg(self):
+        return self.untyped.error
+
+
 class BaseLower(object):
     """
     Lower IR to LLVM
@@ -198,7 +207,12 @@ class BaseLower(object):
             defaulterrcls = partial(LoweringError, loc=self.loc)
             with new_error_context('lowering "{inst}" at {loc}', inst=inst,
                                    loc=self.loc, errcls_=defaulterrcls):
-                self.lower_inst(inst)
+                try:
+                    self.lower_inst(inst)
+                except UntypedError as e:
+                    self.return_exception(TypeError, (e.get_runtime_msg(),))
+                    # terminate this block
+                    return
 
     def create_cpython_wrapper(self, release_gil=False):
         """
@@ -221,7 +235,10 @@ class BaseLower(object):
         self.call_helper = self.call_conv.init_call_helper(self.builder)
 
     def typeof(self, varname):
-        return self.fndesc.typemap[varname]
+        res = self.fndesc.typemap[varname]
+        if isinstance(res, types.Untyped):
+            raise UntypedError(res, loc=self.loc)
+        return res
 
     def debug_print(self, msg):
         if config.DEBUG_JIT:
