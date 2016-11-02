@@ -1,5 +1,5 @@
 from numba import ir, errors
-from . import register_rewrite, Rewrite
+from . import register_rewrite, Rewrite, InstRewrite
 
 
 class Macro(object):
@@ -36,45 +36,40 @@ class Macro(object):
 
 
 @register_rewrite('before-inference')
-class ExpandMacros(Rewrite):
+class ExpandMacros(InstRewrite):
     """
     Expand lookups and calls of Macro objects.
     """
+    rewrite_inst_of = ir.Assign
 
-    def match(self, interp, block, typemap, calltypes):
+    def match_inst(self, interp, inst, typemap, calltypes):
         """
         Look for potential macros for expand and store their expansions.
         """
-        self.block = block
-        self.rewrites = rewrites = {}
+        rhs = inst.value
+        if not isinstance(rhs, ir.Expr):
+            return
+        if rhs.op == 'call' and isinstance(rhs.func, ir.Var):
+            # Is it a callable macro?
+            try:
+                const = interp.infer_constant(rhs.func)
+            except errors.ConstantInferenceError:
+                return
+            if isinstance(const, Macro):
+                assert const.callable
+                new_expr = self._expand_callable_macro(interp, rhs,
+                                                       const, rhs.loc)
+                return new_expr
 
-        for m, inst, exp in block.match_exprs():
-            if m:
-                rhs = inst.value
-                if (isinstance(rhs, ir.Expr) and rhs.op == 'call'
-                    and isinstance(rhs.func, ir.Var)):
-                    # Is it a callable macro?
-                    try:
-                        const = interp.infer_constant(rhs.func)
-                    except errors.ConstantInferenceError:
-                        continue
-                    if isinstance(const, Macro):
-                        assert const.callable
-                        new_expr = self._expand_callable_macro(interp, rhs,
-                                                               const, rhs.loc)
-                        rewrites[rhs] = new_expr
-
-                elif isinstance(rhs, ir.Expr) and rhs.op == 'getattr':
-                    # Is it a non-callable macro looked up as a constant attribute?
-                    try:
-                        const = interp.infer_constant(inst.target)
-                    except errors.ConstantInferenceError:
-                        continue
-                    if isinstance(const, Macro) and not const.callable:
-                        new_expr = self._expand_non_callable_macro(const, rhs.loc)
-                        rewrites[rhs] = new_expr
-
-        return len(rewrites) > 0
+        elif rhs.op == 'getattr':
+            # Is it a non-callable macro looked up as a constant attribute?
+            try:
+                const = interp.infer_constant(inst.target)
+            except errors.ConstantInferenceError:
+                return
+            if isinstance(const, Macro) and not const.callable:
+                new_expr = self._expand_non_callable_macro(const, rhs.loc)
+                return new_expr
 
     def _expand_non_callable_macro(self, macro, loc):
         """
@@ -119,18 +114,10 @@ class ExpandMacros(Rewrite):
                                 kws=call.kws, loc=loc)
         return new_expr
 
-    def apply(self):
+    def rewrite_inst(self, inst, new_expr):
         """
         Apply the expansions computed in .match().
         """
-        block = self.block
-        new_block = block.copy()
-        new_block.clear()
-
-        rewrites = self.rewrites
-        for m, inst, expr in block.match_exprs():
-            new_inst = inst.copy()
-            if m and expr in rewrites:
-                new_inst.value = rewrites[inst.value]
-            new_block.append(new_inst)
-        return new_block
+        new_inst = inst.copy()
+        new_inst.value = new_expr
+        return new_inst

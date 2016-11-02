@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 from numba import ir, errors
-from . import register_rewrite, Rewrite
+from . import register_rewrite, Rewrite, InstRewrite
 
 
 @register_rewrite('before-inference')
@@ -46,42 +46,35 @@ class RewritePrintCalls(Rewrite):
                                         loc=inst.loc)
                 new_block.append(assign_node)
             else:
-                new_block.append(inst.copy())
+                new_block.append(inst)
         return new_block
 
 
 @register_rewrite('before-inference')
-class DetectConstPrintArguments(Rewrite):
+class DetectConstPrintArguments(InstRewrite):
     """
     Detect and store constant arguments to print() nodes.
     """
+    rewrite_inst_of = ir.Print
 
-    def match(self, interp, block, typemap, calltypes):
-        self.consts = consts = {}
-        self.block = block
-        for inst in block.find_insts(ir.Print):
-            if inst.consts:
-                # Already rewritten
+    def match_inst(self, interp, inst, typemap, calltypes):
+        if inst.consts:
+            # Already rewritten
+            return
+        out = {}
+        for idx, var in enumerate(inst.args):
+            try:
+                const = interp.infer_constant(var)
+            except errors.ConstantInferenceError:
                 continue
-            for idx, var in enumerate(inst.args):
-                try:
-                    const = interp.infer_constant(var)
-                except errors.ConstantInferenceError:
-                    continue
-                consts.setdefault(inst, {})[idx] = const
+            out[idx] = const
+        if out:
+            return out
 
-        return len(consts) > 0
-
-    def apply(self):
+    def rewrite_inst(self, inst, consts):
         """
         Store detected constant arguments on their nodes.
         """
-        new_block = self.block.copy()
-        new_block.clear()
-
-        for inst in self.block.body:
-            new_inst = inst.copy()
-            if inst in self.consts:
-                new_inst.consts = self.consts[inst]
-            new_block.append(new_inst)
-        return new_block
+        new_inst = inst.copy()
+        new_inst.consts = consts
+        return new_inst

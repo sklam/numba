@@ -1,9 +1,9 @@
 from numba import ir
-from . import register_rewrite, Rewrite
+from . import register_rewrite, InstRewrite
 
 
 @register_rewrite('before-inference')
-class RewriteConstRaises(Rewrite):
+class RewriteConstRaises(InstRewrite):
     """
     Rewrite IR statements of the kind `raise(value)`
     where `value` is the result of instantiating an exception with
@@ -13,6 +13,8 @@ class RewriteConstRaises(Rewrite):
     This allows lowering in nopython mode, where one can't instantiate
     exception instances from runtime data.
     """
+
+    rewrite_inst_of = ir.Raise
 
     def _is_exception_type(self, const):
         return isinstance(const, type) and issubclass(const, Exception)
@@ -29,33 +31,21 @@ class RewriteConstRaises(Rewrite):
             raise NotImplementedError("unsupported exception constant %r"
                                       % (const,))
 
-    def match(self, interp, block, typemap, calltypes):
-        self.raises = raises = {}
-        self.block = block
-        # Detect all raise statements and find which ones can be
-        # rewritten
-        for inst in block.find_insts(ir.Raise):
-            if inst.exception is None:
-                # re-reraise
-                exc_type, exc_args = None, None
-            else:
-                # raise <something> => find the definition site for <something>
-                const = interp.infer_constant(inst.exception)
-                exc_type, exc_args = self._break_constant(interp, const)
-            raises[inst] = exc_type, exc_args
+    def match_inst(self, interp, inst, typemap, calltypes):
+        if inst.exception is None:
+            # re-reraise
+            exc_type, exc_args = None, None
+        else:
+            # raise <something> => find the definition site for <something>
+            const = interp.infer_constant(inst.exception)
+            exc_type, exc_args = self._break_constant(interp, const)
+        return exc_type, exc_args
 
-        return len(raises) > 0
+    def rewrite_inst(self, inst, data):
+        """
+        Rewrite all matching raise as static_raise.
+        """
+        exc_type, exc_args = data
+        return ir.StaticRaise(exc_type, exc_args, inst.loc)
 
-    def apply(self):
-        """
-        Rewrite all matching setitems as static_setitems.
-        """
-        new_block = self.block.copy()
-        new_block.clear()
-        for m, inst in self.block.match_insts(ir.Raise):
-            new_inst = inst.copy()
-            if m and inst in self.raises:
-                exc_type, exc_args = self.raises[inst]
-                new_inst = ir.StaticRaise(exc_type, exc_args, inst.loc)
-            new_block.append(new_inst)
-        return new_block
+
