@@ -14,8 +14,9 @@ class RewritePrintCalls(Rewrite):
         self.prints = prints = {}
         self.block = block
         # Find all assignments with a right-hand print() call
-        for inst in block.find_insts(ir.Assign):
-            if isinstance(inst.value, ir.Expr) and inst.value.op == 'call':
+
+        for m, inst, expr in block.match_exprs(op='call'):
+            if m:
                 expr = inst.value
                 if expr.kws:
                     # Only positional args are supported
@@ -35,9 +36,8 @@ class RewritePrintCalls(Rewrite):
         """
         new_block = self.block.copy()
         new_block.clear()
-        for inst in self.block.body:
-            if inst in self.prints:
-                expr = self.prints[inst]
+        for m, inst, expr in self.block.match_exprs(op='call'):
+            if m and inst in self.prints:
                 print_node = ir.Print(args=expr.args, vararg=expr.vararg,
                                       loc=expr.loc)
                 new_block.append(print_node)
@@ -46,7 +46,7 @@ class RewritePrintCalls(Rewrite):
                                         loc=inst.loc)
                 new_block.append(assign_node)
             else:
-                new_block.append(inst)
+                new_block.append(inst.copy())
         return new_block
 
 
@@ -76,7 +76,12 @@ class DetectConstPrintArguments(Rewrite):
         """
         Store detected constant arguments on their nodes.
         """
+        new_block = self.block.copy()
+        new_block.clear()
+
         for inst in self.block.body:
+            new_inst = inst.copy()
             if inst in self.consts:
-                inst.consts = self.consts[inst]
-        return self.block
+                new_inst.consts = self.consts[inst]
+            new_block.append(new_inst)
+        return new_block

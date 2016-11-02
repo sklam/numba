@@ -52,11 +52,10 @@ class RewriteConstRaises(Rewrite):
         """
         new_block = self.block.copy()
         new_block.clear()
-        for inst in self.block.body:
-            if inst in self.raises:
+        for m, inst in self.block.match_insts(ir.Raise):
+            new_inst = inst.copy()
+            if m and inst in self.raises:
                 exc_type, exc_args = self.raises[inst]
                 new_inst = ir.StaticRaise(exc_type, exc_args, inst.loc)
-                new_block.append(new_inst)
-            else:
-                new_block.append(inst)
+            new_block.append(new_inst)
         return new_block

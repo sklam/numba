@@ -48,8 +48,8 @@ class ExpandMacros(Rewrite):
         self.block = block
         self.rewrites = rewrites = {}
 
-        for inst in block.body:
-            if isinstance(inst, ir.Assign):
+        for m, inst, exp in block.match_exprs():
+            if m:
                 rhs = inst.value
                 if (isinstance(rhs, ir.Expr) and rhs.op == 'call'
                     and isinstance(rhs.func, ir.Var)):
@@ -124,8 +124,13 @@ class ExpandMacros(Rewrite):
         Apply the expansions computed in .match().
         """
         block = self.block
+        new_block = block.copy()
+        new_block.clear()
+
         rewrites = self.rewrites
-        for inst in block.body:
-            if isinstance(inst, ir.Assign) and inst.value in rewrites:
-                inst.value = rewrites[inst.value]
-        return block
+        for m, inst, expr in block.match_exprs():
+            new_inst = inst.copy()
+            if m and expr in rewrites:
+                new_inst.value = rewrites[inst.value]
+            new_block.append(new_inst)
+        return new_block

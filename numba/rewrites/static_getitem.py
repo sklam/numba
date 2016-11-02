@@ -16,12 +16,11 @@ class RewriteConstGetitems(Rewrite):
         # Detect all getitem expressions and find which ones can be
         # rewritten
         for expr in block.find_exprs(op='getitem'):
-            if expr.op == 'getitem':
-                try:
-                    const = interp.infer_constant(expr.index)
-                except errors.ConstantInferenceError:
-                    continue
-                getitems[expr] = const
+            try:
+                const = interp.infer_constant(expr.index)
+            except errors.ConstantInferenceError:
+                continue
+            getitems[expr] = const
 
         return len(getitems) > 0
 
@@ -31,18 +30,17 @@ class RewriteConstGetitems(Rewrite):
         """
         new_block = self.block.copy()
         new_block.clear()
-        for inst in self.block.body:
-            if isinstance(inst, ir.Assign):
-                expr = inst.value
-                if expr in self.getitems:
-                    const = self.getitems[expr]
-                    new_expr = ir.Expr.static_getitem(value=expr.value,
-                                                      index=const,
-                                                      index_var=expr.index,
-                                                      loc=expr.loc)
-                    inst = ir.Assign(value=new_expr, target=inst.target,
-                                     loc=inst.loc)
-            new_block.append(inst)
+
+        for m, inst, expr in self.block.match_exprs(op='getitem'):
+            new_inst = inst.copy()
+            if m and expr in self.getitems:
+                const = self.getitems[expr]
+                new_expr = ir.Expr.static_getitem(value=expr.value,
+                                                  index=const,
+                                                  index_var=expr.index,
+                                                  loc=expr.loc)
+                new_inst.value = new_expr
+            new_block.append(new_inst)
         return new_block
 
 
@@ -74,12 +72,11 @@ class RewriteConstSetitems(Rewrite):
         """
         new_block = self.block.copy()
         new_block.clear()
-        for inst in self.block.body:
-            if inst in self.setitems:
+        for m, inst in self.block.match_insts(ir.SetItem):
+            new_inst = inst.copy()
+            if m and inst in self.setitems:
                 const = self.setitems[inst]
                 new_inst = ir.StaticSetItem(inst.target, const,
                                             inst.index, inst.value, inst.loc)
-                new_block.append(new_inst)
-            else:
-                new_block.append(inst)
+            new_block.append(new_inst)
         return new_block

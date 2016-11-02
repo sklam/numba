@@ -30,6 +30,13 @@ class DetectStaticBinops(Rewrite):
         """
         Store constant arguments that were detected in match().
         """
-        for expr, rhs in self.static_rhs.items():
-            expr.static_rhs = rhs
-        return self.block
+        new_block = self.block.copy()
+        new_block.clear()
+        for m, inst, expr in self.block.match_exprs(op='binop'):
+            new_inst = inst.copy()
+            if m and expr in self.static_rhs:
+                new_expr = expr.copy()
+                new_expr.static_rhs = expr.rhs
+                new_inst.value = new_expr
+            new_block.append(new_inst)
+        return new_block

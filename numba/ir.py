@@ -90,6 +90,9 @@ class Inst(object):
     Base class for all IR instructions.
     """
 
+    def copy(self):
+        return copy.copy(self)
+
     def list_vars(self):
         """
         List the variables used (read or written) by the instruction.
@@ -713,20 +716,27 @@ class Block(object):
         """
         Iterate over exprs of the given *op* in this block.
         """
+        return (expr for m, inst, expr in self.match_exprs(op=op) if m)
+
+    def match_exprs(self, op=None):
         for inst in self.body:
             if isinstance(inst, Assign):
                 expr = inst.value
                 if isinstance(expr, Expr):
                     if op is None or expr.op == op:
-                        yield expr
+                        yield True, inst, expr
+                        continue
+            yield False, inst, None
 
-    def find_insts(self, cls=None):
+    def find_insts(self, cls):
         """
         Iterate over insts of the given class in this block.
         """
+        return (v for m, v in self.match_insts(cls) if m)
+
+    def match_insts(self, cls):
         for inst in self.body:
-            if isinstance(inst, cls):
-                yield inst
+            yield isinstance(inst, cls), inst
 
     def prepend(self, inst):
         assert isinstance(inst, Stmt)
