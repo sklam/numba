@@ -2,6 +2,7 @@ from __future__ import print_function, division, absolute_import
 
 from collections import defaultdict
 import sys
+import types
 
 from numba import config, ir
 
@@ -28,6 +29,13 @@ class Rewrite(object):
         raise NotImplementedError("Abstract Rewrite.apply() called!")
 
 
+def _as_generator(val):
+    if not isinstance(val, types.GeneratorType):
+        return (val,)
+    else:
+        return val
+
+
 class InstRewrite(Rewrite):
     '''
     Simple instruction rewriter
@@ -49,8 +57,11 @@ class InstRewrite(Rewrite):
         block = self.block
         for inst in block.body:
             data = self._matched.get(inst)
-            new_inst = (inst if data is None else self.rewrite_inst(inst, data))
-            new_block.append(new_inst)
+            if data is None:
+                new_block.append(inst)
+            else:
+                for new_inst in _as_generator(self.rewrite_inst(inst, data)):
+                    new_block.append(new_inst)
 
     def match_inst(self, inst):
         raise NotImplementedError("Abstract InstRewrite.match_inst() called!")
@@ -59,35 +70,28 @@ class InstRewrite(Rewrite):
         raise NotImplementedError("Abstract InstRewrite.rewrite_inst() called!")
 
 
-class ExprRewrite(Rewrite):
+class ExprRewrite(InstRewrite):
     '''
     Simple expression rewriter
     '''
     rewrite_expr_of = None
 
-    def match(self, interp, block, typmap, calltypes):
-        self._matched = matched = {}
-        self.block = block
-        for m, inst, expr in block.match_exprs(self.rewrite_expr_of):
-            if m:
-                result = self.match_expr(interp, expr, typmap, calltypes)
-                if result is not None:
-                    matched[inst] = result
+    @property
+    def rewrite_inst_of(self):
+        return ir.Assign
 
-        return matched
+    def match_inst(self, interp, inst, typmap, calltypes):
+        expr = inst.value
+        if isinstance(expr, ir.Expr):
+            pat = self.rewrite_expr_of
+            if pat is not None and pat == expr.op:
+                return self.match_expr(interp, expr, typmap, calltypes)
 
-    def apply(self, new_block):
-        block = self.block
-        for m, inst, expr in block.match_exprs(self.rewrite_expr_of):
-            if m and inst in self._matched:
-                data = self._matched.get(inst)
-                new_expr = (expr if data is None
-                            else self.rewrite_expr(expr, data))
-                new_inst = inst.copy()
-                new_inst.value = new_expr
-                new_block.append(new_inst)
-            else:
-                new_block.append(inst)
+    def rewrite_inst(self, inst, data):
+        new_inst = inst.copy()
+        expr = inst.value
+        new_inst.value = self.rewrite_expr(expr, data)
+        return new_inst
 
     def match_expr(self, expr):
         raise NotImplementedError("Abstract ExprRewrite.match_expr() called!")
