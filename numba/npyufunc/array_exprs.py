@@ -185,7 +185,7 @@ class RewriteArrayExprs(rewrites.Rewrite):
             replacement = replacement_map[replacement]
         return replacement
 
-    def apply(self):
+    def apply(self, new_block):
         '''When we've found array expressions in a basic block, rewrite that
         block, returning a new, transformed block.
         '''
@@ -194,8 +194,7 @@ class RewriteArrayExprs(rewrites.Rewrite):
         replace_map, dead_vars, used_vars = self._handle_matches()
         # Part 2: Using the information above, rewrite the target
         # basic block.
-        result = self.crnt_block.copy()
-        result.clear()
+        result = new_block
         delete_map = {}
         for instr in self.crnt_block.body:
             if isinstance(instr, ir.Assign):
@@ -225,7 +224,6 @@ class RewriteArrayExprs(rewrites.Rewrite):
         if delete_map:
             for instr in delete_map.values():
                 result.insert_before_terminator(instr)
-        return result
 
 
 _unaryops = {

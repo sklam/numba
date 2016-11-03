@@ -29,13 +29,11 @@ class RewritePrintCalls(Rewrite):
                     prints[inst] = expr
         return len(prints) > 0
 
-    def apply(self):
+    def apply(self, new_block):
         """
         Rewrite `var = call <print function>(...)` as a sequence of
         `print(...)` and `var = const(None)`.
         """
-        new_block = self.block.copy()
-        new_block.clear()
         for m, inst, expr in self.block.match_exprs(op='call'):
             if m and inst in self.prints:
                 print_node = ir.Print(args=expr.args, vararg=expr.vararg,
@@ -47,7 +45,6 @@ class RewritePrintCalls(Rewrite):
                 new_block.append(assign_node)
             else:
                 new_block.append(inst)
-        return new_block
 
 
 @register_rewrite('before-inference')

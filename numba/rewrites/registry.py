@@ -21,7 +21,7 @@ class Rewrite(object):
         '''
         return False
 
-    def apply(self):
+    def apply(self, new_block):
         '''Overload this method to return a rewritten IR basic block when a
         match has been found.
         '''
@@ -45,15 +45,12 @@ class InstRewrite(Rewrite):
 
         return matched
 
-    def apply(self):
+    def apply(self, new_block):
         block = self.block
-        new_block = block.copy()
-        new_block.clear()
         for inst in block.body:
             data = self._matched.get(inst)
             new_inst = (inst if data is None else self.rewrite_inst(inst, data))
             new_block.append(new_inst)
-        return new_block
 
     def match_inst(self, inst):
         raise NotImplementedError("Abstract InstRewrite.match_inst() called!")
@@ -79,10 +76,8 @@ class ExprRewrite(Rewrite):
 
         return matched
 
-    def apply(self):
+    def apply(self, new_block):
         block = self.block
-        new_block = block.copy()
-        new_block.clear()
         for m, inst, expr in block.match_exprs(self.rewrite_expr_of):
             if m and inst in self._matched:
                 data = self._matched.get(inst)
@@ -93,8 +88,6 @@ class ExprRewrite(Rewrite):
                 new_block.append(new_inst)
             else:
                 new_block.append(inst)
-
-        return new_block
 
     def match_expr(self, expr):
         raise NotImplementedError("Abstract ExprRewrite.match_expr() called!")
@@ -150,7 +143,9 @@ class RewriteRegistry(object):
                         print("REWRITING (%s):" % rewrite_cls.__name__)
                         block.dump()
                         print("_" * 60)
-                    new_block = rewrite.apply()
+                    new_block = block.copy()
+                    new_block.clear()
+                    rewrite.apply(new_block)
                     blocks[key] = new_block
                     work_list.append((key, new_block))
                     if config.DEBUG or config.DUMP_IR:
