@@ -38,10 +38,13 @@ class Untyped(Dummy):
 
     @property
     def key(self):
-        return self.error
+        return str(self.error)
 
     def can_convert_to(self, typingctx, other):
         return Conversion.safe
+
+    def get_exception(self):
+        return self.error
 
 
 class RawPointer(Opaque):

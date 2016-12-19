@@ -128,7 +128,7 @@ class ConstraintNetwork(object):
                     constraint(typeinfer)
                 except TypingError as e:
                     errors.append(e)
-                    constraint.set_typing_error(typeinfer, str(e))
+                    constraint.set_typing_error(typeinfer, e)
                 except Exception as e:
                     msg = "Internal error at {con}:\n{sep}\n{err}{sep}\n"
                     e = TypingError(msg.format(con=constraint,
@@ -136,13 +136,16 @@ class ConstraintNetwork(object):
                                                sep='--%<' +'-' * 65),
                                     loc=constraint.loc)
                     errors.append(e)
-                    constraint.set_typing_error(typeinfer, str(e))
+                    constraint.set_typing_error(typeinfer, e)
         return errors
 
 
 class Constraint(object):
     def set_typing_error(self, typeinfer, error):
-        typeinfer.add_type(self.target, types.Untyped(error), loc=self.loc)
+        if typeinfer.partial_typing:
+            target = (self.target.name
+                      if isinstance(self.target, ir.Var) else self.target)
+            typeinfer.add_type(target, types.Untyped(error), loc=self.loc)
 
 
 class Propagate(Constraint):
@@ -648,7 +651,7 @@ class TypeInferer(object):
     Operates on block that shares the same ir.Scope.
     """
 
-    def __init__(self, context, func_ir, warnings):
+    def __init__(self, context, func_ir, warnings, partial_typing):
         self.context = context
         self.blocks = func_ir.blocks
         self.generator_info = func_ir.generator_info
@@ -659,6 +662,7 @@ class TypeInferer(object):
         self.typevars.set_context(context)
         self.constraints = ConstraintNetwork()
         self.warnings = warnings
+        self.partial_typing = partial_typing
 
         # { index: mangled name }
         self.arg_names = {}
@@ -680,7 +684,7 @@ class TypeInferer(object):
         self._skip_recursion = False
 
     def copy(self, skip_recursion=False):
-        clone = TypeInferer(self.context, self.func_ir, self.warnings)
+        clone = TypeInferer(self.context, self.func_ir, self.warnings, self.partial_typing)
         clone.arg_names = self.arg_names.copy()
         clone._skip_recursion = skip_recursion
 
@@ -749,7 +753,9 @@ class TypeInferer(object):
         # unify return types
         return cloned._unify_return_types(rettypes)
 
-    def propagate(self, raise_errors=False):
+    def propagate(self, raise_errors=None):
+        if raise_errors is None:
+            raise_errors = not self.partial_typing
         newtoken = self.get_state_token()
         oldtoken = None
         # Since the number of types are finite, the typesets will eventually

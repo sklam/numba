@@ -43,7 +43,7 @@ class UntypedError(LoweringError):
         self.untyped = untyped
 
     def get_runtime_msg(self):
-        return self.untyped.error
+        return str(self.untyped.get_exception())
 
 
 class BaseLower(object):

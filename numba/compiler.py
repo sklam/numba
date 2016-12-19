@@ -38,6 +38,7 @@ class Flags(utils.ConfigOptions):
         'nrt': False,
         'no_rewrites': False,
         'error_model': 'python',
+        'partial_typing': True,
     }
 
 
@@ -433,10 +434,13 @@ class Pipeline(object):
                 self.func_ir,
                 self.args,
                 self.return_type,
-                self.locals)
+                self.locals,
+                self.flags.partial_typing)
 
         with self.fallback_context('Function "%s" has invalid return type'
                                    % (self.func_id.func_name,)):
+            # if self.flags.partial_typing:
+            #     legalize_interior_types(self.func_ir.blocks, self.typemap)
             legalize_return_type(self.return_type, self.func_ir,
                                  self.targetctx)
 
@@ -708,6 +712,15 @@ def compile_internal(typingctx, targetctx, library,
     return pipeline.compile_extra(func)
 
 
+def legalize_interior_types(blocks, typemap):
+    for blk in blocks.values():
+        for inst in blk.body:
+            if isinstance(inst, ir.Assign):
+                ty = typemap[inst.target.name]
+                if isinstance(ty, types.Untyped):
+                    raise ty.get_exception()
+
+
 def legalize_return_type(return_type, interp, targetctx):
     """
     Only accept array return type iff it is passed into the function.
@@ -742,7 +755,7 @@ def legalize_return_type(return_type, interp, targetctx):
         raise TypeError("Can't return function object in nopython mode")
 
     elif isinstance(return_type, types.Untyped):
-        raise TypeError(return_type.error)
+        raise return_type.get_exception()
 
 
 def translate_stage(func_id, bytecode):
@@ -765,12 +778,12 @@ def ir_processing_stage(func_ir):
     return func_ir
 
 
-def type_inference_stage(typingctx, interp, args, return_type, locals={}):
+def type_inference_stage(typingctx, interp, args, return_type, locals, partial_typing):
     if len(args) != interp.arg_count:
         raise TypeError("Mismatch number of argument types")
 
     warnings = errors.WarningsFixer(errors.NumbaWarning)
-    infer = typeinfer.TypeInferer(typingctx, interp, warnings)
+    infer = typeinfer.TypeInferer(typingctx, interp, warnings, partial_typing)
     with typingctx.callstack.register(infer, interp.func_id, args):
         # Seed argument types
         for index, (name, ty) in enumerate(zip(interp.arg_names, args)):
