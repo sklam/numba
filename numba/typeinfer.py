@@ -145,7 +145,9 @@ class Constraint(object):
         if typeinfer.partial_typing:
             target = (self.target.name
                       if isinstance(self.target, ir.Var) else self.target)
-            typeinfer.add_type(target, types.Untyped(error), loc=self.loc)
+            untyped = types.Untyped(error, loc=self.loc)
+            typeinfer.add_type(target, untyped, loc=self.loc)
+            self.signature = untyped
 
 
 class Propagate(Constraint):
@@ -240,7 +242,6 @@ class BuildListConstraint(_BuildContainerConstraint):
 
 class BuildSetConstraint(_BuildContainerConstraint):
     container_type = types.Set
-
 
 
 class ExhaustIterConstraint(Constraint):

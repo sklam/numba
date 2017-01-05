@@ -61,6 +61,9 @@ class TargetOptions(object):
         if kws.pop('no_cpython_wrapper', False):
             flags.set('no_cpython_wrapper')
 
+        if kws.pop('partial_typing', True):
+            flags.set('partial_typing')
+
         flags.set("enable_pyobject_looplift")
 
         if kws:

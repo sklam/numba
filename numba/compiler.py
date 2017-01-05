@@ -38,12 +38,13 @@ class Flags(utils.ConfigOptions):
         'nrt': False,
         'no_rewrites': False,
         'error_model': 'python',
-        'partial_typing': True,
+        'partial_typing': False,
     }
 
 
 DEFAULT_FLAGS = Flags()
 DEFAULT_FLAGS.set('nrt')
+DEFAULT_FLAGS.set('partial_typing')
 
 
 CR_FIELDS = ["typing_context",
@@ -439,8 +440,8 @@ class Pipeline(object):
 
         with self.fallback_context('Function "%s" has invalid return type'
                                    % (self.func_id.func_name,)):
-            # if self.flags.partial_typing:
-            #     legalize_interior_types(self.func_ir.blocks, self.typemap)
+            if not self.flags.partial_typing:
+                legalize_interior_types(self.func_ir.blocks, self.typemap)
             legalize_return_type(self.return_type, self.func_ir,
                                  self.targetctx)
 

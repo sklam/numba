@@ -32,9 +32,10 @@ class Undefined(Dummy):
 
 
 class Untyped(Dummy):
-    def __init__(self, error):
+    def __init__(self, error, loc):
         super(Untyped, self).__init__(name='Untyped')
         self.error = error
+        self.loc = loc
 
     @property
     def key(self):

@@ -21,6 +21,7 @@ from .imputils import (user_function, user_generator,
                        builtin_registry, impl_ret_borrowed,
                        RegistryLoader)
 from numba import datamodel
+from numba.lowering import UntypedError
 
 
 GENERIC_POINTER = Type.pointer(Type.int(8))
@@ -457,6 +458,8 @@ class BaseContext(object):
         Return the implementation of function *fn* for signature *sig*.
         The return value is a callable with the signature (builder, args).
         """
+        if isinstance(sig, types.Untyped):
+            raise UntypedError(sig)
         sig = sig.as_function()
         if isinstance(fn, (types.Function, types.BoundFunction,
                            types.Dispatcher)):

@@ -38,8 +38,8 @@ _VarArgItem = namedtuple("_VarArgItem", ("vararg", "index"))
 
 
 class UntypedError(LoweringError):
-    def __init__(self, untyped, loc):
-        super(UntypedError, self).__init__(untyped, loc=loc)
+    def __init__(self, untyped):
+        super(UntypedError, self).__init__(untyped, loc=untyped.loc)
         self.untyped = untyped
 
     def get_runtime_msg(self):
@@ -237,7 +237,7 @@ class BaseLower(object):
     def typeof(self, varname):
         res = self.fndesc.typemap[varname]
         if isinstance(res, types.Untyped):
-            raise UntypedError(res, loc=self.loc)
+            raise UntypedError(res)
         return res
 
     def debug_print(self, msg):

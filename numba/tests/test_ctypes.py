@@ -190,7 +190,7 @@ class TestCTypesUseCases(MemoryLeakMixin, TestCase):
         def pyfunc(arr):
             return c_take_array_ptr(arr.ctypes.data)
 
-        cfunc = jit(nopython=True, nogil=True)(pyfunc)
+        cfunc = jit(nopython=True, nogil=True, partial_typing=True)(pyfunc)
 
         arr = np.arange(5)
 

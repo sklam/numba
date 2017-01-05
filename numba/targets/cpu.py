@@ -186,6 +186,7 @@ class CPUTargetOptions(TargetOptions):
         "_nrt": bool,
         "no_rewrites": bool,
         "no_cpython_wrapper": bool,
+        "partial_typing": bool,
     }
 
 

@@ -768,7 +768,7 @@ class TestSetItem(TestCase):
     Note fancy indexing is tested in test_fancy_indexing.
     """
 
-    def test_conversion_setitem(self, flags=enable_pyobj_flags):
+    def test_conversion_setitem(self):
         """ this used to work, and was used in one of the tutorials """
         from numba import jit
 
