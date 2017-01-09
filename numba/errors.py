@@ -165,7 +165,7 @@ class LoweringError(NumbaError):
     def __init__(self, msg, loc):
         self.msg = msg
         self.loc = loc
-        super(LoweringError, self).__init__("%s\n%s" % (msg, loc.strformat()))
+        super(LoweringError, self).__init__("%s\n%s" % (msg, str(loc)))
 
 
 class ForbiddenConstruct(LoweringError):

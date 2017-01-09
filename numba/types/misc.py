@@ -3,6 +3,7 @@ from __future__ import print_function, division, absolute_import
 from .abstract import *
 from .common import *
 from ..typeconv import Conversion
+from ..errors import TypingError
 
 
 class PyObject(Dummy):
@@ -33,7 +34,7 @@ class Undefined(Dummy):
 
 class Untyped(Dummy):
     def __init__(self, error, loc):
-        super(Untyped, self).__init__(name='Untyped')
+        super(Untyped, self).__init__(name='Untyped{{{}...}}'.format(str(error)[:30]))
         self.error = error
         self.loc = loc
 
@@ -41,8 +42,11 @@ class Untyped(Dummy):
     def key(self):
         return str(self.error)
 
-    def can_convert_to(self, typingctx, other):
-        return Conversion.safe
+    def unify(self, typingctx, other):
+        if isinstance(other, Untyped):
+            return Untyped(TypingError('unifying on untyped'), loc=self.loc)
+        else:
+            return other
 
     def get_exception(self):
         return self.error

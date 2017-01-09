@@ -626,8 +626,8 @@ class BaseContext(object):
             impl = self._casts.find((fromty, toty))
             return impl(self, builder, fromty, toty, val)
         except NotImplementedError:
-            raise NotImplementedError(
-                "Cannot cast %s to %s: %s" % (fromty, toty, val))
+            msg = "Cannot cast %s to %s: %s" % (fromty, toty, val)
+            raise UntypedError(types.Untyped(NotImplementedError(msg), loc='?'))
 
     def generic_compare(self, builder, key, argtypes, args):
         """

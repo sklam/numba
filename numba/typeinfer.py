@@ -863,11 +863,21 @@ class TypeInferer(object):
 
     def _unify_return_types(self, rettypes):
         if rettypes:
+            non_untypes = [t for t in rettypes
+                           if not isinstance(t, types.Untyped)]
+            if not non_untypes:
+                untypes = [t for t in rettypes
+                           if isinstance(t, types.Untyped)]
+                t = self.context.unify_types(*untypes)
+                raise t.get_exception()
+            else:
+                rettypes = non_untypes
             unified = self.context.unify_types(*rettypes)
             if unified is None or not unified.is_precise():
                 raise TypingError("Can't unify return type from the "
                                   "following types: %s"
                                   % ", ".join(sorted(map(str, rettypes))))
+
             return unified
         else:
             # Function without a successful return path

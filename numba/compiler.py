@@ -44,7 +44,6 @@ class Flags(utils.ConfigOptions):
 
 DEFAULT_FLAGS = Flags()
 DEFAULT_FLAGS.set('nrt')
-DEFAULT_FLAGS.set('partial_typing')
 
 
 CR_FIELDS = ["typing_context",
@@ -719,7 +718,9 @@ def legalize_interior_types(blocks, typemap):
             if isinstance(inst, ir.Assign):
                 ty = typemap[inst.target.name]
                 if isinstance(ty, types.Untyped):
-                    raise ty.get_exception()
+                    # raise ty.get_exception()
+                    raise TypeError('INTERNAL ERROR. untyped variable not'
+                                    'allowed without partial_typing')
 
 
 def legalize_return_type(return_type, interp, targetctx):
