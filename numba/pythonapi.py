@@ -1042,6 +1042,20 @@ class PythonAPI(object):
         fn = self._get_function(fnty, name="PyObject_GetAttr")
         return self.builder.call(fn, [obj, attr])
 
+    def object_getattr_inlinecached(self, obj, attr):
+        mod = self.builder.module
+        ic_entry_ty = ir.LiteralStructType([ir.IntType(64)] * 3)
+        ic_entry = mod.add_global_variable(ic_entry_ty, name='ic_entry')
+        ic_entry.linkage = 'internal'
+        ic_entry.initializer = ir.Constant(ic_entry_ty, None)
+
+        fnty = Type.function(self.pyobj, [self.pyobj, self.pyobj, ic_entry.type])
+        attr.name = 'ic_attr'
+        fn = self._get_function(fnty, name="numba_getattr_inlinecached")
+        res = self.builder.call(fn, [obj, attr, ic_entry])
+        res.name = 'ic_call'
+        return res
+
     def object_setattr_string(self, obj, attr, val):
         cstr = self.context.insert_const_string(self.module, attr)
         fnty = Type.function(Type.int(), [self.pyobj, self.cstring, self.pyobj])

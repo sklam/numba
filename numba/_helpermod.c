@@ -36,6 +36,8 @@ build_c_helpers_dict(void)
 
 #define declpointer(ptr) _declpointer(#ptr, &numba_##ptr)
 
+    declmethod(getattr_inlinecached);
+
     declmethod(fixed_fmod);
     declmethod(fixed_fmodf);
     declmethod(set_fnclex);

@@ -262,7 +262,11 @@ class PyLower(BaseLower):
             return ret
         elif expr.op == 'getattr':
             obj = self.loadvar(expr.value.name)
-            res = self.pyapi.object_getattr(obj, self._freeze_string(expr.attr))
+            # Original
+            # res = self.pyapi.object_getattr(obj, self._freeze_string(expr.attr))
+            # Optimized
+            res = self.pyapi.object_getattr_inlinecached(obj, self._freeze_string(expr.attr))
+            # END
             self.check_error(res)
             return res
         elif expr.op == 'build_tuple':

@@ -21,6 +21,55 @@
 
 #include "_arraystruct.h"
 
+
+#define BAD_IC_ENTRY (void*)(0x1)
+
+typedef struct {
+    PyObject    *attr;
+    PY_UINT64_T  tag;
+    PyObject    *res;
+
+} InlineCacheEntry;
+
+#define GetTypeDictVer(x) (((PyDictObject*)(Py_TYPE(x)->tp_dict))->ma_version_tag)
+
+#ifdef __GNUC__
+#  define unlikely(x) __builtin_expect((x), 1)
+#else
+#  define unlikely(x) x
+#  error
+#endif
+
+NUMBA_EXPORT_FUNC(PyObject*)
+numba_getattr_inlinecached(PyObject* obj , PyObject* attr, InlineCacheEntry *ic_entry){
+    PyObject *res = NULL;
+    if (ic_entry->res == BAD_IC_ENTRY) {
+        return PyObject_GetAttr(obj, attr);
+    }
+
+    if (unlikely(ic_entry->attr != attr || ic_entry->tag != GetTypeDictVer(obj))) {
+        Py_XDECREF(ic_entry->attr);
+        Py_XDECREF(ic_entry->res);
+
+        res = PyObject_GetAttr(obj, attr);
+        if (Py_TYPE(res) != &PyMethod_Type && Py_TYPE(res) != &PyFunction_Type) {
+            ic_entry->res = BAD_IC_ENTRY;
+
+        } else {
+            ic_entry->attr = attr;
+            Py_INCREF(ic_entry->attr);
+            ic_entry->tag = GetTypeDictVer(obj);
+            ic_entry->res = res;
+            Py_INCREF(res);
+        }
+    } else {
+        res = ic_entry->res;
+        Py_INCREF(res);
+    }
+    return res;
+}
+
+
 /*
  * Other helpers.
  */
