@@ -284,7 +284,7 @@ class TestParfors(TestParforsBase):
         This test is in place until issues with the 'parallel'
         target on Windows with Python 2.7 / 32 bit hardware are fixed.
         """
-        
+
         with self.assertRaises(RuntimeError) as raised:
             @njit(parallel=True)
             def ddot(a, v):
@@ -740,6 +740,26 @@ class TestPrange(TestParforsBase):
         X = np.random.ranf(n)
         self.prange_tester(test_impl, X)
 
+    @skip_unsupported
+    def test_parfor_alias1(self):
+        def test_impl(n):
+            b = np.zeros((n, n))
+            a = b[0]
+            for j in range(n):
+                a[j] = j + 1
+            return b.sum()
+        self.prange_tester(test_impl, 4)
+
+    @skip_unsupported
+    def test_parfor_alias2(self):
+        def test_impl(n):
+            b = np.zeros((n, n))
+            for i in range(n):
+              a = b[i]
+              for j in range(n):
+                a[j] = i + j
+            return b.sum()
+        self.prange_tester(test_impl, 4)
 
 if __name__ == "__main__":
     unittest.main()
