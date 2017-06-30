@@ -761,5 +761,18 @@ class TestPrange(TestParforsBase):
             return b.sum()
         self.prange_tester(test_impl, 4)
 
+    @skip_unsupported
+    def test_parfor_alias3(self):
+        def test_impl(n):
+            b = np.zeros((n, n, n))
+            for i in range(n):
+              a = b[i]
+              for j in range(n):
+                c = a[j]
+                for k in range(n):
+                  c[k] = i + j + k
+            return b.sum()
+        self.prange_tester(test_impl, 4)
+
 if __name__ == "__main__":
     unittest.main()
