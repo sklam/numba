@@ -9,6 +9,7 @@ import math
 import re
 import sys
 import types as pytypes
+import warnings
 
 import numpy as np
 
@@ -27,6 +28,8 @@ from numba import ir
 from numba.compiler import compile_isolated, Flags
 from numba.bytecode import ByteCodeIter
 from .support import tag
+from .matmul_usecase import needs_blas
+from .test_linalg import needs_lapack
 
 # for decorating tests, marking that Windows with Python 2.7 is not supported
 _windows_py27 = (sys.platform.startswith('win32') and
@@ -136,6 +139,7 @@ def countParfors(func_ir):
 
     return ret_count
 
+
 class TestPipeline(object):
     def __init__(self, typingctx, targetctx, args, test_ir):
         typingctx.refresh()
@@ -174,6 +178,7 @@ class TestParfors(TestParforsBase):
         self.check(test_impl, A, X, Y)
 
     @skip_unsupported
+    @needs_blas
     @tag('important')
     def test_mvdot(self):
         def test_impl(a, v):
@@ -240,6 +245,7 @@ class TestParfors(TestParforsBase):
             self.assertTrue(countParfors(test_ir) == 1)
 
     @skip_unsupported
+    @needs_blas
     @tag('important')
     def test_test2(self):
         typingctx = typing.Context()
@@ -279,6 +285,7 @@ class TestParfors(TestParforsBase):
 
     @unittest.skipIf(not (_windows_py27 or _32bit),
                      "Only impacts Windows with Python 2.7 / 32 bit hardware")
+    @needs_blas
     def test_unsupported_combination_raises(self):
         """
         This test is in place until issues with the 'parallel'
@@ -394,18 +401,21 @@ class TestParfors(TestParforsBase):
         self.check(test_impl, *self.simple_args)
 
     @skip_unsupported
+    @needs_lapack
     def test_simple18(self):
         def test_impl(v1, v2, m1, m2):
             return m1 + np.linalg.svd(m2)[0][:-1, :]
         self.check(test_impl, *self.simple_args)
 
     @skip_unsupported
+    @needs_blas
     def test_simple19(self):
         def test_impl(v1, v2, m1, m2):
             return np.dot(m1, v2)
         self.check(test_impl, *self.simple_args)
 
     @skip_unsupported
+    @needs_blas
     def test_simple20(self):
         def test_impl(v1, v2, m1, m2):
             return np.dot(m1, m2)
@@ -415,6 +425,7 @@ class TestParfors(TestParforsBase):
         self.assertIn("\'@do_scheduling\' not found", str(raises.exception))
 
     @skip_unsupported
+    @needs_blas
     def test_simple21(self):
         def test_impl(v1, v2, m1, m2):
             return np.dot(v1, v1)
@@ -773,6 +784,37 @@ class TestPrange(TestParforsBase):
                   c[k] = i + j + k
             return b.sum()
         self.prange_tester(test_impl, 4)
+
+class TestParforsMisc(unittest.TestCase):
+    """
+    Tests miscellaneous parts of ParallelAccelerator use.
+    """
+
+    @skip_unsupported
+    def test_warn_if_cache_set(self):
+
+        def pyfunc():
+            return
+
+        with warnings.catch_warnings(record=True) as raised_warnings:
+            warnings.simplefilter('always')
+            cfunc = njit(parallel=True, cache=True)(pyfunc)
+            cfunc()
+
+        self.assertEqual(len(raised_warnings), 1)
+
+        warning_obj = raised_warnings[0]
+
+        expected_msg = ("Caching is not available when the 'parallel' target "
+                        "is in use. Caching is now being disabled to allow "
+                        "execution to continue.")
+
+        # check warning message appeared
+        self.assertIn(expected_msg, str(warning_obj.message))
+
+        # make sure the cache is set to false, cf. NullCache
+        self.assertTrue(isinstance(cfunc._cache, numba.caching.NullCache))
+
 
 if __name__ == "__main__":
     unittest.main()

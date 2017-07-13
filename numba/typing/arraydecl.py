@@ -204,7 +204,8 @@ class SetItemBuffer(AbstractTemplate):
                 else:
                     # Incompatible scalar type
                     return
-        elif not isinstance(val, types.Array):
+        elif (not isinstance(val, types.Array) and
+              self.context.can_convert(val, res)):
             # Single item assignment
             if not self.context.can_convert(val, res):
                 # if the array dtype is not yet defined
@@ -535,9 +536,13 @@ def generic_homog(self, args, kws):
     return signature(self.this.dtype, recvr=self.this)
 
 def generic_expand(self, args, kws):
+    assert not args
+    assert not kws
     return signature(_expand_integer(self.this.dtype), recvr=self.this)
 
 def generic_expand_cumulative(self, args, kws):
+    assert not args
+    assert not kws
     assert isinstance(self.this, types.Array)
     return_type = types.Array(dtype=_expand_integer(self.this.dtype),
                               ndim=1, layout='C')
