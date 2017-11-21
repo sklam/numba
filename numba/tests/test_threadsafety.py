@@ -42,6 +42,7 @@ class TestThreadSafety(unittest.TestCase):
     def test_concurrent_jit(self):
         self.run_compile([self.run_jit(nopython=True)])
 
+    @unittest.skip("BAD")
     def test_concurrent_jit_cache(self):
         self.run_compile([self.run_jit(nopython=True, cache=True)])
 

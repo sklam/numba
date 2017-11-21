@@ -537,7 +537,7 @@ class ParallelTestRunner(runner.TextTestRunner):
 
     resultclass = ParallelTestResult
     # A test can't run longer than 2 minutes
-    timeout = 120
+    timeout = 30
 
     def __init__(self, runner_cls, **kwargs):
         runner.TextTestRunner.__init__(self, **kwargs)
