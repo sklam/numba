@@ -24,7 +24,7 @@ def main():
     for i, t in enumerate(tests[:3], start=1):
         print('{}/{}'.format(i, len(tests)))
         logbase = os.path.join(DIR, str(i))
-        lf = os.path.join(logbase, '.log')
+        lf = logbase + '.log'
 
         ts = timer()
         out = !valgrind --tool=helgrind --logfile={lf} python runtests.py -v {t}
@@ -34,7 +34,7 @@ def main():
         ct_remaining_tests = len(tests) - i
         print('time remaining:',
               datetime.timedelta(seconds=avg_time * ct_remaining_tests))
-        with open(os.path.join(logbase, '.out'), mode='w') as fout:
+        with open(logbase + '.out', mode='w') as fout:
             fprint = lambda x: print(x, file=fout)
             fprint('TEST NAME: {}'.format(t))
             fprint('\n'.join(out))
