@@ -17,8 +17,9 @@ DIR = 'helgrind_log'
 def main():
     tests = get_list_of_tests()
     for i, t in enumerate(tests[:10]):
+        print('{}/{}'.format(i, len(tests)))
         out = !valgrind --tool=helgrind python runtests.py -v {t}
-        logfn = os.path.join(DIR, i)
+        logfn = os.path.join(DIR, str(i))
         with open(logfn, mode='w') as fout:
             fprint = lambda x: print(x, file=fout)
             fprint('TEST NAME: {}'.format(t))
