@@ -27,7 +27,7 @@ def main():
         lf = logbase + '.log'
 
         ts = timer()
-        out = !valgrind --tool=helgrind --logfile={lf} python runtests.py -v {t}
+        out = !valgrind --tool=helgrind --log-file={lf} python runtests.py -v {t}
         te = timer()
         avg_time = (avg_time + (te - ts)) / 2
 
