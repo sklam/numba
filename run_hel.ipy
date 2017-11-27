@@ -11,7 +11,7 @@ import datetime
 
 def get_list_of_tests():
     tests = !python runtests.py -l 2> /dev/null
-    return tests
+    return [t for t in tests if t.startswith('numba.')]
 
 
 DIR = 'helgrind_log'
@@ -21,7 +21,7 @@ def main():
     print("PID", os.getpid())
     tests = get_list_of_tests()
     avg_time = 0.0
-    for i, t in enumerate(tests[:3], start=1):
+    for i, t in enumerate(tests, start=1):
         print('{}/{}'.format(i, len(tests)))
         logbase = os.path.join(DIR, str(i))
         lf = logbase + '.log'
@@ -32,6 +32,8 @@ def main():
         avg_time = (avg_time + (te - ts)) / 2
 
         ct_remaining_tests = len(tests) - i
+
+        print('avg time', datetime.timedelta(seconds=avg_time))
         print('time remaining:',
               datetime.timedelta(seconds=avg_time * ct_remaining_tests))
         with open(logbase + '.out', mode='w') as fout:
