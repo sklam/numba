@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import re
+import os
 import os.path
 from timeit import default_timer as timer
 
@@ -16,6 +17,7 @@ DIR = 'helgrind_log'
 
 
 def main():
+    print("PID", os.getpid())
     tests = get_list_of_tests()
     avg_time = 0.0
     for i, t in enumerate(tests[:3], start=1):
