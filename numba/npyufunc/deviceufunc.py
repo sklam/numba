@@ -430,7 +430,6 @@ class DeviceGUFuncVectorize(_BaseUFuncBuilder):
         self.identity = parse_identity(identity)
         self.signature = sig
         self.inputsig, self.outputsig = parse_signature(self.signature)
-        assert len(self.outputsig) == 1, "only support 1 output"
         # { arg_dtype: (return_dtype), cudakernel }
         self.kernelmap = OrderedDict()
 
@@ -468,7 +467,9 @@ class DeviceGUFuncVectorize(_BaseUFuncBuilder):
         kernel = self._compile_kernel(fnobj, sig=tuple(outertys))
 
         dtypes = tuple(np.dtype(str(t.dtype)) for t in outertys)
-        self.kernelmap[tuple(dtypes[:-1])] = dtypes[-1], kernel
+        input_dtypes = tuple(dtypes[:len(self.inputsig)])
+        output_dtypes = dtypes[len(self.inputsig):]
+        self.kernelmap[input_dtypes] = output_dtypes, kernel
 
     def _compile_kernel(self, fnobj, sig):
         raise NotImplementedError
@@ -625,22 +626,28 @@ class GenerializedUFunc(object):
         self.kernelmap = kernelmap
         self.engine = engine
         self.max_blocksize = 2 ** 30
-        assert self.engine.nout == 1, "only support single output"
 
     def __call__(self, *args, **kws):
         callsteps = self._call_steps(self.engine.nin, self.engine.nout,
                                      args, kws)
         callsteps.prepare_inputs()
-        indtypes, schedule, outdtype, kernel = self._schedule(
+        indtypes, schedule, outdtypes, kernel = self._schedule(
             callsteps.norm_inputs, callsteps.output)
         callsteps.adjust_input_types(indtypes)
-        callsteps.allocate_outputs(schedule, outdtype)
+        callsteps.allocate_outputs(schedule, outdtypes)
         callsteps.prepare_kernel_parameters()
-        newparams, newretval = self._broadcast(schedule,
-                                               callsteps.kernel_parameters,
-                                               callsteps.kernel_returnvalue)
-        callsteps.launch_kernel(kernel, schedule.loopn, newparams + [newretval])
-        return callsteps.post_process_result()
+        newparams, newretvals = self._broadcast(schedule,
+                                                callsteps.kernel_parameters,
+                                                callsteps.kernel_returnvalue)
+        callsteps.launch_kernel(kernel, schedule.loopn, newparams + newretvals)
+        outs = callsteps.post_process_result()
+        if self.engine.nout == 1:
+            # Expecting a single output
+            assert len(outs) == 1
+            return outs[0]
+        else:
+            # Returns a tuple of the output arrays
+            return tuple(outs)
 
     def _schedule(self, inputs, out):
         input_shapes = [a.shape for a in inputs]
@@ -649,20 +656,22 @@ class GenerializedUFunc(object):
         # find kernel
         idtypes = tuple(i.dtype for i in inputs)
         try:
-            outdtype, kernel = self.kernelmap[idtypes]
+            outdtypes, kernel = self.kernelmap[idtypes]
         except KeyError:
             # No exact match, then use the first compatbile.
             # This does not match the numpy dispatching exactly.
             # Later, we may just jit a new version for the missing signature.
             idtypes = self._search_matching_signature(idtypes)
             # Select kernel
-            outdtype, kernel = self.kernelmap[idtypes]
+            outdtypes, kernel = self.kernelmap[idtypes]
 
         # check output
-        if out is not None and schedule.output_shapes[0] != out.shape:
-            raise ValueError('output shape mismatch')
+        if out is not None:
+            if any(outshape != outary.shape
+                   for outary, outshape in zip(out, schedule.output_shapes)):
+                raise ValueError('output shape mismatch')
 
-        return idtypes, schedule, outdtype, kernel
+        return idtypes, schedule, outdtypes, kernel
 
     def _search_matching_signature(self, idtypes):
         """
@@ -678,7 +687,7 @@ class GenerializedUFunc(object):
         else:
             raise TypeError("no matching signature")
 
-    def _broadcast(self, schedule, params, retval):
+    def _broadcast(self, schedule, params, retvals):
         assert schedule.loopn > 0, "zero looping dimension"
 
         odim = 1 if not schedule.loopdims else schedule.loopn
@@ -691,8 +700,11 @@ class GenerializedUFunc(object):
             else:
                 # Broadcast vector input
                 newparams.append(self._broadcast_array(p, odim, cs))
-        newretval = retval.reshape(odim, *schedule.oshapes[0])
-        return newparams, newretval
+        # Reshape output arrays
+        newretvals = []
+        for rv, shape in zip(retvals, schedule.oshapes):
+            newretvals.append(rv.reshape(odim, *shape))
+        return newparams, newretvals
 
     def _broadcast_array(self, ary, newdim, innerdim):
         newshape = (newdim,) + innerdim
@@ -730,12 +742,13 @@ class GUFuncCallSteps(object):
     ]
 
     def __init__(self, nin, nout, args, kwargs):
-        if nout > 1:
-            raise ValueError('multiple output is not supported')
         self.args = args
         self.kwargs = kwargs
 
         self.output = self.kwargs.get('out')
+        if self.output is not None and not isinstance(self.output, (tuple, list)):
+            self.output = tuple([self.output])
+
         self._is_device_array = [self.is_device_array(a) for a in self.args]
         self._need_device_conversion = not any(self._is_device_array)
 
@@ -747,14 +760,16 @@ class GUFuncCallSteps(object):
             else:
                 inputs.append(np.asarray(a))
         self.norm_inputs = inputs[:nin]
-        # Check if there are extra arguments for outputs.
+        # Check if there are extra arguments for output.
         unused_inputs = inputs[nin:]
+
         if unused_inputs:
             if self.output is not None:
                 raise ValueError("cannot specify 'out' as both a positional "
                                  "and keyword argument")
             else:
-                [self.output] = unused_inputs
+                self.output = unused_inputs
+
 
     def adjust_input_types(self, indtypes):
         """
@@ -773,14 +788,17 @@ class GUFuncCallSteps(object):
                 # Cast types
                 self.norm_inputs[i] = val.astype(ity)
 
-    def allocate_outputs(self, schedule, outdtype):
+    def allocate_outputs(self, schedule, outdtypes):
         # allocate output
         if self._need_device_conversion or self.output is None:
-            retval = self.device_array(shape=schedule.output_shapes[0],
-                                       dtype=outdtype)
+            retvals = []
+            for shape, dt in zip(schedule.output_shapes, outdtypes):
+                ary = self.device_array(shape=schedule.output_shapes[0],
+                                        dtype=dt)
+                retvals.append(ary)
         else:
-            retval = self.output
-        self.kernel_returnvalue = retval
+            retvals = self.output
+        self.kernel_returnvalue = tuple(retvals)
 
     def prepare_kernel_parameters(self):
         params = []
@@ -794,7 +812,13 @@ class GUFuncCallSteps(object):
 
     def post_process_result(self):
         if self._need_device_conversion:
-            out = self.to_host(self.kernel_returnvalue, self.output)
+            out = []
+            # assert self.output is not None
+            norm_output = (([None] * len(self.kernel_returnvalue))
+                           if self.output is None else self.output)
+            for dary, hary in zip(self.kernel_returnvalue, norm_output):
+                outary = self.to_host(dary, hary)
+                out.append(outary)
         elif self.output is None:
             out = self.kernel_returnvalue
         else:

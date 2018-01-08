@@ -298,6 +298,37 @@ class TestCUDAGufunc(unittest.TestCase):
         self.assertEqual(str(raises.exception),
             "cannot specify 'out' as both a positional and keyword argument")
 
+    def test_multiple_output(self):
+        @guvectorize(["(float32[:], float32[:], float32[:])"],
+                     '(x)->(x),(x)', target='cuda')
+        def foo(inp, out1, out2):
+            for i in range(inp.size):
+                out1[i] = inp[i] * 2
+                out2[i] = inp[i] * 3
+
+        inp = np.arange(1, 11).astype(np.float32)
+        exp1 = inp * 2
+        exp2 = inp * 3
+
+        # Implicit outputs
+        out1, out2 = foo(inp)
+        np.testing.assert_array_equal(out1, exp1)
+        np.testing.assert_array_equal(out2, exp2)
+
+        # Positional outputs
+        out1 = np.zeros_like(inp)
+        out2 = np.zeros_like(inp)
+        foo(inp, out1, out2)
+        np.testing.assert_array_equal(out1, exp1)
+        np.testing.assert_array_equal(out2, exp2)
+
+        # Keyword outputs
+        out1 = np.zeros_like(inp)
+        out2 = np.zeros_like(inp)
+        foo(inp, out=(out1, out2))
+        np.testing.assert_array_equal(out1, exp1)
+        np.testing.assert_array_equal(out2, exp2)
+
 
 if __name__ == '__main__':
     unittest.main()
