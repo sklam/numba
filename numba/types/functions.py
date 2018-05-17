@@ -241,6 +241,7 @@ class Dispatcher(WeakType, Callable, Dummy):
     """
     Type class for @jit-compiled functions.
     """
+    _memo_deserialized = set()
 
     def __init__(self, dispatcher):
         self._store_object(dispatcher)
@@ -280,6 +281,22 @@ class Dispatcher(WeakType, Callable, Dummy):
         Get the implementation key for the given signature.
         """
         return self.get_overload(sig)
+
+    @classmethod
+    def _deserialize(cls, dispatcher):
+        """Customized instance unpickling
+
+        Also see .__reduce__()
+        """
+        # A deserailized dispatcher is made immortal, this is necessary
+        # because the type-object doesn't keep ownership of the dispatcher.
+        cls._memo_deserialized.add(dispatcher)
+        return dispatcher._numba_type_
+
+    def __reduce__(self):
+        """Customized instance pickling
+        """
+        return (type(self)._deserialize, (self.dispatcher,))
 
 
 class ExternalFunctionPointer(BaseFunction):

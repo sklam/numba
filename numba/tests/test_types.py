@@ -27,8 +27,14 @@ Point = namedtuple('Point', ('x', 'y'))
 
 Rect = namedtuple('Rect', ('width', 'height'))
 
+
 def gen(x):
     yield x + 1
+
+
+def func(x):
+    return x + 123
+
 
 class Dummy(object):
     pass
@@ -471,6 +477,11 @@ class TestPickling(TestCase):
             ty = ctypes_utils.make_function_type(fnptr)
             self.assertIsInstance(ty, types.ExternalFunctionPointer)
             self.check_pickling(ty)
+
+    def test_dispatcher(self):
+        cfunc = jit(nopython=True)(func)
+        ty = typeof(cfunc)
+        self.check_pickling(ty)
 
 
 class TestSignatures(TestCase):
