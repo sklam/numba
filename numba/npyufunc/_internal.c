@@ -150,6 +150,12 @@ dufunc_call(PyDUFuncObject *self, PyObject *args, PyObject *kws)
                 Py_DECREF(result);
                 result = PyUFunc_Type.tp_call((PyObject *)self->ufunc, args,
                                               kws);
+            } else {
+                PyErr_Clear();
+                method = PyObject_GetAttrString((PyObject*)self, "_handle_ufunc_protocol");
+                if (method) {
+                    result = PyObject_Call(method, args, kws);
+                }
             }
         }
         Py_XDECREF(method);

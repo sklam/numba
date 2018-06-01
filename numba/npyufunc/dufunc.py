@@ -285,4 +285,17 @@ class DUFunc(_internal._DUFunc):
         targetctx.insert_func_defn(
             [(self._lower_me, self, sig) for sig in (sig0, sig1)])
 
+    def _handle_ufunc_protocol(self, args, kwargs):
+        for a in args:
+            if hasattr(a, '__array_ufunc__'):
+                protocol = a.__array_ufunc__
+                break
+
+        return protocol(self, '__call__', args, kwargs)
+
+    @property
+    def signature(self):
+        return None
+
+
 array_analysis.MAP_TYPES.append(DUFunc)
