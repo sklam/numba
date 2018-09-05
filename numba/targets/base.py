@@ -671,6 +671,10 @@ class BaseContext(object):
         """
         if fromty == toty or toty == types.Any:
             return val
+        if isinstance(fromty, types.Const):
+            valtype = self.typing_context.resolve_value_type(fromty.value)
+            if toty == valtype:
+                return self.get_constant_generic(builder, toty, fromty.value)
         try:
             impl = self._casts.find((fromty, toty))
             return impl(self, builder, fromty, toty, val)
