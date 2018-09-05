@@ -59,6 +59,10 @@ class Const(Dummy):
     def key(self):
         return type(self.value), self._key
 
+    def can_convert_to(self, context, othertype):
+        valtype = context.resolve_value_type(self.value)
+        return context.can_convert(valtype, othertype)
+
 
 class Omitted(Opaque):
     """

@@ -414,7 +414,7 @@ register_number_classes(infer_global)
 # -----------------------------------------------------------------------------
 # Numpy array constructors
 
-def _parse_shape(shape):
+def _parse_shape(shape, ctx=None):
     ndim = None
     if isinstance(shape, types.Integer):
         ndim = 1
@@ -422,10 +422,14 @@ def _parse_shape(shape):
         if all(isinstance(s, types.Integer) for s in shape):
             ndim = len(shape)
     elif isinstance(shape, types.Const):
-        if isinstance(shape.value, int):
-            ndim = 1
-        elif isinstance(shape.value, tuple) and all(isinstance(s, int) for s in shape.value):
-            ndim = len(shape.value)
+        if ctx is None:
+            if isinstance(shape.value, int):
+                ndim = 1
+            elif isinstance(shape.value, tuple) and all(isinstance(s, int) for s in shape.value):
+                ndim = len(shape.value)
+        else:
+            if ctx.can_convert(shape, types.intp):
+                return 1
     return ndim
 
 def _parse_dtype(dtype):
@@ -512,9 +516,14 @@ class NdConstructor(CallableTemplate):
             else:
                 nb_dtype = _parse_dtype(dtype)
 
-            ndim = _parse_shape(shape)
+            ndim = _parse_shape(shape, ctx=self.context)
             if nb_dtype is not None and ndim is not None:
-                return types.Array(dtype=nb_dtype, ndim=ndim, layout='C')
+                restype = types.Array(dtype=nb_dtype, ndim=ndim, layout='C')
+                if dtype is None:
+                    if isinstance(shape, types.Const):
+                        shape = self.context.resolve_value_type(shape.value)
+                    return signature(restype, shape)
+                return restype
 
         return typer
 
