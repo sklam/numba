@@ -45,3 +45,13 @@ def normalize_signature(sig):
         check_type(ty)
 
     return args, return_type
+
+
+def normalize_type(typ):
+    """Normalize *typ* to be a numba type.
+    *typ* can be a numba-type or a str.
+    """
+    if isinstance(typ, types.Type):
+        return typ
+    else:
+        return _parse_signature_string(typ)
