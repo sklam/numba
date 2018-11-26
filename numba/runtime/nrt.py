@@ -105,6 +105,13 @@ class _Runtime(object):
                            mi_alloc=_nrt.memsys_get_stats_mi_alloc(),
                            mi_free=_nrt.memsys_get_stats_mi_free())
 
+    def heap_dump(self):
+        """
+        Dump diagnostic information of the heap.
+        """
+        self._init_guard()
+        _nrt.memsys_heap_dump()
+
 
 # Alias to _nrt_python._MemInfo
 MemInfo = _nrt._MemInfo

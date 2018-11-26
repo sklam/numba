@@ -75,6 +75,13 @@ VISIBILITY_HIDDEN
 void NRT_MemSys_set_atomic_cas_stub(void);
 
 /*
+ * Dump diagnostic info for the heap
+ */
+VISIBILITY_HIDDEN
+void NRT_MemSys_heap_dump(void);
+
+
+/*
  * The following functions get internal statistics of the memory subsystem.
  */
 VISIBILITY_HIDDEN

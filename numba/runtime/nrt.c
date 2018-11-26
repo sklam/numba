@@ -7,6 +7,9 @@
 #define MIN(a, b) ((a) < (b)) ? (a) : (b)
 #endif
 
+#define HEAP_IDLE ((void*)0)
+#define HEAP_BUSY ((void*)1)
+
 
 typedef int (*atomic_meminfo_cas_func)(void **ptr, void *cmp,
                                        void *repl, void **oldptr);
@@ -19,6 +22,7 @@ struct MemInfo {
     void              *dtor_info;
     void              *data;
     size_t            size;    /* only used for NRT allocated memory */
+    struct MemInfo    *next, *prev;
 };
 
 
@@ -56,6 +60,8 @@ struct MemSys {
         NRT_realloc_func realloc;
         NRT_free_func free;
     } allocator;
+    struct MemInfo heap;
+    void          *heap_lock;
 };
 
 /* The Memory System object */
@@ -68,6 +74,10 @@ void NRT_MemSys_init(void) {
     TheMSys.allocator.malloc = malloc;
     TheMSys.allocator.realloc = realloc;
     TheMSys.allocator.free = free;
+    /* Setup sentinel for the heap */
+    TheMSys.heap.next = NULL;
+    TheMSys.heap.prev = NULL;
+    TheMSys.heap_lock = HEAP_IDLE;
 }
 
 void NRT_MemSys_shutdown(void) {
@@ -164,6 +174,80 @@ void NRT_MemSys_set_atomic_cas_stub(void) {
     NRT_MemSys_set_atomic_cas(nrt_testing_atomic_cas);
 }
 
+static
+void heap_lock() {
+    void *oldval = (void*)0;
+    void **oldptr = &oldval;
+    while (!TheMSys.atomic_cas(
+        &TheMSys.heap_lock,
+        HEAP_IDLE,
+        HEAP_BUSY,
+        oldptr
+    ));
+}
+
+static
+void heap_unlock() {
+    void *oldval = (void*)0;
+    void **oldptr = &oldval;
+    while (!TheMSys.atomic_cas(
+        &TheMSys.heap_lock,
+        HEAP_BUSY,
+        HEAP_IDLE,
+        oldptr
+    ));
+}
+
+
+void NRT_MemSys_heap_dump(void) {
+    puts("BEGIN HEAP DUMP");
+    heap_lock();
+    size_t heap_count = 0;
+    NRT_MemInfo *mi = &TheMSys.heap;
+    printf("heap %p\n", mi);
+
+    while (mi->next) {
+        mi = mi->next;
+        heap_count += 1;
+        printf(
+            " object %p data=%p refct=%zu size=%zu\n",
+            mi, mi->data, mi->refct, mi->size
+        );
+    }
+    printf("Heap count = %zu\n", heap_count);
+
+    heap_unlock();
+    puts("END HEAP DUMP");
+}
+
+
+
+void heap_insert(NRT_MemInfo *mi) {
+    heap_lock();
+    mi->prev = &TheMSys.heap;
+    mi->next = TheMSys.heap.next;
+    TheMSys.heap.next = mi;
+    if (mi->next) {
+        mi->next->prev = mi;
+    }
+    heap_unlock();
+}
+
+void heap_remove(NRT_MemInfo *mi) {
+    NRT_MemInfo *nxt;
+    NRT_MemInfo *prv;
+    heap_lock();
+
+    nxt = mi->next;
+    prv = mi->prev;
+    if (nxt) {
+        nxt->prev = prv;
+    }
+    if (prv) {
+        prv->next = nxt;
+    }
+    heap_unlock();
+}
 
 /*
  * The MemInfo structure.
@@ -179,6 +263,9 @@ void NRT_MemInfo_init(NRT_MemInfo *mi,void *data, size_t size,
     mi->size = size;
     /* Update stats */
     TheMSys.atomic_inc(&TheMSys.stats_mi_alloc);
+
+    /* Update heap */
+    heap_insert(mi);
 }
 
 NRT_MemInfo *NRT_MemInfo_new(void *data, size_t size,
@@ -290,6 +377,7 @@ NRT_MemInfo *NRT_MemInfo_alloc_safe_aligned(size_t size, unsigned align) {
 }
 
 void NRT_MemInfo_destroy(NRT_MemInfo *mi) {
+    heap_remove(mi);
     NRT_Free(mi);
     TheMSys.atomic_inc(&TheMSys.stats_mi_free);
 }
