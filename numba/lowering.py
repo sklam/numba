@@ -152,35 +152,50 @@ class BaseLower(object):
         Called after all blocks are lowered
         """
         self.debuginfo.finalize()
+        self.gc_post_lowering_setup()
+
+    def gc_post_lowering_setup(self):
+        if not self.context.enable_nrt:
+            return
+        # GC'ed variables
+        gc_vars = []
+        for k in self.varmap.keys():
+            fetype = self.typeof(k)
+            data_model = self.context.data_model_manager[fetype]
+            if data_model.contains_nrt_meminfo():
+                gc_vars.append(k)
+        # Make GC frame
+        gc_header_types = [llvmir.IntType(8).as_pointer()]
+        gc_var_types = [self.varmap[k].type for k in gc_vars]
+        gc_frame_type = llvmir.LiteralStructType(
+            gc_header_types + gc_var_types,
+            )
+        builder = self.builder
+        with builder.goto_entry_block():
+            # Stack allocate the frame
+            gc_frame = builder.alloca(gc_frame_type)
+            fp = self.context.nrt.get_frame(builder)
+            cgutils.printf(builder, "fp=%p\n", fp)
+            builder.store(fp, cgutils.gep_inbounds(builder, gc_frame, 0, 0))
+            for i, k in enumerate(gc_vars, start=1):
+                ptr = self.varmap[k]
+                # Store pointers to where GC'ed variables
+                builder.store(
+                    ptr,
+                    cgutils.gep_inbounds(builder, gc_frame, 0, i),
+                    )
+            # Register frame
+            self.context.nrt.register_frame(
+                builder,
+                builder.bitcast(gc_frame, cgutils.voidptr_t),
+                )
+
 
     def pre_block(self, block):
         """
         Called before lowering a block.
         """
-        self.gc_mark_live_vars(block)
-
-    def gc_mark_live_vars(self, block):
-        if not self.context.enable_nrt:
-            return
-        # GC: Mark live variables
-        if block not in self.func_ir.block_entry_vars:
-            return
-
-        live_vars = self.func_ir.block_entry_vars[block]
-        gc_vars = []
-        # Find variables that require GC because they contain NRT meminfo
-        for v in live_vars:
-            ty = self.typeof(v)
-            data_model = self.context.data_model_manager[ty]
-            if data_model.contains_nrt_meminfo():
-                gc_vars.append(v)
-
-        if not gc_vars:
-            return
-
-        print('GC:', gc_vars)
-
-
+        pass
 
     def return_exception(self, exc_class, exc_args=None, loc=None):
         self.call_conv.return_user_exc(self.builder, exc_class, exc_args,

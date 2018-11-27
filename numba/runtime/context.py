@@ -220,3 +220,38 @@ class NRTContext(object):
         Recursively decref the given *value* and its members.
         """
         self._call_incref_decref(builder, typ, typ, value, "NRT_decref")
+
+    def register_frame(self, builder, frameptr):
+        """
+        Register call frame for the current function.
+        """
+        self._require_nrt()
+
+        assert frameptr.type == cgutils.voidptr_t
+        mod = builder.module
+        fnty = ir.FunctionType(ir.VoidType(), [cgutils.voidptr_t])
+        fn = mod.get_or_insert_function(fnty, name="NRT_RegisterFrame")
+        return builder.call(fn, [frameptr])
+
+    def unregister_frame(self, builder):
+        """
+        Unregister call frame for the current function.
+        """
+        self._require_nrt()
+
+        mod = builder.module
+        fnty = ir.FunctionType(ir.VoidType(), [])
+        fn = mod.get_or_insert_function(fnty, name="NRT_UnregisterFrame")
+        return builder.call(fn, [])
+
+    def get_frame(self, builder):
+        """
+        Get the current call frame
+        """
+        self._require_nrt()
+
+        mod = builder.module
+        fnty = ir.FunctionType(cgutils.voidptr_t, [])
+        fn = mod.get_or_insert_function(fnty, name="NRT_GetFrame")
+        fn.return_value.add_attribute("noalias")
+        return builder.call(fn, [])

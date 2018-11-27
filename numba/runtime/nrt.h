@@ -229,5 +229,10 @@ VISIBILITY_HIDDEN void *NRT_Reallocate(void *ptr, size_t size);
  */
 VISIBILITY_HIDDEN void nrt_debug_print(char *fmt, ...);
 
+VISIBILITY_HIDDEN void NRT_RegisterFrame(void *fp);
+
+VISIBILITY_HIDDEN  void* NRT_GetFrame(void);
+
+VISIBILITY_HIDDEN void NRT_UnregisterFrame(void);
 
 #endif /* NUMBA_NRT_H_ */

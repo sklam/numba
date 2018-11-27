@@ -10,6 +10,16 @@
 #define HEAP_IDLE ((void*)0)
 #define HEAP_BUSY ((void*)1)
 
+#ifdef _MSC_VER
+#define THREAD_LOCAL(ty) __declspec(thread) ty
+#else
+/* Non-standard C99 extension that's understood by gcc and clang */
+#define THREAD_LOCAL(ty) __thread ty
+#endif
+
+
+static THREAD_LOCAL(void*) TheFramePointer;
+
 
 typedef int (*atomic_meminfo_cas_func)(void **ptr, void *cmp,
                                        void *repl, void **oldptr);
@@ -530,4 +540,25 @@ void nrt_debug_print(char *fmt, ...) {
    va_start(args, fmt);
    vfprintf(stderr, fmt, args);
    va_end(args);
+}
+
+
+void NRT_RegisterFrame(void *fp){
+    printf("Register %p -> %p\n", TheFramePointer, fp);
+    TheFramePointer = fp;
+}
+
+void* NRT_GetFrame(void) {
+    printf("Current Frame %p\n", TheFramePointer);
+    return TheFramePointer;
+}
+
+void NRT_UnregisterFrame(void) {
+    typedef struct {
+        /* First void* in the frame record must be the pointer to the parent */
+        void *parent;
+    } frame_t;
+    frame_t* top = TheFramePointer;
+    printf("Unregister %p -> %p\n", TheFramePointer, top->parent);
+    TheFramePointer = top->parent;
 }

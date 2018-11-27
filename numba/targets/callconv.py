@@ -386,6 +386,8 @@ class CPUCallConv(BaseCallConv):
         self._return_errcode_raw(builder, status.code)
 
     def _return_errcode_raw(self, builder, code):
+        if self.context.enable_nrt:
+            self.context.nrt.unregister_frame(builder)
         builder.ret(code)
 
     def _get_return_status(self, builder, code, excinfoptr):
