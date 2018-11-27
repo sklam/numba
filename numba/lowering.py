@@ -157,6 +157,30 @@ class BaseLower(object):
         """
         Called before lowering a block.
         """
+        self.gc_mark_live_vars(block)
+
+    def gc_mark_live_vars(self, block):
+        if not self.context.enable_nrt:
+            return
+        # GC: Mark live variables
+        if block not in self.func_ir.block_entry_vars:
+            return
+
+        live_vars = self.func_ir.block_entry_vars[block]
+        gc_vars = []
+        # Find variables that require GC because they contain NRT meminfo
+        for v in live_vars:
+            ty = self.typeof(v)
+            data_model = self.context.data_model_manager[ty]
+            if data_model.contains_nrt_meminfo():
+                gc_vars.append(v)
+
+        if not gc_vars:
+            return
+
+        print('GC:', gc_vars)
+
+
 
     def return_exception(self, exc_class, exc_args=None, loc=None):
         self.call_conv.return_user_exc(self.builder, exc_class, exc_args,
@@ -1130,13 +1154,13 @@ class Lower(BaseLower):
         if not self.context.enable_nrt:
             return
 
-        self.context.nrt.incref(self.builder, typ, val)
+        # self.context.nrt.incref(self.builder, typ, val)
 
     def decref(self, typ, val):
         if not self.context.enable_nrt:
             return
 
-        self.context.nrt.decref(self.builder, typ, val)
+        # self.context.nrt.decref(self.builder, typ, val)
 
 
 def _lit_or_omitted(value):
