@@ -553,12 +553,37 @@ void* NRT_GetFrame(void) {
     return TheFramePointer;
 }
 
+static
+void dump_meminfo_callback(NRT_MemInfo* mi, void *data){
+    if (!mi) return;
+
+    printf(
+            "            * live %p data=%p refct=%zu size=%zu\n",
+            mi, mi->data, mi->refct, mi->size
+        );
+}
+
 void NRT_UnregisterFrame(void) {
     typedef struct {
         /* First void* in the frame record must be the pointer to the parent */
-        void *parent;
+        void   *parent;
+        /* Number of varibles */
+        size_t  num_var;
+        /* Variables */
+        struct {
+            void *base;
+            void (*callback)(void (*)(NRT_MemInfo*, void*), void*, void*);
+        } vars[0];
     } frame_t;
     frame_t* top = TheFramePointer;
     printf("Unregister %p -> %p\n", TheFramePointer, top->parent);
+    printf("           #var=%zu\n", top->num_var);
+    for (size_t i=0; i<top->num_var; ++i) {
+        printf("           [%zu] base=%p cb=%p\n",
+               i, top->vars[i].base, top->vars[i].callback);
+        top->vars[i].callback(dump_meminfo_callback, top->vars[i].base, NULL);
+    }
     TheFramePointer = top->parent;
 }
+
+

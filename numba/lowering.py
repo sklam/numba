@@ -159,31 +159,85 @@ class BaseLower(object):
             return
         # GC'ed variables
         gc_vars = []
+        gc_callbacks = []
+
+        def get_meminfo_callback(context, module, fetype):
+            pointer_type = context.get_value_type(fetype).as_pointer()
+
+            callback_fnty = llvmir.FunctionType(
+                llvmir.VoidType(),
+                [cgutils.voidptr_t, cgutils.voidptr_t],
+                )
+            fnty = llvmir.FunctionType(
+                llvmir.VoidType(),
+                [callback_fnty.as_pointer(), pointer_type, cgutils.voidptr_t],
+                )
+            fn = module.get_or_insert_function(
+                fnty,
+                name='.meminfo_cb.{}'.format(str(fetype)),
+                )
+            if not fn.is_declaration:
+                return fn
+            fn.linkage = 'linkonce_odr'
+            builder = llvmir.IRBuilder(fn.append_basic_block())
+
+            cb, ptr, data = fn.args
+            meminfos = self.context.nrt.get_meminfos(
+                builder,
+                fetype,
+                builder.load(ptr),
+                )
+            for mi in meminfos:
+                builder.call(
+                    cb,
+                    (builder.bitcast(mi, cgutils.voidptr_t), data),
+                    )
+            builder.ret_void()
+            return fn
+
         for k in self.varmap.keys():
             fetype = self.typeof(k)
             data_model = self.context.data_model_manager[fetype]
             if data_model.contains_nrt_meminfo():
                 gc_vars.append(k)
+                fn = get_meminfo_callback(self.context, self.module, fetype)
+                gc_callbacks.append(fn.bitcast(cgutils.voidptr_t))
+
         # Make GC frame
-        gc_header_types = [llvmir.IntType(8).as_pointer()]
+        gc_header_types = [
+            llvmir.IntType(8).as_pointer(),      # parent frame
+            cgutils.intp_t,                      # variable counts
+            ]
         gc_var_types = [self.varmap[k].type for k in gc_vars]
-        gc_frame_type = llvmir.LiteralStructType(
-            gc_header_types + gc_var_types,
-            )
+        var_infos = []
+        for varty, cbty in zip(gc_var_types, gc_callbacks):
+            var_infos.append(varty)
+            var_infos.append(cgutils.voidptr_t)
+        gc_frame_type = llvmir.LiteralStructType(gc_header_types + var_infos)
         builder = self.builder
         with builder.goto_entry_block():
             # Stack allocate the frame
             gc_frame = builder.alloca(gc_frame_type)
             fp = self.context.nrt.get_frame(builder)
-            cgutils.printf(builder, "fp=%p\n", fp)
+            # Store parent frame
             builder.store(fp, cgutils.gep_inbounds(builder, gc_frame, 0, 0))
-            for i, k in enumerate(gc_vars, start=1):
-                ptr = self.varmap[k]
+            # Store variable count
+            builder.store(
+                cgutils.intp_t(len(gc_var_types)),
+                cgutils.gep_inbounds(builder, gc_frame, 0, 1),
+                )
+            base_offset = len(gc_header_types)
+            for i, k in enumerate(gc_vars):
+                var_entry_pos = base_offset + i * 2
                 # Store pointers to where GC'ed variables
-                builder.store(
-                    ptr,
-                    cgutils.gep_inbounds(builder, gc_frame, 0, i),
+                var_entry_pointer = cgutils.gep_inbounds(
+                    builder, gc_frame, 0, var_entry_pos,
                     )
+                builder.store(self.varmap[k], var_entry_pointer)
+                cb_entry_pointer = cgutils.gep_inbounds(
+                    builder, gc_frame, 0, var_entry_pos + 1,
+                    )
+                builder.store(gc_callbacks[i], cb_entry_pointer)
             # Register frame
             self.context.nrt.register_frame(
                 builder,

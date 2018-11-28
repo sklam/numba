@@ -179,12 +179,33 @@ class NRTContext(object):
                                         name="NRT_MemInfo_data_fast")
         return builder.call(fn, [meminfo])
 
+
+    def get_meminfos(self, builder, typ, value, _getters=()):
+        """
+        Return a list of all meminfos for a value given its type.
+        """
+        data_model = self._context.data_model_manager[typ]
+        members = data_model.traverse(builder)
+        output = []
+        for mtyp, getter in members:
+            inners = self.get_meminfos(builder, mtyp, value,
+                                       _getters + (getter,))
+            output.extend(inners)
+        if data_model.has_nrt_meminfo():
+            # Call the chain of getters to compute the member value
+            for getter in _getters:
+                value = getter(value)
+            meminfo = data_model.get_nrt_meminfo(builder, value)
+            output.append(meminfo)
+        return output
+
     def _call_incref_decref(self, builder, root_type, typ, value,
                                 funcname, getters=()):
         self._require_nrt()
 
         from numba.runtime.nrtdynmod import incref_decref_ty
 
+        # TODO: replace the following with .get_meminfos()
         data_model = self._context.data_model_manager[typ]
 
         members = data_model.traverse(builder)
