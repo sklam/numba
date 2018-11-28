@@ -543,46 +543,65 @@ void nrt_debug_print(char *fmt, ...) {
 }
 
 
-void NRT_RegisterFrame(void *fp){
+struct Frame{
+    /* First void* in the frame record must be the pointer to the parent */
+    void   *parent;
+    /* Number of varibles */
+    size_t  num_var;
+    /* Variables */
+    struct {
+        void *base;
+        void (*callback)(void (*)(NRT_MemInfo*, void*), void*, void*);
+    } vars[0];
+};
+
+
+void NRT_Frame_register(NRT_Frame *fp){
     printf("Register %p -> %p\n", TheFramePointer, fp);
     TheFramePointer = fp;
+    NRT_Frame_dump_ex(fp);
 }
 
-void* NRT_GetFrame(void) {
+
+NRT_Frame* NRT_Frame_get(void) {
     printf("Current Frame %p\n", TheFramePointer);
     return TheFramePointer;
 }
 
+
 static
 void dump_meminfo_callback(NRT_MemInfo* mi, void *data){
-    if (!mi) return;
-
-    printf(
-            "            * live %p data=%p refct=%zu size=%zu\n",
-            mi, mi->data, mi->refct, mi->size
-        );
+    if (!mi) {
+           printf("            * dead\n", mi);
+    } else {
+        printf(
+                "            * live %p data=%p refct=%zu size=%zu\n",
+                mi, mi->data, mi->refct, mi->size
+            );
+    }
 }
 
-void NRT_UnregisterFrame(void) {
-    typedef struct {
-        /* First void* in the frame record must be the pointer to the parent */
-        void   *parent;
-        /* Number of varibles */
-        size_t  num_var;
-        /* Variables */
-        struct {
-            void *base;
-            void (*callback)(void (*)(NRT_MemInfo*, void*), void*, void*);
-        } vars[0];
-    } frame_t;
-    frame_t* top = TheFramePointer;
-    printf("Unregister %p -> %p\n", TheFramePointer, top->parent);
-    printf("           #var=%zu\n", top->num_var);
-    for (size_t i=0; i<top->num_var; ++i) {
+
+void NRT_Frame_dump_ex(NRT_Frame *frame) {
+    printf("Dump frame %p #var=%zu\n", frame, frame->num_var);
+    for (size_t i=0; i<frame->num_var; ++i) {
         printf("           [%zu] base=%p cb=%p\n",
-               i, top->vars[i].base, top->vars[i].callback);
-        top->vars[i].callback(dump_meminfo_callback, top->vars[i].base, NULL);
+               i, frame->vars[i].base, frame->vars[i].callback);
+        frame->vars[i].callback(
+            dump_meminfo_callback,
+            frame->vars[i].base,
+            NULL
+            );
     }
+}
+
+void NRT_Frame_dump(void) {
+    NRT_Frame_dump_ex(TheFramePointer);
+}
+
+void NRT_Frame_unregister(void) {
+    NRT_Frame* top = TheFramePointer;
+    printf("Unregister %p -> %p\n", TheFramePointer, top->parent);
     TheFramePointer = top->parent;
 }
 

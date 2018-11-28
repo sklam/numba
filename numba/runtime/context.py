@@ -251,7 +251,7 @@ class NRTContext(object):
         assert frameptr.type == cgutils.voidptr_t
         mod = builder.module
         fnty = ir.FunctionType(ir.VoidType(), [cgutils.voidptr_t])
-        fn = mod.get_or_insert_function(fnty, name="NRT_RegisterFrame")
+        fn = mod.get_or_insert_function(fnty, name="NRT_Frame_register")
         return builder.call(fn, [frameptr])
 
     def unregister_frame(self, builder):
@@ -262,7 +262,7 @@ class NRTContext(object):
 
         mod = builder.module
         fnty = ir.FunctionType(ir.VoidType(), [])
-        fn = mod.get_or_insert_function(fnty, name="NRT_UnregisterFrame")
+        fn = mod.get_or_insert_function(fnty, name="NRT_Frame_unregister")
         return builder.call(fn, [])
 
     def get_frame(self, builder):
@@ -273,6 +273,6 @@ class NRTContext(object):
 
         mod = builder.module
         fnty = ir.FunctionType(cgutils.voidptr_t, [])
-        fn = mod.get_or_insert_function(fnty, name="NRT_GetFrame")
+        fn = mod.get_or_insert_function(fnty, name="NRT_Frame_get")
         fn.return_value.add_attribute("noalias")
         return builder.call(fn, [])

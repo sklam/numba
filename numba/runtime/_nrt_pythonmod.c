@@ -180,9 +180,10 @@ declmethod(MemInfo_varsize_realloc);
 declmethod(MemInfo_release);
 declmethod(Allocate);
 declmethod(Free);
-declmethod(RegisterFrame);
-declmethod(UnregisterFrame);
-declmethod(GetFrame);
+declmethod(Frame_register);
+declmethod(Frame_unregister);
+declmethod(Frame_get);
+declmethod(Frame_dump);
 
 
 #undef declmethod

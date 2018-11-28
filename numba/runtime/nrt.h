@@ -27,6 +27,8 @@ typedef int (*NRT_atomic_cas_func)(void * volatile *ptr, void *cmp, void *repl,
 typedef struct MemInfo NRT_MemInfo;
 typedef struct MemSys NRT_MemSys;
 
+typedef struct Frame NRT_Frame;
+
 typedef void *(*NRT_malloc_func)(size_t size);
 typedef void *(*NRT_realloc_func)(void *ptr, size_t new_size);
 typedef void (*NRT_free_func)(void *ptr);
@@ -229,10 +231,15 @@ VISIBILITY_HIDDEN void *NRT_Reallocate(void *ptr, size_t size);
  */
 VISIBILITY_HIDDEN void nrt_debug_print(char *fmt, ...);
 
-VISIBILITY_HIDDEN void NRT_RegisterFrame(void *fp);
+VISIBILITY_HIDDEN void NRT_Frame_register(NRT_Frame *fp);
 
-VISIBILITY_HIDDEN  void* NRT_GetFrame(void);
+VISIBILITY_HIDDEN NRT_Frame* NRT_Frame_get(void);
 
-VISIBILITY_HIDDEN void NRT_UnregisterFrame(void);
+VISIBILITY_HIDDEN void NRT_Frame_unregister(void);
+
+VISIBILITY_HIDDEN void NRT_Frame_dump_ex(NRT_Frame *fp);
+
+VISIBILITY_HIDDEN void NRT_Frame_dump(void);
+
 
 #endif /* NUMBA_NRT_H_ */
