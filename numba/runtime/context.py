@@ -276,3 +276,53 @@ class NRTContext(object):
         fn = mod.get_or_insert_function(fnty, name="NRT_Frame_get")
         fn.return_value.add_attribute("noalias")
         return builder.call(fn, [])
+
+    def dump_frame(self, builder):
+        """
+        Dump the current call frame
+        """
+        self._require_nrt()
+
+        mod = builder.module
+        fnty = ir.FunctionType(cgutils.voidptr_t, [])
+        fn = mod.get_or_insert_function(fnty, name="NRT_Frame_dump")
+        return builder.call(fn, [])
+
+    def get_meminfo_callback(self, module, fetype):
+        """Get a MemInfo callback function that retrieves the MemInfo for a
+        FE type.
+
+        This will create a function into *module* if one doesn't already exist.
+        """
+        pointer_type = self._context.get_value_type(fetype).as_pointer()
+
+        callback_fnty = ir.FunctionType(
+            ir.VoidType(),
+            [cgutils.voidptr_t, cgutils.voidptr_t],
+            )
+        fnty = ir.FunctionType(
+            ir.VoidType(),
+            [callback_fnty.as_pointer(), pointer_type, cgutils.voidptr_t],
+            )
+        fn = module.get_or_insert_function(
+            fnty,
+            name='.meminfo_cb.{}'.format(str(fetype)),
+            )
+        if not fn.is_declaration:
+            return fn
+        fn.linkage = 'linkonce_odr'
+        builder = ir.IRBuilder(fn.append_basic_block())
+
+        cb, ptr, data = fn.args
+        meminfos = self.get_meminfos(
+            builder,
+            fetype,
+            builder.load(ptr),
+            )
+        for mi in meminfos:
+            builder.call(
+                cb,
+                (builder.bitcast(mi, cgutils.voidptr_t), data),
+                )
+        builder.ret_void()
+        return fn

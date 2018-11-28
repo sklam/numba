@@ -559,7 +559,6 @@ struct Frame{
 void NRT_Frame_register(NRT_Frame *fp){
     printf("Register %p -> %p\n", TheFramePointer, fp);
     TheFramePointer = fp;
-    NRT_Frame_dump_ex(fp);
 }
 
 

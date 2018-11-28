@@ -161,46 +161,12 @@ class BaseLower(object):
         gc_vars = []
         gc_callbacks = []
 
-        def get_meminfo_callback(context, module, fetype):
-            pointer_type = context.get_value_type(fetype).as_pointer()
-
-            callback_fnty = llvmir.FunctionType(
-                llvmir.VoidType(),
-                [cgutils.voidptr_t, cgutils.voidptr_t],
-                )
-            fnty = llvmir.FunctionType(
-                llvmir.VoidType(),
-                [callback_fnty.as_pointer(), pointer_type, cgutils.voidptr_t],
-                )
-            fn = module.get_or_insert_function(
-                fnty,
-                name='.meminfo_cb.{}'.format(str(fetype)),
-                )
-            if not fn.is_declaration:
-                return fn
-            fn.linkage = 'linkonce_odr'
-            builder = llvmir.IRBuilder(fn.append_basic_block())
-
-            cb, ptr, data = fn.args
-            meminfos = self.context.nrt.get_meminfos(
-                builder,
-                fetype,
-                builder.load(ptr),
-                )
-            for mi in meminfos:
-                builder.call(
-                    cb,
-                    (builder.bitcast(mi, cgutils.voidptr_t), data),
-                    )
-            builder.ret_void()
-            return fn
-
         for k in self.varmap.keys():
             fetype = self.typeof(k)
             data_model = self.context.data_model_manager[fetype]
             if data_model.contains_nrt_meminfo():
                 gc_vars.append(k)
-                fn = get_meminfo_callback(self.context, self.module, fetype)
+                fn = self.context.nrt.get_meminfo_callback(self.module, fetype)
                 gc_callbacks.append(fn.bitcast(cgutils.voidptr_t))
 
         # Make GC frame
@@ -409,6 +375,7 @@ class Lower(BaseLower):
             condty = self.typeof(inst.cond.name)
             pred = self.context.cast(self.builder, cond, condty, types.boolean)
             assert pred.type == Type.int(1), ("cond is not i1: %s" % pred.type)
+            self.context.nrt.dump_frame(self.builder)
             self.builder.cbranch(pred, tr, fl)
 
         elif isinstance(inst, ir.Jump):
@@ -430,6 +397,7 @@ class Lower(BaseLower):
             if ty != oty:
                 val = self.context.cast(self.builder, val, oty, ty)
             retval = self.context.get_return_value(self.builder, ty, val)
+            self.context.nrt.dump_frame(self.builder)
             self.call_conv.return_value(self.builder, retval)
 
         elif isinstance(inst, ir.StaticSetItem):
