@@ -60,6 +60,15 @@ class _TypeMetaclass(ABCMeta):
         inst = type.__call__(cls, *args, **kwargs)
         return cls._intern(inst)
 
+    def __instancecheck__(cls, instance):
+        if issubclass(cls, Trait):
+            if isinstance(instance, Type):
+                return instance.has_trait(cls)
+            return False
+        else:
+            return super(_TypeMetaclass, cls).__instancecheck__(instance)
+
+
 
 def _type_reconstructor(reconstructor, reconstructor_args, state):
     """
@@ -86,6 +95,10 @@ class Type(object):
 
     def __init__(self, name):
         self.name = name
+
+    @property
+    def traits(self):
+        return frozenset()
 
     @property
     def key(self):
@@ -206,6 +219,13 @@ class Type(object):
     def cast_python_value(self, args):
         raise NotImplementedError
 
+    def has_trait(self, trait):
+        return issubclass(type(self), trait) or trait in self.traits
+
+
+class Trait(Type):
+    pass
+
 
 # XXX we should distinguish between Dummy (no meaningful
 # representation, e.g. None or a builtin function) and Opaque (has a
@@ -218,7 +238,7 @@ class Dummy(Type):
     """
 
 
-class Hashable(Type):
+class Hashable(Trait):
     """
     Base class for hashable types.
     """
@@ -293,7 +313,7 @@ class IterableType(Type):
         """
 
 
-class Sized(Type):
+class Sized(Trait):
     """
     Base class for objects that support len()
     """

@@ -102,7 +102,7 @@ class MemoryView(Buffer):
     """
 
 
-class BaseTuple(ConstSized, Hashable):
+class BaseTuple(ConstSized):
     """
     The base class for all tuple types (with a known size).
     """
@@ -133,6 +133,14 @@ class BaseTuple(ConstSized, Hashable):
             return UniTuple(first, len(tys))
         else:
             return Tuple(tys)
+
+    @property
+    def traits(self):
+        is_hashable = all(isinstance(t, Hashable) for t in self)
+        if is_hashable:
+            return frozenset({Hashable})
+        else:
+            return frozenset()
 
 
 class BaseAnonymousTuple(BaseTuple):
