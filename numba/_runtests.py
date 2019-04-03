@@ -2,6 +2,8 @@ from __future__ import print_function
 
 import json
 import re
+import sys
+import trace
 
 
 def _main(argv, **kwds):
@@ -19,8 +21,37 @@ def _main(argv, **kwds):
         argv.remove('--last-failed')
         return _FailedFirstRunner(last_failed=True).main(argv, kwds)
     else:
-        return run_tests(argv, defaultTest='numba.tests',
-                         **kwds).wasSuccessful()
+        import time
+        ignoredirs = [sys.prefix]
+        tracer = trace.Trace(count=True, trace=False, ignoredirs=ignoredirs)
+        ts = time.time()
+        out = tracer.runfunc(run_tests, argv, defaultTest='numba.tests', **kwds)
+        te = time.time()
+        successful = out.wasSuccessful()
+        if successful:
+            tests = [a for a in argv[1:] if not a.startswith('-')]
+            write_traced_results(tests, tracer.results(), te - ts)
+        return successful
+        # return run_tests(argv, defaultTest='numba.tests',
+        #                  **kwds).wasSuccessful()
+
+
+def write_traced_results(tests, covresults, exectime):
+    import numba
+    import os.path
+    import time
+    import pickle
+    moddir = os.path.abspath(os.path.dirname(os.path.dirname(numba.__file__)))
+
+    buf = []
+    for (fpath, lineno), counts in covresults.counts.items():
+        if fpath.startswith(moddir):
+            fpath = os.path.relpath(fpath, start=moddir)
+            buf.append((fpath, lineno, counts))
+
+    os.makedirs('./report', exist_ok=True)
+    with open('./report/cov{}'.format(time.time()), 'wb') as fout:
+        pickle.dump({'tests': tests, 'trace': buf, 'exectime': exectime}, fout)
 
 
 def main(*argv, **kwds):
@@ -68,9 +99,7 @@ class _FailedFirstRunner(object):
         print("Running {} tests".format(len(tests)))
         print('Flags', flags)
         result = run_tests([prog] + flags + tests, **kwds)
-        # Update failed tests records only if we have run the all the tests
-        # last failed.
-        if len(tests) == result.testsRun:
+        if not self.last_failed:
             self.save_failed_tests(result, all_tests)
         return result.wasSuccessful()
 
