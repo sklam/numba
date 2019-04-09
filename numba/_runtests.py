@@ -4,6 +4,7 @@ import json
 import re
 import sys
 import trace
+import os
 
 
 def _main(argv, **kwds):
@@ -12,7 +13,6 @@ def _main(argv, **kwds):
     # is the name of the calling program.
     # The 'main' API function is invoked in-process, and thus
     # will synthesize that name.
-
     if '--failed-first' in argv:
         # Failed first
         argv.remove('--failed-first')
@@ -20,7 +20,8 @@ def _main(argv, **kwds):
     elif '--last-failed' in argv:
         argv.remove('--last-failed')
         return _FailedFirstRunner(last_failed=True).main(argv, kwds)
-    else:
+    elif '--trace' in argv:
+        argv.remove('--trace')
         import time
         ignoredirs = [sys.prefix]
         tracer = trace.Trace(count=True, trace=False, ignoredirs=ignoredirs)
@@ -32,8 +33,9 @@ def _main(argv, **kwds):
             tests = [a for a in argv[1:] if not a.startswith('-')]
             write_traced_results(tests, tracer.results(), te - ts)
         return successful
-        # return run_tests(argv, defaultTest='numba.tests',
-        #                  **kwds).wasSuccessful()
+    else:
+        return run_tests(argv, defaultTest='numba.tests',
+                         **kwds).wasSuccessful()
 
 
 def write_traced_results(tests, covresults, exectime):
