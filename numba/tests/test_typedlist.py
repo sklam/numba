@@ -97,25 +97,25 @@ class TestTypedList(MemoryLeakMixin, TestCase):
 class StuartsTests(MemoryLeakMixin, TestCase):
 
     # --------------------------------------------------------------------------
-    @unittest.skip
     def test_init_1(self):
         # whilst this is caught, it should be caught earlier and have a better
         # message raised
         # FIXME: need help from Siu
+        # NOTE: This is an type error.  types.NoneType is not instance of Type
         l = List.empty_list(types.NoneType)
 
-    @unittest.skip
     def test_init_2(self):
         # Fairly sure this shouldn't work!
         # FIXME: need help from Siu
+        # NOTE: This is an type error.  `1j` is not instance of Type
         l = List.empty_list(1j)
         print(repr(l))
 
-    @unittest.skip
     def test_init_3(self):
         # nesting seems to leak
         # FIXME: intenion unclear, I think ty1, ty2 and ty3 should be type objects
         ty1 = List.empty_list(types.int64)
+        # NOTE: This is an type error.  `ty1` is not instance of Type
         ty2 = List.empty_list(ty1)
         ty3 = List.empty_list(ty2)
         ty4 = List.empty_list(ty3)
@@ -132,11 +132,12 @@ class StuartsTests(MemoryLeakMixin, TestCase):
         List.empty_list(Dict.empty(int32, types.Array(types.float64, 4, 'C')))
 
     # --------------------------------------------------------------------------
-    @unittest.skip
+    # @unittest.skip
     def test_append_1(self):
         # self reference mutation
         # Fail: wrong answer
         # FIXME: cpython runs away with this one, unclear what Numba should do
+        # NOTE: it's okay to be restrictive and raise on mutation until someone complain
         @njit
         def impl():
             l = List.empty_list(int32)
@@ -151,7 +152,7 @@ class StuartsTests(MemoryLeakMixin, TestCase):
         got = impl()
         self.assertEqual(expected, got)
 
-    @unittest.skip
+    # @unittest.skip
     def test_append_2(self):
         # check mutation of pointer ref is transparent
         # Fail: AttributeError: 'ListType' object has no attribute 'instance_type'

@@ -456,6 +456,8 @@ class ListType(IterableType):
 
     def __init__(self, itemty):
         assert not isinstance(itemty, TypeRef)
+        if not isinstance(itemty, Type):
+            raise TypeError('*itemty* must be of a Type instance')
         itemty = unliteral(itemty)
         if isinstance(itemty, (Optional, NoneType)):
             fmt = 'List.item_type cannot be of type {}'
