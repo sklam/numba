@@ -16,6 +16,7 @@ skip_py2 = unittest.skipUnless(IS_PY3, reason='not supported in py2')
 
 
 class TestTypedList(MemoryLeakMixin, TestCase):
+
     def test_basic(self):
         l = List.empty_list(int32)
         # len
@@ -90,6 +91,325 @@ class TestTypedList(MemoryLeakMixin, TestCase):
         self.assertNotEqual(l, new)
         # index
         self.assertEqual(l.index(15), 4)
+
+
+class StuartsTests(MemoryLeakMixin, TestCase):
+
+    # --------------------------------------------------------------------------
+    def test_init_1(self):
+        # whilst this is caught, it should be caught earlier and have a better
+        # message raised
+        l = List.empty_list(types.NoneType)
+
+    def test_init_2(self):
+        # Fairly sure this shouldn't work!
+        l = List.empty_list(1j)
+        print(repr(l))
+
+    def test_init_3(self):
+        # nesting seems to leak
+        ty1 = List.empty_list(types.int64)
+        ty2 = List.empty_list(ty1)
+        ty3 = List.empty_list(ty2)
+        ty4 = List.empty_list(ty3)
+
+    def test_init_4(self):
+        # fails during lowering
+        List.empty_list(types.Array(types.float64, 4, 'C'))
+
+    def test_init_5(self):
+        # fails during lowering, expect similar issue to #4.
+        List.empty_list(Dict.empty(int32, types.Array(types.float64, 4, 'C')))
+
+    # --------------------------------------------------------------------------
+    def test_append_1(self):
+        # self reference mutation
+        # Fail: wrong answer
+        @njit
+        def impl():
+            l = List.empty_list(int32)
+            for i in range(10):
+                l.append(i)
+
+            for x in l:
+                l.append(x)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_append_2(self):
+        # check mutation of pointer ref is transparent
+        # Fail: AttributeError: 'ListType' object has no attribute 'instance_type'
+        @njit
+        def impl():
+            ty = List.empty_list(types.unicode_type)
+            l = List.empty_list(ty)
+
+            z = List.empty_list(types.unicode_type)
+            for i in range(10):
+                z.append('a' * 2)
+
+            for i in z:
+                l.append(z)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_append_3(self):
+        # self reference mutation
+        # Fail: wrong answer
+        @njit
+        def impl():
+            l = List.empty_list(int32)
+            for i in range(10):
+                l.append(i)
+
+            for x in l:
+                l.append(x)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
+
+    def test_count_1(self):
+        # weird typing failure, not sure it's the fault of list
+        @njit
+        def impl():
+            l = List.empty_list(int32)
+            for i in range(10):
+                l.append(i)
+
+            l.append(l.count(1))
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_count_2(self):
+        # this sometimes is different to cpython `['abc', 'def', 'ghi'].count('abc\0')
+        @njit
+        def impl():
+            l = List.empty_list(types.unicode_type)
+            l.append('abc')
+            l.append('def')
+            l.append('ghi')
+            return l.count('abc\0')
+
+        expected = impl.py_func()
+        got = impl()
+        print(expected, got)
+        self.assertEqual(expected, got)
+
+
+    # --------------------------------------------------------------------------
+
+    def test_extend_1(self):
+        # this is broken behaviour, expect .extend() needs to copy if self
+        # referent
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            for x in range(10):
+                l.append(x)
+            l.extend(l)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
+    def test_index_1(self):
+        # index not implemented
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            l.append(0)
+            return l.index(0)
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
+    def test_insert_1(self):
+        # should raise something about the index needing to be an int
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            l.insert('a', 0)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_insert_2(self):
+        # ok, stressing expansion on both sides and insertion in existing
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            l.append(0)
+            for i in range(1, 3):
+                for x in range(-i * 10, i * 10):
+                    l.insert(x, x * i)
+            return l
+
+        def py_impl():
+            l = []
+            l.append(0)
+            for i in range(1, 3):
+                for x in range(-i * 10, i * 10):
+                    l.insert(x, x * i)
+            return l
+
+        expected = py_impl()
+        got = impl()
+        self.assertEqual(len(expected), len(got))
+        for x, y in zip(expected, got):
+            self.assertEqual(x, y)
+
+    # --------------------------------------------------------------------------
+
+    def test_pop_1(self):
+        # should raise message "pop from empty list"
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            l.pop()
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_pop_2(self):
+        # should raise message "pop index out of range"
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            l.append(0)
+            l.pop(1)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_pop_3(self):
+        # test drain and rebuilt
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            for x in range(6):
+                l.append(x)
+            for x in range(6):
+                l.pop()
+            for x in range(12):
+                l.append(x)
+            for x in range(6):
+                l.pop(6 - x)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
+    def test_remove_1(self):
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            for x in range(6):
+                l.append(0)
+            for x in range(6):
+                l.append(1)
+            for x in range(6):
+                l.remove(1)
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    def test_remove_2(self):
+        # lowering error
+        @njit
+        def impl():
+            l = List.empty_list(types.List(types.int32))
+            inner1 = List.empty_list(types.int32)
+            inner2 = List.empty_list(types.int32)
+            rem = List.empty_list(types.int32)
+            for x in range(3):
+                inner1.append(x)
+                inner2.append(2 * x)
+                rem.append(x)
+
+            l.append(inner1)
+            l.append(inner2)
+            l.remove(rem)
+
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
+    def test_reverse_1(self):
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            for x in range(20):
+                l.append(x)
+
+            l.reverse()
+
+            for x in range(17):
+                l.append(x)
+
+            l.reverse()
+
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
+    def test_sort_1(self):
+        # sort() needs writing
+        @njit
+        def impl():
+            l = List.empty_list(types.int32)
+            for x in range(20):
+                l.append(x)
+
+            l.reverse()
+            l.sort()
+
+            return l
+
+        expected = impl.py_func()
+        got = impl()
+        self.assertEqual(expected, got)
+
+    # --------------------------------------------------------------------------
+
 
     def test_compiled(self):
         @njit
