@@ -298,6 +298,7 @@ class EnumModel(ProxyModel):
 @register_default(types.Phantom)
 @register_default(types.ContextManager)
 @register_default(types.Dispatcher)
+@register_default(types.MakeFunctionLiteral)
 @register_default(types.ObjModeDispatcher)
 @register_default(types.ExceptionClass)
 @register_default(types.Dummy)

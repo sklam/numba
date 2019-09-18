@@ -1102,6 +1102,9 @@ class Lower(BaseLower):
             self.incref(resty, castval)
             return castval
 
+        elif expr.op == 'make_function':
+            return self.context.get_dummy_value()
+
         elif expr.op in self.context.special_ops:
             res = self.context.special_ops[expr.op](self, expr)
             return res

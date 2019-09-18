@@ -350,7 +350,7 @@ class IRLegalization(FunctionPass):
         FunctionPass.__init__(self)
 
     def run_pass(self, state):
-        raise_on_unsupported_feature(state.func_ir, state.typemap)
+        # raise_on_unsupported_feature(state.func_ir, state.typemap)
         warn_deprecated(state.func_ir, state.typemap)
         # NOTE: this function call must go last, it checks and fixes invalid IR!
         check_and_legalize_ir(state.func_ir)
