@@ -617,6 +617,7 @@ class ControlFlowAnalysis(object):
         self.blockseq = []
         self.doms = None
         self.backbone = None
+        self.blockstates = {}
         # Internal temp states
         self._force_new_block = True
         self._curblock = None
@@ -675,8 +676,6 @@ class ControlFlowAnalysis(object):
         analyzer.run()
         # from pprint import pprint
         # print('---------------')
-        # pprint(self.blocks)
-        # print('---------------')
         # pprint(analyzer.blocks)
         self.blocks.clear()
         self.blocks.update(analyzer.blocks)
@@ -684,9 +683,15 @@ class ControlFlowAnalysis(object):
         self.blockseq = list(sorted(analyzer.blocks))
         self._loops.clear()
         self._loops.extend(analyzer.loops)
+        self.blockstates.clear()
+        self.blockstates.update(analyzer.blockstates)
 
     def run(self):
-        # self._run()
+        self._run()
+        # from pprint import pprint
+        # print('---------------')
+        # pprint(self.blocks)
+        # print(self.bytecode.dump())
         self._alternative_run()
 
         graph = CFGraph()
@@ -829,6 +834,7 @@ class AnalyzeBytecode(object):
     def __init__(self, bytecode):
         self.bytecode = bytecode
         self.blocks = {}
+        self.blockstates = {}
         self._pending = []
         self._seen = {}
 
@@ -840,7 +846,6 @@ class AnalyzeBytecode(object):
             state = self._pending.pop()
             self._seen[state] = state
             self.run_block(state)
-
         # Build up CFBlocks
         for s in self._seen:
             blk = CFBlock(s.initial_offset)
@@ -858,6 +863,10 @@ class AnalyzeBytecode(object):
             if blk:
                 loops.add((blk['start_offset'], blk['end_offset']))
         self.loops = tuple(loops)
+
+        # Set blockstates
+        for s in self._seen:
+            self.blockstates[s.initial_offset] = s
 
     def run_block(self, state):
         def do():
@@ -956,7 +965,10 @@ class AnalyzeBytecode(object):
 
     def op_BREAK_LOOP(self, state, inst):
         end = state.get_block(kind='loop')['end_offset']
-        state.fork(end, pop_block=True)
+        self.add_pending(state.fork(end, pop_block=True))
+
+    def op_POP_BLOCK(self, state, inst):
+        self.add_pending(state.fork(inst.next, pop_block=True))
 
 
 StateId = collections.namedtuple("StateId", "bytecode,initoffset")
@@ -1021,6 +1033,9 @@ class AnalysisState(object):
         for blk in reversed(self._blockstack):
             if blk['kind'] == kind:
                 return blk
+
+    def get_block_stack(self):
+        return tuple(self._blockstack)
 
     def terminate(self):
         self._terminated = True

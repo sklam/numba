@@ -105,7 +105,6 @@ class Interpreter(object):
         # Temp states during interpretation
         self.current_block = None
         self.current_block_offset = None
-        self.syntax_blocks = []
         self.dfainfo = None
 
         firstblk = min(self.cfa.blocks.keys())
@@ -148,12 +147,6 @@ class Interpreter(object):
         # Get DFA block info
         self.dfainfo = self.dfa.infos[self.current_block_offset]
         self.assigner = Assigner()
-        # Check out-of-scope syntactic-block
-        while self.syntax_blocks:
-            if inst.offset >= self.syntax_blocks[-1].exit:
-                self.syntax_blocks.pop()
-            else:
-                break
 
     def _end_current_block(self):
         self._remove_unused_temporaries()
@@ -620,14 +613,10 @@ class Interpreter(object):
 
     def op_SETUP_LOOP(self, inst):
         assert self.blocks[inst.offset] is self.current_block
-        loop = ir.Loop(inst.offset, exit=(inst.next + inst.arg))
-        self.syntax_blocks.append(loop)
 
     def op_SETUP_WITH(self, inst, contextmanager):
         assert self.blocks[inst.offset] is self.current_block
         exitpt = inst.next + inst.arg
-        wth = ir.With(inst.offset, exit=exitpt)
-        self.syntax_blocks.append(wth)
         self.current_block.append(ir.EnterWith(
             contextmanager=self.get(contextmanager),
             begin=inst.offset, end=exitpt, loc=self.loc,
@@ -939,7 +928,7 @@ class Interpreter(object):
         self.current_block.append(jmp)
 
     def op_POP_BLOCK(self, inst):
-        self.syntax_blocks.pop()
+        pass
 
     def op_RETURN_VALUE(self, inst, retval, castval):
         self.store(ir.Expr.cast(self.get(retval), loc=self.loc), castval)
@@ -960,9 +949,9 @@ class Interpreter(object):
             self._binop(op, lhs, rhs, res)
 
     def op_BREAK_LOOP(self, inst):
-        loop = self.syntax_blocks[-1]
-        assert isinstance(loop, ir.Loop)
-        jmp = ir.Jump(target=loop.exit, loc=self.loc)
+        blockstate = self.cfa.blockstates[self.current_block_offset]
+        end = blockstate.get_block('loop')['end_offset']
+        jmp = ir.Jump(target=end, loc=self.loc)
         self.current_block.append(jmp)
 
     def _op_JUMP_IF(self, inst, pred, iftrue):
