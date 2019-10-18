@@ -650,7 +650,7 @@ class ControlFlowAnalysis(object):
     def dump(self, file=None):
         self.graph.dump(file=None)
 
-    def run(self):
+    def _run(self):
         for inst in self._iter_inst():
             fname = "op_%s" % inst.opname
             fn = getattr(self, fname, None)
@@ -663,11 +663,31 @@ class ControlFlowAnalysis(object):
                     msg = "Use of unsupported opcode (%s) found" % inst.opname
                     raise UnsupportedError(msg, loc=l)
 
+
         # Close all blocks
         for cur, nxt in zip(self.blockseq, self.blockseq[1:]):
             blk = self.blocks[cur]
             if not blk.outgoing_jumps and not blk.terminating:
                 blk.outgoing_jumps[nxt] = 0
+
+    def _alternative_run(self):
+        analyzer = AnalyzeBytecode(self.bytecode)
+        analyzer.run()
+        # from pprint import pprint
+        # print('---------------')
+        # pprint(self.blocks)
+        # print('---------------')
+        # pprint(analyzer.blocks)
+        self.blocks.clear()
+        self.blocks.update(analyzer.blocks)
+        self.blockseq.clear()
+        self.blockseq = list(sorted(analyzer.blocks))
+        self._loops.clear()
+        self._loops.extend(analyzer.loops)
+
+    def run(self):
+        # self._run()
+        self._alternative_run()
 
         graph = CFGraph()
         for b in self.blocks:
@@ -803,3 +823,216 @@ class ControlFlowAnalysis(object):
     def op_BREAK_LOOP(self, inst):
         self.jump(self._blockstack[-1])
         self._force_new_block = True
+
+
+class AnalyzeBytecode(object):
+    def __init__(self, bytecode):
+        self.bytecode = bytecode
+        self.blocks = {}
+        self._pending = []
+        self._seen = {}
+
+    def run(self):
+        firstinst = self.bytecode[0]
+        state = AnalysisState(self.bytecode, firstinst.offset)
+        self.add_pending(state)
+        while self._pending:
+            state = self._pending.pop()
+            self._seen[state] = state
+            self.run_block(state)
+
+        # Build up CFBlocks
+        for s in self._seen:
+            blk = CFBlock(s.initial_offset)
+            for inst in s.get_instructions():
+                blk.body.append(inst.offset)
+            for edge_id, npop in s._outedges:
+                edge = self._seen[edge_id]
+                blk.outgoing_jumps[edge.initial_offset] = npop
+            self.blocks[blk.offset] = blk
+
+        # Build up loops
+        loops = set()
+        for s in self._seen:
+            blk = s.get_block(kind='loop')
+            if blk:
+                loops.add((blk['start_offset'], blk['end_offset']))
+        self.loops = tuple(loops)
+
+    def run_block(self, state):
+        def do():
+            inst = state.get_inst()
+            self.dispatch(state, inst)
+            state.next()
+
+        def check_need_new_block():
+            inst = state.get_inst()
+            cond = (
+                inst.offset in self.bytecode.labels,
+                inst.opname in NEW_BLOCKERS
+            )
+            if any(cond):
+                self.add_pending(state.fork(state.offset))
+                return True
+
+        # A do-while loop
+        do()
+        while not state.is_terminated():
+            if check_need_new_block():
+                break
+            do()
+        assert state.offset > state.initial_offset
+
+    def dispatch(self, state, inst):
+        fname = "op_%s" % inst.opname
+        fn = getattr(self, fname, None)
+        if fn is not None:
+            return fn(state, inst)
+        else:
+            # this catches e.g. try... except
+            if inst.is_jump or inst.is_terminator:
+                l = Loc(self.bytecode.func_id.filename, inst.lineno)
+                msg = "Use of unsupported opcode (%s) found" % inst.opname
+                raise UnsupportedError(msg, loc=l)
+
+    def add_pending(self, state):
+        if state not in self._seen:
+            self._pending.append(state)
+
+    def _JUMP_IF(self, state, inst):
+        self.add_pending(state.fork(inst.next))
+        self.add_pending(state.fork(inst.get_jump_target()))
+
+    op_POP_JUMP_IF_FALSE = _JUMP_IF
+    op_POP_JUMP_IF_TRUE = _JUMP_IF
+
+    def _JUMP_IF_OR_POP(self, state, inst):
+        self.add_pending(state.fork(inst.next, npop=1))
+        self.add_pending(state.fork(inst.get_jump_target()))
+
+    op_JUMP_IF_FALSE_OR_POP = _JUMP_IF_OR_POP
+    op_JUMP_IF_TRUE_OR_POP = _JUMP_IF_OR_POP
+
+    def _JUMP(self, state, inst):
+        self.add_pending(state.fork(inst.get_jump_target()))
+
+    op_JUMP_FORWARD = _JUMP
+    op_JUMP_ABSOLUTE = _JUMP
+
+
+    def _TERM(self, state, inst):
+        state.terminate()
+
+    op_RETURN_VALUE = _TERM
+    op_RAISE_VARARGS = _TERM
+
+    def op_SETUP_LOOP(self, state, inst):
+        end = inst.get_jump_target()
+        self.add_pending(
+            state.fork(
+                inst.next,
+                new_block={
+                    'kind': 'loop',
+                    'start_offset': inst.offset,
+                    'end_offset': end,
+                },
+            ),
+        )
+
+    def op_SETUP_WITH(self, state, inst):
+        end = inst.get_jump_target()
+        self.add_pending(
+            state.fork(inst.next,
+                new_block={
+                    'kind': 'with',
+                    'end_offset': end,
+                },
+            ),
+        )
+
+    def op_FOR_ITER(self, state, inst):
+        self.add_pending(state.fork(inst.next))
+        self.add_pending(state.fork(inst.get_jump_target()))
+
+    def op_BREAK_LOOP(self, state, inst):
+        end = state.get_block(kind='loop')['end_offset']
+        state.fork(end, pop_block=True)
+
+
+StateId = collections.namedtuple("StateId", "bytecode,initoffset")
+
+
+class AnalysisState(object):
+    def __init__(self, bytecode, offset, blockstack=()):
+        self._bytecode = bytecode
+        self._state_id = StateId(bytecode=bytecode,
+                                 initoffset=offset)
+        self._offset = offset
+        self._terminated = False
+        self._outedges = set()
+        self._blockstack = tuple(blockstack)
+
+    def __repr__(self):
+        return "{clsname}(start={start}, stop={stop})".format(
+            clsname=self.__class__.__name__,
+            start=self._state_id.initoffset,
+            stop=self._offset,
+        )
+
+    def __hash__(self):
+        return hash(self._state_id)
+
+    def __eq__(self, other):
+        if isinstance(other, AnalysisState):
+            return self._state_id == other._state_id
+
+    @property
+    def offset(self):
+        return self._offset
+
+    @property
+    def initial_offset(self):
+        return self._state_id.initoffset
+
+    def get_inst(self):
+        return self._bytecode[self.offset]
+
+    def next(self):
+        self._offset = self.get_inst().next
+
+    def fork(self, offset, new_block=None, pop_block=False, npop=0):
+        assert offset in self._bytecode
+        blockstack = list(self._blockstack)
+        if pop_block:
+            blockstack.pop()
+        if new_block:
+            blockstack.append(new_block)
+        s = AnalysisState(
+            bytecode=self._bytecode,
+            offset=offset,
+            blockstack=blockstack,
+        )
+        self._outedges.add((s, npop))
+        assert len(self._outedges) <= 2
+        self.terminate()
+        return s
+
+    def get_block(self, kind):
+        for blk in reversed(self._blockstack):
+            if blk['kind'] == kind:
+                return blk
+
+    def terminate(self):
+        self._terminated = True
+
+    def is_terminated(self):
+        return self._terminated
+
+    def get_instructions(self):
+        i = self.initial_offset
+        out = []
+        while i < self.offset:
+            inst = self._bytecode[i]
+            out.append(inst)
+            i = inst.next
+        return out

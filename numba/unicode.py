@@ -605,6 +605,7 @@ def unicode_endswith(a, b):
 
 @overload_method(types.UnicodeType, 'split')
 def unicode_split(a, sep=None, maxsplit=-1):
+
     if not (maxsplit == -1 or
             isinstance(maxsplit, (types.Omitted, types.Integer,
                                   types.IntegerLiteral))):
