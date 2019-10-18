@@ -687,7 +687,7 @@ class ControlFlowAnalysis(object):
         self.blockstates.update(analyzer.blockstates)
 
     def run(self):
-        self._run()
+        # self._run()
         # from pprint import pprint
         # print('---------------')
         # pprint(self.blocks)

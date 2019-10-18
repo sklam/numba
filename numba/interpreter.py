@@ -614,9 +614,11 @@ class Interpreter(object):
     def op_SETUP_LOOP(self, inst):
         assert self.blocks[inst.offset] is self.current_block
 
-    def op_SETUP_WITH(self, inst, contextmanager):
+    def op_SETUP_WITH(self, inst, contextmanager, yielded):
         assert self.blocks[inst.offset] is self.current_block
         exitpt = inst.next + inst.arg
+        const = ir.Const(None, loc=self.loc)
+        self.store(self.get(contextmanager), yielded)
         self.current_block.append(ir.EnterWith(
             contextmanager=self.get(contextmanager),
             begin=inst.offset, end=exitpt, loc=self.loc,
@@ -631,7 +633,15 @@ class Interpreter(object):
     def op_WITH_CLEANUP_FINISH(self, inst):
         "no-op"
 
+    def op_BEGIN_FINALLY(self, inst, status):
+        value = None
+        const = ir.Const(value, loc=self.loc)
+        self.store(const, status)
+
     def op_END_FINALLY(self, inst):
+        "no-op"
+
+    def op_POP_FINALLY(self, inst):
         "no-op"
 
     if PYVERSION < (3, 6):

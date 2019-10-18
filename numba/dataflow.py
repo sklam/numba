@@ -1,5 +1,6 @@
 from __future__ import print_function, division, absolute_import
 
+import logging
 import collections
 from pprint import pprint
 import sys
@@ -8,6 +9,9 @@ import warnings
 from numba import utils
 from .errors import UnsupportedError
 from .ir import Loc
+
+
+_logger = logging.getLogger(__name__)
 
 
 class DataFlowAnalysis(object):
@@ -87,6 +91,7 @@ class DataFlowAnalysis(object):
     def dispatch(self, info, inst):
         fname = "op_%s" % inst.opname.replace('+', '_')
         fn = getattr(self, fname, self.handle_unknown_opcode)
+        _logger.debug('dispatch %s', inst)
         fn(info, inst)
 
     def handle_unknown_opcode(self, info, inst):
@@ -683,8 +688,9 @@ class DataFlowAnalysis(object):
         cm = info.pop()    # the context-manager
         self.add_syntax_block(info, WithBlock())
         yielded = info.make_temp()
+        info.push(cm)
+        info.append(inst, contextmanager=cm, yielded=yielded)
         info.push(yielded)
-        info.append(inst, contextmanager=cm)
 
     def op_WITH_CLEANUP(self, info, inst):
         """
@@ -702,7 +708,17 @@ class DataFlowAnalysis(object):
     def op_WITH_CLEANUP_FINISH(self, info, inst):
         info.append(inst)
 
+    if utils.PYVERSION >= (3, 8):
+        def op_BEGIN_FINALLY(self, info, inst):
+            res = info.make_temp('const')
+            info.append(inst, status=res)
+            info.push(res)
+
     def op_END_FINALLY(self, info, inst):
+        info.append(inst)
+
+    def op_POP_FINALLY(self, info, inst):
+        info.pop()
         info.append(inst)
 
     def op_POP_BLOCK(self, info, inst):
@@ -822,7 +838,10 @@ class BlockInfo(object):
         self.syntax_blocks = None
 
     def __repr__(self):
-        return "<%s at offset %d>" % (self.__class__.__name__, self.offset)
+        return "<%s at offset %d stack_offset %d stack_effect %d stack %s>" % (
+            self.__class__.__name__, self.offset, self.stack_offset, self.stack_effect,
+            self.stack
+        )
 
     def dump(self):
         print("offset", self.offset, "{")
@@ -839,6 +858,7 @@ class BlockInfo(object):
     def push(self, val):
         self.stack_effect += 1
         self.stack.append(val)
+        _logger.debug('%s stack+1 %s', self, self.stack)
 
     def pop(self, discard=False):
         """
@@ -847,13 +867,16 @@ class BlockInfo(object):
         If *discard* is true, the variable isn't meant to be used anymore,
         which allows reducing the number of temporaries created.
         """
+        res = None
         if not self.stack:
             self.stack_offset -= 1
             if not discard:
-                return self.make_incoming()
+                res = self.make_incoming()
         else:
             self.stack_effect -= 1
-            return self.stack.pop()
+            res = self.stack.pop()
+        _logger.debug('%s stack-1 %s', self, self.stack)
+        return res
 
     def peek(self, k):
         """
@@ -889,12 +912,13 @@ class BlockInfo(object):
             # If phiname was already requested, ignore this new request
             # (can happen with a diamond-shaped block flow structure).
             return
-        if stack_index < self.stack_offset:
+        try:
+            varname = self.stack[stack_index - self.stack_offset]
+        except IndexError:
             assert self.incoming_blocks
             for ib in self.incoming_blocks:
-                ib.request_outgoing(self, phiname, stack_index)
+                ib.request_outgoing(self, phiname, stack_index + len(self.stack))
         else:
-            varname = self.stack[stack_index - self.stack_offset]
             self.outgoing_phis[phiname] = varname
 
     @property
