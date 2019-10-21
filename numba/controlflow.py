@@ -622,7 +622,6 @@ class ControlFlowAnalysis(object):
         self._force_new_block = True
         self._curblock = None
         self._blockstack = []
-        self._loops = []
         self._withs = []
 
     def iterblocks(self):
@@ -674,24 +673,14 @@ class ControlFlowAnalysis(object):
     def _alternative_run(self):
         analyzer = AnalyzeBytecode(self.bytecode)
         analyzer.run()
-        # from pprint import pprint
-        # print('---------------')
-        # pprint(analyzer.blocks)
         self.blocks.clear()
         self.blocks.update(analyzer.blocks)
         self.blockseq.clear()
         self.blockseq = list(sorted(analyzer.blocks))
-        self._loops.clear()
-        self._loops.extend(analyzer.loops)
         self.blockstates.clear()
         self.blockstates.update(analyzer.blockstates)
 
     def run(self):
-        # self._run()
-        # from pprint import pprint
-        # print('---------------')
-        # pprint(self.blocks)
-        # print(self.bytecode.dump())
         self._alternative_run()
 
         graph = CFGraph()
@@ -727,9 +716,9 @@ class ControlFlowAnalysis(object):
         inloopblocks = set()
 
         for b in self.blocks.keys():
-            for s, e in self._loops:
-                if s <= b < e:
-                    inloopblocks.add(b)
+            loops = self.graph.in_loops(b)
+            if loops:
+                inloopblocks.add(b)
 
         self.backbone = backbone - inloopblocks
 
@@ -766,7 +755,6 @@ class ControlFlowAnalysis(object):
     def op_SETUP_LOOP(self, inst):
         end = inst.get_jump_target()
         self._blockstack.append(end)
-        self._loops.append((inst.offset, end))
         # TODO: Looplifting requires the loop entry be its own block.
         #       Forcing a new block here is the simplest solution for now.
         #       But, we should consider other less ad-hoc ways.

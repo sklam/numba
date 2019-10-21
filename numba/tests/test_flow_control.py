@@ -7,7 +7,7 @@ from numba.controlflow import CFGraph, ControlFlowAnalysis
 from numba.compiler import compile_isolated, Flags
 from numba import types, errors
 from numba.bytecode import FunctionIdentity, ByteCode
-from numba.utils import IS_PY3
+from numba.utils import IS_PY3, PYVERSION
 from .support import TestCase, tag
 
 enable_pyobj_flags = Flags()
@@ -402,7 +402,10 @@ class TestFlowControl(TestCase):
         for f in [no_pyobj_flags, enable_pyobj_flags]:
             with self.assertRaises(errors.UnsupportedError) as e:
                 compile_isolated(pyfunc, (), flags=f)
-            msg = "Use of unsupported opcode (SETUP_EXCEPT) found"
+            if PYVERSION >= (3, 8):
+                msg = "Use of unsupported opcode (SETUP_FINALLY) found"
+            else:
+                msg = "Use of unsupported opcode (SETUP_EXCEPT) found"
             self.assertIn(msg, str(e.exception))
 
 
@@ -1034,7 +1037,9 @@ class TestRealCodeDomFront(TestCase):
                         if s <= inst.offset < e:
                             break
                     else:
-                        raise AssertionError('unreachable loop')
+                        # Set block number to None for missing blocks
+                        namedblocks[name] = None
+                        continue
                     blkno = s
                     namedblocks[name] = blkno
         return namedblocks
