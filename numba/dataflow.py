@@ -912,13 +912,12 @@ class BlockInfo(object):
             # If phiname was already requested, ignore this new request
             # (can happen with a diamond-shaped block flow structure).
             return
-        try:
-            varname = self.stack[stack_index - self.stack_offset]
-        except IndexError:
+        if stack_index < self.stack_offset:
             assert self.incoming_blocks
             for ib in self.incoming_blocks:
-                ib.request_outgoing(self, phiname, stack_index + len(self.stack))
+                ib.request_outgoing(self, phiname, stack_index)
         else:
+            varname = self.stack[stack_index - self.stack_offset]
             self.outgoing_phis[phiname] = varname
 
     @property
