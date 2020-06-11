@@ -1296,9 +1296,29 @@ class PythonAPI(object):
         """
         fnty = Type.function(self.pyobj, (self.voidptr, ir.IntType(32)))
         fn = self._get_function(fnty, name="numba_unpickle")
-        ptr = self.builder.extract_value(self.builder.load(structptr), 0)
-        n = self.builder.extract_value(self.builder.load(structptr), 1)
-        return self.builder.call(fn, (ptr, n))
+
+        m = self.builder.module
+
+        gv = ir.GlobalVariable(m, self.pyobj, name=m.get_unique_name("cached_unserialized_object"))
+        gv.initializer = gv.type.pointee(None)
+        gv.linkage = 'internal'
+        cached = self.builder.load(gv)
+
+        res = self.builder.alloca(self.pyobj)
+        with self.builder.if_else(cgutils.is_null(self.builder, cached)) as (br_not_cached, br_cached):
+            with br_not_cached:
+                cgutils.printf(self.builder, f"not cached {gv.name}\n")
+                ptr = self.builder.extract_value(self.builder.load(structptr), 0)
+                n = self.builder.extract_value(self.builder.load(structptr), 1)
+
+                res_not_cached = self.builder.call(fn, (ptr, n))
+                self.incref(cached)
+                self.builder.store(res_not_cached, res)
+                self.builder.store(res_not_cached, gv)
+            with br_cached:
+                self.builder.store(cached, res)
+
+        return self.builder.load(res)
 
     def serialize_uncached(self, obj):
         """
