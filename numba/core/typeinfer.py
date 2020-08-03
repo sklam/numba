@@ -292,8 +292,7 @@ class BuildListConstraint(_BuildContainerConstraint):
                         if all(islit):
                             iv = [x.literal_value for x in typs]
                         typeinfer.add_type(self.target,
-                                           types.List(unified,
-                                                      initial_value=iv),
+                                           types.List(unified),
                                            loc=self.loc)
                     else:
                         typeinfer.add_type(self.target,
@@ -363,8 +362,7 @@ class BuildMapConstraint(object):
                     key_type, value_type = tsets[0]
                     typeinfer.add_type(self.target,
                                        types.DictType(key_type,
-                                                      value_type,
-                                                      init_value),
+                                                      value_type),
                                        loc=self.loc)
 
 
@@ -591,6 +589,7 @@ class CallConstraint(object):
             requested = set()
             unsatisified = set()
             ivs = set()
+            pos_args = list(pos_args)
             for idx in e.requested_args:
                 maybe_arg = typeinfer.func_ir.get_definition(folded[idx])
                 maybe_iv = typeinfer.func_ir.get_definition(folded[idx], True)
@@ -598,17 +597,20 @@ class CallConstraint(object):
                     requested.add(maybe_arg.index)
                 elif isinstance(typevars[maybe_iv.name].getone(), types.InitialValue):
                     if typevars[maybe_iv.name].getone().initial_value is None:
+                        ty = typevars[maybe_iv.name].getone()
+                        iv_rhs = typeinfer.func_ir.get_definition(maybe_iv)
+                        if iv_rhs.op == 'build_map':
+                            tmp = ty.add_initial_value(iv_rhs.literal_value)
+                        elif iv_rhs.op == 'build_list':
+                            iv = [typevars[x.name].getone().literal_value
+                                  for x in iv_rhs.items]
+                            tmp = ty.add_initial_value(iv)
+                        else:
+                            raise Exception("unknown IR node")
+                        pos_args[idx] = tmp
                         ivs.add(maybe_iv)
                 else:
                     unsatisified.add(idx)
-
-            if ivs: # mangle types to inject the initial value into the type
-                for iv in ivs:
-                    ty = typevars[maybe_iv.name].getone()
-                    tmp = ty.copy()
-                    tmp._initial_value = ty._iv_store
-                    typeinfer.add_type(maybe_iv.name, tmp, maybe_iv.loc)
-
             if unsatisified:
                 raise TypingError("Cannot request literal type.", loc=self.loc)
             elif ivs:

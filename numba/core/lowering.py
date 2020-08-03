@@ -15,12 +15,20 @@ from numba.core.environment import Environment
 _VarArgItem = namedtuple("_VarArgItem", ("vararg", "index"))
 
 
+def _has_iv(t):
+    return getattr(t, 'initial_value', None) is not None
+
+
 class BaseLower(object):
     """
     Lower IR to LLVM
     """
 
     def __init__(self, context, library, fndesc, func_ir, metadata=None):
+        if any(map(_has_iv, fndesc.argtypes)):
+            import os
+            with open(f'iv_test_{os.getpid()}.log', 'a') as fout:
+                print(f'{fndesc.qualname} :: {fndesc.argtypes}', file=fout)
         self.library = library
         self.fndesc = fndesc
         self.blocks = utils.SortedMap(utils.iteritems(func_ir.blocks))

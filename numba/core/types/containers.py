@@ -423,7 +423,7 @@ class List(MutableSequence, InitialValue):
         cls_name = "reflected list" if reflected else "list"
         name = "%s(%s)<iv=%s>" % (cls_name, self.dtype, initial_value)
         super(List, self).__init__(name=name)
-        InitialValue.__init__(self, None)
+        InitialValue.__init__(self, initial_value)
 
     def copy(self, dtype=None, reflected=None):
         if dtype is None:
@@ -446,6 +446,10 @@ class List(MutableSequence, InitialValue):
                     return List(dtype, reflected, use.initial_value)
                 else:
                     return List(dtype, reflected)
+
+    def add_initial_value(self, initial_value):
+        return List(dtype=self.dtype, reflected=self.reflected,
+                    initial_value=initial_value)
 
     @property
     def key(self):
@@ -677,8 +681,8 @@ class DictType(IterableType, InitialValue):
         name = "{}[{},{}]<iv={}>".format(
             self.__class__.__name__, keyty, valty, initial_value
         )
-        super(DictType, self).__init__(name)
-        InitialValue.__init__(self, None)
+        super(DictType, self).__init__(name=name)
+        InitialValue.__init__(self, initial_value)
 
     def is_precise(self):
         return not any(
@@ -690,6 +694,11 @@ class DictType(IterableType, InitialValue):
 
     def copy(self):
         return DictType(self.key_type, self.value_type)
+
+    def add_initial_value(self, initial_value):
+        out = DictType(self.key_type, self.value_type,
+                       initial_value=initial_value)
+        return out
 
     @property
     def iterator_type(self):
@@ -724,8 +733,6 @@ class DictType(IterableType, InitialValue):
                     if siv_none ^ oiv_none:
                         use = siv if not siv_none else oiv
                         return DictType(self.key_type, self.value_type, use)
-
-
 
     @property
     def key(self):
