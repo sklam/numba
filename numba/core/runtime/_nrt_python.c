@@ -294,7 +294,7 @@ NRT_adapt_ndarray_to_python(arystruct_t* arystruct, int ndim,
     npy_intp *shape, *strides;
     int flags = 0;
 
-    if (!PyArray_DescrCheck(descr)) {
+    if (!PyObject_TypeCheck(descr, &PyArrayDescr_Type)) {
         PyErr_Format(PyExc_TypeError,
                      "expected dtype object, got '%.200s'",
                      Py_TYPE(descr)->tp_name);

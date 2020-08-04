@@ -372,7 +372,7 @@ compute_fingerprint(string_writer_t *w, PyObject *val)
         PyBuffer_Release(&buf);
         return 0;
     }
-    if (PyArray_DescrCheck(val)) {
+    if (PyObject_TypeCheck(val, &PyArrayDescr_Type)) {
         TRY(string_writer_put_char, w, OP_NP_DTYPE);
         return compute_dtype_fingerprint(w, (PyArray_Descr *) val);
     }
