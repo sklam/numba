@@ -15,7 +15,7 @@ import sys
 import warnings
 from threading import RLock as threadRLock
 import multiprocessing
-from ctypes import CFUNCTYPE, c_int, CDLL
+from ctypes import CFUNCTYPE, c_int, CDLL, RTLD_GLOBAL
 
 import numpy as np
 
@@ -348,7 +348,8 @@ def _check_tbb_version_compatible():
             libtbb_name = 'libtbb.so.2'
         else:
             raise ValueError("Unknown operating system")
-        libtbb = CDLL(libtbb_name)
+
+        libtbb = CDLL(libtbb_name, RTLD_GLOBAL)
         version_func = libtbb.TBB_runtime_interface_version
         version_func.argtypes = []
         version_func.restype = c_int

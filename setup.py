@@ -221,15 +221,15 @@ def get_ext_modules():
                 depends=['numba/np/ufunc/workqueue.h'],
                 include_dirs=[os.path.join(tbb_root, 'include')],
                 extra_compile_args=cpp11flags,
-                libraries=['tbb'],  # TODO: if --debug or -g, use 'tbb_debug'
-                library_dirs=[
-                    # for Linux
-                    os.path.join(tbb_root, 'lib', 'intel64', 'gcc4.4'),
-                    # for MacOS
-                    os.path.join(tbb_root, 'lib'),
-                    # for Windows
-                    os.path.join(tbb_root, 'lib', 'intel64', 'vc_mt'),
-                ],
+                # libraries=['tbb'],  # TODO: if --debug or -g, use 'tbb_debug'
+                # library_dirs=[
+                #     # for Linux
+                #     os.path.join(tbb_root, 'lib', 'intel64', 'gcc4.4'),
+                #     # for MacOS
+                #     os.path.join(tbb_root, 'lib'),
+                #     # for Windows
+                #     os.path.join(tbb_root, 'lib', 'intel64', 'vc_mt'),
+                # ],
             )
             ext_np_ufunc_backends.append(ext_np_ufunc_tbb_backend)
         else:

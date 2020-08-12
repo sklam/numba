@@ -4,7 +4,8 @@ from numba.np.ufunc.decorators import Vectorize, GUVectorize, vectorize, guvecto
 from numba.np.ufunc._internal import PyUFunc_None, PyUFunc_Zero, PyUFunc_One
 from numba.np.ufunc import _internal, array_exprs
 from numba.np.ufunc.parallel import (threading_layer, get_num_threads,
-                                     set_num_threads, _get_thread_id)
+                                     set_num_threads, _get_thread_id,
+                                     _check_tbb_version_compatible)
 
 
 if hasattr(_internal, 'PyUFunc_ReorderableNone'):
@@ -38,3 +39,5 @@ def _init():
 
 _init()
 del _init
+
+_check_tbb_version_compatible()
