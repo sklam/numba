@@ -315,7 +315,7 @@ class _FixSSAVars(_BaseHandler):
             if states['varname'] != newdef.target.name:
                 replmap = {states['varname']: newdef.target}
                 stmt = copy(stmt)
-                ir_utils.replace_vars_stmt(stmt, replmap)
+                stmt = ir_utils.replace_vars_stmt_clone(stmt, replmap)
         return stmt
 
     def _fix_var(self, states, stmt, used_vars):

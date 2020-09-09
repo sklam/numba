@@ -321,6 +321,10 @@ def replace_vars_stmt(stmt, vardict):
     visit_vars_stmt(stmt, replace_var_callback, vardict)
 
 
+def replace_vars_stmt_clone(stmt, vardict):
+    return visit_vars_stmt_clone(stmt, replace_var_callback, vardict)
+
+
 def replace_vars_inner(node, vardict):
     return visit_vars_inner(node, replace_var_callback, vardict)
 
@@ -389,6 +393,71 @@ def visit_vars_stmt(stmt, callback, cbdata):
         # TODO: raise NotImplementedError("no replacement for IR node: ", stmt)
         pass
     return
+
+
+visit_vars_clone_extensions = {}
+
+
+def visit_vars_stmt_clone(stmt, callback, cbdata):
+    """
+    Similar to visit_vars_stmt() but always return a new `Stmt` instance.
+    """
+    # let external calls handle stmt if type matches
+    for t, f in visit_vars_clone_extensions.items():
+        if isinstance(stmt, t):
+            return f(stmt, callback, cbdata)
+    if isinstance(stmt, ir.Assign):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        value = visit_vars_inner(stmt.value, callback, cbdata)
+        return stmt.replace(target=target, value=value)
+    elif isinstance(stmt, ir.Arg):
+        name = visit_vars_inner(stmt.name, callback, cbdata)
+        return stmt.replace(name)
+    elif isinstance(stmt, ir.Return):
+        value = visit_vars_inner(stmt.value, callback, cbdata)
+        return stmt.replace(value=value)
+    elif isinstance(stmt, ir.Raise):
+        exception = visit_vars_inner(stmt.exception, callback, cbdata)
+        return stmt.replace(exception=exception)
+    elif isinstance(stmt, ir.Branch):
+        cond = visit_vars_inner(stmt.cond, callback, cbdata)
+        return stmt.replace(cond=cond)
+    elif isinstance(stmt, ir.Jump):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        return stmt.replace(target=target)
+    elif isinstance(stmt, ir.Del):
+        # Because Del takes only a var name, we make up by
+        # constructing a temporary variable.
+        var = ir.Var(None, stmt.value, stmt.loc)
+        var = visit_vars_inner(var, callback, cbdata)
+        return stmt.replace(value=var.name)
+    elif isinstance(stmt, ir.DelAttr):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        attr = visit_vars_inner(stmt.attr, callback, cbdata)
+        return stmt.replace(target=target, attr=attr)
+    elif isinstance(stmt, ir.SetAttr):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        attr = visit_vars_inner(stmt.attr, callback, cbdata)
+        value = visit_vars_inner(stmt.value, callback, cbdata)
+        return stmt.replace(target=target, attr=attr, value=value)
+    elif isinstance(stmt, ir.DelItem):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        index = visit_vars_inner(stmt.index, callback, cbdata)
+        return stmt.replace(target=target, index=index)
+    elif isinstance(stmt, ir.StaticSetItem):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        index_var = visit_vars_inner(stmt.index_var, callback, cbdata)
+        value = visit_vars_inner(stmt.value, callback, cbdata)
+        return stmt.replace(target=target, index_var=index_var, value=value)
+    elif isinstance(stmt, ir.SetItem):
+        target = visit_vars_inner(stmt.target, callback, cbdata)
+        index = visit_vars_inner(stmt.index, callback, cbdata)
+        value = visit_vars_inner(stmt.value, callback, cbdata)
+        return stmt.replace(target=target, index=index, value=value)
+    elif isinstance(stmt, ir.Print):
+        args = [visit_vars_inner(x, callback, cbdata) for x in stmt.args]
+        return stmt.replace(args=args)
+    raise NotImplementedError(type(stmt))
 
 
 def visit_vars_inner(node, callback, cbdata):

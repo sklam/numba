@@ -411,6 +411,12 @@ class Expr(Inst):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(op=self._op, loc=self._loc)
+        d.update(self._kws)
+        d.update(*kwargs)
+        return type(self)(**d)
+
     def __getattr__(self, name):
         if name not in self.__slots__:
             try:
@@ -644,6 +650,12 @@ class SetItem(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(target=self.target, index=self.index, value=self.value,
+                 loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __repr__(self):
         return '%s[%s] = %s' % (self.target, self.index, self.value)
 
@@ -670,6 +682,12 @@ class StaticSetItem(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(target=self.target, index=self.index,
+                 index_var=self.index_var, value=self.value, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __repr__(self):
         return '%s[%r] = %s' % (self.target, self.index, self.value)
 
@@ -692,6 +710,11 @@ class DelItem(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(target=self.target, index=self.index, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __repr__(self):
         return 'del %s[%s]' % (self.target, self.index)
 
@@ -713,6 +736,12 @@ class SetAttr(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(target=self.target, attr=self.attr, value=self.value,
+                 loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __repr__(self):
         return '(%s).%s = %s' % (self.target, self.attr, self.value)
 
@@ -731,6 +760,11 @@ class DelAttr(Stmt):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(target=self.target, attr=self.attr, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __repr__(self):
         return 'del (%s).%s' % (self.target, self.attr)
@@ -753,6 +787,11 @@ class StoreMap(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(dct=self.dct, key=self.key, value=self.value, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __repr__(self):
         return '%s[%s] = %s' % (self.dct, self.key, self.value)
 
@@ -769,6 +808,11 @@ class Del(Stmt):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(value=self.value, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return "del %s" % self.value
@@ -787,6 +831,11 @@ class Raise(Terminator):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(exception=self.exception, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return "raise %s" % self.exception
@@ -815,6 +864,12 @@ class StaticRaise(Terminator):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(exc_class=self.exc_class, exc_args=self.exc_args,
+                 loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         if self.exc_class is None:
@@ -847,6 +902,11 @@ class TryRaise(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(exception=self.exception, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __str__(self):
         return "try_raise %s" % self.exception
 
@@ -868,6 +928,12 @@ class StaticTryRaise(Stmt):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(exc_class=self.exc_class, exc_args=self.exc_args,
+                 loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         if self.exc_class is None:
@@ -899,6 +965,11 @@ class Return(Terminator):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(value=self.value, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __str__(self):
         return 'return %s' % self.value
 
@@ -920,6 +991,11 @@ class Jump(Terminator):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(target=self.target, loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return 'jump %s' % self.target
@@ -945,6 +1021,12 @@ class Branch(Terminator):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(cond=self.cond, truebr=self.truebr, falsebr=self.falsebr,
+                 loc=self._loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return 'branch %s, %s, %s' % (self.cond, self.truebr, self.falsebr)
@@ -1000,6 +1082,12 @@ class Print(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(args=self.args, vararg=self.vararg, consts=self.consts,
+                 loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __str__(self):
         return 'print(%s)' % ', '.join(str(v) for v in self.args)
 
@@ -1017,6 +1105,11 @@ class Yield(Inst):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(value=self.value, index=self.index, loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return 'yield %s' % (self.value,)
@@ -1051,6 +1144,12 @@ class EnterWith(Stmt):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(contextmanager=self.contextmanager, begin=self.begin,
+                 end=self.end, loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __str__(self):
         return 'enter_with {}'.format(self.contextmanager)
 
@@ -1073,6 +1172,11 @@ class Arg(SlotEqualityCheckMixin, AbstractRHS):
     def loc(self):
         return self._loc
 
+    def replace(self, **kwargs):
+        d = dict(name=self.name, index=self.index, loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
+
     def __repr__(self):
         return 'arg(%d, name=%s)' % (self.index, self.name)
 
@@ -1093,6 +1197,12 @@ class Const(SlotEqualityCheckMixin, AbstractRHS):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(value=self.value, use_literal_type=self.use_literal_type,
+                 loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __repr__(self):
         return 'const(%s, %s)' % (type(self.value).__name__, self.value)
@@ -1120,6 +1230,11 @@ class Global(SlotEqualityCheckMixin, AbstractRHS):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(name=self.name, value=self.value, loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return 'global(%s: %s)' % (self.name, self.value)
@@ -1155,6 +1270,12 @@ class FreeVar(SlotEqualityCheckMixin, AbstractRHS):
     @property
     def loc(self):
         return self._loc
+
+    def replace(self, **kwargs):
+        d = dict(index=self.index, name=self.name, value=self.value,
+                 loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     def __str__(self):
         return 'freevar(%s: %s)' % (self.name, self.value)
@@ -1208,6 +1329,12 @@ class Var(SlotEqualityCheckMixin, AbstractRHS):
 
     def __str__(self):
         return self.name
+
+    def replace(self, **kwargs):
+        d = dict(index=self.index, name=self.name, value=self.value,
+                 loc=self.loc)
+        d.update(kwargs)
+        return type(self)(**d)
 
     @property
     def is_temp(self):
