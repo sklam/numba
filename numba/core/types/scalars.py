@@ -55,7 +55,7 @@ class Integer(Number):
         name = ('int%d' if signed else 'uint%d') % bitwidth
         return cls(name)
 
-    def cast_python_value(self, value: pt.Any) -> int:
+    def cast_python_value(self, value: pt.Any) -> np.integer:
         return getattr(np, self.name)(value)  # type: ignore[no-any-return]
 
     def __lt__(self, other: pt.Any) -> bool:

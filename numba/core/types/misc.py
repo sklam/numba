@@ -48,7 +48,7 @@ class StringLiteral(Literal, Dummy):
 Literal.ctor_map[str] = StringLiteral
 
 
-def unliteral(lit_type: NumbaTypeInst) -> NumbaTypeInst:
+def unliteral(lit_type: pt.Any) -> pt.Any:
     """
     Get base type from Literal type.
     """
@@ -107,7 +107,7 @@ class VarArg(Type):
     not for actual values.
     """
 
-    def __init__(self, dtype: NumbaTypeInst):
+    def __init__(self, dtype: pt.Union[pt.Type[NumbaTypeInst], NumbaTypeInst]):
         self.dtype = dtype
         super(VarArg, self).__init__("*%s" % dtype)
 

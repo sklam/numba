@@ -282,7 +282,7 @@ class _HeterogeneousTuple(BaseTuple):
 
     types: pt.Tuple[NumbaTypeInst, ...]
 
-    def __getitem__(self, i: int) -> NumbaTypeInst:
+    def __getitem__(self, i: pt.Union[int, slice]) -> pt.Union[pt.Tuple[NumbaTypeInst, ...], NumbaTypeInst]:
         """
         Return element at position i
         """
@@ -392,7 +392,7 @@ class BaseNamedTuple(BaseTuple):
 
 class NamedUniTuple(_HomogeneousTuple, BaseNamedTuple):
     def __init__(
-        self, dtype: NumbaTypeInst, count: int, cls: pt.Type[pt.NamedTuple],
+        self, dtype: NumbaTypeInst, count: int, cls: pt.Type,
     ):
         self.dtype = dtype
         self.count = count
