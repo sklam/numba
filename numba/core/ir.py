@@ -1,4 +1,5 @@
 from collections import defaultdict
+import typing as tp
 import copy
 import itertools
 import os
@@ -7,7 +8,7 @@ import pprint
 import re
 import sys
 import operator
-from types import FunctionType, BuiltinFunctionType
+from types import FunctionType, BuiltinFunctionType, CodeType
 from functools import total_ordering
 from io import StringIO
 
@@ -17,10 +18,15 @@ from numba.core.utils import (BINOPS_TO_OPERATORS, INPLACE_BINOPS_TO_OPERATORS,
 from numba.core.errors import (NotDefinedError, RedefinedError,
                                VerificationError, ConstantInferenceError)
 from numba.core import consts
+from numba.core.bytecode import FunctionIdentity
+from numba.core.types import Type
 
 # terminal color markup
 _termcolor = errors.termcolor()
 
+_arg_type = tp.Sequence["Var"]
+_kws_type = tp.Union[tp.Sequence[tp.Tuple[str, "Var"]], tp.Dict[str, "Var"]]
+_index_type = tp.Union[str, int, slice, tp.Tuple]
 
 class Loc(object):
     """Source location
@@ -28,7 +34,8 @@ class Loc(object):
     """
     _defmatcher = re.compile('def\s+(\w+)\(.*')
 
-    def __init__(self, filename, line, col=None, maybe_decorator=False):
+    def __init__(self, filename: str, line: int, col: int=None,
+                 maybe_decorator: bool=False):
         """ Arguments:
         filename - name of the file
         line - line in file
@@ -41,7 +48,7 @@ class Loc(object):
         self.lines = None # the source lines from the linecache
         self.maybe_decorator = maybe_decorator
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Loc") -> bool:
         # equivalence is solely based on filename, line and col
         if type(self) is not type(other): return False
         if self.filename != other.filename: return False
@@ -49,24 +56,24 @@ class Loc(object):
         if self.col != other.col: return False
         return True
 
-    def __ne__(self, other):
+    def __ne__(self, other: "Loc") -> bool:
         return not self.__eq__(other)
 
     @classmethod
-    def from_function_id(cls, func_id):
+    def from_function_id(cls, func_id: FunctionIdentity):
         return cls(func_id.filename, func_id.firstlineno, maybe_decorator=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Loc(filename=%s, line=%s, col=%s)" % (self.filename,
                                                       self.line, self.col)
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.col is not None:
             return "%s (%s:%s)" % (self.filename, self.line, self.col)
         else:
             return "%s (%s)" % (self.filename, self.line)
 
-    def _find_definition(self):
+    def _find_definition(self) -> tp.Optional[str]:
         # try and find a def, go backwards from error line
         fn_name = None
         lines = self.get_lines()
@@ -79,7 +86,7 @@ class Loc(object):
 
         return fn_name
 
-    def _raw_function_name(self):
+    def _raw_function_name(self) -> tp.Optional[str]:
         defn = self._find_definition()
         if defn:
             return self._defmatcher.match(defn.strip()).groups()[0]
@@ -87,14 +94,12 @@ class Loc(object):
             # Probably exec(<string>) or REPL.
             return None
 
-    def get_lines(self):
+    def get_lines(self) -> tp.List[str]:
         if self.lines is None:
-
             self.lines = linecache.getlines(self._get_path())
-
         return self.lines
 
-    def _get_path(self):
+    def _get_path(self) -> str:
         path = None
         try:
             # Try to get a relative path
@@ -108,10 +113,8 @@ class Loc(object):
         return path
 
 
-    def strformat(self, nlines_up=2):
-
+    def strformat(self, nlines_up: int=2) -> str:
         lines = self.get_lines()
-
         use_line = self.line
 
         if self.maybe_decorator:
@@ -135,7 +138,6 @@ class Loc(object):
                         index = idx
                         break
                 use_line = use_line + index
-
 
         ret = [] # accumulates output
         if lines and use_line:
@@ -256,40 +258,40 @@ class VarMap(object):
     def __init__(self):
         self._con = {}
 
-    def define(self, name, var):
+    def define(self, name: str, var: "Var"):
         if name in self._con:
             raise RedefinedError(name)
         else:
             self._con[name] = var
 
-    def get(self, name):
+    def get(self, name: str) -> "Var":
         try:
             return self._con[name]
         except KeyError:
             raise NotDefinedError(name)
 
-    def __contains__(self, name):
+    def __contains__(self, name: str) -> bool:
         return name in self._con
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._con)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return pprint.pformat(self._con)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.name)
 
     def __iter__(self):
         return self._con.iterkeys()
 
-    def __eq__(self, other):
+    def __eq__(self, other: "VarMap") -> bool:
         if type(self) is type(other):
             # check keys only, else __eq__ ref cycles, scope -> varmap -> var
             return self._con.keys() == other._con.keys()
         return False
 
-    def __ne__(self, other):
+    def __ne__(self, other: "VarMap") -> bool:
         return not self.__eq__(other)
 
 
@@ -369,9 +371,7 @@ class Expr(Inst):
     statement).
     """
 
-    def __init__(self, op, loc, **kws):
-        assert isinstance(op, str)
-        assert isinstance(loc, Loc)
+    def __init__(self, op: str, loc: Loc, **kws):
         self.op = op
         self.loc = loc
         self._kws = kws
@@ -388,166 +388,144 @@ class Expr(Inst):
             self._kws[name] = value
 
     @classmethod
-    def binop(cls, fn, lhs, rhs, loc):
-        assert isinstance(fn, BuiltinFunctionType)
-        assert isinstance(lhs, Var)
-        assert isinstance(rhs, Var)
-        assert isinstance(loc, Loc)
+    def binop(cls, fn: BuiltinFunctionType, lhs: "Var", rhs: "Var", loc: Loc):
         op = 'binop'
         return cls(op=op, loc=loc, fn=fn, lhs=lhs, rhs=rhs,
                    static_lhs=UNDEFINED, static_rhs=UNDEFINED)
 
     @classmethod
-    def inplace_binop(cls, fn, immutable_fn, lhs, rhs, loc):
-        assert isinstance(fn, BuiltinFunctionType)
-        assert isinstance(immutable_fn, BuiltinFunctionType)
-        assert isinstance(lhs, Var)
-        assert isinstance(rhs, Var)
-        assert isinstance(loc, Loc)
+    def inplace_binop(cls,
+                     fn: BuiltinFunctionType,
+                     immutable_fn: BuiltinFunctionType,
+                     lhs: "Var",
+                     rhs: "Var",
+                     loc: Loc):
         op = 'inplace_binop'
         return cls(op=op, loc=loc, fn=fn, immutable_fn=immutable_fn,
                    lhs=lhs, rhs=rhs,
                    static_lhs=UNDEFINED, static_rhs=UNDEFINED)
 
     @classmethod
-    def unary(cls, fn, value, loc):
-        assert isinstance(value, (str, Var, FunctionType))
-        assert isinstance(loc, Loc)
+    def unary(cls,
+              fn: str,
+              value: tp.Union[str, "Var", FunctionType],
+              loc: Loc):
         op = 'unary'
         fn = UNARY_BUITINS_TO_OPERATORS.get(fn, fn)
         return cls(op=op, loc=loc, fn=fn, value=value)
 
     @classmethod
-    def call(cls, func, args, kws, loc, vararg=None):
-        assert isinstance(func, Var)
-        assert isinstance(loc, Loc)
+    def call(cls,
+             func: "Var",
+             args: _arg_type,
+             kws: _kws_type,
+             loc: Loc,
+             vararg: "Var"=None):
         op = 'call'
         return cls(op=op, loc=loc, func=func, args=args, kws=kws,
                    vararg=vararg)
 
     @classmethod
-    def build_tuple(cls, items, loc):
-        assert isinstance(loc, Loc)
+    def build_tuple(cls, items: _arg_type, loc: Loc):
         op = 'build_tuple'
         return cls(op=op, loc=loc, items=items)
 
     @classmethod
-    def build_list(cls, items, loc):
-        assert isinstance(loc, Loc)
+    def build_list(cls, items: _arg_type, loc: Loc):
         op = 'build_list'
         return cls(op=op, loc=loc, items=items)
 
     @classmethod
-    def build_set(cls, items, loc):
-        assert isinstance(loc, Loc)
+    def build_set(cls, items: _arg_type, loc: Loc):
         op = 'build_set'
         return cls(op=op, loc=loc, items=items)
 
     @classmethod
-    def build_map(cls, items, size, literal_value, value_indexes, loc):
-        assert isinstance(loc, Loc)
+    def build_map(cls, items: tp.Sequence, size: int, literal_value: tp.Dict,
+                 value_indexes: tp.Dict[tp.Union[int, str], int], loc: Loc):
         op = 'build_map'
         return cls(op=op, loc=loc, items=items, size=size,
                    literal_value=literal_value, value_indexes=value_indexes)
 
     @classmethod
-    def pair_first(cls, value, loc):
-        assert isinstance(value, Var)
+    def pair_first(cls, value: "Var", loc: Loc):
         op = 'pair_first'
         return cls(op=op, loc=loc, value=value)
 
     @classmethod
-    def pair_second(cls, value, loc):
-        assert isinstance(value, Var)
-        assert isinstance(loc, Loc)
+    def pair_second(cls, value: "Var", loc: Loc):
         op = 'pair_second'
         return cls(op=op, loc=loc, value=value)
 
     @classmethod
-    def getiter(cls, value, loc):
-        assert isinstance(value, Var)
-        assert isinstance(loc, Loc)
+    def getiter(cls, value: "Var", loc: Loc):
         op = 'getiter'
         return cls(op=op, loc=loc, value=value)
 
     @classmethod
-    def iternext(cls, value, loc):
-        assert isinstance(value, Var)
-        assert isinstance(loc, Loc)
+    def iternext(cls, value: "Var", loc: Loc):
         op = 'iternext'
         return cls(op=op, loc=loc, value=value)
 
     @classmethod
-    def exhaust_iter(cls, value, count, loc):
-        assert isinstance(value, Var)
-        assert isinstance(count, int)
-        assert isinstance(loc, Loc)
+    def exhaust_iter(cls, value: "Var", count: int, loc: Loc):
         op = 'exhaust_iter'
         return cls(op=op, loc=loc, value=value, count=count)
 
     @classmethod
-    def getattr(cls, value, attr, loc):
-        assert isinstance(value, Var)
-        assert isinstance(attr, str)
-        assert isinstance(loc, Loc)
+    def getattr(cls, value: "Var", attr: str, loc: Loc):
         op = 'getattr'
         return cls(op=op, loc=loc, value=value, attr=attr)
 
     @classmethod
-    def getitem(cls, value, index, loc):
-        assert isinstance(value, Var)
-        assert isinstance(index, Var)
-        assert isinstance(loc, Loc)
+    def getitem(cls, value: "Var", index: "Var", loc: Loc):
         op = 'getitem'
         fn = operator.getitem
         return cls(op=op, loc=loc, value=value, index=index, fn=fn)
 
     @classmethod
-    def typed_getitem(cls, value, dtype, index, loc):
-        assert isinstance(value, Var)
-        assert isinstance(loc, Loc)
+    def typed_getitem(cls, value: "Var", dtype: Type, index: "Var", loc: Loc):
         op = 'typed_getitem'
         return cls(op=op, loc=loc, value=value, dtype=dtype,
                    index=index)
 
     @classmethod
-    def static_getitem(cls, value, index, index_var, loc):
-        assert isinstance(value, Var)
-        assert index_var is None or isinstance(index_var, Var)
-        assert isinstance(loc, Loc)
+    def static_getitem(cls, value: "Var", index: _index_type,
+                       index_var: tp.Optional["Var"], loc: Loc):
         op = 'static_getitem'
         fn = operator.getitem
         return cls(op=op, loc=loc, value=value, index=index,
                    index_var=index_var, fn=fn)
 
     @classmethod
-    def cast(cls, value, loc):
+    def cast(cls, value: "Var", loc: Loc):
         """
         A node for implicit casting at the return statement
         """
-        assert isinstance(value, Var)
-        assert isinstance(loc, Loc)
         op = 'cast'
         return cls(op=op, value=value, loc=loc)
 
     @classmethod
-    def phi(cls, loc):
+    def phi(cls, loc: Loc):
         """Phi node
         """
-        assert isinstance(loc, Loc)
         return cls(op='phi', incoming_values=[], incoming_blocks=[], loc=loc)
 
     @classmethod
-    def make_function(cls, name, code, closure, defaults, loc):
+    def make_function(cls,
+                      name: "Var",
+                      code: CodeType,
+                      closure: tp.Optional["Var"],
+                      defaults: tp.Optional["Var"],
+                      loc: Loc):
         """
         A node for making a function object.
         """
-        assert isinstance(loc, Loc)
         op = 'make_function'
         return cls(op=op, name=name, code=code, closure=closure, defaults=defaults, loc=loc)
 
     @classmethod
-    def null(cls, loc):
+    def null(cls, loc: Loc):
         """
         A node for null value.
 
@@ -557,7 +535,7 @@ class Expr(Inst):
         op = 'null'
         return cls(op=op, loc=loc)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         if self.op == 'call':
             args = ', '.join(str(a) for a in self.args)
             pres_order = self._kws.items() if config.DIFF_IR == 0 else sorted(self._kws.items())
