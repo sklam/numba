@@ -40,6 +40,8 @@ from numba.tests.support import (TestCase, captured_stdout, MemoryLeakMixin,
                       override_env_config, linux_only, tag,
                       skip_parfors_unsupported, _32bit, needs_blas,
                       needs_lapack, disabled_test, skip_unless_scipy)
+from numba.experimental import structref
+
 import cmath
 import unittest
 
@@ -3738,6 +3740,59 @@ class TestParforsMisc(TestParforsBase):
             find_maxima_3D_jit(args),
             find_maxima_3D_jit.py_func(args),
         )
+
+    @skip_parfors_unsupported
+    def test_issue5499_fusing_user_defined_type(self):
+        # Use structref to make a simple user-defined type
+        @structref.register
+        class MyStructType(types.StructRef):
+            pass
+
+        my_struct_ty = MyStructType(
+            fields=[("values", types.float64[::1])]
+        )
+
+        structref.define_boxing(MyStructType, structref.StructRefProxy)
+
+        # Define always inlined methods for parfors to enable fusion
+        @overload_method(MyStructType, "floordiv", inline="always")
+        def ov_floordiv(self, other):
+            def impl(self, other):
+                return self.values // other.values
+
+            return impl
+
+        @overload_method(MyStructType, "add", inline="always")
+        def ov_floordiv(self, other):
+            def impl(self, other):
+                return self.values + other.values
+
+            return impl
+
+        @njit(parallel=True)
+        def test(a, b):
+            lhs = structref.new(my_struct_ty)
+            lhs.values = a
+
+            rhs = structref.new(my_struct_ty)
+            rhs.values = b
+
+            res1 = lhs.floordiv(rhs)  # parfor loop 0
+            res2 = lhs.add(rhs)       # parfor loop 1
+
+            return res1, res2
+
+        a = np.arange(10, dtype=np.float64)
+        b = 1 / (1 + np.arange(10, dtype=np.float64))
+
+        res1, res2 = test(a, b)
+        # Check that the result make sense
+        self.assertPreciseEqual(res1, a // b)
+        self.assertPreciseEqual(res2, a + b)
+
+        # Check that fusion has happened that loop 1 is fused into loop 0.
+        pd = test.get_metadata(test.signatures[0])['parfor_diagnostics']
+        self.assertEqual(pd.fusion_info, {0: [1]})
 
 
 @skip_parfors_unsupported
