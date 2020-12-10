@@ -1511,7 +1511,7 @@ class ParforPassStates:
     """
 
     def __init__(self, func_ir, typemap, calltypes, return_type, typingctx,
-                 options, flags, diagnostics=ParforDiagnostics()):
+                 options, flags, metadata, diagnostics=ParforDiagnostics()):
         self.func_ir = func_ir
         self.typemap = typemap
         self.calltypes = calltypes
@@ -1529,6 +1529,127 @@ class ParforPassStates:
 
         ir_utils._max_label = max(func_ir.blocks.keys())
         self.flags = flags
+        self.metadata = metadata
+        if "parfors" not in metadata:
+            metadata["parfors"] = {}
+
+
+class ConvertInplaceBinop:
+    """Parfor subpass to convert setitem on Arrays
+    """
+    def __init__(self, pass_states):
+        """
+        Parameters
+        ----------
+        pass_states : ParforPassStates
+        """
+        self.pass_states = pass_states
+        self.rewritten = []
+
+    def run(self, blocks):
+        pass_states = self.pass_states
+        # convert expressions like A += ... where A is an array.
+        topo_order = find_topo_order(blocks)
+        # variables available in the program so far (used for finding map
+        # functions in array_expr lowering)
+        for label in topo_order:
+            block = blocks[label]
+            new_body = []
+            equiv_set = pass_states.array_analysis.get_equiv_set(label)
+            for instr in block.body:
+                if isinstance(instr, ir.Assign):
+                    lhs = instr.target
+                    expr = instr.value
+                    if isinstance(expr, ir.Expr) and expr.op == 'inplace_binop':
+                        loc = expr.loc
+                        target = expr.lhs
+                        value = expr.rhs
+                        target_typ = pass_states.typemap[target.name]
+                        value_typ = pass_states.typemap[value.name]
+                        # Handle A op= ...
+                        if isinstance(target_typ, types.npytypes.Array):
+                            # RHS is an array
+                            if isinstance(value_typ, types.npytypes.Array):
+                                new_instr = self._inplace_binop_to_parfor(equiv_set,
+                                        loc, expr.immutable_fn, target, value)
+                                self.rewritten.append(
+                                    dict(old=instr, new=new_instr,
+                                         reason='inplace_binop'),
+                                )
+                                instr = [new_instr, ir.Assign(target, lhs, loc)]
+                if isinstance(instr, list):
+                    new_body.extend(instr)
+                else:
+                    new_body.append(instr)
+            block.body = new_body
+
+    def _inplace_binop_to_parfor(self, equiv_set, loc, op, target, value):
+        """generate parfor from setitem node with a boolean or slice array indices.
+        The value can be either a scalar or an array variable, and if a boolean index
+        is used for the latter case, the same index must be used for the value too.
+        """
+        pass_states = self.pass_states
+        scope = target.scope
+        arr_typ = pass_states.typemap[target.name]
+        el_typ = arr_typ.dtype
+        init_block = ir.Block(scope, loc)
+        value_typ = pass_states.typemap[value.name]
+
+        size_vars = equiv_set.get_shape(target)
+
+        # generate loopnests and size variables from target correlations
+        index_vars, loopnests = _mk_parfor_loops(pass_states.typemap, size_vars, scope, loc)
+
+        # generate body
+        body_label = next_label()
+        body_block = ir.Block(scope, loc)
+        index_var, index_var_typ = _make_index_var(
+                pass_states.typemap, scope, index_vars, body_block)
+
+        # Read value.
+        value_var = ir.Var(scope, mk_unique_var("$value_var"), loc)
+        pass_states.typemap[value_var.name] = value_typ.dtype
+        getitem_call = ir.Expr.getitem(value, index_var, loc)
+        pass_states.calltypes[getitem_call] = signature(
+            value_typ.dtype, value_typ, index_var_typ)
+        body_block.body.append(ir.Assign(getitem_call, value_var, loc))
+
+        # Read target
+        target_var = ir.Var(scope, mk_unique_var("$target_var"), loc)
+        pass_states.typemap[target_var.name] = el_typ
+        getitem_call = ir.Expr.getitem(target, index_var, loc)
+        pass_states.calltypes[getitem_call] = signature(
+            el_typ, arr_typ, index_var_typ)
+        body_block.body.append(ir.Assign(getitem_call, target_var, loc))
+
+        # Create temp to hold result.
+        expr_out_var = ir.Var(scope, mk_unique_var("$expr_out_var"), loc)
+        pass_states.typemap[expr_out_var.name] = el_typ
+
+        # Create binop and assign result to temporary.
+        binop_expr = ir.Expr.binop(op, target_var, value_var, loc)
+        body_block.body.append(ir.Assign(binop_expr, expr_out_var, loc))
+        unified_type = self.pass_states.typingctx.unify_pairs(el_typ, value_typ.dtype)
+        pass_states.calltypes[binop_expr] = signature(
+            unified_type, unified_type, unified_type)
+
+        # Write to target
+        setitem_node = ir.SetItem(target, index_var, expr_out_var, loc)
+        pass_states.calltypes[setitem_node] = signature(
+            types.none, arr_typ, index_var_typ, el_typ)
+        body_block.body.append(setitem_node)
+
+        parfor = Parfor(loopnests, init_block, {}, loc, index_var, equiv_set,
+                        ('inplace_binop', ''), pass_states.flags)
+        parfor.loop_body = {body_label: body_block}
+        if config.DEBUG_ARRAY_OPT >= 1:
+            print("parfor from inplace_binop")
+            parfor.dump()
+        return parfor
+
+    def _type_getitem(self, args):
+        fnty = operator.getitem
+        return self.pass_states.typingctx.resolve_function_type(fnty, tuple(args), {})
 
 
 class ConvertSetItemPass:
@@ -1550,7 +1671,6 @@ class ConvertSetItemPass:
         topo_order = find_topo_order(blocks)
         # variables available in the program so far (used for finding map
         # functions in array_expr lowering)
-        avail_vars = []
         for label in topo_order:
             block = blocks[label]
             new_body = []
@@ -1767,12 +1887,13 @@ class ConvertNumpyPass:
                         # only translate C order since we can't allocate F
                         if guard(self._is_supported_npycall, expr):
                             new_instr = self._numpy_to_parfor(equiv_set, lhs, expr)
-                            self.rewritten.append(dict(
-                                old=instr,
-                                new=new_instr,
-                                reason='numpy_allocator',
-                            ))
-                            instr = new_instr
+                            if new_instr is not None:
+                                self.rewritten.append(dict(
+                                    old=instr,
+                                    new=new_instr,
+                                    reason='numpy_allocator',
+                                ))
+                                instr = new_instr
                         elif isinstance(expr, ir.Expr) and expr.op == 'arrayexpr':
                             new_instr = self._arrayexpr_to_parfor(
                                 equiv_set, lhs, expr, avail_vars)
@@ -1881,6 +2002,11 @@ class ConvertNumpyPass:
 
         # generate loopnests and size variables from lhs correlations
         size_vars = equiv_set.get_shape(lhs)
+        if size_vars is None:
+            if config.DEBUG_ARRAY_OPT >= 1:
+                print("Could not convert numpy map to parfor, unknown size")
+            return None
+
         index_vars, loopnests = _mk_parfor_loops(pass_states.typemap, size_vars, scope, loc)
 
         # generate init block and body
@@ -1910,20 +2036,20 @@ class ConvertNumpyPass:
                 typing.Context(), new_arg_typs, new_kw_types)
             value = expr
         else:
-            NotImplementedError(
+            raise NotImplementedError(
                 "Map of numpy.{} to parfor is not implemented".format(call_name))
 
         value_assign = ir.Assign(value, expr_out_var, loc)
         body_block.body.append(value_assign)
 
-        parfor = Parfor(loopnests, init_block, {}, loc, index_var, equiv_set,
-                        ('{} function'.format(call_name,), 'NumPy mapping'),
-                        pass_states.flags)
-
         setitem_node = ir.SetItem(lhs, index_var, expr_out_var, loc)
         pass_states.calltypes[setitem_node] = signature(
             types.none, pass_states.typemap[lhs.name], index_var_typ, el_typ)
         body_block.body.append(setitem_node)
+
+        parfor = Parfor(loopnests, init_block, {}, loc, index_var, equiv_set,
+                        ('{} function'.format(call_name,), 'NumPy mapping'),
+                        pass_states.flags)
         parfor.loop_body = {body_label: body_block}
         if config.DEBUG_ARRAY_OPT >= 1:
             print("generated parfor for numpy map:")
@@ -1992,6 +2118,9 @@ class ConvertReducePass:
 
         init_val = args[2]
         size_vars = equiv_set.get_shape(in_arr if mask_indices is None else mask_var)
+        if size_vars is None:
+            return None
+
         index_vars, loopnests = _mk_parfor_loops(pass_states.typemap, size_vars, scope, loc)
         mask_index = index_vars
         if mask_indices:
@@ -2562,8 +2691,6 @@ def _find_mask(typemap, func_ir, arr_def):
                 mask_indices.append(None)
             # Handle integer index
             elif isinstance(index_typ, types.Integer):
-                # The follow is never tested
-                raise AssertionError('unreachable')
                 count_consts += 1
                 mask_indices.append(ind)
 
@@ -2583,6 +2710,9 @@ class ParforPass(ParforPassStates):
     def _pre_run(self):
         # run array analysis, a pre-requisite for parfor translation
         self.array_analysis.run(self.func_ir.blocks)
+        # NOTE: Prepare _max_label. See #6102
+        ir_utils._max_label = max(ir_utils._max_label,
+                                  ir_utils.find_max_label(self.func_ir.blocks))
 
     def run(self):
         """run parfor conversion pass: replace Numpy calls
@@ -2601,6 +2731,8 @@ class ParforPass(ParforPassStates):
             ConvertReducePass(self).run(self.func_ir.blocks)
         if self.options.prange:
             ConvertLoopPass(self).run(self.func_ir.blocks)
+        if self.options.inplace_binop:
+            ConvertInplaceBinop(self).run(self.func_ir.blocks)
 
         # setup diagnostics now parfors are found
         self.diagnostics.setup(self.func_ir, self.options.fusion)
@@ -2611,11 +2743,11 @@ class ParforPass(ParforPassStates):
         # jumps can be created with prange conversion
         simplify_parfor_body_CFG(self.func_ir.blocks)
         # simplify before fusion
-        simplify(self.func_ir, self.typemap, self.calltypes)
+        simplify(self.func_ir, self.typemap, self.calltypes, self.metadata["parfors"])
         # need two rounds of copy propagation to enable fusion of long sequences
         # of parfors like test_fuse_argmin (some PYTHONHASHSEED values since
         # apply_copies_parfor depends on set order for creating dummy assigns)
-        simplify(self.func_ir, self.typemap, self.calltypes)
+        simplify(self.func_ir, self.typemap, self.calltypes, self.metadata["parfors"])
 
         if self.options.fusion:
             self.func_ir._definitions = build_definitions(self.func_ir.blocks)
@@ -2627,6 +2759,7 @@ class ParforPass(ParforPassStates):
                                                             up_direction=False)
             dprint_func_ir(self.func_ir, "after maximize fusion down")
             self.fuse_parfors(self.array_analysis, self.func_ir.blocks)
+            dprint_func_ir(self.func_ir, "after first fuse")
             # push non-parfors up
             maximize_fusion(self.func_ir, self.func_ir.blocks, self.typemap)
             dprint_func_ir(self.func_ir, "after maximize fusion up")
@@ -2634,13 +2767,13 @@ class ParforPass(ParforPassStates):
             self.fuse_parfors(self.array_analysis, self.func_ir.blocks)
             dprint_func_ir(self.func_ir, "after fusion")
         # simplify again
-        simplify(self.func_ir, self.typemap, self.calltypes)
+        simplify(self.func_ir, self.typemap, self.calltypes, self.metadata["parfors"])
         # push function call variables inside parfors so gufunc function
         # wouldn't need function variables as argument
         push_call_vars(self.func_ir.blocks, {}, {}, self.typemap)
         dprint_func_ir(self.func_ir, "after push call vars")
         # simplify again
-        simplify(self.func_ir, self.typemap, self.calltypes)
+        simplify(self.func_ir, self.typemap, self.calltypes, self.metadata["parfors"])
         dprint_func_ir(self.func_ir, "after optimization")
         if config.DEBUG_ARRAY_OPT >= 1:
             print("variable types: ", sorted(self.typemap.items()))
@@ -2672,15 +2805,12 @@ class ParforPass(ParforPassStates):
                             new_block.append(ir_print)
                 block.body = new_block
 
-        # run post processor again to generate Del nodes
-        post_proc = postproc.PostProcessor(self.func_ir)
-        post_proc.run(True)
         if self.func_ir.is_generator:
             fix_generator_types(self.func_ir.generator_info, self.return_type,
                                 self.typemap)
         if sequential_parfor_lowering:
             lower_parfor_sequential(
-                self.typingctx, self.func_ir, self.typemap, self.calltypes)
+                self.typingctx, self.func_ir, self.typemap, self.calltypes, self.metadata)
         else:
             # prepare for parallel lowering
             # add parfor params to parfors here since lowering is destructive
@@ -2742,7 +2872,8 @@ class ParforPass(ParforPassStates):
                         equiv_set = array_analysis.get_equiv_set(label)
                         stmt.equiv_set = equiv_set
                         next_stmt.equiv_set = equiv_set
-                        fused_node, fuse_report = try_fuse(equiv_set, stmt, next_stmt)
+                        fused_node, fuse_report = try_fuse(equiv_set, stmt, next_stmt,
+                            self.metadata["parfors"])
                         # accumulate fusion reports
                         self.diagnostics.fusion_reports.append(fuse_report)
                         if fused_node is not None:
@@ -2763,6 +2894,7 @@ class ParforPass(ParforPassStates):
     def fuse_recursive_parfor(self, parfor, equiv_set):
         blocks = wrap_parfor_blocks(parfor)
         maximize_fusion(self.func_ir, blocks, self.typemap)
+        dprint_func_ir(self.func_ir, "after recursive maximize fusion down", blocks)
         arr_analysis = array_analysis.ArrayAnalysis(self.typingctx, self.func_ir,
                                                 self.typemap, self.calltypes)
         arr_analysis.run(blocks, equiv_set)
@@ -3048,7 +3180,7 @@ def _find_func_var(typemap, func, avail_vars, loc):
     raise errors.UnsupportedRewriteError("ufunc call variable not found", loc=loc)
 
 
-def lower_parfor_sequential(typingctx, func_ir, typemap, calltypes):
+def lower_parfor_sequential(typingctx, func_ir, typemap, calltypes, metadata):
     ir_utils._max_label = max(ir_utils._max_label,
                               ir_utils.find_max_label(func_ir.blocks))
     parfor_found = False
@@ -3063,12 +3195,8 @@ def lower_parfor_sequential(typingctx, func_ir, typemap, calltypes):
     if parfor_found:
         func_ir.blocks = rename_labels(func_ir.blocks)
     dprint_func_ir(func_ir, "after parfor sequential lowering")
-    simplify(func_ir, typemap, calltypes)
+    simplify(func_ir, typemap, calltypes, metadata["parfors"])
     dprint_func_ir(func_ir, "after parfor sequential simplify")
-    # add dels since simplify removes dels
-    post_proc = postproc.PostProcessor(func_ir)
-    post_proc.run(True)
-    return
 
 
 def _lower_parfor_sequential_block(
@@ -3305,7 +3433,7 @@ def get_parfor_reductions(func_ir, parfor, parfor_params, calltypes, reductions=
             if isinstance(stmt, Parfor):
                 # recursive parfors can have reductions like test_prange8
                 get_parfor_reductions(func_ir, stmt, parfor_params, calltypes,
-                    reductions, reduce_varnames, param_uses, param_nodes, var_to_param)
+                    reductions, reduce_varnames, None, param_nodes, var_to_param)
 
     for param, used_vars in param_uses.items():
         # a parameter is a reduction variable if its value is used to update it
@@ -3587,14 +3715,26 @@ def maximize_fusion(func_ir, blocks, typemap, up_direction=True):
     so they are adjacent.
     """
     call_table, _ = get_call_table(blocks)
-    alias_map, arg_aliases = find_potential_aliases(blocks, func_ir.arg_names, typemap, func_ir)
+    alias_map, arg_aliases = find_potential_aliases(
+                                 blocks,
+                                 func_ir.arg_names,
+                                 typemap,
+                                 func_ir
+                             )
     for block in blocks.values():
         order_changed = True
         while order_changed:
-            order_changed = maximize_fusion_inner(func_ir, block, call_table,
-                                                  alias_map, up_direction)
+            order_changed = maximize_fusion_inner(
+                                func_ir,
+                                block,
+                                call_table,
+                                alias_map,
+                                arg_aliases,
+                                up_direction
+                            )
 
-def maximize_fusion_inner(func_ir, block, call_table, alias_map, up_direction=True):
+def maximize_fusion_inner(func_ir, block, call_table, alias_map,
+                          arg_aliases, up_direction=True):
     order_changed = False
     i = 0
     # i goes to body[-3] (i+1 to body[-2]) since body[-1] is terminator and
@@ -3602,9 +3742,10 @@ def maximize_fusion_inner(func_ir, block, call_table, alias_map, up_direction=Tr
     while i < len(block.body) - 2:
         stmt = block.body[i]
         next_stmt = block.body[i+1]
-        can_reorder = (_can_reorder_stmts(stmt, next_stmt, func_ir, call_table, alias_map)
+        can_reorder = (_can_reorder_stmts(stmt, next_stmt, func_ir,
+                                          call_table, alias_map, arg_aliases)
                         if up_direction else _can_reorder_stmts(next_stmt, stmt,
-                        func_ir, call_table, alias_map))
+                        func_ir, call_table, alias_map, arg_aliases))
         if can_reorder:
             block.body[i] = next_stmt
             block.body[i+1] = stmt
@@ -3612,16 +3753,18 @@ def maximize_fusion_inner(func_ir, block, call_table, alias_map, up_direction=Tr
         i += 1
     return order_changed
 
-def expand_aliases(the_set, alias_map):
+def expand_aliases(the_set, alias_map, arg_aliases):
     ret = set()
     for i in the_set:
         if i in alias_map:
             ret = ret.union(alias_map[i])
-        else:
-            ret.add(i)
+        if i in arg_aliases:
+            ret = ret.union(arg_aliases)
+        ret.add(i)
     return ret
 
-def _can_reorder_stmts(stmt, next_stmt, func_ir, call_table, alias_map):
+def _can_reorder_stmts(stmt, next_stmt, func_ir, call_table,
+                       alias_map, arg_aliases):
     """
     Check dependencies to determine if a parfor can be reordered in the IR block
     with a non-parfor statement.
@@ -3630,18 +3773,20 @@ def _can_reorder_stmts(stmt, next_stmt, func_ir, call_table, alias_map):
     # don't reorder calls with side effects (e.g. file close)
     # only read-read dependencies are OK
     # make sure there is no write-write, write-read dependencies
-    if (isinstance(
-            stmt, Parfor) and not isinstance(
-            next_stmt, Parfor) and not isinstance(
-            next_stmt, ir.Print)
-            and (not isinstance(next_stmt, ir.Assign)
-                 or has_no_side_effect(
-                next_stmt.value, set(), call_table)
+    if (isinstance(stmt, Parfor)
+        and not isinstance(next_stmt, Parfor)
+        and not isinstance(next_stmt, ir.Print)
+        and (not isinstance(next_stmt, ir.Assign)
+            or has_no_side_effect(next_stmt.value, set(), call_table)
             or guard(is_assert_equiv, func_ir, next_stmt.value))):
-        stmt_accesses = expand_aliases({v.name for v in stmt.list_vars()}, alias_map)
-        stmt_writes = expand_aliases(get_parfor_writes(stmt), alias_map)
-        next_accesses = expand_aliases({v.name for v in next_stmt.list_vars()}, alias_map)
-        next_writes = expand_aliases(get_stmt_writes(next_stmt), alias_map)
+        stmt_accesses = expand_aliases({v.name for v in stmt.list_vars()},
+                                       alias_map, arg_aliases)
+        stmt_writes = expand_aliases(get_parfor_writes(stmt),
+                                     alias_map, arg_aliases)
+        next_accesses = expand_aliases({v.name for v in next_stmt.list_vars()},
+                                       alias_map, arg_aliases)
+        next_writes = expand_aliases(get_stmt_writes(next_stmt),
+                                     alias_map, arg_aliases)
         if len((stmt_writes & next_accesses)
                 | (next_writes & stmt_accesses)) == 0:
             return True
@@ -3666,7 +3811,7 @@ def get_parfor_writes(parfor):
 
 FusionReport = namedtuple('FusionReport', ['first', 'second', 'message'])
 
-def try_fuse(equiv_set, parfor1, parfor2):
+def try_fuse(equiv_set, parfor1, parfor2, metadata):
     """try to fuse parfors and return a fused parfor, otherwise return None
     """
     dprint("try_fuse: trying to fuse \n", parfor1, "\n", parfor2)
@@ -3690,6 +3835,16 @@ def try_fuse(equiv_set, parfor1, parfor2):
     def is_equiv(x, y):
         return x == y or equiv_set.is_equiv(x, y)
 
+    def get_user_varname(v):
+        """get original variable name by user if possible"""
+        if not isinstance(v, ir.Var):
+            return v
+        v = v.name
+        if "var_rename_map" in metadata and v in metadata["var_rename_map"]:
+            user_varname = metadata["var_rename_map"][v]
+            return user_varname
+        return v
+
     for i in range(ndims):
         nest1 = parfor1.loop_nests[i]
         nest2 = parfor2.loop_nests[i]
@@ -3698,8 +3853,10 @@ def try_fuse(equiv_set, parfor1, parfor2):
                 is_equiv(nest1.step, nest2.step)):
             dprint("try_fuse: parfor dimension correlation mismatch", i)
             msg = "- fusion failed: loop dimension mismatched in axis %s. "
-            msg += "slice(%s, %s, %s) != " % (nest1.start, nest1.stop, nest1.step)
-            msg += "slice(%s, %s, %s)" % (nest2.start, nest2.stop, nest2.step)
+            msg += "slice(%s, %s, %s) != " % (get_user_varname(nest1.start),
+                get_user_varname(nest1.stop), get_user_varname(nest1.step))
+            msg += "slice(%s, %s, %s)" % (get_user_varname(nest2.start),
+                get_user_varname(nest2.stop), get_user_varname(nest2.step))
             report = FusionReport(parfor1.id, parfor2.id, msg % i)
             return None, report
 
