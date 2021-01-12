@@ -10,8 +10,9 @@ import multiprocessing as mp
 import pickle
 
 import zmq
+import numpy as np
 
-from numba import njit, jit, types
+from numba import njit, jit, types, carray
 from numba.extending import overload, intrinsic
 from numba.core.extending_hardware import (
     JitDecorator,
@@ -31,6 +32,7 @@ from numba.core import callconv, decorators
 from numba.core.codegen import BaseCPUCodegen, CodeLibrary
 from numba.core.callwrapper import PyCallWrapper
 from numba.core.imputils import RegistryLoader, Registry
+from numba.np import arrayobj
 from numba import _dynfunc
 import llvmlite.binding as ll
 from llvmlite.llvmpy import core as lc
@@ -114,6 +116,16 @@ class RPUContext(BaseContext):
         self._internal_codegen = JITRPUCodegen("numba.exec")
         self._remote_exe = RemoteExecutor()
         self.refresh()
+
+        self.dummy_nrt = ll.parse_assembly("""
+define void @NRT_decref(i8* noalias nocapture %0){
+    ret void
+}
+
+define void @NRT_incref(i8* noalias nocapture){
+    ret void
+}
+""")
 
     def refresh(self):
         registry = rpu_function_registry
@@ -209,7 +221,7 @@ class RPUContext(BaseContext):
         def inner(closure, args):
             print("---Running:", fndesc.qualname, args)
             res = self._offload_to_remote(
-                library, fndesc.llvm_cfunc_wrapper_name, args
+                library, fndesc.llvm_cfunc_wrapper_name, fndesc.argtypes, args
             )
             return res
 
@@ -226,11 +238,21 @@ class RPUContext(BaseContext):
         )
         return cfunc
 
-    def _offload_to_remote(self, library, fname, args):
+    def _offload_to_remote(self, library, fname, argtypes, args):
         mod = library._final_module
         for lm in library.codegen._linking_modules:
             mod.link_in(lm)
-        return self._remote_exe.jit(mod, fname, args)
+
+        mod.link_in(self.dummy_nrt)
+        undefined = 0
+        for fn in mod.functions:
+            if fn.name.startswith("NRT_") and fn.is_declaration:
+                print(f'undefined symbol {fn}')
+                undefined += 1
+
+        if undefined:
+            raise RuntimeError("undefined NRT symbols")
+        return self._remote_exe.jit(mod, fname, argtypes, args)
 
 
 class RemoteExecutor:
@@ -242,11 +264,19 @@ class RemoteExecutor:
         self.socket = self.ctx.socket(zmq.REQ)
         self.socket.connect(f"tcp://localhost:{self.port}")
 
-    def jit(self, mod, fname, args):
-        packed = pickle.dumps(dict(mod=str(mod), fname=fname, args=args))
+    def jit(self, mod, fname, argtypes, args):
+        dat = dict(msg="jit", mod=str(mod), fname=fname, argtypes=argtypes, args=args)
+        packed = pickle.dumps(dat)
         self.socket.send(packed)
         result = pickle.loads(self.socket.recv())
         print(result)
+        return result["return"]
+
+    def allocate_array(self, ary):
+        dat = dict(msg="allocate", ary=ary)
+        packed = pickle.dumps(dat)
+        self.socket.send(packed)
+        result = pickle.loads(self.socket.recv())
         return result["return"]
 
 
@@ -416,6 +446,8 @@ def intrin_add(tyctx, x, y):
     sig = x(x, y)
 
     def codegen(cgctx, builder, tyargs, llargs):
+
+        cgutils.printf(builder, "ADD HERE\n")
         return builder.add(*llargs)
 
     return sig, codegen
@@ -432,11 +464,65 @@ def ol_add(x, y):
         return impl
 
 
+@intrinsic(hardware="rpu")
+def ref_array(tyctx, addr, shape, dtype):
+    print('ref_array', addr, shape, dtype)
+    shape = types.unliteral(shape)
+    aryty = types.Array(dtype=dtype.dtype, ndim=len(shape), layout='C')
+    sig = aryty(addr, shape, dtype)
+
+    def codegen(cgctx, builder, tyargs, llargs):
+
+        cgutils.printf(builder, "REF_ARRAY\n")
+        aryproxy = arrayobj.make_array(aryty)(cgctx, builder)
+
+        [addr, shape, _] = llargs
+        llty = cgctx.get_data_type(dtype.dtype)
+        ptr = builder.inttoptr(addr, llty.as_pointer())
+
+        itemsize = cgctx.get_constant(types.intp, cgctx.get_abi_sizeof(llty))
+        strides = [itemsize]
+        out = arrayobj.populate_array(aryproxy, data=ptr, shape=shape, strides=strides, itemsize=itemsize, meminfo=None)
+        return out._getvalue()
+
+    return sig, codegen
+
+
+@intrinsic(hardware="rpu")
+def intrin_getitem(tyctx, ary, idx):
+    print('intrin_getitem', ary, idx)
+    sig = ary.dtype(ary, idx)
+
+    def codegen(cgctx, builder, sig, llargs):
+        cgutils.printf(builder, "GETITEM\n")
+        [aryty, idxty] = sig.args
+        [ary, idx] = llargs
+        aryproxy = arrayobj.make_array(aryty)(cgctx, builder, value=ary)
+        ptr = builder.gep(aryproxy.data, [idx])
+        return builder.load(ptr)
+
+    print(">>>", sig)
+    return sig, codegen
+
+
+
+@overload(operator.getitem, hardware="rpu")
+def ol_ary_getitem(ary, idx):
+    print("GETITEM", ary, idx)
+    def codegen(ary, idx):
+        return intrin_getitem(ary, idx)
+
+    return codegen
+
+
 ## Should be used by the RPU only
 @overload(my_func, hardware="rpu")
 def ol_my_func3(x):
     def impl(x):
-        return x + 100
+        # return x + 100
+        y = 9
+        ary = ref_array(x, (y + 1,), np.intp)
+        return ary[3] + ary[8] + ary[2]
 
     return impl
 
@@ -450,6 +536,9 @@ target = "rpu"
 
 jitter = rjit if target == "rpu" else jit
 
+
+remote = RemoteExecutor()
+
 # This is the demonstration function, it calls a version of the overloaded
 # 'my_func' function.
 @jitter(nopython=True)
@@ -457,4 +546,10 @@ def foo(x):
     return my_func(x)
 
 
-print("foo(5) with %s" % target, foo(5))
+# print("foo(5) with %s" % target, foo(5))
+
+arr = np.arange(10, dtype=np.intp)
+da = remote.allocate_array(arr)
+print('allocate_array', da)
+print("foo(5) with %s" % target, foo(da))
+
