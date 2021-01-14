@@ -6,20 +6,17 @@ Requires exe_server.py to be running
 import contextlib
 import ctypes
 import operator
-import multiprocessing as mp
 import pickle
 
 import zmq
 import numpy as np
 
-from numba import njit, jit, types, carray
+from numba import types
 from numba.extending import overload, intrinsic
 from numba.core.extending_hardware import (
     JitDecorator,
     hardware_registry,
     GPU,
-    current_target,
-    hardware_target,
 )
 from numba.core import registry, utils
 from numba.core.dispatcher import Dispatcher
@@ -30,14 +27,12 @@ from numba.core.compiler_lock import global_compiler_lock
 from numba.core.utils import cached_property
 from numba.core import callconv, decorators
 from numba.core.codegen import BaseCPUCodegen, CodeLibrary
-from numba.core.callwrapper import PyCallWrapper
 from numba.core.imputils import RegistryLoader, Registry
 from numba.np import arrayobj
 from numba import _dynfunc
 import llvmlite.binding as ll
+from llvmlite import ir
 from llvmlite.llvmpy import core as lc
-
-from numba import njit
 from numba.core import compiler
 
 
@@ -51,6 +46,7 @@ class RPU(GPU):
 hardware_registry["rpu"] = RPU
 
 
+# Define a bare codelibrary that disable all optimizations.
 class RemoteCodeLibrary(CodeLibrary):
     def _optimize_functions(self, ll_module):
         pass
@@ -87,14 +83,13 @@ class JITRPUCodegen(BaseCPUCodegen):
         return ir_module
 
     def _module_pass_manager(self):
-        # return ll.create_module_pass_manager()
         pass
 
     def _function_pass_manager(self, llvm_module):
-        # return ll.create_function_pass_manager(llvm_module)
         pass
 
     def _add_module(self, module):
+        # Added modules are needed to be linked to the final modules
         print(f"==== {self}._add_module", module.name)
         self._linking_modules.append(module)
 
@@ -116,8 +111,9 @@ class RPUContext(BaseContext):
         self._internal_codegen = JITRPUCodegen("numba.exec")
         self._remote_exe = RemoteExecutor()
         self.refresh()
-
-        self.dummy_nrt = ll.parse_assembly("""
+        # Add a dummy NRT module to disable the incref/decref
+        self.dummy_nrt = ll.parse_assembly(
+            """
 define void @NRT_decref(i8* noalias nocapture %0){
     ret void
 }
@@ -125,7 +121,8 @@ define void @NRT_decref(i8* noalias nocapture %0){
 define void @NRT_incref(i8* noalias nocapture){
     ret void
 }
-""")
+"""
+        )
 
     def refresh(self):
         registry = rpu_function_registry
@@ -154,17 +151,13 @@ define void @NRT_incref(i8* noalias nocapture){
     def create_cpython_wrapper(
         self, library, fndesc, env, call_helper, release_gil=False
     ):
-        # No cpython wrapper
+        # Disable cpython wrapper
         pass
 
     def create_cfunc_wrapper(self, library, fndesc, env, call_helper):
         # The following is a direct copy of the CPU create_cfunc_wrapper
-        from llvmlite import ir
-
         wrapper_module = self.create_module("cfunc_wrapper")
-        fnty = self.call_conv.get_function_type(
-            fndesc.restype, fndesc.argtypes
-        )
+        fnty = self.call_conv.get_function_type(fndesc.restype, fndesc.argtypes)
         wrapper_callee = wrapper_module.add_function(
             fnty, fndesc.llvm_func_name
         )
@@ -202,22 +195,9 @@ define void @NRT_incref(i8* noalias nocapture){
         library.add_ir_module(wrapper_module)
 
     def get_executable(self, library, fndesc, env):
-        """
-        Returns
-        -------
-        (cfunc, fnptr)
-
-        - cfunc
-            callable function (Can be None)
-        - fnptr
-            callable function address
-        - env
-            an execution environment (from _dynfunc)
-        """
-
-        @ctypes.PYFUNCTYPE(
-            ctypes.py_object, ctypes.py_object, ctypes.py_object
-        )
+        # This is overridden to create a callable that will offload the actual
+        # execution to the execution server.
+        @ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.py_object, ctypes.py_object)
         def inner(closure, args):
             print("---Running:", fndesc.qualname, args)
             res = self._offload_to_remote(
@@ -225,6 +205,7 @@ define void @NRT_incref(i8* noalias nocapture){
             )
             return res
 
+        # Prepare the function for injection into the dispatcher
         addr = ctypes.cast(inner, ctypes.c_void_p).value
         doc = "compiled wrapper for %r" % (fndesc.qualname,)
         cfunc = _dynfunc.make_function(
@@ -234,27 +215,35 @@ define void @NRT_incref(i8* noalias nocapture){
             addr,
             env,
             # objects to keepalive with the function
-            (library,),
+            (library, inner),
         )
         return cfunc
 
     def _offload_to_remote(self, library, fname, argtypes, args):
+        # This implements the offloading to the remote server.
+
+        # First, complete the linking so that we have a self-contained module.
         mod = library._final_module
         for lm in library.codegen._linking_modules:
             mod.link_in(lm)
 
+        # Then, linkin the dummy NRT library to mask off the incref/decref.
         mod.link_in(self.dummy_nrt)
+
+        # The following is checking for undefined symbols in NRT.
         undefined = 0
         for fn in mod.functions:
             if fn.name.startswith("NRT_") and fn.is_declaration:
-                print(f'undefined symbol {fn}')
+                print(f"undefined symbol {fn}")
                 undefined += 1
-
         if undefined:
             raise RuntimeError("undefined NRT symbols")
+
+        # Send to remote server to JIT and execute.
         return self._remote_exe.jit(mod, fname, argtypes, args)
 
 
+# Defines a class to communicate to the remote server.
 class RemoteExecutor:
 
     port = 5555
@@ -265,7 +254,9 @@ class RemoteExecutor:
         self.socket.connect(f"tcp://localhost:{self.port}")
 
     def jit(self, mod, fname, argtypes, args):
-        dat = dict(msg="jit", mod=str(mod), fname=fname, argtypes=argtypes, args=args)
+        dat = dict(
+            msg="jit", mod=str(mod), fname=fname, argtypes=argtypes, args=args
+        )
         packed = pickle.dumps(dat)
         self.socket.send(packed)
         result = pickle.loads(self.socket.recv())
@@ -354,6 +345,7 @@ class RPUDispatcher(Dispatcher):
 # internally to work out what to do RE compilation
 registry.dispatcher_registry["rpu"] = RPUDispatcher
 
+
 # Implement a dispatcher for the RPU target
 class rjit(JitDecorator):
     def __init__(self, *args, **kwargs):
@@ -391,7 +383,7 @@ class rjit(JitDecorator):
         return disp(
             py_func=self.py_func,
             targetoptions=topt,
-            pipeline_class=compiler.Compiler,
+            pipeline_class=pipeline_class,
         )
 
 
@@ -440,14 +432,12 @@ def const_float(context, builder, ty, pyval):
     return lty(pyval)
 
 
-# In this example, the RPU actually subtracts when it's asked to 'add'!
 @intrinsic(hardware="rpu")
 def intrin_add(tyctx, x, y):
     sig = x(x, y)
 
     def codegen(cgctx, builder, tyargs, llargs):
-
-        cgutils.printf(builder, "ADD HERE\n")
+        cgutils.printf(builder, "intrin_add() invoked\n")
         return builder.add(*llargs)
 
     return sig, codegen
@@ -466,14 +456,15 @@ def ol_add(x, y):
 
 @intrinsic(hardware="rpu")
 def ref_array(tyctx, addr, shape, dtype):
-    print('ref_array', addr, shape, dtype)
+    # This acts like `carray()` by taking the "device address" of the array
+    # along with the shape and dtype to create a reference to the array.
+    print("ref_array", addr, shape, dtype)
     shape = types.unliteral(shape)
-    aryty = types.Array(dtype=dtype.dtype, ndim=len(shape), layout='C')
+    aryty = types.Array(dtype=dtype.dtype, ndim=len(shape), layout="C")
     sig = aryty(addr, shape, dtype)
 
     def codegen(cgctx, builder, tyargs, llargs):
-
-        cgutils.printf(builder, "REF_ARRAY\n")
+        cgutils.printf(builder, "ref_array() invoked\n")
         aryproxy = arrayobj.make_array(aryty)(cgctx, builder)
 
         [addr, shape, _] = llargs
@@ -482,7 +473,14 @@ def ref_array(tyctx, addr, shape, dtype):
 
         itemsize = cgctx.get_constant(types.intp, cgctx.get_abi_sizeof(llty))
         strides = [itemsize]
-        out = arrayobj.populate_array(aryproxy, data=ptr, shape=shape, strides=strides, itemsize=itemsize, meminfo=None)
+        out = arrayobj.populate_array(
+            aryproxy,
+            data=ptr,
+            shape=shape,
+            strides=strides,
+            itemsize=itemsize,
+            meminfo=None,
+        )
         return out._getvalue()
 
     return sig, codegen
@@ -490,36 +488,34 @@ def ref_array(tyctx, addr, shape, dtype):
 
 @intrinsic(hardware="rpu")
 def intrin_getitem(tyctx, ary, idx):
-    print('intrin_getitem', ary, idx)
+    print("intrin_getitem", ary, idx)
     sig = ary.dtype(ary, idx)
 
     def codegen(cgctx, builder, sig, llargs):
-        cgutils.printf(builder, "GETITEM\n")
+        cgutils.printf(builder, "intrin_getitem() invoked\n")
         [aryty, idxty] = sig.args
         [ary, idx] = llargs
         aryproxy = arrayobj.make_array(aryty)(cgctx, builder, value=ary)
         ptr = builder.gep(aryproxy.data, [idx])
         return builder.load(ptr)
 
-    print(">>>", sig)
     return sig, codegen
-
 
 
 @overload(operator.getitem, hardware="rpu")
 def ol_ary_getitem(ary, idx):
-    print("GETITEM", ary, idx)
+    print("getitem", ary, idx)
+
     def codegen(ary, idx):
         return intrin_getitem(ary, idx)
 
     return codegen
 
 
-## Should be used by the RPU only
 @overload(my_func, hardware="rpu")
 def ol_my_func3(x):
     def impl(x):
-        # return x + 100
+        # Exercise arrays
         y = 9
         ary = ref_array(x, (y + 1,), np.intp)
         return ary[3] + ary[8] + ary[2]
@@ -529,27 +525,18 @@ def ol_my_func3(x):
 
 # -----------------------------------------------------------------------------
 
-# Uncomment one or the other to choose to run on CPU or RPU
-
-# target = 'cpu'
-target = "rpu"
-
-jitter = rjit if target == "rpu" else jit
-
-
 remote = RemoteExecutor()
 
 # This is the demonstration function, it calls a version of the overloaded
 # 'my_func' function.
-@jitter(nopython=True)
+@rjit(nopython=True)
 def foo(x):
     return my_func(x)
 
 
-# print("foo(5) with %s" % target, foo(5))
-
 arr = np.arange(10, dtype=np.intp)
+# Allocate a "device" array
 da = remote.allocate_array(arr)
-print('allocate_array', da)
-print("foo(5) with %s" % target, foo(da))
-
+print("allocate_array", da)
+# Invoke foo()
+print(f"foo({da})", foo(da))

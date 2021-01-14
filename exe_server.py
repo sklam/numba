@@ -2,35 +2,41 @@
 The execution server.
 """
 
-import zmq
-
-from llvmlite import binding as ll
-from numba import _dynfunc
-from numba.core.base import _load_global_helpers
-from numba.core import types
-
 import ctypes
 import pickle
 import types as py_types
+
+import zmq
+from llvmlite import binding as ll
+
+from numba.core.base import _load_global_helpers
+from numba.core import types
+
 
 port = 5555
 
 
 libpy = ctypes.CDLL(None)
 
+
 class LLVMExe:
     def __init__(self):
+        # Initialize LLVM
         ll.initialize()
         ll.initialize_all_targets()
         ll.initialize_all_asmprinters()
-
+        # Load C helpers in Numba
         _load_global_helpers()
 
         self._dummy_module = py_types.ModuleType("LLVMExe")
-
+        # A dictionary to keep all array allocation
         self._allocated = {}
 
     def jit(self, mod, fname, argtypes, args):
+        # This is invoked to JIT-compile and execute a function.
+        # Each time, we are creating a new LLVM JIT engine to keep this process
+        # clear, and ensure that the incoming LLVM IR is self-contained.
+
         target = ll.Target.from_triple(ll.get_process_triple())
         tm = target.create_target_machine(reloc="static", jit=True)
 
@@ -49,7 +55,7 @@ class LLVMExe:
             else:
                 raise TypeError(at)
 
-        print('>>>>', cargtys, cargs)
+        print(">>>>", cargtys, cargs)
 
         engine.finalize_object()
         addr = engine.get_function_address(fname)
@@ -61,6 +67,8 @@ class LLVMExe:
         return cfunc(*cargs)
 
     def allocate(self, ary):
+        # This is invoked when the client asked to allocate an array.
+        # It will return the "device address" back to the host.
         print(f"Allocate array: {ary}")
         addr = ary.ctypes.data
         self._allocated[addr] = ary
@@ -68,6 +76,7 @@ class LLVMExe:
 
 
 def main():
+    # Start the 0MQ server
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind(f"tcp://*:{port}")
@@ -78,14 +87,14 @@ def main():
         message = socket.recv()
         print(f"Received {len(message)} Bytes")
         dct = pickle.loads(message)
-        msg = dct.pop('msg')
-        if msg == 'jit':
+        msg = dct.pop("msg")
+        if msg == "jit":
             result = le.jit(**dct)
             socket.send(pickle.dumps({"return": result}))
-        elif msg == 'allocate':
+        elif msg == "allocate":
             result = le.allocate(**dct)
             socket.send(pickle.dumps({"return": result}))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
