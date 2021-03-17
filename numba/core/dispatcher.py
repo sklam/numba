@@ -815,6 +815,9 @@ class Dispatcher(serialize.ReduceMixin, _MemoMixin, _DispatcherBase):
 
     __numba__ = 'py_func'
 
+    # For overriding in subclasses
+    target_unspecified = False
+
     def __init__(self, py_func, locals={}, targetoptions={},
                  impl_kind='direct', pipeline_class=compiler.Compiler):
         """

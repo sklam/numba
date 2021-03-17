@@ -152,7 +152,7 @@ def jit(signature_or_function=None, locals={}, cache=False,
         target = options.pop('target')
         warnings.warn("The 'target' keyword argument is deprecated.", NumbaDeprecationWarning)
     else:
-        target = options.pop('_target', 'cpu')
+        target = options.pop('_target', 'default')
 
     options['boundscheck'] = boundscheck
 

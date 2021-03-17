@@ -98,3 +98,11 @@ class TargetRegistry(utils.UniqueDict):
 
 dispatcher_registry = TargetRegistry()
 dispatcher_registry['cpu'] = CPUDispatcher
+
+
+class DefaultDispatcher(CPUDispatcher):
+    # Overriding definition in Dispatcher
+    target_unspecified = True
+
+
+dispatcher_registry['default'] = DefaultDispatcher
