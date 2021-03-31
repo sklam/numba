@@ -15,6 +15,7 @@ import numba
 from numba.core import types, utils
 from numba.core.errors import TypingError, InternalError
 from numba.core.cpu_options import InlineOptions
+from numba.core.implcache import ImplCache
 
 # info store for inliner callback functions e.g. cost model
 _inline_info = namedtuple('inline_info',
@@ -688,7 +689,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         flags = ConfigStack().top()
         cache_key = self.context, tuple(args), tuple(kws.items()), flags
         try:
-            impl, args = self._impl_cache[cache_key]
+            impl, args = self._impl_cache.get_expected(cache_key)
             return impl, args
         except KeyError:
             # pass and try outside the scope so as to not have KeyError with a
@@ -728,7 +729,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         ovf_result = self._overload_func(*args, **kws)
         if ovf_result is None:
             # No implementation => fail typing
-            self._impl_cache[cache_key] = None, None
+            self._impl_cache.add_failed(cache_key, (None, None))
             return None, None
         elif isinstance(ovf_result, tuple):
             # The implementation returned a signature that the type-inferencer
@@ -757,7 +758,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         disp_type = types.Dispatcher(disp)
         disp_type.get_call_type(self.context, args, kws)
         if cache_key is not None:
-            self._impl_cache[cache_key] = disp, args
+            self._impl_cache.add_success(cache_key, (disp, args))
         return disp, args
 
     def get_impl_key(self, sig):
@@ -827,8 +828,10 @@ def make_overload_template(func, overload_func, jit_options, strict,
     func_name = getattr(func, '__name__', str(func))
     name = "OverloadTemplate_%s" % (func_name,)
     base = _OverloadFunctionTemplate
+    implcache = ImplCache()
     dct = dict(key=func, _overload_func=staticmethod(overload_func),
-               _impl_cache={}, _compiled_overloads={}, _jit_options=jit_options,
+               _impl_cache=implcache, _compiled_overloads={},
+               _jit_options=jit_options,
                _strict=strict, _inline=staticmethod(InlineOptions(inline)),
                _inline_overloads={}, prefer_literal=prefer_literal)
     return type(base)(name, (base,), dct)
