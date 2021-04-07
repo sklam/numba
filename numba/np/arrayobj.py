@@ -31,7 +31,6 @@ from numba.core.extending import (register_jitable, overload, overload_method,
 from numba.misc import quicksort, mergesort
 from numba.cpython import slicing
 from numba.cpython.unsafe.tuple import tuple_setitem, build_full_slice_tuple
-from numba.core.pythonapi import _allocators
 from numba.core.overload_glue import glue_lowering
 
 
@@ -3373,6 +3372,46 @@ def iternext_numpy_nditer2(context, builder, sig, args, result):
 
 
 # ------------------------------------------------------------------------------
+# Numpy array allocator
+
+
+@intrinsic
+def allocate(typingctx, size, align):
+    """Intrinsic to call NRT meminfo_alloc_aligned
+    """
+    if not isinstance(size, types.Integer):
+        raise errors.TypingError(f"size must be a int; got {size}")
+
+    if not isinstance(align, types.Integer):
+        raise errors.TypingError(f"align must be a int; got {size}")
+
+    # create the expected type signature
+    result_type = types.CPointer(types.uint8)
+    sig = result_type(types.intp, types.uint32)
+
+    def codegen(context, builder, signature, args):
+        [size, align] = args
+        res = context.nrt.meminfo_alloc_aligned(builder, size, align)
+        return res
+
+    return sig, codegen
+
+
+def _call_allocate(context, builder, allocsize, align):
+    """Call the allocate intrinsic from builder code
+    """
+    resty = types.CPointer(types.uint8)
+    sig = resty(types.intp, types.uint32)
+
+    tyctx = context.typing_context
+    fnty = tyctx.resolve_value_type(allocate)
+    callsig = fnty.get_call_type(tyctx, sig.args, {})
+    impl = context.get_function(fnty, callsig)
+    meminfo = impl(builder, (allocsize, cgutils.int32_t(align)))
+    return meminfo
+
+
+# ------------------------------------------------------------------------------
 # Numpy array constructors
 
 def _empty_nd_impl(context, builder, arrtype, shapes):
@@ -3429,14 +3468,7 @@ def _empty_nd_impl(context, builder, arrtype, shapes):
         )
 
     align = context.get_preferred_array_alignment(arrtype.dtype)
-
-    def alloc_unsupported(context, builder, size, align):
-        return context.nrt.meminfo_alloc_aligned(builder, size, align)
-
-    # See if the type has a special allocator, if not use the default
-    # alloc_unsuppported allocator above.
-    allocator_impl = _allocators.lookup(arrtype.__class__, alloc_unsupported)
-    meminfo = allocator_impl(context, builder, size=allocsize, align=align)
+    meminfo = _call_allocate(context, builder, allocsize, align)
 
     data = context.nrt.meminfo_data(builder, meminfo)
 

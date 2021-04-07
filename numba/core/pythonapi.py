@@ -46,13 +46,10 @@ class _Registry(object):
 _boxers = _Registry()
 _unboxers = _Registry()
 _reflectors = _Registry()
-# Registry of special allocators for types.
-_allocators = _Registry()
 
 box = _boxers.register
 unbox = _unboxers.register
 reflect = _reflectors.register
-allocator = _allocators.register
 
 class _BoxContext(namedtuple("_BoxContext",
                   ("context", "builder", "pyapi", "env_manager"))):
