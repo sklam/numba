@@ -264,6 +264,9 @@ class CompilationUnit(object):
             if options.pop('debug'):
                 opts.append('-g')
 
+        if options.pop('lineinfo', False):
+            opts.append('-generate-line-info')
+
         if 'opt' in options:
             opts.append('-opt=%d' % options.pop('opt'))
 
@@ -349,6 +352,7 @@ def get_supported_ccs():
     except: # noqa: E722
         # The CUDA Runtime may not be present
         cudart_version_major = 0
+        cudart_version_minor = 0
 
     ctk_ver = f"{cudart_version_major}.{cudart_version_minor}"
     unsupported_ver = f"CUDA Toolkit {ctk_ver} is unsupported by Numba - " \

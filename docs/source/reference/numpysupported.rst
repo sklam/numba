@@ -276,6 +276,7 @@ The following methods of Numpy arrays are supported in their basic form
 * :meth:`~numpy.ndarray.any`
 * :meth:`~numpy.ndarray.argmax`
 * :meth:`~numpy.ndarray.argmin`
+* :meth:`~numpy.ndarray.clip`
 * :meth:`~numpy.ndarray.conj`
 * :meth:`~numpy.ndarray.conjugate`
 * :meth:`~numpy.ndarray.cumprod`
@@ -498,6 +499,7 @@ The following top-level functions are supported:
 * :func:`numpy.sort` (no optional arguments)
 * :func:`numpy.split`
 * :func:`numpy.stack`
+* :func:`numpy.swapaxes`
 * :func:`numpy.take` (only the 2 first arguments)
 * :func:`numpy.transpose`
 * :func:`numpy.trapz` (only the 3 first arguments)
@@ -580,6 +582,42 @@ Initialization
 
 * :func:`numpy.random.seed`: with an integer argument only
 
+.. warning::
+   Calling :func:`numpy.random.seed` from interpreted code (including from :term:`object mode`
+   code) will seed the NumPy random generator, not the Numba random generator.
+   To seed the Numba random generator, see the example below.
+
+.. code-block:: python
+
+  from numba import njit
+  import numpy as np
+
+  @njit
+  def seed(a):
+      np.random.seed(a)
+
+  @njit
+  def rand():
+      return np.random.rand()
+
+
+  # Incorrect seeding
+  np.random.seed(1234)
+  print(rand())
+
+  np.random.seed(1234)
+  print(rand())
+
+  # Correct seeding
+  seed(1234)
+  print(rand())
+
+  seed(1234)
+  print(rand())
+
+
+
+
 Simple random data
 ''''''''''''''''''
 
@@ -609,6 +647,7 @@ Distributions
 * :func:`numpy.random.beta`
 * :func:`numpy.random.binomial`
 * :func:`numpy.random.chisquare`
+* :func:`numpy.random.dirichlet`
 * :func:`numpy.random.exponential`
 * :func:`numpy.random.f`
 * :func:`numpy.random.gamma`
