@@ -5,17 +5,24 @@ from contextlib import contextmanager
 from numba import njit
 from numba.core.dispatcher import TargetConfig
 from numba._dispatcher import set_use_tls_target_stack
-from numba.core.registry import dispatcher_registry, CPUDispatcher
+from numba.core.target_extension import (
+    dispatcher_registry, CPUDispatcher, CPU, target_registry,
+)
 
 
 # ------------ A "CustomCPU" target ------------
+
+
+class CustomCPU(CPU):
+    pass
 
 
 class CustomCPUDispatcher(CPUDispatcher):
     pass
 
 
-dispatcher_registry["CustomCPU"] = CustomCPUDispatcher
+target_registry["CustomCPU"] = CustomCPU
+dispatcher_registry[target_registry["CustomCPU"]] = CustomCPUDispatcher
 
 
 # ------------ For switching target ------------
