@@ -684,22 +684,56 @@ class TestTargetHierarchySelection(TestCase):
 
     def test_overload_allocation(self):
 
-        import logging
-        logger = logging.basicConfig(level=logging.DEBUG)
+        # import logging
+        # logger = logging.basicConfig(level=logging.DEBUG)
 
+        def cast_integer(context, builder, val, fromty, toty):
+            # XXX Shouldn't require this.
+            if toty.bitwidth == fromty.bitwidth:
+                # Just a change of signedness
+                return val
+            elif toty.bitwidth < fromty.bitwidth:
+                # Downcast
+                return builder.trunc(val, context.get_value_type(toty))
+            elif fromty.signed:
+                # Signed upcast
+                return builder.sext(val, context.get_value_type(toty))
+            else:
+                # Unsigned upcast
+                return builder.zext(val, context.get_value_type(toty))
+
+
+        @intrinsic(target='dpu')
+        def intrin_alloc(typingctx, allocsize, align):
+            """Intrinsic to call into the allocator for Array
+            """
+            print("DPU INTRIN ALLOC")
+            def codegen(context, builder, signature, args):
+                [allocsize, align] = args
+
+                # XXX: error are being eaten.
+                #      example: replace the next line with `align_u32 = align`
+                align_u32 = cast_integer(context, builder, align, signature.args[1], types.uint32)
+                meminfo = context.nrt.meminfo_alloc_aligned(builder, allocsize, align_u32)
+                return meminfo
+
+            from numba.core.typing import signature
+            mip = types.MemInfoPointer(types.voidptr)    # return untyped pointer
+            sig = signature(mip, allocsize, align)
+            return sig, codegen
 
         @overload_classmethod(types.Array, '_allocate', target='dpu', nopython=True)
         def _ol_arr_allocate_dpu(cls, allocsize, align):
             print("DPU ALLOC")
             def impl(cls, allocsize, align):
-                return 1
+                return intrin_alloc(allocsize, align)
             return impl
 
         @overload(np.empty, target='dpu', nopython=True)
         def ol_empty_impl(n):
             print("DPU EMPTY")
             def impl(n):
-                #return 17 # WORKS
+                # return 17 # WORKS
                 return types.Array._allocate(n, 7) # FAILS
             return impl
 
@@ -712,12 +746,14 @@ class TestTargetHierarchySelection(TestCase):
                 return np.empty(10)
             return impl
 
+        from numba.core.target_extension import target_override
 
-        @djit(nopython=True)
-        def foo():
-            return buffer_func()
+        with target_override('dpu'):  # XXX: this should probably go inside the dispatcher
+            @djit(nopython=True)
+            def foo():
+                return buffer_func()
 
-        print("RESULT:", foo())
+            print("RESULT:", foo())
 
 
 class TestTargetOffload(TestCase):
