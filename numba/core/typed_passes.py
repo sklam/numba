@@ -422,7 +422,11 @@ class NativeLowering(LoweringPass):
                 # Prepare for execution
                 # Insert native function for use by other jitted-functions.
                 # We also register its library to allow for inlining.
-                cfunc = targetctx.get_executable(library, fndesc, env)
+
+                # cfunc = targetctx.get_executable(library, fndesc, env)
+
+                cfunc = get_and_load_as_dso(targetctx, library, fndesc, env)
+
                 targetctx.insert_user_function(cfunc, fndesc, [library])
                 state['cr'] = _LowerResult(fndesc, call_helper,
                                            cfunc=cfunc, env=env)
@@ -434,6 +438,56 @@ class NativeLowering(LoweringPass):
             # Save the LLVM pass timings
             metadata['llvm_pass_timings'] = library.recorded_timings
         return True
+
+
+def get_and_load_as_dso(targetctx, library, fndesc, env):
+    from ctypes import CDLL, cast, c_void_p
+    import os.path
+    from tempfile import NamedTemporaryFile
+    from numba.pycc.platform import Toolchain
+
+    library._ensure_finalized()
+    # baseptr = library.get_pointer_to_function(fndesc.llvm_func_name)
+    # fnptr = library.get_pointer_to_function(fndesc.llvm_cpython_wrapper_name)
+    # engine = library._codegen._engine
+    # engine.finalize_object()
+    # objfile = library._get_compiled_object()
+
+    objfile = library._codegen._tm.emit_object(library._final_module)
+
+    tmpdir = "./temp"
+    with NamedTemporaryFile(delete=False, dir=tmpdir) as f:
+        f.write(objfile)
+        f.flush()
+
+    # print('-' * 80)
+    # print(library._final_module)
+    # print('=' * 80)
+    raw_dso_name = f'{os.path.basename(f.name)}.so'
+    linked_dso = os.path.join(tmpdir, raw_dso_name)
+    tc = Toolchain()
+    files_to_link = [f.name, 'modulemixin.o']
+    tc.link_shared(linked_dso, files_to_link)
+    print("linked_dso", linked_dso)
+    obj_to_analyse = linked_dso
+    dso = CDLL(obj_to_analyse)
+    fnobj = dso[fndesc.llvm_cpython_wrapper_name]
+    fnptr = cast(fnobj, c_void_p).value
+    print("fname", fndesc.llvm_cpython_wrapper_name)
+    print("fn", hex(fnptr))
+    envname = targetctx.get_env_name(fndesc)
+    print("envname", envname)
+
+    envobj = dso[envname]
+    gvaddr = cast(envobj, c_void_p).value
+    envptr = (c_void_p * 1).from_address(gvaddr)
+    envptr[0] = c_void_p(id(env))
+
+    # Note: we avoid reusing the original docstring to avoid encoding
+    # issues on Python 2, see issue #1908
+    cfunc = targetctx.make_dynfunc(fnptr, library, fndesc, env,
+                                   keepalive=(library, dso))
+    return cfunc
 
 
 @register_pass(mutates_CFG=False, analysis_only=True)

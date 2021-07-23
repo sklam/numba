@@ -229,7 +229,9 @@ class CPUContext(BaseContext):
         # Code generation
         baseptr = library.get_pointer_to_function(fndesc.llvm_func_name)
         fnptr = library.get_pointer_to_function(fndesc.llvm_cpython_wrapper_name)
+        return self.make_dynfunc(fnptr, library, fndesc, env, keepalive=(library,))
 
+    def make_dynfunc(self, fnptr, library, fndesc, env, keepalive):
         # Note: we avoid reusing the original docstring to avoid encoding
         # issues on Python 2, see issue #1908
         doc = "compiled wrapper for %r" % (fndesc.qualname,)
@@ -237,7 +239,7 @@ class CPUContext(BaseContext):
                                        fndesc.qualname.split('.')[-1],
                                        doc, fnptr, env,
                                        # objects to keepalive with the function
-                                       (library,)
+                                       keepalive,
                                        )
         library.codegen.set_env(self.get_env_name(fndesc), env)
         return cfunc
