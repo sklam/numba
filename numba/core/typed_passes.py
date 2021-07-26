@@ -442,49 +442,47 @@ class NativeLowering(LoweringPass):
 
 def get_and_load_as_dso(targetctx, library, fndesc, env):
     from ctypes import CDLL, cast, c_void_p
+    import os
     import os.path
     from tempfile import NamedTemporaryFile
     from numba.pycc.platform import Toolchain
 
+    # Finalize the library
     library._ensure_finalized()
-    # baseptr = library.get_pointer_to_function(fndesc.llvm_func_name)
-    # fnptr = library.get_pointer_to_function(fndesc.llvm_cpython_wrapper_name)
-    # engine = library._codegen._engine
-    # engine.finalize_object()
-    # objfile = library._get_compiled_object()
-
+    # Write the objectfile into disk
     objfile = library._codegen._tm.emit_object(library._final_module)
 
-    tmpdir = "./temp"
+    tmpdir = "./numba-temp"
+    try:
+        os.mkdir(tmpdir)
+    except FileExistsError:
+        pass  # ignore
     with NamedTemporaryFile(delete=False, dir=tmpdir) as f:
         f.write(objfile)
         f.flush()
 
-    # print('-' * 80)
-    # print(library._final_module)
-    # print('=' * 80)
+    # Link the objectfile into a shared lib
     raw_dso_name = f'{os.path.basename(f.name)}.so'
     linked_dso = os.path.join(tmpdir, raw_dso_name)
     tc = Toolchain()
     files_to_link = [f.name, 'modulemixin.o']
     tc.link_shared(linked_dso, files_to_link)
-    print("linked_dso", linked_dso)
-    obj_to_analyse = linked_dso
-    dso = CDLL(obj_to_analyse)
+    with open("numba-link.log", "a") as fout:
+        print(f"linked dso {linked_dso} for {fndesc.llvm_cpython_wrapper_name}",
+              file=fout)
+
+    # Load the shared lib
+    dso = CDLL(linked_dso)
+    # Get the entry point function pointer
     fnobj = dso[fndesc.llvm_cpython_wrapper_name]
     fnptr = cast(fnobj, c_void_p).value
-    print("fname", fndesc.llvm_cpython_wrapper_name)
-    print("fn", hex(fnptr))
+    # Set the environment object
     envname = targetctx.get_env_name(fndesc)
-    print("envname", envname)
-
     envobj = dso[envname]
     gvaddr = cast(envobj, c_void_p).value
     envptr = (c_void_p * 1).from_address(gvaddr)
     envptr[0] = c_void_p(id(env))
-
-    # Note: we avoid reusing the original docstring to avoid encoding
-    # issues on Python 2, see issue #1908
+    # Make the dynfunc
     cfunc = targetctx.make_dynfunc(fnptr, library, fndesc, env,
                                    keepalive=(library, dso))
     return cfunc
