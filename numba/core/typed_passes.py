@@ -446,6 +446,7 @@ def get_and_load_as_dso(targetctx, library, fndesc, env):
     import os.path
     from tempfile import NamedTemporaryFile
     from numba.pycc.platform import Toolchain
+    import numba
 
     # Finalize the library
     library._ensure_finalized()
@@ -465,7 +466,26 @@ def get_and_load_as_dso(targetctx, library, fndesc, env):
     raw_dso_name = f'{os.path.basename(f.name)}.so'
     linked_dso = os.path.join(tmpdir, raw_dso_name)
     tc = Toolchain()
-    files_to_link = [f.name, 'modulemixin.o', 'nrt.o']
+    nb_path = os.path.dirname(numba.__file__)
+
+    import numpy.distutils.misc_util as np_misc
+    np_compile_args = np_misc.get_info('npymath')
+    outpaths = tc.compile_objects(
+        sources=[
+            os.path.join(nb_path, "pycc", "modulemixin.c"),
+            os.path.join(nb_path, "core", "runtime", "nrt.c")
+        ],
+        output_dir=tmpdir,
+        include_dirs=[
+            *np_compile_args['include_dirs'],
+            *tc.get_python_include_dirs(),
+        ],
+        macros=[('PYCC_MODULE_NAME', fndesc.unique_name),
+                ('PYCC_USE_NRT', 1)],
+        extra_cflags=["-g3"],
+    )
+
+    files_to_link = [f.name, *outpaths]
     tc.link_shared(linked_dso, files_to_link)
     with open("numba-link.log", "a") as fout:
         print(f"linked dso {linked_dso} for {fndesc.llvm_cpython_wrapper_name}",
