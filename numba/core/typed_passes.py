@@ -465,7 +465,7 @@ def get_and_load_as_dso(targetctx, library, fndesc, env):
     raw_dso_name = f'{os.path.basename(f.name)}.so'
     linked_dso = os.path.join(tmpdir, raw_dso_name)
     tc = Toolchain()
-    files_to_link = [f.name, 'modulemixin.o']
+    files_to_link = [f.name, 'modulemixin.o', 'nrt.o']
     tc.link_shared(linked_dso, files_to_link)
     with open("numba-link.log", "a") as fout:
         print(f"linked dso {linked_dso} for {fndesc.llvm_cpython_wrapper_name}",

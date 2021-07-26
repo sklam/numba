@@ -59,7 +59,20 @@ VISIBILITY_HIDDEN void **PYCC(_unused_) = {
 };
 
 /* The LLVM-generated functions for atomic refcounting */
-extern void *nrt_atomic_add, *nrt_atomic_sub;
+// extern void *nrt_atomic_add, *nrt_atomic_sub;
+
+// FIXME: putting a hack definition in
+size_t nrt_atomic_add(size_t *ptr) {
+    size_t old = *ptr;
+    ptr += 1;
+    return old;
+}
+size_t nrt_atomic_sub(size_t *ptr) {
+    size_t old = *ptr;
+    ptr -= 1;
+    return old;
+}
+
 
 /* The structure type constructed by PythonAPI.serialize_uncached() */
 typedef struct {
