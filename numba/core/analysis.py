@@ -540,6 +540,7 @@ def dead_branch_prune(func_ir, called_args):
     # for all phis that are still in live blocks.
     for phi, lbl in phi2lbl.items():
         if lbl in dead_blocks:
+            raise
             continue
         new_incoming = [x[0] for x in new_cfg.predecessors(lbl)]
         if set(new_incoming) != set(phi.incoming_blocks):
@@ -580,6 +581,7 @@ def dead_branch_prune(func_ir, called_args):
             else:
                 # There's more than one incoming still, then look through the
                 # incoming and remove dead
+                raise
                 ic_val_tmp = []
                 ic_blk_tmp = []
                 for ic_val, ic_blk in zip(phi.incoming_values,
