@@ -390,7 +390,7 @@ class DIBuilder(AbstractDIBuilder):
         return self.module.add_debug_info('DICompileUnit', {
             'language': ir.DIToken('DW_LANG_C_plus_plus'),
             'file': self.difile,
-            'producer': 'Numba',
+            'producer': 'clang (Numba)',
             'runtimeVersion': 0,
             'isOptimized': config.OPT != 0,
             'emissionKind': 1,  # 0-NoDebug, 1-FullDebug
