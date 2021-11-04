@@ -313,6 +313,19 @@ class CFGraph(object):
             if n in nodes:
                 yield n
 
+    def clone_drop_backedge(self) -> "CFGraph":
+        cfg = CFGraph()
+        for k in self._nodes:
+            cfg.add_node(k)
+        back_edges = self._back_edges
+        for (src, dst), data in self._edge_data.items():
+            # skip backedges
+            if (src, dst) not in back_edges:
+                cfg.add_edge(src, dst, data)
+        cfg.set_entry_point(self._entry_point)
+        cfg.process()
+        return cfg
+
     def dump(self, file=None):
         """
         Dump extensive debug information.

@@ -345,6 +345,10 @@ def with_lifting(func_ir, typingctx, targetctx, flags, locals):
     if not withs:
         return func_ir, []
 
+    func_ir = consolidate_multi_exit_withs(withs, func_ir.blocks, func_ir)
+    func_ir.render_dot().view()
+    withs = _old_find_setupwiths(func_ir.blocks)
+
     postproc.PostProcessor(func_ir).run()  # ensure we have variable lifetime
     assert func_ir.variable_lifetime
     vlt = func_ir.variable_lifetime
@@ -476,11 +480,12 @@ def _cfg_nodes_in_region(cfg, region_begin, region_end):
     return region_nodes
 
 
-def find_setupwiths(blocks):
+def _old_find_setupwiths(blocks):
     """Find all top-level with.
 
     Returns a list of ranges for the with-regions.
     """
+
     def find_ranges(blocks):
 
         def is_setup_with(stmt):
@@ -601,3 +606,173 @@ def find_setupwiths(blocks):
             known_ranges.append((s, e))
 
     return known_ranges
+
+
+def is_setup_with(stmt):
+    return isinstance(stmt, ir.EnterWith)
+
+def is_pop_block(stmt):
+    try:
+        if hasattr(stmt, "value"):
+            return str(stmt.value).startswith("POP_BLOCK_INFO")
+    except KeyError:
+        return False
+
+def find_setupwiths(blocks):
+
+    # Get CFG without backedges
+    cfg = compute_cfg_from_blocks(blocks).clone_drop_backedge()
+    # cfg.render_dot().view()
+
+    pop_in_blocks = defaultdict(set)
+    setup_in_blocks = defaultdict(set)
+
+    # Find blocks containing SETUP_WITH and POP_BLOCK
+    for bkey, blk in blocks.items():
+        for stmt in blk.body:
+            if is_setup_with(stmt):
+                setup_in_blocks[bkey].add(stmt)
+            if is_pop_block(stmt):
+                pop_in_blocks[bkey].add(stmt)
+
+    setup_to_pops = {}
+
+    def dfs_find_pop(node) -> set:
+        out = set()
+        seen = set()
+        todos = [node]
+        while todos:
+            k = todos.pop()
+            if k in seen:
+                continue
+            seen.add(k)
+            # Check each successors
+            for desc, _ in cfg.successors(k):
+                # Does the successor contain a POP_BLOCK?
+                if pop_in_blocks[desc]:
+                    out.add(desc)
+                else:
+                    # If no, continue down this path
+                    todos.append(desc)
+        return out
+
+    # Look for SETUP_WITH in reverse topo order
+    for k in reversed(cfg.topo_order()):
+        if setup_in_blocks[k]:
+            # DFS to search for the first POP_BLOCK for every outgoing path
+            pops = dfs_find_pop(k)
+            # Remove matched pops
+            for x in pops:
+                del pop_in_blocks[x]
+
+            setup_to_pops[k] = pops
+
+    return setup_to_pops
+
+
+def consolidate_multi_exit_withs(withs: dict, blocks, func_ir):
+    out = []
+    for k in withs:
+        vs : set = withs[k]
+        if len(vs) > 1:
+            func_ir = fix_multi_pop_block(func_ir, k, vs)
+            func_ir.render_dot().view()
+    return func_ir
+    #         raise AssertionError("not supported")
+    #     else:
+    #         [v] = vs
+    #         term : ir.Terminator = blocks[v].terminator
+    #         [target] = term.get_targets()
+    #     out.append((k, target))
+
+    # old = _old_find_setupwiths(blocks)
+    # print('expect', old)
+    # print('got', out)
+    # if set(old) != set(out):
+    #     pass
+    #     # cfg = compute_cfg_from_blocks(blocks)
+    #     # cfg.render_dot().view()
+    # return out
+
+
+def fix_multi_pop_block(func_ir, setup_node, pop_nodes):
+
+    func_ir.render_dot(filename_prefix="before").view()
+    blocks = func_ir.blocks
+
+    any_blk = min(func_ir.blocks.values())
+    scope = any_blk.scope
+    max_key = max(func_ir.blocks) + 1
+
+    common_block = ir.Block(any_blk.scope, loc=any_blk.loc)
+    common_key = max_key
+    max_key += 1
+    blocks[common_key] = common_block
+
+    post_block = ir.Block(any_blk.scope, loc=any_blk.loc)
+    post_key = max_key
+    max_key += 1
+    blocks[post_key] = post_block
+
+    remainings = []
+    for i, k in enumerate(pop_nodes):
+        blk = blocks[k]
+
+        for pt, stmt in enumerate(blk.body):
+            if is_pop_block(stmt):
+                break
+
+        before = blk.body[:pt]
+        after = blk.body[pt:]
+        remainings.append(after)
+
+        blk.body = before
+        loc = blk.loc
+        blk.body.append(ir.Assign(value=ir.Const(i, loc=loc), target=scope.get_or_define("$cp", loc=loc), loc=loc))
+        blk.body.append(ir.Jump(common_key, loc=blk.loc))
+
+    common_block.body.append(remainings[0][0])  # the POP
+    common_block.body.append(ir.Jump(post_key, loc=loc))
+    # make if-else tree to jump to target
+
+    remain_blocks = []
+    for remain in remainings:
+        remain_blocks.append(max_key)
+        max_key += 1
+
+
+    switch_block = post_block
+    for i, remain in enumerate(remainings):
+        import operator
+
+        match_expr = scope.redefine("$cp_check", loc=loc)
+        match_rhs = scope.redefine("$cp_rhs", loc=loc)
+
+        switch_block.body.append(
+            ir.Assign(
+                value=ir.Const(i, loc=loc),
+                target=match_rhs,
+                loc=loc
+            ),
+        )
+
+        switch_block.body.append(
+            ir.Assign(
+                value=ir.Expr.binop(fn=operator.eq, lhs=scope.get("$cp"), rhs=match_rhs, loc=loc),
+                target=match_expr,
+                loc=loc
+            ),
+        )
+
+        # insert jump
+        [jump_target] = remain[-1].get_targets()
+        switch_block.body.append(ir.Branch(match_expr, jump_target, remain_blocks[i], loc=loc))
+
+        switch_block = ir.Block(scope=scope, loc=loc)
+        blocks[remain_blocks[i]] = switch_block
+
+    switch_block.body.append(ir.Jump(jump_target, loc=loc))
+
+    return func_ir
+    # func_ir.render_dot().view()
+    # raise
