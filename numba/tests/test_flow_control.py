@@ -1144,12 +1144,17 @@ class TestRealCodeDomFront(TestCase):
         cfa, blkpts = self.get_cfa_and_namedblocks(foo)
         idoms = cfa.graph.immediate_dominators()
 
-        self.assertEqual(blkpts['B0'], idoms[blkpts['B1']])
+        # Py3.10 turns while loop into if(...) { do {...} while(...) }.
+        # Also, `SET_BLOCK_B0` is duplicated. As a result, the second B0
+        # is picked up by `blkpts`.
+        if sys.version_info < (3, 10):
+            self.assertEqual(blkpts['B0'], idoms[blkpts['B1']])
 
         domfront = cfa.graph.dominance_frontier()
         self.assertFalse(domfront[blkpts['A']])
         self.assertFalse(domfront[blkpts['C']])
-        self.assertEqual({blkpts['B0']}, domfront[blkpts['B1']])
+        if sys.version_info < (3, 10):
+            self.assertEqual({blkpts['B0']}, domfront[blkpts['B1']])
 
     def test_loop_nested_and_break(self):
         def foo(n):
