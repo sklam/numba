@@ -1,3 +1,4 @@
+import sys
 import itertools
 
 import unittest
@@ -1276,12 +1277,16 @@ class TestRealCodeDomFront(TestCase):
         cfa, blkpts = self.get_cfa_and_namedblocks(foo)
 
         idoms = cfa.graph.immediate_dominators()
-        self.assertNotIn(blkpts['E'], idoms)
+        if sys.version_info >= (3, 10):
+            self.assertNotIn('E', blkpts)
+        else:
+            self.assertNotIn(blkpts['E'], idoms)
         self.assertEqual(blkpts['B'], idoms[blkpts['C']])
         self.assertEqual(blkpts['B'], idoms[blkpts['D']])
 
         domfront = cfa.graph.dominance_frontier()
-        self.assertNotIn(blkpts['E'], domfront)
+        if sys.version_info < (3, 10):
+            self.assertNotIn(blkpts['E'], domfront)
         self.assertFalse(domfront[blkpts['A']])
         self.assertFalse(domfront[blkpts['C']])
         self.assertEqual({blkpts['B']}, domfront[blkpts['B']])
