@@ -1282,6 +1282,8 @@ class TestRealCodeDomFront(TestCase):
         cfa, blkpts = self.get_cfa_and_namedblocks(foo)
 
         idoms = cfa.graph.immediate_dominators()
+        # Py3.10 optimizes away the infinite loop and removes SET_BLOCK_E from
+        # the bytecode.
         if sys.version_info >= (3, 10):
             self.assertNotIn('E', blkpts)
         else:
