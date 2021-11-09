@@ -1175,20 +1175,27 @@ class TestRealCodeDomFront(TestCase):
         cfa, blkpts = self.get_cfa_and_namedblocks(foo)
         idoms = cfa.graph.immediate_dominators()
         self.assertEqual(blkpts['D0'], blkpts['C1'])
-        self.assertEqual(blkpts['C0'], idoms[blkpts['C1']])
+
+        # Py3.10 changes while loop into if-do-while
+        if sys.version_info < (3, 10):
+            self.assertEqual(blkpts['C0'], idoms[blkpts['C1']])
 
         domfront = cfa.graph.dominance_frontier()
         self.assertFalse(domfront[blkpts['A']])
         self.assertFalse(domfront[blkpts['G']])
-        self.assertEqual({blkpts['B0']}, domfront[blkpts['B1']])
+        if sys.version_info < (3, 10):
+            self.assertEqual({blkpts['B0']}, domfront[blkpts['B1']])
         # 2 domfront members for C1
         # C0 because of the loop; F because of the break.
-        self.assertEqual({blkpts['C0'], blkpts['F']}, domfront[blkpts['C1']])
+        if sys.version_info < (3, 10):
+            self.assertEqual({blkpts['C0'], blkpts['F']},
+                             domfront[blkpts['C1']])
         self.assertEqual({blkpts['F']}, domfront[blkpts['D1']])
         self.assertEqual({blkpts['E']}, domfront[blkpts['D2']])
-        self.assertEqual({blkpts['C0']}, domfront[blkpts['E']])
-        self.assertEqual({blkpts['B0']}, domfront[blkpts['F']])
-        self.assertEqual({blkpts['B0']}, domfront[blkpts['B0']])
+        if sys.version_info < (3, 10):
+            self.assertEqual({blkpts['C0']}, domfront[blkpts['E']])
+            self.assertEqual({blkpts['B0']}, domfront[blkpts['F']])
+            self.assertEqual({blkpts['B0']}, domfront[blkpts['B0']])
 
     def test_if_else(self):
         def foo(a, b):
