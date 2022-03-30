@@ -187,6 +187,7 @@ def populate_array(array, data, shape, strides, itemsize, meminfo,
     context = array._context
     builder = array._builder
     datamodel = array._datamodel
+
     # doesn't matter what this array type instance is, it's just to get the
     # fields for the datamodel of the standard array type in this context
     standard_array = types.Array(types.float64, 1, 'C')
@@ -232,11 +233,6 @@ def populate_array(array, data, shape, strides, itemsize, meminfo,
     for axlen in unpacked_shape:
         nitems = builder.mul(nitems, axlen, flags=['nsw'])
     attrs['nitems'] = nitems
-
-    # Make sure that we have all the fields
-    got_fields = set(attrs.keys())
-    if got_fields != required_fields:
-        raise ValueError("missing {0}".format(required_fields - got_fields))
 
     # Set field value
     for k, v in attrs.items():
