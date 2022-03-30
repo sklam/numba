@@ -78,7 +78,7 @@ def copy_struct(dst, src, repl={}):
     """
     repl = repl.copy()
     # copy data from src or use those in repl
-    for k in src._datamodel._fields:
+    for k in dst._datamodel._fields:
         v = repl.pop(k, getattr(src, k))
         setattr(dst, k, v)
     # use remaining key-values in repl
