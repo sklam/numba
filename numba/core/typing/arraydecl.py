@@ -26,6 +26,8 @@ def get_array_index_type(ary, idx):
     """
     if not isinstance(ary, types.Buffer):
         return
+    if getattr(ary, "__use_overload_indexing__", False):
+        return
 
     ndim = ary.ndim
 
