@@ -279,56 +279,92 @@ class BaseFunction(Callable):
         return self._impl_keys[sig.args]
 
     def get_call_type(self, context, args, kws):
-
-        prefer_lit = [True, False]    # old behavior preferring literal
-        prefer_not = [False, True]    # new behavior preferring non-literal
-        failures = _ResolutionFailures(context, self, args, kws,
-                                       depth=self._depth)
-
         # get the order in which to try templates
         from numba.core.target_extension import get_local_target # circular
         target_hw = get_local_target(context)
         order = utils.order_by_target_specificity(target_hw, self.templates,
                                                   fnkey=self.key[0])
 
+        failures = _ResolutionFailures(context, self, args, kws,
+                                       depth=self._depth)
+
+
+        matched = list(self._iter_matching_templates(context, args, kws, order, failures))
+
+        if not matched:
+            failures.raise_error()
+
+        # print(f"---- matched {len(matched)}")
+        for num, (temp, sig) in enumerate(matched):
+            specialized = getattr(sig, "specialized_signature", None)
+            # print(f"{num:3} -- {temp} {sig} !!! {specialized}")
+        temp, sig = self._select_best_versions(matched)
+
+        self._impl_keys[sig.args] = temp.get_impl_key(sig)
+        return sig
+
+    def _select_best_versions(self, matched):
+        # Prefer versions with a specialized signature
+        specialized = [
+            (temp, sig) for temp, sig in matched
+            if getattr(sig, "specialized_signature", None) is not None
+        ]
+        if len(specialized) == 1:
+            return specialized[0]
+        elif len(specialized) > 1:
+            raise TypeError(f"ambiguous with specialized {specialized}")
+
+        # Pick without specialized signature
+        if len(matched) == 1:
+            return matched[0]
+        elif len(matched) > 1:
+            raise TypeError(f"ambiguous open versions {matched}")
+
+
+    def _iter_matching_templates(self, context, args, kws, order, failures):
+
+        prefer_lit = [True, False]    # old behavior preferring literal
+        prefer_not = [False, True]    # new behavior preferring non-literal
+
         self._depth += 1
-
-        for temp_cls in order:
-            temp = temp_cls(context)
-            # The template can override the default and prefer literal args
-            choice = prefer_lit if temp.prefer_literal else prefer_not
-            for uselit in choice:
-                try:
-                    if uselit:
-                        sig = temp.apply(args, kws)
-                    else:
-                        nolitargs = tuple([_unlit_non_poison(a) for a in args])
-                        nolitkws = {k: _unlit_non_poison(v)
-                                    for k, v in kws.items()}
-                        sig = temp.apply(nolitargs, nolitkws)
-                except Exception as e:
-                    if (utils.use_new_style_errors() and not
-                            isinstance(e, errors.NumbaError)):
-                        raise e
-                    else:
-                        sig = None
-                        failures.add_error(temp, False, e, uselit)
-                else:
-                    if sig is not None:
-                        self._impl_keys[sig.args] = temp.get_impl_key(sig)
-                        self._depth -= 1
-                        return sig
-                    else:
-                        registered_sigs = getattr(temp, 'cases', None)
-                        if registered_sigs is not None:
-                            msg = "No match for registered cases:\n%s"
-                            msg = msg % '\n'.join(" * {}".format(x) for x in
-                                                  registered_sigs)
+        try:
+            for temp_cls in order:
+                temp = temp_cls(context)
+                # The template can override the default and prefer literal args
+                choice = prefer_lit if temp.prefer_literal else prefer_not
+                for uselit in choice:
+                    try:
+                        if uselit:
+                            sig = temp.apply(args, kws)
                         else:
-                            msg = 'No match.'
-                        failures.add_error(temp, True, msg, uselit)
+                            nolitargs = tuple([_unlit_non_poison(a) for a in args])
+                            nolitkws = {k: _unlit_non_poison(v)
+                                        for k, v in kws.items()}
+                            if nolitargs == args and nolitkws == kws:
+                                continue
+                            sig = temp.apply(nolitargs, nolitkws)
+                    except Exception as e:
+                        if (utils.use_new_style_errors() and not
+                                isinstance(e, errors.NumbaError)):
+                            raise e
+                        else:
+                            sig = None
+                            failures.add_error(temp, False, e, uselit)
+                    else:
+                        if sig is not None:
+                            yield temp, sig
+                        else:
+                            registered_sigs = getattr(temp, 'cases', None)
+                            if registered_sigs is not None:
+                                msg = "No match for registered cases:\n%s"
+                                msg = msg % '\n'.join(" * {}".format(x) for x in
+                                                    registered_sigs)
+                            else:
+                                msg = 'No match.'
+                            failures.add_error(temp, True, msg, uselit)
 
-        failures.raise_error()
+        finally:
+            self._depth -= 1
 
     def get_call_signatures(self):
         sigs = []

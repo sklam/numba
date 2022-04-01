@@ -33,7 +33,7 @@ class Signature(object):
 
     # XXX Perhaps the signature should be a BoundArguments, instead
     # of separate args and pysig...
-    __slots__ = '_return_type', '_args', '_recvr', '_pysig'
+    __slots__ = '_return_type', '_args', '_recvr', '_pysig', "specialized_signature"
 
     def __init__(self, return_type, args, recvr, pysig=None):
         if isinstance(args, list):
@@ -693,6 +693,9 @@ class _OverloadFunctionTemplate(AbstractTemplate):
             if sig is None: # can't resolve for this target
                 return None
             self._compiled_overloads[sig.args] = disp_type.get_overload(sig)
+
+        if hasattr(disp, "specialized_signature"):
+            sig.specialized_signature = disp.specialized_signature
         return sig
 
     def _get_impl(self, args, kws):
@@ -792,6 +795,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         else:
             ovf_result = self._overload_func(*args, **kws)
 
+        expected_sig = None
         if ovf_result is None:
             # No implementation => fail typing
             self._impl_cache[cache_key] = None, None
@@ -803,6 +807,9 @@ class _OverloadFunctionTemplate(AbstractTemplate):
             args = sig.args
             kws = {}
             cache_key = None            # don't cache
+        elif hasattr(ovf_result, "expected_sig"):
+            pyfunc = ovf_result.impl
+            expected_sig = ovf_result.expected_sig
         else:
             # Regular case
             pyfunc = ovf_result
@@ -819,6 +826,9 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         # Make dispatcher
         jitdecor = jitter(**self._jit_options)
         disp = jitdecor(pyfunc)
+        if expected_sig is not None:
+            disp.specialized_signature = expected_sig
+
         # Make sure that the implementation can be fully compiled
         disp_type = types.Dispatcher(disp)
         disp_type.get_call_type(self.context, args, kws)
