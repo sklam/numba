@@ -1,8 +1,15 @@
 import operator
 from numba import njit, typeof, types
-from numba.extending import (register_model, models, typeof_impl, overload,
-                             overload_method, overload_classmethod, intrinsic,
-                             overload_attribute)
+from numba.extending import (
+    register_model,
+    models,
+    typeof_impl,
+    overload,
+    overload_method,
+    overload_classmethod,
+    intrinsic,
+    overload_attribute,
+)
 from numba.core.pythonapi import box, unbox, NativeValue
 from numba.core import cgutils
 import other_numpy
@@ -11,8 +18,8 @@ from numba.core.typing.npydecl import parse_dtype, parse_shape
 from numba.np.arrayobj import _parse_empty_args, _empty_nd_impl
 from numba.core.imputils import impl_ret_new_ref
 
-class OtherArray:
 
+class OtherArray:
     def __init__(self, ndim, layout, data, extra_parameter):
         self._ndim = ndim
         self._layout = layout
@@ -36,7 +43,9 @@ class OtherArray:
         return self._extra_parameter
 
     def __repr__(self):
-        return f"OtherArray({self.data}, extra_parameter={self.extra_parameter})"
+        return (
+            f"OtherArray({self.data}, extra_parameter={self.extra_parameter})"
+        )
 
 
 class OtherArrayType(types.Array):
@@ -47,7 +56,9 @@ class OtherArrayType(types.Array):
         self.name = f"OtherArrayType{self.name}"
 
     def get_array_type(self):
-        return types.Array(dtype=self.dtype, ndim=self.ndim, layout=self.layout)
+        return types.Array(
+            dtype=self.dtype, ndim=self.ndim, layout=self.layout
+        )
 
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
         # return NotImplemented   # disable default ufunc
@@ -69,14 +80,14 @@ class OtherArrayTypeModel(models.StructModel):
     def __init__(self, dmm, fe_type):
         ndim = fe_type.ndim
         members = [
-            ('meminfo', types.MemInfoPointer(fe_type.dtype)),
-            ('parent', types.pyobject),
-            ('nitems', types.intp),
-            ('itemsize', types.intp),
-            ('data', types.CPointer(fe_type.dtype)),
-            ('shape', types.UniTuple(types.intp, ndim)),
-            ('strides', types.UniTuple(types.intp, ndim)),
-            ('extra_parameter', types.intp),
+            ("meminfo", types.MemInfoPointer(fe_type.dtype)),
+            ("parent", types.pyobject),
+            ("nitems", types.intp),
+            ("itemsize", types.intp),
+            ("data", types.CPointer(fe_type.dtype)),
+            ("shape", types.UniTuple(types.intp, ndim)),
+            ("strides", types.UniTuple(types.intp, ndim)),
+            ("extra_parameter", types.intp),
         ]
         super(OtherArrayTypeModel, self).__init__(dmm, fe_type, members)
 
@@ -94,8 +105,9 @@ def unbox_oat(typ, obj, c):
     ary = c.unbox(data_array_type, buf)
     c.pyapi.decref(buf)
 
-
-    data_ary = c.context.make_array(data_array_type)(c.context, c.builder, value=ary.value)
+    data_ary = c.context.make_array(data_array_type)(
+        c.context, c.builder, value=ary.value
+    )
 
     nativearycls = c.context.make_array(typ)
     nativeary = nativearycls(c.context, c.builder)
@@ -123,14 +135,16 @@ def intrin_otherarray_attr(typingctx, arr):
         return nativeary.extra_parameter
 
     from numba.core.typing import signature
+
     sig = signature(types.intp, arr)
     return sig, codegen
 
 
-@overload_attribute(OtherArrayType, 'extra_parameters')
+@overload_attribute(OtherArrayType, "extra_parameters")
 def array_extra_parameters(arr):
     def get(arr):
         return intrin_otherarray_attr(arr)
+
     return get
 
 
@@ -138,6 +152,7 @@ def array_extra_parameters(arr):
 def intrin_otherarray_data(typingctx, arr):
 
     base_arry_t = arr.get_array_type()
+
     def codegen(context, builder, signature, args):
         [arr] = args
         arry_t = signature.args[0]
@@ -151,16 +166,17 @@ def intrin_otherarray_data(typingctx, arr):
         return out
 
     from numba.core.typing import signature
+
     sig = signature(base_arry_t, arr)
     return sig, codegen
 
 
-@overload_attribute(OtherArrayType, 'data')
+@overload_attribute(OtherArrayType, "data")
 def array_data(arr):
     def get(arr):
         return intrin_otherarray_data(arr)
-    return get
 
+    return get
 
 
 def _box_oat(array, extra_parameter):
@@ -187,7 +203,6 @@ def box_oat(typ, val, c):
     return retval
 
 
-
 def cast_integer(context, builder, val, fromty, toty):
     # XXX Shouldn't require this.
     if toty.bitwidth == fromty.bitwidth:
@@ -203,30 +218,37 @@ def cast_integer(context, builder, val, fromty, toty):
         # Unsigned upcast
         return builder.zext(val, context.get_value_type(toty))
 
+
 @intrinsic
 def intrin_alloc(typingctx, allocsize, align):
     """Intrinsic to call into the allocator for Array
     """
+
     def codegen(context, builder, signature, args):
         [allocsize, align] = args
 
         # XXX: error are being eaten.
         #      example: replace the next line with `align_u32 = align`
-        align_u32 = cast_integer(context, builder, align,
-                                    signature.args[1], types.uint32)
-        meminfo = context.nrt.meminfo_alloc_aligned(builder, allocsize,
-                                                    align_u32)
+        align_u32 = cast_integer(
+            context, builder, align, signature.args[1], types.uint32
+        )
+        meminfo = context.nrt.meminfo_alloc_aligned(
+            builder, allocsize, align_u32
+        )
         return meminfo
 
     from numba.core.typing import signature
+
     mip = types.MemInfoPointer(types.voidptr)  # return untyped pointer
     sig = signature(mip, allocsize, align)
     return sig, codegen
 
-@overload_classmethod(OtherArrayType, '_allocate')
+
+@overload_classmethod(OtherArrayType, "_allocate")
 def oat_allocate(cls, allocsize, alignment):
     def impl(cls, allocsize, alignment):
         return intrin_alloc(allocsize, alignment)
+
     return impl
 
 
@@ -239,14 +261,18 @@ def oat_empty_intrin(tyctx, shape, dtype):
 
     ndim = parse_shape(shape)
     if nb_dtype is not None and ndim is not None:
-        sig = OtherArrayType(dtype=nb_dtype, ndim=ndim, layout='C')(shape, dtype)
+        sig = OtherArrayType(dtype=nb_dtype, ndim=ndim, layout="C")(
+            shape, dtype
+        )
     else:
         return None, None
 
     def codegen(cgctx, builder, sig, llargs):
         arrtype, shapes = _parse_empty_args(cgctx, builder, sig, llargs)
         ary = _empty_nd_impl(cgctx, builder, arrtype, shapes)
-        return impl_ret_new_ref(cgctx, builder, sig.return_type, ary._getvalue())
+        return impl_ret_new_ref(
+            cgctx, builder, sig.return_type, ary._getvalue()
+        )
 
     return sig, codegen
 
@@ -255,33 +281,43 @@ def oat_empty_intrin(tyctx, shape, dtype):
 def ol_empty_impl(shape, dtype=None):
     def impl(shape, dtype=None):
         return oat_empty_intrin(shape, dtype)
+
     return impl
+
 
 @overload(operator.add)
 def ol_add_impl(lhs, rhs):
     if isinstance(lhs, OtherArrayType):
+
         def impl(lhs, rhs):
             out = other_numpy.empty(lhs.size)
             out.data[:] = lhs.data + rhs.data
             return lhs
+
         return impl
 
 
 @overload(operator.getitem)
 def ol_getitem_impl(arr, idx):
     if isinstance(arr, OtherArrayType):
+
         def impl(arr, idx):
             print("OAT getitem")
             return arr.data[idx]
+
         return impl
+
 
 @overload(operator.setitem)
 def ol_getitem_impl(arr, idx, val):
     if isinstance(arr, OtherArrayType):
+
         def impl(arr, idx, val):
             print("OAT setitem")
             arr.data[idx] = val
+
         return impl
+
 
 ################################################################################
 
@@ -291,16 +327,16 @@ def foo(arr):
     r = other_numpy.empty(arr.size)
 
     for i in range(r.size):
-        v = arr[i]    # getitem via overload
+        v = arr[i]  # getitem via overload
         r[i] = arr.extra_parameters + v
 
-    arr[:] = r       # setitem via overload
-    return arr + r   # add via overload
+    arr[:] = r  # setitem via overload
+    return arr + r  # add via overload
 
-oa = OtherArray(1, 'C', np.ones(5), 1234)
 
-r =  foo(oa)
+oa = OtherArray(1, "C", np.ones(5), 1234)
+
+r = foo(oa)
 # print(type(r))
 print(oa)
 print(r)
-
