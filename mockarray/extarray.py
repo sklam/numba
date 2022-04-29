@@ -67,8 +67,17 @@ class ExtArray:
         )
         return np.ndarray(shape=self.shape, dtype=self.dtype, buffer=buf)
 
+    def __eq__(self, other):
+        return all(
+            [
+                self.shape == other.shape,
+                self.dtype == other.dtype,
+                self.handle_addr == other.handle_addr,
+            ]
+        )
+
     def __repr__(self):
-        return f"ExtArray({self.shape}, 0x{self.handle:x})"
+        return f"ExtArray({self.shape}, 0x{self.handle_addr:x})"
 
 
 def test_extarray_basic():
@@ -168,10 +177,42 @@ def unbox_extarray(typ, obj, c):
     handle = c.unbox(types.uintp, handle_obj).value
     c.pyapi.decref(handle_obj)
 
-    nativeary.handle = c.context.cast(c.builder, handle, types.uintp, types.voidptr)
+    nativeary.handle = c.context.cast(
+        c.builder, handle, types.uintp, types.voidptr
+    )
 
     aryptr = nativeary._getpointer()
     return NativeValue(c.builder.load(aryptr), is_error=c.pyapi.c_api_error())
+
+
+def _box_extarray(array, handle):
+    hldr = ctypes.cast(
+        ctypes.c_void_p(handle), extarray_capi.ExtArrayHandlePtr
+    )
+    return ExtArray(shape=array.shape, dtype=array.dtype, handle=hldr)
+
+
+@box(ExtArrayType)
+def box_extarray(typ, val, c):
+    base_ary = c.context.make_array(typ.as_base_array_type())(
+        c.context, c.builder
+    )
+    nativearycls = c.context.make_array(typ)
+    nativeary = nativearycls(c.context, c.builder, value=val)
+    cgutils.copy_struct(base_ary, nativeary)
+
+    handle = nativeary.handle
+    data_ary = c.box(typ.as_base_array_type(), base_ary._getvalue())
+
+    boxer = c.pyapi.unserialize(c.pyapi.serialize_object(_box_extarray))
+    lluintp = c.context.get_value_type(types.uintp)
+    handle_obj = c.pyapi.long_from_longlong(
+        c.builder.ptrtoint(handle, lluintp)
+    )
+    retval = c.pyapi.call_function_objargs(boxer, [data_ary, handle_obj])
+    c.pyapi.decref(handle_obj)
+
+    return retval
 
 
 def test_unbox():
@@ -184,3 +225,43 @@ def test_unbox():
     ea = ExtArray(shape=(nelem,), dtype=np.float64, handle=handle)
 
     foo(ea)
+
+
+def test_unbox_box():
+    @njit
+    def foo(ea):
+        return ea
+
+    nelem = 10
+    handle = extarray_capi.alloc(nelem * np.dtype(np.float64).itemsize)
+    ea = ExtArray(shape=(nelem,), dtype=np.float64, handle=handle)
+
+    ret = foo(ea)
+    assert ea == ret
+
+
+# ----------------------------------------------------------------------------
+# Part 4: Allocator
+
+
+def extarray_empty(shape, dtype):
+    nelem = np.prod(shape)
+    dtype = np.dtype(dtype)
+    handle = extarray_capi.alloc(nelem * dtype.itemsize)
+    return ExtArray(shape=shape, dtype=dtype, handle=handle)
+
+
+@overload(other_numpy.empty)
+def ol_empty_impl(shape, dtype=None):
+    def impl(shape, dtype=None):
+        return oat_empty_intrin(shape, dtype)
+
+    return impl
+
+
+def test_allocator():
+    # @njit
+    def foo(shape):
+        return extarray_empty(shape, dtype=np.float64)
+
+    foo()
