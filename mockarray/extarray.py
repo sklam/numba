@@ -5,6 +5,8 @@ from numba.core import types
 
 
 import operator
+from llvmlite import ir as llvmir
+from llvmlite import binding as llvm
 from numba import njit, typeof, types
 from numba.extending import (
     register_model,
@@ -18,12 +20,13 @@ from numba.extending import (
 )
 from numba.core.pythonapi import box, unbox, NativeValue
 from numba.core import cgutils
+from numba.core import typing
 import numpy as np
 from numba.core.typing.npydecl import parse_dtype, parse_shape
 from numba.np.arrayobj import _parse_empty_args, _empty_nd_impl
 from numba.core.imputils import impl_ret_new_ref
-
 from numba.core.unsafe import refcount
+from numba.np import numpy_support
 
 import extarray_capi
 
@@ -101,6 +104,9 @@ def test_extarray_basic():
 
 
 class ExtArrayType(types.Array):
+    __use_overload_indexing__ = True
+    """This is needed for overloading getitem/setitem"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = f"ExtArrayType({self.name})"
@@ -251,17 +257,194 @@ def extarray_empty(shape, dtype):
     return ExtArray(shape=shape, dtype=dtype, handle=handle)
 
 
-@overload(other_numpy.empty)
-def ol_empty_impl(shape, dtype=None):
-    def impl(shape, dtype=None):
-        return oat_empty_intrin(shape, dtype)
+# Call these once to bind the library function to LLVM
+llvm.add_symbol(
+    "extarray_alloc", ctypes.cast(extarray_capi.alloc, ctypes.c_void_p).value
+)
+
+llvm.add_symbol(
+    "extarray_getpointer",
+    ctypes.cast(extarray_capi.getpointer, ctypes.c_void_p).value,
+)
+
+llvm.add_symbol(
+    "extarray_make_meminfo",
+    ctypes.cast(extarray_capi.make_meminfo, ctypes.c_void_p).value,
+)
+
+
+@intrinsic(prefer_literal=True)
+def ext_array_alloc(typingctx, nbytes, nitems, ndim, shape, dtype, itemsize):
+    if not isinstance(ndim, types.IntegerLiteral):
+        # reject if ndim is not a literal
+        return
+    # note: skipping error checking for other arguments
+
+    def codegen(context, builder, signature, args):
+        [nbytes, nitems, ndim, shape, dtype, itemsize] = args
+
+        # Call extarray_alloc to allocate a ExtArray handle
+        alloc_fnty = llvmir.FunctionType(cgutils.voidptr_t, [cgutils.intp_t])
+        alloc_fn = cgutils.get_or_insert_function(
+            builder.module, alloc_fnty, "extarray_alloc",
+        )
+        handle = builder.call(alloc_fn, [nbytes])
+
+        # Call extarray_getpointer
+        getptr_fnty = llvmir.FunctionType(
+            cgutils.voidptr_t, [cgutils.voidptr_t]
+        )
+        getptr_fn = cgutils.get_or_insert_function(
+            builder.module, getptr_fnty, "extarray_getpointer",
+        )
+        dataptr = builder.call(getptr_fn, [handle])
+
+        nativearycls = context.make_array(signature.return_type)
+        nativeary = nativearycls(context, builder)
+
+        # Make Meminfo
+        meminfo_fnty = llvmir.FunctionType(
+            cgutils.voidptr_t, [cgutils.voidptr_t]
+        )
+        meminfo_fn = cgutils.get_or_insert_function(
+            builder.module, meminfo_fnty, name="extarray_make_meminfo"
+        )
+        meminfo = builder.call(meminfo_fn, [handle])
+
+        # compute strides
+        strides = []
+        cur_stride = itemsize
+        for s in reversed(cgutils.unpack_tuple(builder, shape)):
+            strides.append(cur_stride)
+            cur_stride = builder.mul(cur_stride, s)
+        strides.reverse()
+
+        # populate array struct (same as populate_array)
+
+        nativeary.meminfo = meminfo
+        nativeary.nitems = nitems
+        nativeary.itemsize = itemsize
+        nativeary.data = builder.bitcast(dataptr, nativeary.data.type)
+        nativeary.shape = shape
+        nativeary.strides = cgutils.pack_array(builder, strides)
+        nativeary.handle = handle
+
+        return nativeary._getvalue()
+
+    arraytype = ExtArrayType(
+        ndim=ndim.literal_value, dtype=dtype.dtype, layout="C"
+    )
+    sig = typing.signature(
+        arraytype, nbytes, nitems, ndim, shape, dtype, itemsize
+    )
+    return sig, codegen
+
+
+@overload(extarray_empty)
+def ol_empty_impl(shape, dtype):
+    dtype = numpy_support.as_dtype(dtype.dtype)
+    itemsize = dtype.itemsize
+
+    def impl(shape, dtype):
+        nelem = np.prod(np.asarray(shape))
+        return ext_array_alloc(
+            nelem * itemsize, nelem, len(shape), shape, dtype, itemsize
+        )
 
     return impl
 
 
 def test_allocator():
-    # @njit
+    @njit
     def foo(shape):
         return extarray_empty(shape, dtype=np.float64)
 
-    foo()
+    shape = (2, 3)
+    r = foo(shape)
+    arr = r.as_numpy()
+    assert arr.shape == shape
+    assert arr.dtype == np.dtype(np.float64)
+    assert arr.size == np.prod(shape)
+
+
+# ----------------------------------------------------------------------------
+# Part 4: Getitem Setitem
+
+
+@overload_attribute(ExtArrayType, "data")
+def array_data(arr):
+    def get(arr):
+        return intrin_otherarray_data(arr)
+
+    return get
+
+
+@intrinsic
+def intrin_otherarray_data(typingctx, arr):
+
+    base_arry_t = arr.as_base_array_type()
+
+    def codegen(context, builder, signature, args):
+        [arr] = args
+        arry_t = signature.args[0]
+        nativearycls = context.make_array(arry_t)
+        nativeary = nativearycls(context, builder, value=arr)
+
+        base_ary = context.make_array(base_arry_t)(context, builder)
+        cgutils.copy_struct(base_ary, nativeary)
+        out = base_ary._getvalue()
+        context.nrt.incref(builder, base_arry_t, out)
+        return out
+
+    from numba.core.typing import signature
+
+    sig = signature(base_arry_t, arr)
+    return sig, codegen
+
+
+@overload(operator.getitem)
+def ol_getitem_impl(arr, idx):
+    if isinstance(arr, ExtArrayType):
+
+        def impl(arr, idx):
+            return arr.data[idx]
+
+        return impl
+
+
+@overload(operator.setitem)
+def ol_getitem_impl(arr, idx, val):
+    if isinstance(arr, ExtArrayType):
+
+        def impl(arr, idx, val):
+            arr.data[idx] = val
+
+        return impl
+
+
+def test_setitem():
+    @njit
+    def foo(size):
+        arr = extarray_empty((size,), dtype=np.float64)
+        for i in range(arr.size):
+            arr[i] = i
+        return arr
+
+    r = foo(10)
+    arr = r.as_numpy()
+    np.testing.assert_equal(arr, np.arange(10))
+
+
+def test_getitem():
+    @njit
+    def foo(size):
+        arr = extarray_empty((size,), dtype=np.float64)
+        for i in range(arr.size):
+            arr[i] = i
+        c = 0
+        for i in range(arr.size):
+            c += i
+        return c
+
+    res = foo(10)
+    assert res == np.arange(10).sum()
