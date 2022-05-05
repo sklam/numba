@@ -7,7 +7,7 @@ from numba.core import types
 import operator
 from llvmlite import ir as llvmir
 from llvmlite import binding as llvm
-from numba import njit, typeof, types
+from numba import njit, typeof
 from numba.extending import (
     register_model,
     models,
@@ -115,6 +115,21 @@ class ExtArrayType(types.Array):
         return types.Array(
             dtype=self.dtype, ndim=self.ndim, layout=self.layout
         )
+
+    # Needed for overloading ufunc
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        return NotImplemented  # disable default ufunc
+        if method == "__call__":
+            for inp in inputs:
+                if not isinstance(inp, (types.Array, types.Number)):
+                    return NotImplemented
+            # # Ban if all arguments are OtherArrayType
+            # if all(isinstance(inp, OtherArrayType) for inp in inputs):
+            #     return NotImplemented
+            return NotImplemented
+            return ExtArrayType
+        else:
+            return NotImplemented
 
 
 @typeof_impl.register(ExtArray)
@@ -371,16 +386,16 @@ def test_allocator():
 # Part 4: Getitem Setitem
 
 
-@overload_attribute(ExtArrayType, "data")
-def array_data(arr):
-    def get(arr):
-        return intrin_otherarray_data(arr)
+@overload_method(ExtArrayType, "as_numpy")
+def extarray_as_numpy(arr):
+    def impl(arr):
+        return intrin_otherarray_as_numpy(arr)
 
-    return get
+    return impl
 
 
 @intrinsic
-def intrin_otherarray_data(typingctx, arr):
+def intrin_otherarray_as_numpy(typingctx, arr):
 
     base_arry_t = arr.as_base_array_type()
 
@@ -407,17 +422,18 @@ def ol_getitem_impl(arr, idx):
     if isinstance(arr, ExtArrayType):
 
         def impl(arr, idx):
-            return arr.data[idx]
+            return arr.as_numpy()[idx]
 
         return impl
 
 
 @overload(operator.setitem)
-def ol_getitem_impl(arr, idx, val):
+def ol_setitem_impl(arr, idx, val):
     if isinstance(arr, ExtArrayType):
 
         def impl(arr, idx, val):
-            arr.data[idx] = val
+            nparr = arr.as_numpy()
+            nparr[idx] = val
 
         return impl
 
@@ -448,3 +464,82 @@ def test_getitem():
 
     res = foo(10)
     assert res == np.arange(10).sum()
+
+
+# ----------------------------------------------------------------------------
+# Part 5: Access to handle address in ExtArray
+
+
+@intrinsic
+def intrin_extarray_handle_addr(typingctx, arr):
+    def codegen(context, builder, signature, args):
+        [arr] = args
+        nativearycls = context.make_array(signature.args[0])
+        nativeary = nativearycls(context, builder, value=arr)
+        return nativeary.handle
+
+    sig = typing.signature(types.voidptr, arr)
+    return sig, codegen
+
+
+@overload_attribute(ExtArrayType, "handle_addr")
+def extarray_handle_addr(arr):
+    def get(arr):
+        return intrin_extarray_handle_addr(arr)
+
+    return get
+
+
+def test_handle_addr():
+    @njit
+    def foo(arr):
+        return arr.handle_addr
+
+    arr = extarray_empty((10,), dtype=np.float64)
+    handle_addr = foo(arr)
+    assert arr.handle_addr == handle_addr
+
+
+# ----------------------------------------------------------------------------
+# Part 6: overload add
+
+
+@overload(operator.add)
+def ol_add_impl(lhs, rhs):
+    if isinstance(lhs, ExtArrayType):
+        if lhs.dtype != rhs.dtype:
+            raise TypeError(
+                f"LHS dtype ({lhs.dtype}) != RHS.dtype ({rhs.dtype})"
+            )
+
+        def impl(lhs, rhs):
+            if lhs.shape != rhs.shape:
+                raise ValueError("shape incompatible")
+            out = extarray_empty(lhs.shape, lhs.dtype)
+            for i in np.ndindex(lhs.shape):
+                out[i] = lhs[i] + rhs[i]
+            return out
+
+        return impl
+
+
+@njit
+def extarray_arange(size, dtype):
+    out = extarray_empty((size,), dtype=np.float64)
+    for i in range(size):
+        out[i] = i
+    return out
+
+
+def test_add():
+    @njit
+    def foo(n):
+        a = extarray_arange(n, dtype=np.float64)
+        b = extarray_arange(n, dtype=np.float64)
+        res = a + b
+        return res
+
+    n = 12
+    res = foo(12)
+    assert isinstance(res, ExtArray)
+    np.testing.assert_equal(res.as_numpy(), np.arange(n) + np.arange(n))
