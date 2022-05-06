@@ -29,9 +29,10 @@ size_t extarray_getnbytes(ExtArrayHandle *hldr) {
 }
 
 
-/* The following is copied from numba/core/runtime/nrt.c 
+/* The following is adapted from numba/core/runtime/nrt.c 
 
-TODO: Numba NRT needs to expose NRT_MemInfo_new
+TODO: Numba NRT needs to expose NRT_MemInfo_new.
+TODO: The MemInfo struct and the functions are expanded.
 */
 struct MemInfo {
     size_t            refct;
@@ -40,11 +41,14 @@ struct MemInfo {
     void              *data;
     size_t            size;    /* only used for NRT allocated memory */
     NRT_ExternalAllocator *external_allocator;
+    void              *handle;
 };
 
-void NRT_MemInfo_init(NRT_MemInfo *mi,void *data, size_t size,
+static
+void ExtArray_NRT_MemInfo_init(NRT_MemInfo *mi,void *data, size_t size,
                       NRT_dtor_function dtor, void *dtor_info,
-                      NRT_ExternalAllocator *external_allocator)
+                      NRT_ExternalAllocator *external_allocator,
+                      ExtArrayHandle *handle)
 {
     mi->refct = 1;  /* starts with 1 refct */
     mi->dtor = dtor;
@@ -52,17 +56,20 @@ void NRT_MemInfo_init(NRT_MemInfo *mi,void *data, size_t size,
     mi->data = data;
     mi->size = size;
     mi->external_allocator = external_allocator;
+    mi->handle = handle;
     NRT_Debug(nrt_debug_print("NRT_MemInfo_init mi=%p external_allocator=%p\n", mi, external_allocator));
     /* Update stats */
     // TheMSys.atomic_inc(&TheMSys.stats_mi_alloc);  // missing
 }
 
-NRT_MemInfo *NRT_MemInfo_new(void *data, size_t size,
-                             NRT_dtor_function dtor, void *dtor_info)
+static
+NRT_MemInfo *ExtArray_NRT_MemInfo_new(void *data, size_t size,
+                             NRT_dtor_function dtor, void *dtor_info,
+                             ExtArrayHandle *handle)
 {
     NRT_MemInfo *mi = malloc(sizeof(NRT_MemInfo));
     NRT_Debug(nrt_debug_print("NRT_MemInfo_new mi=%p\n", mi));
-    NRT_MemInfo_init(mi, data, size, dtor, dtor_info, NULL);
+    ExtArray_NRT_MemInfo_init(mi, data, size, dtor, dtor_info, NULL, handle);
     return mi;
 }
 
@@ -73,5 +80,5 @@ void custom_dtor(void* ptr, size_t size, void* info) {
 
 NRT_MemInfo* extarray_make_meminfo(ExtArrayHandle* handle) {
     void* dtor_info = handle;
-    return NRT_MemInfo_new(handle->buffer, handle->nbytes, custom_dtor, dtor_info);
+    return ExtArray_NRT_MemInfo_new(handle->buffer, handle->nbytes, custom_dtor, dtor_info, handle);
 }

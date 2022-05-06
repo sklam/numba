@@ -104,7 +104,6 @@ def test_extarray_basic():
 
 
 class ExtArrayType(types.Array):
-    __use_overload_indexing__ = True
     """This is needed for overloading getitem/setitem"""
 
     def __init__(self, *args, **kwargs):
@@ -130,6 +129,19 @@ class ExtArrayType(types.Array):
             return ExtArrayType
         else:
             return NotImplemented
+
+    def copy(self, dtype=None, ndim=None, layout=None, readonly=None):
+        if dtype is None:
+            dtype = self.dtype
+        if ndim is None:
+            ndim = self.ndim
+        if layout is None:
+            layout = self.layout
+        if readonly is None:
+            readonly = not self.mutable
+        return type(self)(dtype=dtype, ndim=ndim, layout=layout, readonly=readonly,
+                          aligned=self.aligned)
+
 
 
 @typeof_impl.register(ExtArray)
@@ -286,6 +298,73 @@ llvm.add_symbol(
     "extarray_make_meminfo",
     ctypes.cast(extarray_capi.make_meminfo, ctypes.c_void_p).value,
 )
+####
+
+def cast_integer(context, builder, val, fromty, toty):
+    # XXX Shouldn't require this.
+    if toty.bitwidth == fromty.bitwidth:
+        # Just a change of signedness
+        return val
+    elif toty.bitwidth < fromty.bitwidth:
+        # Downcast
+        return builder.trunc(val, context.get_value_type(toty))
+    elif fromty.signed:
+        # Signed upcast
+        return builder.sext(val, context.get_value_type(toty))
+    else:
+        # Unsigned upcast
+        return builder.zext(val, context.get_value_type(toty))
+
+
+@intrinsic
+def intrin_alloc(typingctx, allocsize, align):
+    """Intrinsic to call into the allocator for Array
+    """
+
+    def codegen(context, builder, signature, args):
+        [allocsize, align] = args
+
+        # XXX: error are being eaten.
+        #      example: replace the next line with `align_u32 = align`
+        # align_u32 = cast_integer(
+        #     context, builder, align, signature.args[1], types.uint32
+        # )
+        meminfo = extarray_new_meminfo(builder, allocsize)
+        return meminfo
+
+    from numba.core.typing import signature
+
+    mip = types.MemInfoPointer(types.voidptr)  # return untyped pointer
+    sig = signature(mip, allocsize, align)
+    return sig, codegen
+
+
+@overload_classmethod(ExtArrayType, "_allocate")
+def oat_allocate(cls, allocsize, alignment):
+    def impl(cls, allocsize, alignment):
+        return intrin_alloc(allocsize, alignment)
+
+    return impl
+
+####
+
+def extarray_new_meminfo(builder, nbytes):
+    # Call extarray_alloc to allocate a ExtArray handle
+    alloc_fnty = llvmir.FunctionType(cgutils.voidptr_t, [cgutils.intp_t])
+    alloc_fn = cgutils.get_or_insert_function(
+        builder.module, alloc_fnty, "extarray_alloc",
+    )
+    handle = builder.call(alloc_fn, [nbytes])
+
+    # Make Meminfo
+    meminfo_fnty = llvmir.FunctionType(
+        cgutils.voidptr_t, [cgutils.voidptr_t]
+    )
+    meminfo_fn = cgutils.get_or_insert_function(
+        builder.module, meminfo_fnty, name="extarray_make_meminfo"
+    )
+    meminfo = builder.call(meminfo_fn, [handle])
+    return meminfo
 
 
 @intrinsic(prefer_literal=True)
@@ -417,25 +496,25 @@ def intrin_otherarray_as_numpy(typingctx, arr):
     return sig, codegen
 
 
-@overload(operator.getitem)
-def ol_getitem_impl(arr, idx):
-    if isinstance(arr, ExtArrayType):
+# @overload(operator.getitem)
+# def ol_getitem_impl(arr, idx):
+#     if isinstance(arr, ExtArrayType):
 
-        def impl(arr, idx):
-            return arr.as_numpy()[idx]
+#         def impl(arr, idx):
+#             return arr.as_numpy()[idx]
 
-        return impl
+#         return impl
 
 
-@overload(operator.setitem)
-def ol_setitem_impl(arr, idx, val):
-    if isinstance(arr, ExtArrayType):
+# @overload(operator.setitem)
+# def ol_setitem_impl(arr, idx, val):
+#     if isinstance(arr, ExtArrayType):
 
-        def impl(arr, idx, val):
-            nparr = arr.as_numpy()
-            nparr[idx] = val
+#         def impl(arr, idx, val):
+#             nparr = arr.as_numpy()
+#             nparr[idx] = val
 
-        return impl
+#         return impl
 
 
 def test_setitem():
@@ -465,6 +544,15 @@ def test_getitem():
     res = foo(10)
     assert res == np.arange(10).sum()
 
+def test_getitem_slice():
+    @njit
+    def foo(size):
+        arr = extarray_empty((2, size), dtype=np.float64)
+        return arr[0]
+
+    res = foo(10)
+    print(type(res))
+    assert False
 
 # ----------------------------------------------------------------------------
 # Part 5: Access to handle address in ExtArray
@@ -543,3 +631,9 @@ def test_add():
     res = foo(12)
     assert isinstance(res, ExtArray)
     np.testing.assert_equal(res.as_numpy(), np.arange(n) + np.arange(n))
+
+
+"""
+Investigate if having a ExtArrayType._allocate will fix the segfault
+from reusing the getitem/setitem
+"""
