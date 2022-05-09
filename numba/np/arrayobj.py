@@ -443,9 +443,10 @@ def getitem_arraynd_intp(context, builder, sig, args):
 
     assert aryty.ndim >= 1
     ary = make_array(aryty)(context, builder, ary)
-
+    context.debug_print(builder, "_getitem_array_generic")
     res = _getitem_array_generic(context, builder, sig.return_type,
                                  aryty, ary, (idxty,), (idx,))
+    context.debug_print(builder, "return from getitem_arraynd_intp")
     return impl_ret_borrowed(context, builder, sig.return_type, res)
 
 

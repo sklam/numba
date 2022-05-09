@@ -1,7 +1,9 @@
+import os
 import ctypes
 
-
-lib = ctypes.CDLL('libextarray.so')
+# Get libextarray.so relative to this file
+_dirpath = os.path.dirname(__file__)
+lib = ctypes.CDLL(os.path.join(_dirpath, 'libextarray.so'))
 
 
 class ExtArrayHandle(ctypes.Structure):

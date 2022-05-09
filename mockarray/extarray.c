@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "numba/core/runtime/nrt.h"
 #include "numba/core/runtime/nrt_external.h"
 
@@ -11,6 +12,7 @@ typedef struct {
 ExtArrayHandle* extarray_alloc(size_t nbytes) {
     ExtArrayHandle *hldr = malloc(nbytes);
     hldr->buffer = malloc(nbytes);
+    memset(hldr->buffer, 0, nbytes);
     hldr->nbytes = nbytes;
     return hldr;
 }

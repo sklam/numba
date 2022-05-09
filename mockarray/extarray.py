@@ -33,8 +33,11 @@ import extarray_capi
 # ----------------------------------------------------------------------------
 # Part 1: Setup basic `ExtArray` class
 
-
+# Define a python wrapper of the array object
 class ExtArray:
+    """This is the python wrapper of the array object defined in libextarray.so.
+    This is a simple array implementation is always C-contiguous.
+    """
     def __init__(
         self,
         shape: Tuple[int, ...],
@@ -49,6 +52,7 @@ class ExtArray:
 
     @property
     def ndim(self):
+        """number of dimension"""
         return len(self.shape)
 
     @property
@@ -58,13 +62,19 @@ class ExtArray:
 
     @property
     def handle_addr(self) -> int:
+        """Returns the handle address
+        """
         return ctypes.cast(self.handle, ctypes.c_void_p).value
 
     @property
     def data_addr(self) -> int:
+        """Returns the data address of the handle
+        """
         return extarray_capi.getpointer(self.handle)
 
     def as_numpy(self):
+        """Returns a numpy.ndarray wrapping the buffer of this array.
+        """
         buf = (ctypes.c_byte * self.nbytes).from_address(
             extarray_capi.getpointer(self.handle)
         )
@@ -84,6 +94,8 @@ class ExtArray:
 
 
 def test_extarray_basic():
+    """Test ExtArray class
+    """
     nelem = 10
     handle = extarray_capi.alloc(nelem * np.dtype(np.float64).itemsize)
     ea = ExtArray(shape=(nelem,), dtype=np.float64, handle=handle)
@@ -94,8 +106,9 @@ def test_extarray_basic():
     print("pointer", hex(ptr))
 
     cbuf = ea.as_numpy()
-    print(cbuf)  # uninitialized garbage values
-
+    # assert all the memory are zero'ed
+    print(cbuf)
+    np.testing.assert_array_equal(cbuf, 0)
     extarray_capi.free(handle)
 
 
@@ -104,7 +117,7 @@ def test_extarray_basic():
 
 
 class ExtArrayType(types.Array):
-    """This is needed for overloading getitem/setitem"""
+    """A Numba type of ExtArray"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -115,20 +128,9 @@ class ExtArrayType(types.Array):
             dtype=self.dtype, ndim=self.ndim, layout=self.layout
         )
 
-    # Needed for overloading ufunc
+    # Needed for overloading operators and ufuncs
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        return NotImplemented  # disable default ufunc
-        if method == "__call__":
-            for inp in inputs:
-                if not isinstance(inp, (types.Array, types.Number)):
-                    return NotImplemented
-            # # Ban if all arguments are OtherArrayType
-            # if all(isinstance(inp, OtherArrayType) for inp in inputs):
-            #     return NotImplemented
-            return NotImplemented
-            return ExtArrayType
-        else:
-            return NotImplemented
+        return NotImplemented  # disable default numpy-based implementation
 
     def copy(self, dtype=None, ndim=None, layout=None, readonly=None):
         if dtype is None:
@@ -139,17 +141,25 @@ class ExtArrayType(types.Array):
             layout = self.layout
         if readonly is None:
             readonly = not self.mutable
-        return type(self)(dtype=dtype, ndim=ndim, layout=layout, readonly=readonly,
-                          aligned=self.aligned)
+        return type(self)(
+            dtype=dtype,
+            ndim=ndim,
+            layout=layout,
+            readonly=readonly,
+            aligned=self.aligned,
+        )
 
 
-
+# Implement `typeof` for `ExtArray`.
+# This affects `numba.typeof(x)`, which is used at function dispatching.
 @typeof_impl.register(ExtArray)
 def typeof_index(val, c):
     return ExtArrayType(typeof(val.dtype), val.ndim, val.layout)
 
 
 def test_extarraytype_basic():
+    """ExtArrayType and typeof
+    """
     nelem = 10
     handle = extarray_capi.alloc(nelem * np.dtype(np.float64).itemsize)
     ea = ExtArray(shape=(nelem,), dtype=np.float64, handle=handle)
@@ -165,6 +175,9 @@ def test_extarraytype_basic():
 # ----------------------------------------------------------------------------
 # Part 3: Datamodel, box and unbox
 
+
+# Define the datamodel for `ExtArrayType`.
+# The base array data model is defined in `numba/core/datamodel/models.py`.
 
 @register_model(ExtArrayType)
 class _ExtArrayTypeModel(models.StructModel):
@@ -185,37 +198,51 @@ class _ExtArrayTypeModel(models.StructModel):
         super().__init__(dmm, fe_type, members)
 
 
+# Define unboxer for `ExtArrayType`.
+
 @unbox(ExtArrayType)
 def unbox_extarray(typ, obj, c):
+    # First convert ExtArray into a numpy array and reuse the unboxer
     as_numpy = c.pyapi.object_getattr_string(obj, "as_numpy")
     nparr = c.pyapi.call_function_objargs(as_numpy, ())
     data_array_type = typ.as_base_array_type()
     ary = c.unbox(data_array_type, nparr)
-    c.pyapi.decref(nparr)
 
     data_ary = c.context.make_array(data_array_type)(
         c.context, c.builder, value=ary.value
     )
 
-    nativearycls = c.context.make_array(typ)
-    nativeary = nativearycls(c.context, c.builder)
-    nativeary.meminfo = data_ary.meminfo
-    nativeary.nitems = data_ary.nitems
-    nativeary.itemsize = data_ary.itemsize
-    nativeary.data = data_ary.data
-    nativeary.shape = data_ary.shape
-    nativeary.strides = data_ary.strides
+    # Populate ExtArray struct with the ndarray struct
+    extarraycls = c.context.make_array(typ)
+    extarray = extarraycls(c.context, c.builder)
+    extarray.meminfo = data_ary.meminfo
+    extarray.nitems = data_ary.nitems
+    extarray.itemsize = data_ary.itemsize
+    extarray.data = data_ary.data
+    extarray.shape = data_ary.shape
+    extarray.strides = data_ary.strides
 
+    # Populate the `handle` field
     handle_obj = c.pyapi.object_getattr_string(obj, "handle_addr")
     handle = c.unbox(types.uintp, handle_obj).value
-    c.pyapi.decref(handle_obj)
 
-    nativeary.handle = c.context.cast(
+    extarray.handle = c.context.cast(
         c.builder, handle, types.uintp, types.voidptr
     )
 
-    aryptr = nativeary._getpointer()
-    return NativeValue(c.builder.load(aryptr), is_error=c.pyapi.c_api_error())
+    aryptr = extarray._getpointer()
+
+    def cleanup():
+        if ary.cleanup is not None:
+            ary.cleanup()
+        c.pyapi.decref(nparr)
+        c.pyapi.decref(handle_obj)
+
+    return NativeValue(
+        c.builder.load(aryptr),
+        is_error=c.pyapi.c_api_error(),
+        cleanup=cleanup,
+    )
 
 
 def _box_extarray(array, handle):
@@ -225,16 +252,18 @@ def _box_extarray(array, handle):
     return ExtArray(shape=array.shape, dtype=array.dtype, handle=hldr)
 
 
+# Define boxer for `ExtArrayType`
+
 @box(ExtArrayType)
 def box_extarray(typ, val, c):
     base_ary = c.context.make_array(typ.as_base_array_type())(
         c.context, c.builder
     )
-    nativearycls = c.context.make_array(typ)
-    nativeary = nativearycls(c.context, c.builder, value=val)
-    cgutils.copy_struct(base_ary, nativeary)
+    extarraycls = c.context.make_array(typ)
+    extarray = extarraycls(c.context, c.builder, value=val)
+    cgutils.copy_struct(base_ary, extarray)
 
-    handle = nativeary.handle
+    handle = extarray.handle
     data_ary = c.box(typ.as_base_array_type(), base_ary._getvalue())
 
     boxer = c.pyapi.unserialize(c.pyapi.serialize_object(_box_extarray))
@@ -244,7 +273,6 @@ def box_extarray(typ, val, c):
     )
     retval = c.pyapi.call_function_objargs(boxer, [data_ary, handle_obj])
     c.pyapi.decref(handle_obj)
-
     return retval
 
 
@@ -300,6 +328,7 @@ llvm.add_symbol(
 )
 ####
 
+
 def cast_integer(context, builder, val, fromty, toty):
     # XXX Shouldn't require this.
     if toty.bitwidth == fromty.bitwidth:
@@ -323,19 +352,12 @@ def intrin_alloc(typingctx, allocsize, align):
 
     def codegen(context, builder, signature, args):
         [allocsize, align] = args
-
-        # XXX: error are being eaten.
-        #      example: replace the next line with `align_u32 = align`
-        # align_u32 = cast_integer(
-        #     context, builder, align, signature.args[1], types.uint32
-        # )
+        # Note: align is being ignored for now
         meminfo = extarray_new_meminfo(builder, allocsize)
         return meminfo
 
-    from numba.core.typing import signature
-
     mip = types.MemInfoPointer(types.voidptr)  # return untyped pointer
-    sig = signature(mip, allocsize, align)
+    sig = typing.signature(mip, allocsize, align)
     return sig, codegen
 
 
@@ -346,7 +368,9 @@ def oat_allocate(cls, allocsize, alignment):
 
     return impl
 
+
 ####
+
 
 def extarray_new_meminfo(builder, nbytes):
     # Call extarray_alloc to allocate a ExtArray handle
@@ -357,9 +381,7 @@ def extarray_new_meminfo(builder, nbytes):
     handle = builder.call(alloc_fn, [nbytes])
 
     # Make Meminfo
-    meminfo_fnty = llvmir.FunctionType(
-        cgutils.voidptr_t, [cgutils.voidptr_t]
-    )
+    meminfo_fnty = llvmir.FunctionType(cgutils.voidptr_t, [cgutils.voidptr_t])
     meminfo_fn = cgutils.get_or_insert_function(
         builder.module, meminfo_fnty, name="extarray_make_meminfo"
     )
@@ -490,31 +512,8 @@ def intrin_otherarray_as_numpy(typingctx, arr):
         context.nrt.incref(builder, base_arry_t, out)
         return out
 
-    from numba.core.typing import signature
-
-    sig = signature(base_arry_t, arr)
+    sig = typing.signature(base_arry_t, arr)
     return sig, codegen
-
-
-# @overload(operator.getitem)
-# def ol_getitem_impl(arr, idx):
-#     if isinstance(arr, ExtArrayType):
-
-#         def impl(arr, idx):
-#             return arr.as_numpy()[idx]
-
-#         return impl
-
-
-# @overload(operator.setitem)
-# def ol_setitem_impl(arr, idx, val):
-#     if isinstance(arr, ExtArrayType):
-
-#         def impl(arr, idx, val):
-#             nparr = arr.as_numpy()
-#             nparr[idx] = val
-
-#         return impl
 
 
 def test_setitem():
@@ -544,15 +543,19 @@ def test_getitem():
     res = foo(10)
     assert res == np.arange(10).sum()
 
-def test_getitem_slice():
+
+def DISABLED_test_getitem_slice():
+    # this will segfault because existing code now dispatching to make the
+    # correct array struct
     @njit
-    def foo(size):
-        arr = extarray_empty((2, size), dtype=np.float64)
+    def foo(arr):
         return arr[0]
 
-    res = foo(10)
+    arr = extarray_empty((2, 10), dtype=np.float64)
+    res = foo(arr)
     print(type(res))
     assert False
+
 
 # ----------------------------------------------------------------------------
 # Part 5: Access to handle address in ExtArray
@@ -634,6 +637,18 @@ def test_add():
 
 
 """
+
+NOTES:
+
 Investigate if having a ExtArrayType._allocate will fix the segfault
 from reusing the getitem/setitem
+
+numba.np.arrayobj.getitem_arraynd_intp
+                 ._getitem_array_generic
+are segfaulting
+
+arrayobj.make_array
+        .make_view
+        .populate_array
+may need dispatching
 """
