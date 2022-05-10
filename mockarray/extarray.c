@@ -7,6 +7,7 @@
 typedef struct {
     void *buffer;
     size_t nbytes;
+    size_t refct;
 } ExtArrayHandle;
 
 ExtArrayHandle* extarray_alloc(size_t nbytes) {
@@ -14,12 +15,22 @@ ExtArrayHandle* extarray_alloc(size_t nbytes) {
     hldr->buffer = malloc(nbytes);
     memset(hldr->buffer, 0, nbytes);
     hldr->nbytes = nbytes;
+    hldr->refct = 1;
     return hldr;
 }
 
+void extarray_acquire(ExtArrayHandle *hldr) { 
+    hldr->refct += 1;
+}
+
+
 void extarray_free(ExtArrayHandle *hldr) { 
-    free(hldr->buffer);
-    free(hldr);
+    // printf("%p free %zu\n", hldr, hldr->refct);
+    hldr->refct -= 1;
+    if (hldr->refct == 0) {
+        free(hldr->buffer);
+        free(hldr);
+    }
 }
 
 void* extarray_getpointer(ExtArrayHandle *hldr) {
@@ -29,6 +40,12 @@ void* extarray_getpointer(ExtArrayHandle *hldr) {
 size_t extarray_getnbytes(ExtArrayHandle *hldr) {
     return hldr->nbytes;
 }
+
+size_t extarray_getrefcount(ExtArrayHandle *hldr) {
+    return hldr->refct;
+}
+
+
 
 
 /* The following is adapted from numba/core/runtime/nrt.c 
@@ -43,7 +60,7 @@ struct MemInfo {
     void              *data;
     size_t            size;    /* only used for NRT allocated memory */
     NRT_ExternalAllocator *external_allocator;
-    void              *handle;
+    ExtArrayHandle   *handle;
 };
 
 static
@@ -83,4 +100,9 @@ void custom_dtor(void* ptr, size_t size, void* info) {
 NRT_MemInfo* extarray_make_meminfo(ExtArrayHandle* handle) {
     void* dtor_info = handle;
     return ExtArray_NRT_MemInfo_new(handle->buffer, handle->nbytes, custom_dtor, dtor_info, handle);
+}
+
+
+ExtArrayHandle* extarray_meminfo_gethandle(NRT_MemInfo* mi) {
+    return mi->handle;
 }
