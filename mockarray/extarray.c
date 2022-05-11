@@ -4,43 +4,73 @@
 #include "numba/core/runtime/nrt_external.h"
 
 
-typedef struct {
-    void *buffer;
-    size_t nbytes;
-    size_t refct;
-} ExtArrayHandle;
+struct _ExtArrayHandle;
+typedef struct _ExtArrayHandle ExtArrayHandle;
 
+struct _ExtArrayHandle{
+    void            *base;     // base data pointer
+    void            *curptr;   // current data pointer (e.g. slicing)
+    size_t           nbytes;   // size of data in data pointer
+    size_t           refct;    // refcount for the handle  
+    ExtArrayHandle  *parent;   // parent handle object
+};
+
+/**
+ * Allocate ExtArrayHandle
+ */
 ExtArrayHandle* extarray_alloc(size_t nbytes) {
     ExtArrayHandle *hldr = malloc(nbytes);
-    hldr->buffer = malloc(nbytes);
-    memset(hldr->buffer, 0, nbytes);
+    hldr->base = malloc(nbytes);
+    memset(hldr->base, 0, nbytes); // zero the allocated memory
+    hldr->curptr = hldr->base;
     hldr->nbytes = nbytes;
     hldr->refct = 1;
+    hldr->parent = NULL;
     return hldr;
 }
 
+/**
+ * Acquire a reference
+ */
 void extarray_acquire(ExtArrayHandle *hldr) { 
     hldr->refct += 1;
 }
 
 
+/**
+ * Release a reference to ExtArrayHandle and free it if needed
+ */
 void extarray_free(ExtArrayHandle *hldr) { 
     // printf("%p free %zu\n", hldr, hldr->refct);
     hldr->refct -= 1;
     if (hldr->refct == 0) {
-        free(hldr->buffer);
-        free(hldr);
+        if (hldr->parent) {
+            extarray_free(hldr->parent);
+        } else {
+            // printf("release\n");
+            free(hldr->base);
+            free(hldr);
+        }
     }
 }
 
+/**
+ * Get the data pointer of the handle
+ */
 void* extarray_getpointer(ExtArrayHandle *hldr) {
-    return hldr->buffer;
+    return hldr->curptr;
 }
 
+/**
+ * Get the number of bytes referred to by this handle
+ */
 size_t extarray_getnbytes(ExtArrayHandle *hldr) {
     return hldr->nbytes;
 }
 
+/**
+ * Get the refcount.
+ */
 size_t extarray_getrefcount(ExtArrayHandle *hldr) {
     return hldr->refct;
 }
@@ -99,10 +129,21 @@ void custom_dtor(void* ptr, size_t size, void* info) {
 
 NRT_MemInfo* extarray_make_meminfo(ExtArrayHandle* handle) {
     void* dtor_info = handle;
-    return ExtArray_NRT_MemInfo_new(handle->buffer, handle->nbytes, custom_dtor, dtor_info, handle);
+    // printf("extarray_meminfo_gethandle %p\n", handle->curptr);
+    return ExtArray_NRT_MemInfo_new(handle->curptr, handle->nbytes, custom_dtor, dtor_info, handle);
 }
 
 
-ExtArrayHandle* extarray_meminfo_gethandle(NRT_MemInfo* mi) {
-    return mi->handle;
+ExtArrayHandle* extarray_meminfo_gethandle(NRT_MemInfo* mi, void *data, size_t nbytes) {
+    // printf("mi->data %p  ... %p\n", mi->data, data);
+    if (mi->handle->curptr == data)
+        return mi->handle;
+    ExtArrayHandle *new_handle = malloc(sizeof(ExtArrayHandle));
+    new_handle->base = mi->handle->base;
+    new_handle->nbytes = nbytes;
+    new_handle->refct = 1;
+    new_handle->curptr = data;
+    new_handle->parent = mi->handle;
+    // printf("newhandle\n");
+    return new_handle;
 }

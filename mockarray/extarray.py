@@ -1,3 +1,13 @@
+# A tutorial on writing a custom array implementation and reuse numba's numpy
+# array implementation.
+#
+# This file is divided into multiple parts and introduces key ideas
+# incrementally. There are tests that exercise the feature added in each part.
+#
+# Test with `pytest`.
+
+import pytest
+
 from typing import Tuple
 import ctypes
 
@@ -22,13 +32,11 @@ from numba.core.pythonapi import box, unbox, NativeValue
 from numba.core import cgutils
 from numba.core import typing
 import numpy as np
-from numba.core.typing.npydecl import parse_dtype, parse_shape
-from numba.np.arrayobj import _parse_empty_args, _empty_nd_impl
-from numba.core.imputils import impl_ret_new_ref
 from numba.core.unsafe import refcount
 from numba.np import numpy_support
 from numba.core.pythonapi import _BoxContext, _UnboxContext
 from numba.np.arrayobj import populate_array
+from numba.core.errors import TypingError
 
 import extarray_capi
 
@@ -36,6 +44,8 @@ import extarray_capi
 # Part 1: Setup basic `ExtArray` class
 
 # Define a python wrapper of the array object
+
+
 class ExtArray:
     """This is the python wrapper of the array object defined in libextarray.so.
     This is a simple array implementation is always C-contiguous.
@@ -104,7 +114,15 @@ class ExtArray:
         )
 
     def __repr__(self):
-        return f"ExtArray({self.shape}, 0x{self.handle_addr:x}, refct={self.refcount})"
+        fields = ", ".join(
+            [
+                f"shape={self.shape}",
+                f"data=0x{self.data_addr:x}",
+                f"handle=0x{self.handle_addr:x}",
+                f"refct={self.refcount}",
+            ]
+        )
+        return f"ExtArray({fields})"
 
     @property
     def refcount(self):
@@ -125,6 +143,7 @@ def test_extarray_basic():
 
     cbuf = ea.as_numpy()
     # assert all the memory are zero'ed
+    print(ea)
     print(cbuf)
     np.testing.assert_array_equal(cbuf, 0)
 
@@ -139,6 +158,8 @@ class ExtArrayType(types.Array):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = f"ExtArrayType({self.name})"
+        if self.layout != "C":
+            raise ValueError("ExtArrayType can only be of C contiguous")
 
     def as_base_array_type(self):
         return types.Array(dtype=self.dtype, ndim=self.ndim, layout=self.layout)
@@ -335,11 +356,21 @@ def box_extarray(typ, val, c: _BoxContext):
     extarray = extarraycls(c.context, c.builder, value=val)
 
     # Extract the handle from the meminfo
-    gethandle_fnty = llvmir.FunctionType(cgutils.voidptr_t, [cgutils.voidptr_t])
+    gethandle_fnty = llvmir.FunctionType(
+        cgutils.voidptr_t,
+        [cgutils.voidptr_t, cgutils.voidptr_t, cgutils.intp_t],
+    )
     gethandle_fn = cgutils.get_or_insert_function(
         c.builder.module, gethandle_fnty, "extarray_meminfo_gethandle",
     )
-    handle = c.builder.call(gethandle_fn, [extarray.meminfo])
+    handle = c.builder.call(
+        gethandle_fn,
+        [
+            extarray.meminfo,
+            c.builder.bitcast(extarray.data, cgutils.voidptr_t),
+            c.builder.mul(extarray.itemsize, extarray.nitems),
+        ],
+    )
 
     lluintp = c.context.get_value_type(types.uintp)
     handle_obj = c.pyapi.long_from_longlong(c.builder.ptrtoint(handle, lluintp))
@@ -516,7 +547,6 @@ def extarray_as_numpy(arr):
 
 @intrinsic
 def intrin_otherarray_as_numpy(typingctx, arr):
-
     base_arry_t = arr.as_base_array_type()
 
     def codegen(context, builder, signature, args):
@@ -563,17 +593,28 @@ def test_getitem():
     assert res == np.arange(10).sum()
 
 
-def DISABLED_test_getitem_slice():
-    # this will segfault because existing code now dispatching to make the
-    # correct array struct
+def test_getitem_slice():
     @njit
     def foo(arr):
-        return arr[0]
+        return arr[1]
 
     arr = extarray_empty((2, 10), dtype=np.float64)
+    arr.as_numpy()[:] = raw = np.arange(20).reshape(2, 10)
     res = foo(arr)
-    print(type(res))
-    assert False
+    np.testing.assert_equal(res.as_numpy(), raw[1])
+
+
+def test_getitem_slice_unsupported_layout():
+    @njit
+    def foo(arr):
+        return arr[:, 1]
+
+    arr = extarray_empty((2, 10), dtype=np.float64)
+    arr.as_numpy()[:] = np.arange(20).reshape(2, 10)
+    with pytest.raises(TypingError) as e:
+        # Slicing to non-C contiguous is not supported
+        foo(arr)
+    e.match("ExtArrayType can only be of C contiguous")
 
 
 # ----------------------------------------------------------------------------
@@ -616,6 +657,9 @@ def test_handle_addr():
 # Internally, Numba's numpy ndarray implementation expects the array type
 # to have a `_allocate()` classmethod. Defining this will enable reuse of
 # existing numpy ndarray code.
+
+# See `ExtArrayType.__array_ufunc__`. It enables ExtArrayType to reuse the
+# internal ndarray add inside Numba.
 
 
 def extarray_new_meminfo(builder, nbytes):
@@ -681,9 +725,13 @@ def test_add():
     np.testing.assert_equal(res.as_numpy(), np.arange(n) + np.arange(n))
 
 
-
 # ----------------------------------------------------------------------------
-# Part 7: Implement extarray sub with a custom overload version
+# Part 7: Implement extarray subtract with a custom overload version
+
+# See ExtArrayType.__array_ufunc__. It disables the reuse of the internal
+# subtract implementation in Numba.
+
+# Define an overload for subtraction
 
 
 @overload(operator.sub)
@@ -722,22 +770,3 @@ def test_sub():
     res = foo(12)
     assert isinstance(res, ExtArray)
     np.testing.assert_equal(res.as_numpy(), 2 * np.arange(n) - 2 * np.arange(n))
-
-
-
-"""
-
-NOTES:
-
-Investigate if having a ExtArrayType._allocate will fix the segfault
-from reusing the getitem/setitem
-
-numba.np.arrayobj.getitem_arraynd_intp
-                 ._getitem_array_generic
-are segfaulting
-
-arrayobj.make_array
-        .make_view
-        .populate_array
-may need dispatching
-"""
