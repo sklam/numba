@@ -477,6 +477,14 @@ class ConcreteTemplate(FunctionTemplate):
     Defines attributes "cases" as a list of signature to match against the
     given input types.
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        import inspect
+        frame = inspect.stack()[1].frame
+        self._ctor_caller_file = inspect.getmodule(frame).__file__
+        self._ctor_caller_lineno = frame.f_lineno
+        if not self._ctor_caller_file:
+            print("-----", inspect.stack()[1].frame)
 
     def apply(self, args, kws):
         cases = getattr(self, 'cases')
@@ -495,8 +503,8 @@ class ConcreteTemplate(FunctionTemplate):
             'kind': kind,
             'name': name,
             'sig': "unknown",
-            'filename': "unknown",
-            'lines': ("unknown", "unknown"),
+            'filename': f"(unknown-{self._ctor_caller_file})",
+            'lines': (str(self._ctor_caller_lineno), "unknown"),
             'docstring': "unknown"
         }
         return info

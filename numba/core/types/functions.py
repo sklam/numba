@@ -353,6 +353,9 @@ class BaseFunction(Callable):
                     else:
                         if sig is not None:
                             yield temp, sig
+                            # Found a working variant (literal vs  nonliteral).
+                            # Stop searching.
+                            break
                         else:
                             registered_sigs = getattr(temp, 'cases', None)
                             if registered_sigs is not None:
