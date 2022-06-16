@@ -197,12 +197,28 @@ def overload_attribute(typ, attr, **kwargs):
     return decorate
 
 
+def _make_unique_func(func, name_postfix):
+    """TODO Move to to misc"""
+    from types import FunctionType
+    cloned = FunctionType(
+        code=func.__code__,
+        globals=func.__globals__,
+        name=f"__clone__{func.__name__}__for__{name_postfix}",
+        argdefs=func.__defaults__,
+        closure=func.__closure__)
+    cloned.__kwdefaults__ = func.__kwdefaults__
+    return cloned
+
+
 def _overload_method_common(typ, attr, **kwargs):
     """Common code for overload_method and overload_classmethod
     """
     from numba.core.typing.templates import make_overload_method_template
 
     def decorate(overload_func):
+        overload_func = _make_unique_func(
+            overload_func, "overload_method_{typ}_{attr}",
+        )
         copied_kwargs = kwargs.copy() # avoid mutating parent dict
         template = make_overload_method_template(
             typ, attr, overload_func,
