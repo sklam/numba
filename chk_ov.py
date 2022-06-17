@@ -37,7 +37,7 @@ def ov_foo_tensor(x, y):
     if isinstance(x, Tensor) and isinstance(y, Tensor):
         def impl(x, y):
             return "tensor"
-        return OVer((Tensor, Tensor), impl)
+        return OVer(Tensor, impl)
 
 
 tyctx = cpu_target.typing_context

@@ -35,13 +35,14 @@ class Signature(object):
     # of separate args and pysig...
     __slots__ = '_return_type', '_args', '_recvr', '_pysig', "specialized_signature"
 
-    def __init__(self, return_type, args, recvr, pysig=None):
+    def __init__(self, return_type, args, recvr, pysig=None, *, specialized_signature=None):
         if isinstance(args, list):
             args = tuple(args)
         self._return_type = return_type
         self._args = args
         self._recvr = recvr
         self._pysig = pysig
+        self.specialized_signature = specialized_signature
 
     @property
     def return_type(self):
@@ -96,7 +97,10 @@ class Signature(object):
         return not (self == other)
 
     def __repr__(self):
-        return "%s -> %s" % (self.args, self.return_type)
+        out = f"{self.args} -> {self.return_type}"
+        if self.specialized_signature is not None:
+            out = f"{out} @ {self.specialized_signature.__qualname__}"
+        return out
 
     @property
     def is_method(self):
@@ -483,8 +487,6 @@ class ConcreteTemplate(FunctionTemplate):
         frame = inspect.stack()[1].frame
         self._ctor_caller_file = inspect.getmodule(frame).__file__
         self._ctor_caller_lineno = frame.f_lineno
-        if not self._ctor_caller_file:
-            print("-----", inspect.stack()[1].frame)
 
     def apply(self, args, kws):
         cases = getattr(self, 'cases')

@@ -312,7 +312,24 @@ class BaseFunction(Callable):
         if len(specialized) == 1:
             return specialized[0]
         elif len(specialized) > 1:
-            raise TypeError(f"ambiguous with specialized {specialized}")
+            # Select the most specific implementation
+            spec_types = []
+            for _, sig in specialized:
+                spec_ty = sig.specialized_signature
+                spec_types.append(spec_ty)
+
+            scores = [0] * len(spec_types)
+            for i, this in enumerate(spec_types):
+                for that in spec_types:
+                    if this is not that:
+                        if this in that.__mro__:
+                            scores[i] += 1
+            ranked = sorted(zip(scores, range(len(spec_types))))
+            [first, second, *_] = ranked
+            if first[0] != second[0]:
+                return specialized[first[1]]
+            else:
+                raise TypeError(f"ambiguous with specialized {specialized}")
 
         # Pick without specialized signature
         if len(matched) == 1:
