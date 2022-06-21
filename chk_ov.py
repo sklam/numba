@@ -18,11 +18,12 @@ class Tensor(types.Array):
 
 models.register_default(Tensor)(models.ArrayModel)
 
-@overload(foo)
+@overload(foo, use_impl_for=True)
 def ov_foo_base(x, y):
     if isinstance(x, types.Array) and isinstance(y, types.Array):
         def impl(x, y):
             return "base"
+        impl.impl_for = types.Array
         return impl
 
 
@@ -32,12 +33,13 @@ class OVer:
         self.impl = impl
 
 
-@overload(foo)
+@overload(foo, use_impl_for=True)
 def ov_foo_tensor(x, y):
     if isinstance(x, Tensor) and isinstance(y, Tensor):
         def impl(x, y):
             return "tensor"
-        return OVer(Tensor, impl)
+        impl.impl_for = Tensor
+        return impl
 
 
 tyctx = cpu_target.typing_context

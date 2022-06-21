@@ -1019,7 +1019,7 @@ def impl_delitem(l, index):
         raise TypingError("list indices must be integers or slices")
 
 
-@overload(operator.contains)
+@overload(operator.contains, use_impl_for=True)
 def impl_contains(l, item):
     if not isinstance(l, types.ListType):
         return
@@ -1034,6 +1034,8 @@ def impl_contains(l, item):
                 return True
         else:
             return False
+
+    impl.impl_for = types.ListType
     return impl
 
 

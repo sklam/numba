@@ -587,8 +587,8 @@ class Contains(AbstractTemplate):
         (seq, val) = args
 
         if isinstance(seq, (types.Sequence)):
-            sig = signature(types.boolean, seq, val)
-            return sig.replace(impl_for=types.Sequence)
+            return signature(types.boolean, seq, val)
+
 
 @infer_global(operator.truth)
 class TupleBool(AbstractTemplate):

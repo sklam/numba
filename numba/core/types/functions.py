@@ -287,15 +287,15 @@ class BaseFunction(Callable):
 
         failures = _ResolutionFailures(context, self, args, kws,
                                        depth=self._depth)
-
-        order_by_typeclass = any(getattr(temp, "use_impl_for", False)
-                                 for temp in order)
         self._depth += 1
         try:
             matched = list(self._iter_matching_templates(context, args, kws, order, failures))
             if not matched:
                 failures.raise_error()
 
+
+            order_by_typeclass = any(getattr(temp, "use_impl_for", False)
+                                     for temp, _ in matched)
             if not order_by_typeclass:
                 temp, sig = matched[0]
             else:
