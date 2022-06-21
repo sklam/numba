@@ -14,7 +14,7 @@ class InContainer(AbstractTemplate):
         cont, item = args
         if isinstance(cont, types.Container):
             sig = signature(types.boolean, cont, cont.dtype)
-            return sig.replace(specialized_signature=types.Container)
+            return sig.replace(impl_for=types.Container)
 
 
 @infer_global(len)

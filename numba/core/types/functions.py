@@ -288,36 +288,49 @@ class BaseFunction(Callable):
         failures = _ResolutionFailures(context, self, args, kws,
                                        depth=self._depth)
 
+        order_by_typeclass = any(getattr(temp, "use_impl_for", False)
+                                 for temp in order)
+        self._depth += 1
+        try:
+            matched = list(self._iter_matching_templates(context, args, kws, order, failures))
+            if not matched:
+                failures.raise_error()
 
-        matched = list(self._iter_matching_templates(context, args, kws, order, failures))
+            if not order_by_typeclass:
+                temp, sig = matched[0]
+            else:
+                # print(f"---- matched {len(matched)}")
+                # for num, (temp, sig) in enumerate(matched):
+                #     specialized = sig.impl_for
+                #     # print(f"{num:3} -- {temp} {sig} !!! {specialized}")
+                temp, sig = self._select_best_versions(matched)
 
-        if not matched:
-            failures.raise_error()
-
-        # print(f"---- matched {len(matched)}")
-        for num, (temp, sig) in enumerate(matched):
-            specialized = getattr(sig, "specialized_signature", None)
-            # print(f"{num:3} -- {temp} {sig} !!! {specialized}")
-        temp, sig = self._select_best_versions(matched)
-
-        self._impl_keys[sig.args] = temp.get_impl_key(sig)
-        return sig
+            self._impl_keys[sig.args] = temp.get_impl_key(sig)
+            return sig
+        finally:
+            self._depth -= 1
 
     def _select_best_versions(self, matched):
         # Prefer versions with a specialized signature
         specialized = [
             (temp, sig) for temp, sig in matched
-            if getattr(sig, "specialized_signature", None) is not None
+            if sig.impl_for is not None
         ]
         if len(specialized) == 1:
             return specialized[0]
         elif len(specialized) > 1:
             # Select the most specific implementation
-            spec_types = []
-            for _, sig in specialized:
-                spec_ty = sig.specialized_signature
-                spec_types.append(spec_ty)
+            spec_types = [sig.impl_for for _, sig in specialized]
+            # Validate the signatures. All impl_for must have a common ancestry.
+            _, shortest_mro = min(zip(map(lambda x: len(x.__mro__), spec_types),
+                                 spec_types))
+            common_ancestry = shortest_mro.__mro__
+            for spec_ty in spec_types:
+                if spec_ty.__mro__[-len(common_ancestry):] != common_ancestry:
+                    msg = f"Not all signatures have a common ancestry {self}."
+                    raise errors.CompilerError(msg)
 
+            # Score each signature
             scores = [0] * len(spec_types)
             for i, this in enumerate(spec_types):
                 for that in spec_types:
@@ -343,48 +356,44 @@ class BaseFunction(Callable):
         prefer_lit = [True, False]    # old behavior preferring literal
         prefer_not = [False, True]    # new behavior preferring non-literal
 
-        self._depth += 1
-        try:
-            for temp_cls in order:
-                temp = temp_cls(context)
-                # The template can override the default and prefer literal args
-                choice = prefer_lit if temp.prefer_literal else prefer_not
-                for uselit in choice:
-                    try:
-                        if uselit:
-                            sig = temp.apply(args, kws)
-                        else:
-                            nolitargs = tuple([_unlit_non_poison(a) for a in args])
-                            nolitkws = {k: _unlit_non_poison(v)
-                                        for k, v in kws.items()}
-                            if nolitargs == args and nolitkws == kws:
-                                continue
-                            sig = temp.apply(nolitargs, nolitkws)
-                    except Exception as e:
-                        if (utils.use_new_style_errors() and not
-                                isinstance(e, errors.NumbaError)):
-                            raise e
-                        else:
-                            sig = None
-                            failures.add_error(temp, False, e, uselit)
+        for temp_cls in order:
+            temp = temp_cls(context)
+            # The template can override the default and prefer literal args
+            choice = prefer_lit if temp.prefer_literal else prefer_not
+            for uselit in choice:
+                try:
+                    if uselit:
+                        sig = temp.apply(args, kws)
                     else:
-                        if sig is not None:
-                            yield temp, sig
-                            # Found a working variant (literal vs  nonliteral).
-                            # Stop searching.
-                            break
+                        nolitargs = tuple([_unlit_non_poison(a) for a in args])
+                        nolitkws = {k: _unlit_non_poison(v)
+                                    for k, v in kws.items()}
+                        if nolitargs == args and nolitkws == kws:
+                            continue
+                        sig = temp.apply(nolitargs, nolitkws)
+                except Exception as e:
+                    if (utils.use_new_style_errors() and not
+                            isinstance(e, errors.NumbaError)):
+                        raise e
+                    else:
+                        sig = None
+                        failures.add_error(temp, False, e, uselit)
+                else:
+                    if sig is not None:
+                        yield temp, sig
+                        # Found a working variant (literal vs  nonliteral).
+                        # Stop searching.
+                        break
+                    else:
+                        registered_sigs = getattr(temp, 'cases', None)
+                        if registered_sigs is not None:
+                            msg = "No match for registered cases:\n%s"
+                            msg = msg % '\n'.join(" * {}".format(x) for x in
+                                                registered_sigs)
                         else:
-                            registered_sigs = getattr(temp, 'cases', None)
-                            if registered_sigs is not None:
-                                msg = "No match for registered cases:\n%s"
-                                msg = msg % '\n'.join(" * {}".format(x) for x in
-                                                    registered_sigs)
-                            else:
-                                msg = 'No match.'
-                            failures.add_error(temp, True, msg, uselit)
+                            msg = 'No match.'
+                        failures.add_error(temp, True, msg, uselit)
 
-        finally:
-            self._depth -= 1
 
     def get_call_signatures(self):
         sigs = []
