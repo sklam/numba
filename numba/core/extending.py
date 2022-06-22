@@ -142,6 +142,7 @@ def impl_for(ty):
     """
     if not issubclass(ty, types.Type):
         raise TypeError("expecting a type class")
+
     def wrapped(fn):
         fn.impl_for = ty
         return fn

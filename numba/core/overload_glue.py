@@ -134,6 +134,7 @@ class _OverloadWrapper(object):
         if self._built:
             return
         self._built = True
+
         @overload(self._function, strict=False,
                   jit_options={'forceinline': True})
         def ol_generated(*ol_args, **ol_kwargs):

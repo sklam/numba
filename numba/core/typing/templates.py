@@ -812,7 +812,6 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         else:
             ovf_result = self._overload_func(*args, **kws)
 
-        expected_sig = None
         if ovf_result is None:
             # No implementation => fail typing
             self._impl_cache[cache_key] = None, None
@@ -911,7 +910,8 @@ class _OverloadFunctionTemplate(AbstractTemplate):
 
 
 def make_overload_template(func, overload_func, jit_options, strict,
-                           inline, prefer_literal=False, use_impl_for=False, **kwargs):
+                           inline, prefer_literal=False, use_impl_for=False,
+                           **kwargs):
     """
     Make a template class for function *func* overloaded by *overload_func*.
     Compiler options are passed as a dictionary to *jit_options*.

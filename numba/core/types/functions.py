@@ -289,10 +289,10 @@ class BaseFunction(Callable):
                                        depth=self._depth)
         self._depth += 1
         try:
-            matched = list(self._iter_matching_templates(context, args, kws, order, failures))
+            matched = list(self._iter_matching_templates(context, args, kws,
+                                                         order, failures))
             if not matched:
                 failures.raise_error()
-
 
             order_by_typeclass = any(getattr(temp, "use_impl_for", False)
                                      for temp, _ in matched)
@@ -323,7 +323,7 @@ class BaseFunction(Callable):
             spec_types = [sig.impl_for for _, sig in specialized]
             # Validate the signatures. All impl_for must have a common ancestry.
             _, shortest_mro = min(zip(map(lambda x: len(x.__mro__), spec_types),
-                                 spec_types))
+                                  spec_types))
             common_ancestry = shortest_mro.__mro__
             for spec_ty in spec_types:
                 if spec_ty.__mro__[-len(common_ancestry):] != common_ancestry:
@@ -349,7 +349,6 @@ class BaseFunction(Callable):
             return matched[0]
         elif len(matched) > 1:
             raise TypeError(f"ambiguous open versions {matched}")
-
 
     def _iter_matching_templates(self, context, args, kws, order, failures):
 
@@ -389,11 +388,10 @@ class BaseFunction(Callable):
                         if registered_sigs is not None:
                             msg = "No match for registered cases:\n%s"
                             msg = msg % '\n'.join(" * {}".format(x) for x in
-                                                registered_sigs)
+                                                  registered_sigs)
                         else:
                             msg = 'No match.'
                         failures.add_error(temp, True, msg, uselit)
-
 
     def get_call_signatures(self):
         sigs = []
