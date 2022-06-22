@@ -15,6 +15,7 @@ from numba.core.extending import (
     register_model,
     models,
     lower_builtin,
+    impl_for
 )
 from numba.core.imputils import iternext_impl
 from numba.core import types, cgutils
@@ -1027,6 +1028,7 @@ def impl_contains(l, item):
     itemty = l.item_type
     _check_for_none_typed(l, "__contains__")
 
+    @impl_for(types.ListType)
     def impl(l, item):
         casteditem = _cast(item, itemty)
         for i in l:
@@ -1035,7 +1037,6 @@ def impl_contains(l, item):
         else:
             return False
 
-    impl.impl_for = types.ListType
     return impl
 
 

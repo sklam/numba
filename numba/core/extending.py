@@ -136,6 +136,18 @@ def overload(func, jit_options={}, strict=True, inline='never',
     return decorate
 
 
+def impl_for(ty):
+    """A decorator to mark an overload implmentation function as implementing
+    for a particular type class.
+    """
+    if not issubclass(ty, types.Type):
+        raise TypeError("expecting a type class")
+    def wrapped(fn):
+        fn.impl_for = ty
+        return fn
+    return wrapped
+
+
 def register_jitable(*args, **kwargs):
     """
     Register a regular python function that can be executed by the python
