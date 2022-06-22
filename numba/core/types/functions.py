@@ -327,7 +327,8 @@ class BaseFunction(Callable):
             common_ancestry = shortest_mro.__mro__
             for spec_ty in spec_types:
                 if spec_ty.__mro__[-len(common_ancestry):] != common_ancestry:
-                    msg = f"Not all signatures have a common ancestry {self}."
+                    msg = ("Not all signatures have a"
+                           f" common `impl_for` ancestry in {self}.")
                     raise errors.CompilerError(msg)
 
             # Score each signature
@@ -342,13 +343,14 @@ class BaseFunction(Callable):
             if first[0] != second[0]:
                 return specialized[first[1]]
             else:
-                raise TypeError(f"ambiguous with specialized {specialized}")
+                msg = f"ambiguous with specialized versions: {specialized}"
+                raise TypeError(msg)
 
         # Pick without specialized signature
         if len(matched) == 1:
             return matched[0]
         elif len(matched) > 1:
-            raise TypeError(f"ambiguous open versions {matched}")
+            raise TypeError(f"ambiguous open versions: {matched}")
 
     def _iter_matching_templates(self, context, args, kws, order, failures):
 
