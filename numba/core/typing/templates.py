@@ -79,13 +79,15 @@ class Signature(object):
         """
         Needed because of __slots__.
         """
-        return self._return_type, self._args, self._recvr, self._pysig
+        return (self._return_type, self._args, self._recvr, self._pysig,
+                self._impl_for)
 
     def __setstate__(self, state):
         """
         Needed because of __slots__.
         """
-        self._return_type, self._args, self._recvr, self._pysig = state
+        (self._return_type, self._args, self._recvr, self._pysig,
+         self._impl_for) = state
 
     def __hash__(self):
         return hash((self.args, self.return_type))
