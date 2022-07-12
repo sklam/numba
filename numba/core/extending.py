@@ -58,7 +58,7 @@ _overload_default_jit_options = {'no_cpython_wrapper': True}
 
 
 def overload(func, jit_options={}, strict=True, inline='never',
-             prefer_literal=False, use_impl_for=False, **kwargs):
+             prefer_literal=False, impl_for=None, **kwargs):
     """
     A decorator marking the decorated function as typing and implementing
     *func* in nopython mode.
@@ -126,7 +126,8 @@ def overload(func, jit_options={}, strict=True, inline='never',
 
     def decorate(overload_func):
         template = make_overload_template(func, overload_func, opts, strict,
-                                          inline, prefer_literal, use_impl_for,
+                                          inline, prefer_literal,
+                                          impl_for=impl_for,
                                           **kwargs)
         infer(template)
         if callable(func):
@@ -134,19 +135,6 @@ def overload(func, jit_options={}, strict=True, inline='never',
         return overload_func
 
     return decorate
-
-
-def impl_for(ty):
-    """A decorator to mark an overload implmentation function as implementing
-    for a particular type class.
-    """
-    if not issubclass(ty, types.Type):
-        raise TypeError("expecting a type class")
-
-    def wrapped(fn):
-        fn.impl_for = ty
-        return fn
-    return wrapped
 
 
 def register_jitable(*args, **kwargs):

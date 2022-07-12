@@ -2,7 +2,7 @@ import unittest
 from functools import partial
 
 from numba.tests.support import TestCase
-from numba.core.extending import overload, impl_for
+from numba.core.extending import overload
 from numba.core import types
 from numba.core.datamodel import models
 from numba.core.registry import cpu_target
@@ -34,22 +34,20 @@ class TestImplForTypeResolution(TestCase):
         models.register_default(Tensor)(models.ArrayModel)
         models.register_default(DeepTensor)(models.ArrayModel)
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=types.Array)
         def ov_foo_base(x, y):
             if isinstance(x, types.Array) and isinstance(y, types.Array):
 
-                @impl_for(types.Array)
                 def impl(x, y):
                     return "base"
 
                 return impl
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=Tensor)
         def ov_foo_tensor(x, y):
             if isinstance(x, types.Array) and isinstance(y, types.Array):
                 if isinstance(x, Tensor) or isinstance(y, Tensor):
 
-                    @impl_for(Tensor)
                     def impl(x, y):
                         return "tensor"
 
@@ -78,52 +76,6 @@ class TestImplForTypeResolution(TestCase):
         check((deeptensor_t, tensor_t), types.literal("tensor"))
         check((deeptensor_t, altarray_t), types.literal("tensor"))
 
-    def test_ambiguous_open(self):
-        def foo():
-            # function to be overloaded
-            pass
-
-        class Tensor(types.Array):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-                self.name = f"Tensor({self.name})"
-
-        models.register_default(Tensor)(models.ArrayModel)
-
-        @overload(foo)
-        def ov_foo_base(x, y):
-            if isinstance(x, types.Array) and isinstance(y, types.Array):
-
-                def impl(x, y):
-                    return "base"
-
-                return impl
-
-        @overload(foo, use_impl_for=True)
-        def ov_foo_tensor(x, y):
-            if isinstance(x, Tensor) and isinstance(y, Tensor):
-                # intentionally left open (no impl_for)
-                def impl(x, y):
-                    return "tensor"
-
-                return impl
-
-        tyctx = cpu_target.typing_context
-        tyctx.refresh()
-
-        tensor_t = Tensor(types.intp, 2, "A")
-
-        fnty = tyctx.resolve_value_type(foo)
-
-        # When one of the matching overload opt-in to use_impl_for
-        self.check_fail(
-            tyctx,
-            fnty,
-            (tensor_t, tensor_t),
-            Exception,
-            "ambiguous open versions",
-        )
-
     def test_ambiguous_impl_for(self):
         def foo():
             # function to be overloaded
@@ -136,21 +88,19 @@ class TestImplForTypeResolution(TestCase):
 
         models.register_default(Tensor)(models.ArrayModel)
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=types.Array)
         def ov_foo_base(x, y):
             if isinstance(x, types.Array) and isinstance(y, types.Array):
 
-                @impl_for(types.Array)
                 def impl(x, y):
                     return "base"
 
                 return impl
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=types.Array)
         def ov_foo_tensor(x, y):
             if isinstance(x, Tensor) and isinstance(y, Tensor):
 
-                @impl_for(types.Array)
                 def impl(x, y):
                     return "tensor"
 
@@ -184,32 +134,29 @@ class TestImplForTypeResolution(TestCase):
 
         models.register_default(Tensor)(models.ArrayModel)
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=types.Array)
         def ov_foo_base(x, y):
             if isinstance(x, types.Array) and isinstance(y, types.Array):
 
-                @impl_for(types.Array)
                 def impl(x, y):
                     return "base"
 
                 return impl
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=Tensor)
         def ov_foo_tensor(x, y):
             # intentionally accept if either x or y is a Tensor
             if isinstance(x, Tensor) or isinstance(y, Tensor):
 
-                @impl_for(Tensor)
                 def impl(x, y):
                     return "tensor"
 
                 return impl
 
-        @overload(foo, use_impl_for=True)
+        @overload(foo, impl_for=types.Integer)
         def ov_foo_disjoint(x, y):
             if isinstance(x, Tensor) and isinstance(y, types.Integer):
 
-                @impl_for(types.Integer)
                 def impl(x, y):
                     return "int"
 
@@ -258,23 +205,21 @@ class TestImplForTypeResolution(TestCase):
 
                 return impl
 
-        @overload(matmul, use_impl_for=True)
+        @overload(matmul, impl_for=Dense)
         def ov_matmul_dense(a, b):
             if isinstance(a, types.Array) and isinstance(b, types.Array):
                 if isinstance(a, Dense) or isinstance(b, Dense):
 
-                    @impl_for(Dense)
                     def impl(a, b):
                         return "dense@dense"
 
                     return impl
 
-        @overload(matmul, use_impl_for=True)
+        @overload(matmul, impl_for=Sparse)
         def ov_matmul_sparse(a, b):
             if isinstance(a, types.Array) and isinstance(b, types.Array):
                 if isinstance(a, Sparse) or isinstance(b, Sparse):
 
-                    @impl_for(Sparse)
                     def impl(a, b):
                         return "sparse@sparse"
 
@@ -284,21 +229,19 @@ class TestImplForTypeResolution(TestCase):
             class DenseSparse(Dense, Sparse):
                 pass
 
-            @overload(matmul, use_impl_for=True)
+            @overload(matmul, impl_for=DenseSparse)
             def ov_matmul_dense_sparse(a, b):
                 if isinstance(a, Dense) and isinstance(b, Sparse):
 
-                    @impl_for(DenseSparse)
                     def impl(a, b):
                         return "dense@sparse"
 
                     return impl
 
-            @overload(matmul, use_impl_for=True)
+            @overload(matmul, impl_for=DenseSparse)
             def ov_matmul_sparse_dense(a, b):
                 if isinstance(a, Sparse) and isinstance(b, Dense):
 
-                    @impl_for(DenseSparse)
                     def impl(a, b):
                         return "sparse@dense"
 

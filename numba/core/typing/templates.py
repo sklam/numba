@@ -273,9 +273,8 @@ class FunctionTemplate(ABC):
     # non-literals.
     # subclass overide-able
     prefer_literal = False
-    # Set to true to enable overloading logic that picks the most specific
-    # typeclass.
-    use_impl_for = False
+    # Set to a typeclass for resolving ambiguous resolution.
+    impl_for = None
     # metadata
     metadata = {}
 
@@ -717,8 +716,8 @@ class _OverloadFunctionTemplate(AbstractTemplate):
                 return None
             self._compiled_overloads[sig.args] = disp_type.get_overload(sig)
 
-        if hasattr(disp, "impl_for"):
-            sig._impl_for = disp.impl_for
+        if self.impl_for is not None:
+            sig = sig.replace(impl_for=self.impl_for)
         return sig
 
     def _get_impl(self, args, kws):
@@ -833,8 +832,6 @@ class _OverloadFunctionTemplate(AbstractTemplate):
             # Regular case
             pyfunc = ovf_result
 
-        impl_for = getattr(pyfunc, "impl_for", None)
-
         # Check type of pyfunc
         if not isinstance(pyfunc, FunctionType):
             msg = ("Implementation function returned by `@overload` "
@@ -847,8 +844,6 @@ class _OverloadFunctionTemplate(AbstractTemplate):
         # Make dispatcher
         jitdecor = jitter(**self._jit_options)
         disp = jitdecor(pyfunc)
-        if impl_for is not None:
-            disp.impl_for = impl_for
 
         # Save the dispatcher early to avoid regenerating the dispatcher due
         # to recursively callgraphs.
@@ -918,7 +913,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
 
 
 def make_overload_template(func, overload_func, jit_options, strict,
-                           inline, prefer_literal=False, use_impl_for=False,
+                           inline, prefer_literal=False, impl_for=None,
                            **kwargs):
     """
     Make a template class for function *func* overloaded by *overload_func*.
@@ -931,7 +926,7 @@ def make_overload_template(func, overload_func, jit_options, strict,
                _impl_cache={}, _compiled_overloads={}, _jit_options=jit_options,
                _strict=strict, _inline=staticmethod(InlineOptions(inline)),
                _inline_overloads={}, prefer_literal=prefer_literal,
-               use_impl_for=use_impl_for,
+               impl_for=impl_for,
                metadata=kwargs)
     return type(base)(name, (base,), dct)
 

@@ -296,8 +296,10 @@ class BaseFunction(Callable):
                 # Raise the errors if no match
                 failures.raise_error()
             # Check if any template define specializes to a typeclass
-            order_by_typeclass = any(getattr(temp, "use_impl_for", False)
-                                     for temp, _ in matched)
+            order_by_typeclass = any(
+                getattr(temp, "impl_for", None) is not None
+                for temp, _ in matched
+            )
             if not order_by_typeclass:
                 # Not specializing. Old-logic returns first match
                 temp, sig = matched[0]
@@ -340,8 +342,10 @@ class BaseFunction(Callable):
             if len(matched) == 1:
                 return matched[0]
             elif len(matched) > 1:
-                # Complain about ambigous open versions
-                raise TypeError(f"ambiguous open versions: {matched}")
+                # Complain about ambigous open versions.
+                # This is not possible.
+                msg = f"ambiguous open versions: {matched}"
+                raise errors.CompilerError(msg)
 
     def _rank_impl_for(self, typclasses):
         """Rank the typeclasses.

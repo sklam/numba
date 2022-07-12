@@ -15,7 +15,6 @@ from numba.core.extending import (
     register_model,
     models,
     lower_builtin,
-    impl_for
 )
 from numba.core.imputils import iternext_impl
 from numba.core import types, cgutils
@@ -1020,7 +1019,7 @@ def impl_delitem(l, index):
         raise TypingError("list indices must be integers or slices")
 
 
-@overload(operator.contains, use_impl_for=True)
+@overload(operator.contains, impl_for=types.ListType)
 def impl_contains(l, item):
     if not isinstance(l, types.ListType):
         return
@@ -1028,7 +1027,6 @@ def impl_contains(l, item):
     itemty = l.item_type
     _check_for_none_typed(l, "__contains__")
 
-    @impl_for(types.ListType)
     def impl(l, item):
         casteditem = _cast(item, itemty)
         for i in l:
