@@ -95,6 +95,7 @@ class DefaultOptions:
     _dbg_extend_lifetimes = _mapping("dbg_extend_lifetimes")
     _dbg_optnone = _mapping("dbg_optnone")
 
+    myflag = _mapping("myflag")
 
 def include_default_options(*args):
     """Returns a mixin class with a subset of the options

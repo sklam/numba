@@ -375,6 +375,8 @@ class NativeLowering(LoweringPass):
         restype = state.return_type
         calltypes = state.calltypes
         flags = state.flags
+
+        print("HERE", flags)
         metadata = state.metadata
         pre_stats = llvm.passmanagers.dump_refprune_stats()
 

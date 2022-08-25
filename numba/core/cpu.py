@@ -277,6 +277,7 @@ _options_mixin = include_default_options(
     "target_backend",
     "_dbg_extend_lifetimes",
     "_dbg_optnone",
+    "myflag",
 )
 
 class CPUTargetOptions(_options_mixin, TargetOptions):

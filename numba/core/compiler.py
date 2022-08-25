@@ -158,6 +158,11 @@ detail""",
              "Equivalent to adding optnone attribute in the LLVM Function.")
     )
 
+    myflag = Option(
+        type=str,
+        default="no",
+        doc=("whatever")
+    )
 
 DEFAULT_FLAGS = Flags()
 DEFAULT_FLAGS.nrt = True
