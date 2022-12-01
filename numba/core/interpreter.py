@@ -10,7 +10,7 @@ from numba.core.errors import NotDefinedError, UnsupportedError, error_extras
 from numba.core.ir_utils import get_definition, guard
 from numba.core.utils import (PYVERSION, BINOPS_TO_OPERATORS,
                               INPLACE_BINOPS_TO_OPERATORS,)
-from numba.core.byteflow import Flow, AdaptDFA, AdaptCFA
+from numba.core.byteflow import Flow, AdaptDFA, AdaptCFA, BlockKind
 from numba.core.unsafe import eh
 from numba.cpython.unsafe.tuple import unpack_single_tuple
 
@@ -1226,39 +1226,50 @@ def peep_hole_fuse_dict_add_updates(func_ir):
 
 def peep_hole_split_at_pop_block(func_ir):
     """
-    Split blocks that contain ir.PopBlock
+    Split blocks that contain ir.PopBlock.
+
+    This rewrite restores the IR structure to pre 3.11 so that withlifting
+    can work correctly.
     """
-    newblocks = {}
-    for label, blk in func_ir.blocks.items():
+    new_block_map = {}
+    sorted_blocks = sorted(func_ir.blocks.items())
+    for blk_idx, (label, blk) in enumerate(sorted_blocks):
+        # Gather locations of PopBlock
+        pop_block_locs = []
         for i, inst in enumerate(blk.body):
             if isinstance(inst, ir.PopBlock):
-                head = blk.body[:i]
-                mid = blk.body[i:i + 1]
-                tail = blk.body[i + 1:]
-                if head:
-                    blk.body.clear()
-                    blk.body.extend(head)
+                pop_block_locs.append(i)
+        # Rewrite block with PopBlock
+        if pop_block_locs:
+            new_blocks = []
+            for i in pop_block_locs:
+                before_blk = ir.Block(blk.scope, loc=blk.loc)
+                before_blk.body.extend(blk.body[:i])
+                new_blocks.append(before_blk)
 
-                    midblk = ir.Block(blk.scope, loc=blk.loc)
-                    midblk.body.extend(mid)
+                popblk_blk = ir.Block(blk.scope, loc=blk.loc)
+                popblk_blk.body.append(blk.body[i])
+                new_blocks.append(popblk_blk)
+            # Add jump instructions
+            prev_label = label
+            for newblk in new_blocks:
+                new_block_map[prev_label] = newblk
+                next_label = prev_label + 1
+                newblk.body.append(ir.Jump(next_label, loc=blk.loc))
+                prev_label = next_label
+            # Check prev_label does not exceed current new block label
+            if blk_idx + 1 < len(sorted_blocks):
+                if prev_label >= sorted_blocks[blk_idx + 1][0]:
+                    # Panic! Due to heuristic in with-lifting, block labels
+                    # must be monotonically increasing. We cannot continue if we
+                    # run out of usable label between the two blocks.
+                    raise errors.InternalError("POP_BLOCK peephole failed")
+            # Add tail block, which will get the original terminator
+            tail_blk = ir.Block(blk.scope, loc=blk.loc)
+            tail_blk.body.extend(blk.body[pop_block_locs[-1] + 1:])
+            new_block_map[prev_label] = tail_blk
 
-                    midlabel = label + i * 2
-                    newblocks[midlabel] = midblk
-
-                    blk.body.append(ir.Jump(midlabel, loc=blk.loc))
-                else:
-                    blk.body.clear()
-                    blk.body.extend(mid)
-                    midblk = blk
-
-                tailblk = ir.Block(blk.scope, loc=blk.loc)
-                tailblk.body.extend(tail)
-                taillabel = label + (i + 1) * 2
-                newblocks[taillabel] = tailblk
-
-                midblk.append(ir.Jump(taillabel, loc=blk.loc))
-
-    func_ir.blocks.update(newblocks)
+    func_ir.blocks.update(new_block_map)
     return func_ir
 
 
@@ -1363,17 +1374,14 @@ class Interpreter(object):
 
         self.scopes.append(ir.Scope(parent=self.current_scope, loc=self.loc))
 
-        # Gather exception info block info
-
-        # for block in self.cfa.iterliveblocks():
-        #     dfainfo = self.dfa.infos[block.offset]
-        #     print('---', block.offset, '[[[[', dfainfo.blockstack)
-
         # Interpret loop
         for inst, kws in self._iter_inst():
             self._dispatch(inst, kws)
         if PYVERSION == (3, 11):
+            # Insert end of try markers
             self._end_try_blocks()
+        elif PYVERSION > (3, 11):
+            raise NotImplementedError(PYVERSION)
         self._legalize_exception_vars()
         # Prepare FunctionIR
         func_ir = ir.FunctionIR(self.blocks, self.is_generator, self.func_id,
@@ -1407,39 +1415,50 @@ class Interpreter(object):
         return func_ir
 
     def _end_try_blocks(self):
+        """Closes all try blocks by inserting the required marker at the
+        exception handler
+
+        This is only needed for py3.11 because of the changes in exception
+        handling. This merely maps the new py3.11 semantics back to the old way.
+
+        What the code does:
+
+        - For each block, compute the difference of blockstack to its incoming
+          blocks' blockstack.
+        - If the incoming blockstack has an extra TRY, the current block must
+          be the EXCEPT block and we need to insert a marker.
+
+        See also: _insert_try_block_end
+        """
         assert PYVERSION == (3, 11)
         graph = self.cfa.graph
         for offset, block in self.blocks.items():
-            cur_bs = inc_bs = self.dfa.infos[offset].blockstack
+            # Get current blockstack
+            cur_bs = self.dfa.infos[offset].blockstack
+            # Check blockstack of the incoming blocks
             for inc, _ in graph.predecessors(offset):
                 inc_bs = self.dfa.infos[inc].blockstack
 
-                # find first diff
+                # find first diff in the blockstack
                 for i, (x, y) in enumerate(zip(cur_bs, inc_bs)):
                     if x != y:
-                        # print(f"mismatch {x} != {y}")
                         break
                 else:
                     i = min(len(cur_bs), len(inc_bs))
 
-                remain = list(inc_bs[i:])
-
-                # print("==", offset, "|", remain)
-
                 def do_change(remain):
-                    if remain:
-                        while remain:
-                            ent = remain.pop()
-                            from .byteflow import BlockKind
-                            if ent['kind'] == BlockKind('TRY'):
-                                self.current_block = block
-                                oldbody = list(block.body)
-                                block.body.clear()
-                                self._insert_try_block_end()
-                                block.body.extend(oldbody)
-                                return True
+                    while remain:
+                        ent = remain.pop()
+                        if ent['kind'] == BlockKind('TRY'):
+                            # Extend block with marker for end of try
+                            self.current_block = block
+                            oldbody = list(block.body)
+                            block.body.clear()
+                            self._insert_try_block_end()
+                            block.body.extend(oldbody)
+                            return True
 
-                if do_change(remain):
+                if do_change(list(inc_bs[i:])):
                     break
 
     def _legalize_exception_vars(self):
@@ -1513,7 +1532,8 @@ class Interpreter(object):
         self.dfainfo = self.dfa.infos[self.current_block_offset]
         self.assigner = Assigner()
         # Check out-of-scope syntactic-block
-        if PYVERSION >= (3, 11):
+        if PYVERSION == (3, 11):
+            # This is recreating pre-3.11 code structure
             while self.syntax_blocks:
                 if offset >= self.syntax_blocks[-1].exit:
                     synblk = self.syntax_blocks.pop()
@@ -1526,12 +1546,14 @@ class Interpreter(object):
             if newtryblk is not None:
                 if newtryblk is not tryblk:
                     self._insert_try_block_begin()
-        else:
+        elif PYVERSION < (3, 11):
             while self.syntax_blocks:
                 if offset >= self.syntax_blocks[-1].exit:
                     self.syntax_blocks.pop()
                 else:
                     break
+        else:
+            raise NotImplementedError(PYVERSION)
 
     def _end_current_block(self):
         # Handle try block
@@ -1681,6 +1703,7 @@ class Interpreter(object):
                 val = self.get(varname)
             except ir.NotDefinedError:
                 # Hack to make sure exception variables are defined
+                assert PYVERSION == (3, 11), "unexpected missing definition"
                 val = ir.Const(value=None, loc=self.loc)
             stmt = ir.Assign(value=val, target=target,
                              loc=self.loc)
@@ -1746,6 +1769,8 @@ class Interpreter(object):
                     if inst.offset >= top.exit:
                         self.current_block.append(ir.PopBlock(loc=self.loc))
                         self.syntax_blocks.pop()
+        elif PYVERSION > (3, 11):
+            raise NotImplementedError(PYVERSION)
 
         fname = "op_%s" % inst.opname.replace('+', '_')
         try:
@@ -2182,17 +2207,29 @@ class Interpreter(object):
             value = self.get_global_value(name)
             gl = ir.Global(name, value, loc=self.loc)
             self.store(gl, res)
-    else:
+    elif PYVERSION < (3, 11):
         def op_LOAD_GLOBAL(self, inst, res):
             name = self.code_names[inst.arg]
             value = self.get_global_value(name)
             gl = ir.Global(name, value, loc=self.loc)
             self.store(gl, res)
+    else:
+        raise NotImplementedError(PYVERSION)
 
     def op_COPY_FREE_VARS(self, inst):
         pass
 
-    if PYVERSION < (3, 11):
+    if PYVERSION == (3, 11):
+        def op_LOAD_DEREF(self, inst, res):
+            name = self.func_id.func.__code__._varname_from_oparg(inst.arg)
+            if name in self.code_cellvars:
+                gl = self.get(name)
+            elif name in self.code_freevars:
+                idx = self.code_freevars.index(name)
+                value = self.get_closure_value(idx)
+                gl = ir.FreeVar(idx, name, value, loc=self.loc)
+            self.store(gl, res)
+    elif PYVERSION < (3, 11):
         def op_LOAD_DEREF(self, inst, res):
             n_cellvars = len(self.code_cellvars)
             if inst.arg < n_cellvars:
@@ -2205,18 +2242,9 @@ class Interpreter(object):
                 gl = ir.FreeVar(idx, name, value, loc=self.loc)
             self.store(gl, res)
     else:
-        def op_LOAD_DEREF(self, inst, res):
-            name = self.func_id.func.__code__._varname_from_oparg(inst.arg)
-            if name in self.code_cellvars:
-                gl = self.get(name)
-            elif name in self.code_freevars:
-                idx = self.code_freevars.index(name)
-                value = self.get_closure_value(idx)
-                gl = ir.FreeVar(idx, name, value, loc=self.loc)
-            self.store(gl, res)
+        raise NotImplementedError(PYVERSION)
 
-    if PYVERSION >= (3, 11):
-
+    if PYVERSION == (3, 11):
         def op_MAKE_CELL(self, inst):
             pass  # ignored bytecode
 
@@ -2224,7 +2252,7 @@ class Interpreter(object):
             name = self.func_id.func.__code__._varname_from_oparg(inst.arg)
             value = self.get(value)
             self.store(value=value, name=name)
-    else:
+    elif PYVERSION < (3, 11):
         def op_STORE_DEREF(self, inst, value):
             n_cellvars = len(self.code_cellvars)
             if inst.arg < n_cellvars:
@@ -2233,6 +2261,8 @@ class Interpreter(object):
                 dstname = self.code_freevars[inst.arg - n_cellvars]
             value = self.get(value)
             self.store(value=value, name=dstname)
+    else:
+        raise NotImplementedError(PYVERSION)
 
     def op_SETUP_LOOP(self, inst):
         assert self.blocks[inst.offset] is self.current_block
@@ -2254,7 +2284,7 @@ class Interpreter(object):
         exit_fn_obj = ir.Const(None, loc=self.loc)
         self.store(value=exit_fn_obj, name=exitfn)
 
-    def op_BEFORE_WITH(self, inst, contextmanager, exitfn=None, end=None):
+    def op_BEFORE_WITH(self, inst, contextmanager, exitfn, end):
         assert self.blocks[inst.offset] is self.current_block
         # Handle with
         wth = ir.With(inst.offset, exit=end)
@@ -2264,7 +2294,7 @@ class Interpreter(object):
                                                begin=inst.offset,
                                                end=end, loc=self.loc,))
 
-        # Store exit f
+        # Store exit function
         exit_fn_obj = ir.Const(None, loc=self.loc)
         self.store(value=exit_fn_obj, name=exitfn)
 
@@ -2839,10 +2869,10 @@ class Interpreter(object):
         else:
             op = BINOPS_TO_OPERATORS["is not"]
 
-        rhs = self.store(value=ir.Const(None, loc=self.loc),
-                         name=f"$constNone{inst.offset}")
-        lhs = self.get(pred)
-        isnone = ir.Expr.binop(op, lhs=lhs, rhs=rhs, loc=self.loc)
+        constnone = self.store(value=ir.Const(None, loc=self.loc),
+                               name="${inst.offset}constnone")
+        pred = self.get(pred)
+        isnone = ir.Expr.binop(op, lhs=pred, rhs=constnone, loc=self.loc)
 
         maybeNone = f"$maybeNone{inst.offset}"
         self.store(value=isnone, name=maybeNone)
@@ -2856,11 +2886,11 @@ class Interpreter(object):
 
         pname = f"$pred{inst.offset}"
         predicate = self.store(value=callres, name=pname)
-        bra = ir.Branch(cond=predicate,
-                        truebr=truebr,
-                        falsebr=falsebr,
-                        loc=self.loc)
-        self.current_block.append(bra)
+        branch = ir.Branch(cond=predicate,
+                           truebr=truebr,
+                           falsebr=falsebr,
+                           loc=self.loc)
+        self.current_block.append(branch)
 
     def op_POP_JUMP_FORWARD_IF_NONE(self, inst, pred):
         self._jump_if_none(inst, pred, True)
@@ -2999,7 +3029,7 @@ class Interpreter(object):
         self.op_MAKE_FUNCTION(inst, name, code, closure, annotations,
                               kwdefaults, defaults, res)
 
-    if PYVERSION >= (3, 11):
+    if PYVERSION == (3, 11):
 
         def op_LOAD_CLOSURE(self, inst, res):
             name = self.func_id.func.__code__._varname_from_oparg(inst.arg)
@@ -3017,7 +3047,7 @@ class Interpreter(object):
                 assert 0, "unreachable"
             self.store(gl, res)
 
-    else:
+    elif PYVERSION < (3, 11):
         def op_LOAD_CLOSURE(self, inst, res):
             n_cellvars = len(self.code_cellvars)
             if inst.arg < n_cellvars:
@@ -3033,6 +3063,8 @@ class Interpreter(object):
                 value = self.get_closure_value(idx)
                 gl = ir.FreeVar(idx, name, value, loc=self.loc)
             self.store(gl, res)
+    else:
+        raise NotImplementedError(PYVERSION)
 
     def op_LIST_APPEND(self, inst, target, value, appendvar, res):
         target = self.get(target)

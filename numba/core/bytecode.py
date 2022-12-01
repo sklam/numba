@@ -90,7 +90,7 @@ class ByteCodeInst(object):
         # https://bugs.python.org/issue27129
         # https://github.com/python/cpython/pull/25069
         assert self.is_jump
-        if PYVERSION >= (3, 11):
+        if PYVERSION == (3, 11):
             if self.opcode in (dis.opmap[k]
                                for k in ("JUMP_BACKWARD",
                                          "POP_JUMP_BACKWARD_IF_TRUE",
@@ -98,6 +98,9 @@ class ByteCodeInst(object):
                                          "POP_JUMP_BACKWARD_IF_NONE",
                                          "POP_JUMP_BACKWARD_IF_NOT_NONE",)):
                 return self.offset - (self.arg - 1) * 2
+        elif PYVERSION > (3, 11):
+            raise NotImplementedError(PYVERSION)
+
         if PYVERSION >= (3, 10):
             if self.opcode in JREL_OPS:
                 return self.next + self.arg * 2
@@ -318,7 +321,8 @@ class _ByteCode(object):
 
 
 def _fix_LOAD_GLOBAL_arg(arg):
-    if utils.PYVERSION >= (3, 11):
+    if PYVERSION >= (3, 11):
+        assert PYVERSION == (3, 11) # reminder to check newer versions
         return arg >> 1
     return arg
 
@@ -354,10 +358,12 @@ class ByteCodePy311(_ByteCode):
             return ent
 
 
-if PYVERSION >= (3, 11):
+if PYVERSION == (3, 11):
     ByteCode = ByteCodePy311
-else:
+elif PYVERSION < (3, 11):
     ByteCode = _ByteCode
+else:
+    raise NotImplementedError(PYVERSION)
 
 
 class FunctionIdentity(serialize.ReduceMixin):
