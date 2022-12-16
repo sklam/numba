@@ -1407,6 +1407,7 @@ class Interpreter(object):
 
         post_processed_ir = self.post_process(peepholes, func_ir)
 
+        # post_processed_ir.render_dot().view()
         return post_processed_ir
 
     def post_process(self, peepholes, func_ir):
@@ -1456,6 +1457,12 @@ class Interpreter(object):
                             block.body.clear()
                             self._insert_try_block_end()
                             block.body.extend(oldbody)
+                            return True
+                        elif ent['kind'] == BlockKind("WITH"):
+                            if len(list(graph.predecessors(offset))) == 1:
+                                block.body.insert(0, ir.PopBlock(loc=self.loc))
+                            else:
+                                self.blocks[inc].body.insert(-2, ir.PopBlock(loc=self.loc))
                             return True
 
                 if do_change(list(inc_bs[i:])):
@@ -1537,8 +1544,8 @@ class Interpreter(object):
             while self.syntax_blocks:
                 if offset >= self.syntax_blocks[-1].exit:
                     synblk = self.syntax_blocks.pop()
-                    if isinstance(synblk, ir.With):
-                        self.current_block.append(ir.PopBlock(self.loc))
+                    # if isinstance(synblk, ir.With):
+                    #     self.current_block.append(ir.PopBlock(self.loc))
                 else:
                     break
             # inject try block:
@@ -1767,7 +1774,7 @@ class Interpreter(object):
                 top = self.syntax_blocks[-1]
                 if isinstance(top, ir.With) :
                     if inst.offset >= top.exit:
-                        self.current_block.append(ir.PopBlock(loc=self.loc))
+                        # self.current_block.append(ir.PopBlock(loc=self.loc))
                         self.syntax_blocks.pop()
         elif PYVERSION > (3, 11):
             raise NotImplementedError(PYVERSION)
