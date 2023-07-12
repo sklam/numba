@@ -475,6 +475,10 @@ class RVSDG2IR(RegionVisitor[_Data]):
 
     def store(self, value, name, *, redefine=True, block=None) -> ir.Var:
         target: ir.Var
+        # The following `if` is to reduce the number of assignments
+        if isinstance(value, ir.Var) and redefine and name.startswith("$"):
+            return value
+
         if redefine:
             target = self.local_scope.redefine(name, loc=self.loc)
         else:
