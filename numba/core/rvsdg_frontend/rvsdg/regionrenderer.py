@@ -51,7 +51,9 @@ class GraphEdge:
     headlabel: str | None = None
     taillabel: str | None = None
     kind: str | None = None
-
+    weak: bool = False
+    """Drop if source or destination does not exist
+    """
 
 @dataclass(frozen=True)
 class GraphGroup:
@@ -104,7 +106,9 @@ class GraphBacking:
 
         * check for missing nodes
         * check for missing ports
+        * drop weak edges that are invalid
         """
+        edge_to_remove = set()
         for edge in self._edges:
             if edge.src not in self._nodes:
                 raise ValueError(f"missing node {edge.src!r}")
@@ -113,15 +117,23 @@ class GraphBacking:
             if edge.src_port is not None:
                 node = self._nodes[edge.src]
                 if edge.src_port not in node.ports:
-                    raise ValueError(
-                        f"missing port {edge.src_port!r} in node {edge.src!r}"
-                    )
+                    if edge.weak:
+                        edge_to_remove.add(edge)
+                    else:
+                        raise ValueError(
+                            f"missing port {edge.src_port!r} in node {edge.src!r}"
+                        )
+
             if edge.dst_port is not None:
                 node = self._nodes[edge.dst]
                 if edge.dst_port not in node.ports:
-                    raise ValueError(
-                        f"missing port {edge.dst_port!r} in node {edge.dst!r}"
-                    )
+                    if edge.weak:
+                        edge_to_remove.add(edge)
+                    else:
+                        raise ValueError(
+                            f"missing port {edge.dst_port!r} in node {edge.dst!r}"
+                        )
+        self._edges -= edge_to_remove
 
     def render(self, renderer: "AbstractRendererBackend"):
         """Render this graph using the given backend.
@@ -403,6 +415,7 @@ class RVSDGRenderer(RegionVisitor):
                     f"incoming_{node.name}",
                     src_port=k,
                     dst_port=k,
+                    weak=True,
                 )
 
     def visit_loop(self, region: RegionBlock, builder: GraphBuilder):

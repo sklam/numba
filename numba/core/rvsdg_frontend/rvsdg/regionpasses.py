@@ -122,7 +122,7 @@ class RegionVisitor(abc.ABC, Generic[Tdata]):
             elif block.kind == "switch":
                 fn = self.visit_switch
             else:
-                raise NotImplementedError("unreachable")
+                raise NotImplementedError("unreachable", block.kind)
             data = fn(block, data)
         else:
             data = self.visit_block(block, data)
