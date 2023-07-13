@@ -14,7 +14,7 @@ from typing import (
     TYPE_CHECKING,
 )
 
-from collections import ChainMap
+from collections import ChainMap, defaultdict
 from numba_rvsdg.core.datastructures.byte_flow import ByteFlow
 from numba_rvsdg.core.datastructures.scfg import SCFG
 from numba_rvsdg.core.datastructures.basic_block import (
@@ -361,6 +361,21 @@ class DDGBlock(BasicBlock):
                 pending.extend(incomings)
         return res
 
+    def get_unused_inputs(self) -> set[str]:
+        """Returns a set of valuestates that are not used internally.
+        """
+        topo_ops = self.get_toposorted_ops()
+        is_reexport = {"var.incoming"}
+        # Find all used valuestates
+        used_vars: set[ValueState] = set()
+        for op in topo_ops:
+            for vs in op.inputs:
+                if op.opname not in is_reexport:
+                    used_vars.add(vs)
+        # Return in_vars that are not in used_vars
+        return {k for k, vs in self.in_vars.items()
+                if vs not in used_vars}
+
 
 def render_scfg(byteflow):
     bfr = ByteFlowRenderer()
@@ -574,6 +589,12 @@ def _scfg_add_conditional_pop_stack(bcmap, scfg: SCFG):
         scfg.graph[newlabel] = ebb
 
 
+def render_rvsdg(rvsdg: SCFG, name: str = "rvsdg"):
+    from .regionrenderer import RVSDGRenderer, to_graphviz
+
+    to_graphviz(RVSDGRenderer().render(rvsdg)).view(name)
+
+
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     byteflow = ByteFlow.from_bytecode(code)
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
@@ -587,9 +608,7 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     rvsdg = convert_to_dataflow(byteflow, argnames)
     rvsdg = propagate_states(rvsdg)
     if DEBUG_GRAPH:
-        from .regionrenderer import RVSDGRenderer, to_graphviz
-
-        to_graphviz(RVSDGRenderer().render(rvsdg)).view("rvsdg")
+        render_rvsdg(rvsdg)
 
     return rvsdg
 
@@ -620,6 +639,7 @@ def propagate_states(rvsdg: SCFG) -> SCFG:
     propagate_stack(rvsdg)
     propagate_vars(rvsdg)
     connect_incoming_stack_vars(rvsdg)
+    remove_dead_vars(rvsdg)
     return rvsdg
 
 
@@ -827,6 +847,143 @@ def propagate_stack(rvsdg: SCFG):
 
 def connect_incoming_stack_vars(rvsdg: SCFG):
     ConnectImportedStackVars().visit_graph(rvsdg, None)
+
+
+class GetUsedInputs(RegionVisitor[frozenset]):
+    direction = "backward"
+
+    def __init__(self, _debug: bool = False):
+        super().__init__()
+        self._debug = _debug
+
+    def debug_print(self, *args, **kwargs):
+        if self._debug:
+            print(*args, **kwargs)
+
+    def visit_block(self, block: BasicBlock, data: frozenset):
+        used = data
+        if isinstance(block, DDGBlock):
+            inp = frozenset(block.incoming_states)
+            unused = block.get_unused_inputs()
+            out = (inp - (unused - used))
+            self.debug_print("   ---", block.name, out)
+            return out
+        else:
+            return used
+
+    def visit_loop(self, region: RegionBlock, data: frozenset):
+        used_at_tail = data
+        return self.visit_graph(region.subregion, used_at_tail)
+
+    def visit_switch(self, region: RegionBlock, data: frozenset):
+        used = data
+        used = self.visit_linear(region.subregion[region.exiting], used)
+
+        to_merge = []
+        for blk in region.subregion.graph.values():
+            if blk.kind == "branch":
+                to_merge.append(self.visit_linear(region.subregion[blk.name], used))
+
+        used = reduce(operator.or_, to_merge)
+        used = self.visit_linear(region.subregion[region.header], used)
+        return used
+
+
+class RemoveDeadVars(RegionVisitor):
+    direction = "backward"
+
+    def __init__(self, _debug: bool = False):
+        super().__init__()
+        self._debug = _debug
+
+    def debug_print(self, *args, **kwargs):
+        if self._debug:
+            print(*args, **kwargs)
+
+    def make_data(self):
+        # Used variables
+        return frozenset()
+
+    def visit_block(self, block: BasicBlock, data: frozenset):
+        self.debug_print("block", block.name)
+        used = data
+        self.debug_print('   used', data)
+        if isinstance(block, DDGBlock):
+            unused = block.get_unused_inputs() - used
+            for k in set(block.out_vars) - used:
+                del block.out_vars[k]
+            used = frozenset(block.in_vars) - frozenset(unused)
+            for k in unused:
+                del block.in_vars[k]
+        else:
+            used = data
+            for k in block.outgoing_states - used:
+                block.outgoing_states.remove(k)
+            for k in block.incoming_states - used:
+                block.incoming_states.remove(k)
+
+        return used
+
+    def visit_loop(self, region: RegionBlock, data: frozenset):
+        # Get used inputs for the subregion
+        used_in_loop = GetUsedInputs().visit_graph(region.subregion, data)
+        used_in_loop |= data
+
+        self.debug_print("loop", region.name)
+        self.debug_print("   used_in_loop", tuple(used_in_loop))
+
+        # Outgoing states need to loopback to the loop head, so keep any
+        # state used in the head as well.
+        for k in region.outgoing_states - used_in_loop:
+            self.debug_print("    remove", k)
+            region.outgoing_states.remove(k)
+
+        self.visit_graph(region.subregion, used_in_loop)
+
+        for k in region.incoming_states - used_in_loop:
+            region.incoming_states.remove(k)
+        return used_in_loop
+
+    def visit_switch(self, region: RegionBlock, data: frozenset):
+        self.debug_print(region.name.center(80, '='))
+        exiting = region.exiting
+        used_by_tail = self.visit_linear(region.subregion[exiting], data)
+
+        used_at_branches = []
+        for blk in region.subregion.graph.values():
+            if blk.kind == "branch":
+                used_at_branches.append(self.visit_linear(blk, used_by_tail))
+        used_before_branches = reduce(operator.or_, used_at_branches)
+        self.debug_print("used_at_branches", used_at_branches)
+        self.debug_print("used_before_branches", used_before_branches)
+
+        header = region.header
+        used = self.visit_linear(region.subregion[header], used_before_branches)
+        self.debug_print('used earlier', data)
+        self.debug_print('used', used)
+
+        for k in region.outgoing_states - data:
+            region.outgoing_states.remove(k)
+        for k in region.incoming_states - used:
+            region.incoming_states.remove(k)
+        self.debug_print(f"END {region.name}".center(80, '='))
+        return used
+
+    def visit_linear(self, region: RegionBlock, data: _pvData) -> _pvData:
+        self.debug_print(region.name.center(80, '='))
+        used = data
+        for k in region.outgoing_states - used:
+            region.outgoing_states.remove(k)
+        used = self.visit_graph(region.subregion, used)
+        for k in region.incoming_states - used:
+            region.incoming_states.remove(k)
+        self.debug_print(f"END {region.name}".center(80, '='))
+        return used
+
+
+def remove_dead_vars(rvsdg: SCFG):
+    visitor = RemoveDeadVars()
+    visitor.visit_graph(rvsdg, visitor.make_data())
 
 
 def _upgrade_dataclass(old, newcls, replacements=None):
