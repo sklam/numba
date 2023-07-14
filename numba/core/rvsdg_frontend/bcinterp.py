@@ -107,7 +107,11 @@ class RVSDG2IR(RegionVisitor[_Data]):
 
     def _get_phi_name(self, varname: str, label: str) -> str:
         suffix = str(self._get_label(label))
-        return f"$phi.{varname}.{suffix}"
+        uservar_prefix = "var."
+        if varname.startswith(uservar_prefix):
+            return f"{varname}"
+        else:
+            return f"$phi.{varname}.{suffix}"
 
     def _get_cp_name(self, cpname: str) -> str:
         return f"$.cp.{cpname}"
@@ -817,6 +821,39 @@ class RVSDG2IR(RegionVisitor[_Data]):
         assert self.current_block.is_terminated
 
 
+def _simplify_assignments(blocks):
+    from pprint import pprint
+
+    changing = True
+    while changing:
+        changing = False
+        defs = ir_utils.build_definitions(blocks)
+        # pprint(defs)
+        repl: dict[str, ir.Var] = {}
+        for k, vs in defs.items():
+            if len(vs) > 1:
+                unique_values = set(vs)
+                if  len(unique_values) == 1:
+                    repl[k] = unique_values.pop()
+        if repl:
+            changing = True
+            from numba.core.ir_utils import replace_vars
+            replace_vars(blocks, repl)
+
+        for blk in blocks.values():
+            def remover(blk):
+                for stmt in blk.body:
+                    if isinstance(stmt, ir.Assign):
+                        if stmt.target == stmt.value:
+                            continue
+                    yield stmt
+            new_body = list(remover(blk))
+            if len(new_body) != len(blk.body):
+                changing = True
+                blk.body.clear()
+                blk.body.extend(new_body)
+
+
 def rvsdg_to_ir(
     func_id: bytecode.FunctionIdentity, rvsdg: SCFG
 ) -> ir.FunctionIR:
@@ -828,7 +865,11 @@ def rvsdg_to_ir(
     for blk in rvsdg2ir.blocks.values():
         blk.verify()
 
+    _simplify_assignments(rvsdg2ir.blocks)
+
     defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+    from numba.core.ir_utils import simplify_CFG
+    simplify_CFG(rvsdg2ir.blocks)
 
     fir = ir.FunctionIR(
         blocks=rvsdg2ir.blocks,
