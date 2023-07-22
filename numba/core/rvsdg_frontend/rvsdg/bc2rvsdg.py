@@ -15,7 +15,7 @@ from typing import (
 )
 
 from collections import ChainMap, defaultdict
-from numba_rvsdg.core.datastructures.byte_flow import ByteFlow
+from numba_rvsdg.core.datastructures.byte_flow import ByteFlow, FlowInfo
 from numba_rvsdg.core.datastructures.scfg import SCFG
 from numba_rvsdg.core.datastructures.basic_block import (
     BasicBlock,
@@ -57,6 +57,7 @@ class ValueState:
 
     For most compiler passes, Value and State can be treated as the same.
     """
+
     parent: Optional["Op"]
     """Optional. The parent Op that output this ValueState.
     """
@@ -85,6 +86,7 @@ class Op:
     An Op has inputs and outputs ports that are ValueStates.
     An Op can optionally have a bytecode instruction associated with it.
     """
+
     opname: str
     """Operation name.
     """
@@ -561,13 +563,15 @@ def _scfg_add_conditional_pop_stack(bcmap, scfg: SCFG):
     for blk in scfg.graph.values():
         if isinstance(blk, PythonBytecodeBlock):
             # Check if last instruction has conditional pop
-            last_inst = blk.get_instructions(bcmap)[-1]
-            handler = HandleConditionalPop()
-            res = handler.handle(last_inst)
-            if res is not None:
-                for br_index, instlist in enumerate(res.branch_instlists):
-                    k = blk._jump_targets[br_index]
-                    extra_records[k] = blk.name, (br_index, instlist)
+            instlist = blk.get_instructions(bcmap)
+            if instlist:
+                last_inst = instlist[-1]
+                handler = HandleConditionalPop()
+                res = handler.handle(last_inst)
+                if res is not None:
+                    for br_index, instlist in enumerate(res.branch_instlists):
+                        k = blk._jump_targets[br_index]
+                        extra_records[k] = blk.name, (br_index, instlist)
 
     def _replace_jump_targets(blk, idx, repl):
         return replace(
@@ -589,16 +593,95 @@ def _scfg_add_conditional_pop_stack(bcmap, scfg: SCFG):
         scfg.graph[newlabel] = ebb
 
 
+def _scfg_unify_return(bcmap, scfg: SCFG):
+    INST_OFFSET = 2
+    returning_blocks: list[PythonBytecodeBlock] = []
+    for blk in scfg.graph.values():
+        if isinstance(blk, PythonBytecodeBlock):
+            # Check if last instruction is a RETURN_VALUE
+            last_inst = blk.get_instructions(bcmap)[-1]
+            if last_inst.opname == "RETURN_VALUE":
+                returning_blocks.append(blk)
+
+    # Make unified return block
+    new_return_label = scfg.name_gen.new_block_name(
+        "python.unified_return_block"
+    )
+    scfg.graph[new_return_label] = ExtraBasicBlock(
+        new_return_label, (), inst_list=("RETURN",)
+    )
+    for blk in returning_blocks:
+        # Replace RETURN_VALUE with a jump to the unified return block
+        scfg.graph[blk.name] = replace(
+            blk,
+            end=blk.end - INST_OFFSET,  # remove the RETURN_VALUE
+            _jump_targets=(new_return_label,),
+        )
+
+
 def render_rvsdg(rvsdg: SCFG, name: str = "rvsdg"):
     from .regionrenderer import RVSDGRenderer, to_graphviz
 
     to_graphviz(RVSDGRenderer().render(rvsdg)).view(name)
 
 
+def _bytecode_unify_return(bc: dis.Bytecode) -> list[dis.Instruction]:
+    """Unify all RETURN instructions into a single block."""
+    INSTR_OFFSET = 2
+    orig_list = list(bc)
+    last_inst = orig_list[-1]
+    new_end_offset = last_inst.offset + INSTR_OFFSET
+    instlist: list[dis.Instruction] = []
+    # Find all blocks with a RETURN instruction and modify it to a jump
+    count_ret = 0
+    for instr in bc:
+        if instr.opname == "RETURN_VALUE":
+            count_ret += 1
+            instlist.append(
+                dis.Instruction(
+                    "JUMP_FORWARD",
+                    dis.opmap["JUMP_FORWARD"],
+                    new_end_offset,
+                    new_end_offset,
+                    str(new_end_offset),
+                    instr.offset,
+                    starts_line=instr.starts_line,
+                    is_jump_target=instr.is_jump_target,
+                    positions=instr.positions,
+                )
+            )
+        else:
+            instlist.append(instr)
+
+    # Only one return statement, bail
+    if count_ret == 1:
+        return orig_list
+
+    # Create unified return block
+    unified_ret = dis.Instruction(
+        "RETURN_VALUE",
+        dis.opmap["RETURN_VALUE"],
+        None,
+        None,
+        "",
+        offset=last_inst.offset + INSTR_OFFSET,
+        starts_line=None,
+        is_jump_target=True,
+    )
+    instlist.append(unified_ret)
+    return instlist
+
+
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
-    byteflow = ByteFlow.from_bytecode(code)
+    # bc = _bytecode_unify_return(dis.Bytecode(code))
+    bc = dis.Bytecode(code)
+    flowinfo = FlowInfo.from_bytecode(bc)
+    scfg = flowinfo.build_basicblocks()
+    byteflow = ByteFlow(bc=bc, scfg=scfg)
+
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
     _scfg_add_conditional_pop_stack(bcmap, byteflow.scfg)
+    _scfg_unify_return(bcmap, byteflow.scfg)
     byteflow = byteflow.restructure()
     # if DEBUG_GRAPH:
     #     render_scfg(byteflow)
@@ -1031,7 +1114,7 @@ def convert_scfg_to_dataflow(scfg, bcmap, argnames: tuple[str, ...]) -> SCFG:
 
 def _convert_bytecode(block, instlist, argnames: tuple[str, ...]) -> DDGBlock:
     converter = BC2DDG()
-    if instlist[0].offset == 0:
+    if instlist and instlist[0].offset == 0:
         for arg in argnames:
             converter.load(f"var.{arg}")
     for inst in instlist:
@@ -1061,6 +1144,19 @@ def convert_extra_bb(block: ExtraBasicBlock) -> DDGBlock:
             converter.push(converter.load("indvar"))
         elif opname == "POP":
             converter.pop()
+        elif opname == "RETURN":
+            converter.op_RETURN_VALUE(
+                dis.Instruction(
+                    "RETURN_VALUE",
+                    dis.opmap["RETURN_VALUE"],
+                    None,
+                    None,
+                    "",
+                    -1,
+                    starts_line=None,
+                    is_jump_target=False,
+                )
+            )
         else:
             assert False, opname
     return _converter_to_ddgblock(block, converter)

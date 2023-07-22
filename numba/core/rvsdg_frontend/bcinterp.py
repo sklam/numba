@@ -141,7 +141,7 @@ class RVSDG2IR(RegionVisitor[_Data]):
             last_block = self.blocks[self.last_block_label]
             if not last_block.is_terminated:
                 last_block.append(
-                    ir.StaticRaise(AssertionError, (), loc=self.loc)
+                    ir.StaticRaise(AssertionError, ("Bad",), loc=self.loc)
                 )
 
     def visit_block(self, block: BasicBlock, data: _Data) -> _Data:
@@ -154,11 +154,11 @@ class RVSDG2IR(RegionVisitor[_Data]):
             ops = block.get_toposorted_ops()
             firstbc: dis.Instruction | None = _get_first_bytecode(ops)
             if firstbc is not None:
-                assert firstbc.positions is not None
-                self.loc = self.loc.with_lineno(
-                    firstbc.positions.lineno,
-                    firstbc.positions.col_offset,
-                )
+                if firstbc.positions is not None:
+                    self.loc = self.loc.with_lineno(
+                        firstbc.positions.lineno,
+                        firstbc.positions.col_offset,
+                    )
             with self.set_block(
                 self._get_label(block.name),
                 ir.Block(scope=self.local_scope, loc=self.loc),
@@ -538,8 +538,8 @@ class RVSDG2IR(RegionVisitor[_Data]):
         """
         assert op.bc_inst is not None
         pos = op.bc_inst.positions
-        assert pos is not None
-        self.loc = self.loc.with_lineno(pos.lineno, pos.col_offset)
+        if pos is not None:
+            self.loc = self.loc.with_lineno(pos.lineno, pos.col_offset)
         # debug print
         if self._emit_debug_print:
             where = f"{op.bc_inst.offset:3}:({pos.lineno:3}:{pos.col_offset:3})"
@@ -865,11 +865,29 @@ def rvsdg_to_ir(
     for blk in rvsdg2ir.blocks.values():
         blk.verify()
 
-    _simplify_assignments(rvsdg2ir.blocks)
+    # rvsdg2ir.blocks = ir_utils.simplify_CFG(rvsdg2ir.blocks)
+    cfg = ir_utils.compute_cfg_from_blocks(rvsdg2ir.blocks)
+    if len(cfg.dead_nodes()) > 0:
+        ## TO DEBUG
+        # defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+        # fir = ir.FunctionIR(
+        #     blocks=rvsdg2ir.blocks,
+        #     is_generator=False,
+        #     func_id=func_id,
+        #     loc=rvsdg2ir.first_loc,
+        #     definitions=defs,
+        #     arg_count=len(func_id.arg_names),  # type: ignore
+        #     arg_names=func_id.arg_names,  # type: ignore
+        # )
+        # fir.render_dot().view()
+        raise Exception("has dead blocks")
 
+    # for dead in cfg.dead_nodes():
+    #     del rvsdg2ir.blocks[dead]
+    ir_utils.merge_adjacent_blocks(rvsdg2ir.blocks)
+    rvsdg2ir.blocks = ir_utils.rename_labels(rvsdg2ir.blocks)
+    _simplify_assignments(rvsdg2ir.blocks)
     defs = ir_utils.build_definitions(rvsdg2ir.blocks)
-    from numba.core.ir_utils import simplify_CFG
-    simplify_CFG(rvsdg2ir.blocks)
 
     fir = ir.FunctionIR(
         blocks=rvsdg2ir.blocks,
