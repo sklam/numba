@@ -9,7 +9,7 @@ import dis
 from contextlib import contextmanager
 import builtins
 import operator
-from typing import Iterator
+from typing import Iterator, no_type_check
 from functools import reduce
 
 from numba.core import (
@@ -128,8 +128,9 @@ class RVSDG2IR(RegionVisitor[_Data]):
 
     def initialize(self) -> _Data:
         label = self._get_temp_label()
-        with self.set_block(label, ir.Block(scope=self.local_scope,
-                                            loc=self.loc)):
+        with self.set_block(
+            label, ir.Block(scope=self.local_scope, loc=self.loc)
+        ):
             data: _Data = {}
             for i, k in enumerate(self.func_id.arg_names):  # type: ignore
                 val = ir.Arg(index=i, name=k, loc=self.loc)
@@ -402,7 +403,8 @@ class RVSDG2IR(RegionVisitor[_Data]):
 
         # handle outgoing values from the branches
         names: set[str] = reduce(
-            operator.or_, map(set, data_for_branches))  # type: ignore
+            operator.or_, map(set, data_for_branches)  # type: ignore
+        )
         for blk, branch_data in zip(
             branch_blocks, data_for_branches, strict=True
         ):
@@ -542,7 +544,9 @@ class RVSDG2IR(RegionVisitor[_Data]):
             self.loc = self.loc.with_lineno(pos.lineno, pos.col_offset)
         # debug print
         if self._emit_debug_print:
-            where = f"{op.bc_inst.offset:3}:({pos.lineno:3}:{pos.col_offset:3})"
+            lineno = pos.lineno if pos is not None else "?"
+            col_offset = pos.col_offset if pos is not None else "?"
+            where = f"{op.bc_inst.offset:3}:({lineno:3}:{col_offset:3})"
             msg = f"[{where}] {op.bc_inst.opname}({op.bc_inst.argrepr}) "
             self.debug_print(msg)
 
@@ -685,7 +689,7 @@ class RVSDG2IR(RegionVisitor[_Data]):
         self._binop(bc.argrepr, op)
 
     def op_IS_OP(self, op: Op, bc: dis.Instruction):
-        opname = 'is not' if bc.argval == 1 else 'is'
+        opname = "is not" if bc.argval == 1 else "is"
         self._binop(opname, op)
 
     def op_UNARY_NOT(self, op: Op, bc: dis.Instruction):
@@ -821,6 +825,7 @@ class RVSDG2IR(RegionVisitor[_Data]):
         assert self.current_block.is_terminated
 
 
+@no_type_check
 def _simplify_assignments(blocks):
     from pprint import pprint
 
@@ -833,20 +838,23 @@ def _simplify_assignments(blocks):
         for k, vs in defs.items():
             if len(vs) > 1:
                 unique_values = set(vs)
-                if  len(unique_values) == 1:
+                if len(unique_values) == 1:
                     repl[k] = unique_values.pop()
         if repl:
             changing = True
             from numba.core.ir_utils import replace_vars
+
             replace_vars(blocks, repl)
 
         for blk in blocks.values():
+
             def remover(blk):
                 for stmt in blk.body:
                     if isinstance(stmt, ir.Assign):
                         if stmt.target == stmt.value:
                             continue
                     yield stmt
+
             new_body = list(remover(blk))
             if len(new_body) != len(blk.body):
                 changing = True
@@ -854,6 +862,7 @@ def _simplify_assignments(blocks):
                 blk.body.extend(new_body)
 
 
+@no_type_check
 def rvsdg_to_ir(
     func_id: bytecode.FunctionIdentity, rvsdg: SCFG
 ) -> ir.FunctionIR:

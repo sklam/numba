@@ -176,9 +176,7 @@ class RegionTransformer(abc.ABC, Generic[Tdata]):
             elif block.kind in {"head", "tail", "branch"}:
                 fn = self.visit_linear
             else:
-                raise NotImplementedError(
-                    "unreachable", block.name, block.kind
-                )
+                raise NotImplementedError("unreachable", block.name, block.kind)
             data = fn(parent, block, data)
         else:
             data = self.visit_block(parent, block, data)

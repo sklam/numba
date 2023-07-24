@@ -32,8 +32,8 @@ from .bc2rvsdg import (
 
 @dataclass(frozen=True)
 class GraphNode:
-    """A node in GraphBacking
-    """
+    """A node in GraphBacking"""
+
     kind: str
     parent_regions: tuple[str, ...] = ()
     ports: tuple[str, ...] = ()
@@ -42,8 +42,8 @@ class GraphNode:
 
 @dataclass(frozen=True)
 class GraphEdge:
-    """An edge in GraphBacking
-    """
+    """An edge in GraphBacking"""
+
     src: str
     dst: str
     src_port: str | None = None
@@ -54,6 +54,7 @@ class GraphEdge:
     weak: bool = False
     """Drop if source or destination does not exist
     """
+
 
 @dataclass(frozen=True)
 class GraphGroup:
@@ -76,6 +77,7 @@ class GraphBacking:
     """An ADT for a graph with hierarchical grouping so it is suited for
     representing regionalized flow graphs in SCFG.
     """
+
     _nodes: dict[str, GraphNode]
     _groups: GraphGroup
     _edges: set[GraphEdge]
@@ -86,8 +88,7 @@ class GraphBacking:
         self._edges = set()
 
     def add_node(self, name: str, node: GraphNode):
-        """Add a graph node
-        """
+        """Add a graph node"""
         assert name not in self._nodes
         self._nodes[name] = node
 
@@ -97,8 +98,7 @@ class GraphBacking:
         group.nodes.add(name)
 
     def add_edge(self, src: str, dst: str, **kwargs):
-        """Add a graph edge
-        """
+        """Add a graph edge"""
         self._edges.add(GraphEdge(src, dst, **kwargs))
 
     def verify(self):
@@ -136,15 +136,13 @@ class GraphBacking:
         self._edges -= edge_to_remove
 
     def render(self, renderer: "AbstractRendererBackend"):
-        """Render this graph using the given backend.
-        """
+        """Render this graph using the given backend."""
         self._render_group(renderer, self._groups)
         for edge in self._edges:
             renderer.render_edge(edge)
 
     def _render_group(self, renderer, group: GraphGroup):
-        """Recursively rendering the hierarchical groups
-        """
+        """Recursively rendering the hierarchical groups"""
         for k, subgroup in group.subgroups.items():
             with renderer.render_cluster(k) as subrenderer:
                 self._render_group(subrenderer, subgroup)
@@ -159,19 +157,18 @@ class GraphNodeMaker:
     """Helper for making GraphNode and keep tracks of the hierarchical
     grouping.
     """
+
     parent_path: tuple[str, ...]
     """The parent group path.
     """
 
     def subgroup(self, name: str):
-        """Start a subgroup with the given name.
-        """
+        """Start a subgroup with the given name."""
         cls = type(self)
         return cls(parent_path=(*self.parent_path, name))
 
     def make_node(self, **kwargs) -> GraphNode:
-        """Make a new node
-        """
+        """Make a new node"""
         return GraphNode(**kwargs, parent_regions=self.parent_path)
 
 
@@ -186,8 +183,8 @@ class GraphBuilder:
 
 
 class AbstractRendererBackend(abc.ABC):
-    """Base class for all renderer backend.
-    """
+    """Base class for all renderer backend."""
+
     @abc.abstractmethod
     def render_node(self, k: str, node: GraphNode):
         ...
@@ -203,8 +200,8 @@ class AbstractRendererBackend(abc.ABC):
 
 
 class GraphvizRendererBackend(AbstractRendererBackend):
-    """The backend for using graphviz to render a GraphBacking.
-    """
+    """The backend for using graphviz to render a GraphBacking."""
+
     def __init__(self, g=None):
         from graphviz import Digraph
 
@@ -281,8 +278,7 @@ class GraphvizRendererBackend(AbstractRendererBackend):
 
 
 class RVSDGRenderer(RegionVisitor):
-    """Convert a RVSDG into a GraphBacking
-    """
+    """Convert a RVSDG into a GraphBacking"""
 
     def visit_block(self, block: BasicBlock, builder: GraphBuilder):
         nodename = block.name
@@ -377,9 +373,7 @@ class RVSDGRenderer(RegionVisitor):
                 )
 
         exiting = region.subregion[region.exiting]
-        if isinstance(region, DDGProtocol) and isinstance(
-            exiting, DDGProtocol
-        ):
+        if isinstance(region, DDGProtocol) and isinstance(exiting, DDGProtocol):
             assert isinstance(region, RegionBlock)
             for k in region.outgoing_states & exiting.outgoing_states:
                 builder.graph.add_edge(
@@ -406,9 +400,7 @@ class RVSDGRenderer(RegionVisitor):
         return builder
 
     def _connect_inout_ports(self, last_node, node, builder):
-        if isinstance(last_node, DDGProtocol) and isinstance(
-            node, DDGProtocol
-        ):
+        if isinstance(last_node, DDGProtocol) and isinstance(node, DDGProtocol):
             for k in last_node.outgoing_states:
                 builder.graph.add_edge(
                     f"outgoing_{last_node.name}",
@@ -454,8 +446,7 @@ class RVSDGRenderer(RegionVisitor):
         return builder
 
     def render(self, rvsdg: SCFG) -> GraphBacking:
-        """Render a RVSDG into a GraphBacking
-        """
+        """Render a RVSDG into a GraphBacking"""
         builder = GraphBuilder.make()
         self.visit_graph(rvsdg, builder)
         builder.graph.verify()
@@ -463,8 +454,7 @@ class RVSDGRenderer(RegionVisitor):
 
 
 def to_graphviz(graph: GraphBacking):
-    """Render a GraphBacking using graphviz
-    """
+    """Render a GraphBacking using graphviz"""
     rgr = GraphvizRendererBackend()
     graph.render(rgr)
     return rgr.digraph
