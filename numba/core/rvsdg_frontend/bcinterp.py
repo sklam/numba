@@ -273,28 +273,6 @@ class RVSDG2IR(RegionVisitor[_Data]):
         └───────────────────────┘
 
         """
-        # with self.set_block(
-        #         self._get_label(block.name),
-        #         ir.Block(scope=self.local_scope, loc=self.loc)):
-        #     # Handle simple two-way branch
-        #     # assert set(block.branch_value_table.keys()) == {0, 1}
-        #     cp = block.variable
-        #     cpvar = self.local_scope.get_exact(f"$.cp.{cp}")
-
-        #     falsebr = self._get_label(block.branch_value_table[1])
-        #     truebr = self._get_label(block.branch_value_table[0])
-
-        #     const = self.store(ir.Const(0, loc=self.loc), "$.const")
-        #     cmp = ir.Expr.binop(operator.eq, const, cpvar,
-        #                         loc=self.loc)
-        #     pred = self.store(cmp, "$.pred")
-        #     br = ir.Branch(
-        #         cond=pred,
-        #         truebr=truebr,
-        #         falsebr=falsebr,
-        #         loc=self.loc,
-        #     )
-        #     self.current_block.append(br)
         bvt = block.branch_value_table
         # The control variable
         cp = block.variable

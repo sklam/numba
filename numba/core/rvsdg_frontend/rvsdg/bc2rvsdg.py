@@ -377,7 +377,7 @@ class DDGBlock(BasicBlock):
         return {k for k, vs in self.in_vars.items() if vs not in used_vars}
 
 
-def render_scfg(byteflow):
+def _render_scfg(byteflow):
     bfr = ByteFlowRenderer()
     bfr.bcmap_from_bytecode(byteflow.bc)
     byteflow.scfg.view("scfg")
@@ -603,28 +603,18 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     _scfg_add_conditional_pop_stack(bcmap, byteflow.scfg)
     byteflow = byteflow.restructure()
     # if DEBUG_GRAPH:
-    #     render_scfg(byteflow)
+    #     # show pre-canonicalization SCFG
+    #     _render_scfg(byteflow)
     canonicalize_scfg(byteflow.scfg)
     if DEBUG_GRAPH:
-        render_scfg(byteflow)
+        # show canonicalized SCFG
+        _render_scfg(byteflow)
     rvsdg = convert_to_dataflow(byteflow, argnames)
     rvsdg = propagate_states(rvsdg)
     if DEBUG_GRAPH:
+        # Show RVSDG
         render_rvsdg(rvsdg)
-
     return rvsdg
-
-
-def _flatten_full_graph(scfg: SCFG):
-    regions = [
-        _flatten_full_graph(elem.subregion)
-        for elem in scfg.graph.values()
-        if isinstance(elem, RegionBlock)
-    ]
-    out = ChainMap(*regions, scfg.graph)
-    for blk in out.values():
-        assert not isinstance(blk, RegionBlock), type(blk)
-    return out
 
 
 DDGTypes = (DDGBlock, DDGControlVariable, DDGBranch)
