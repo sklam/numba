@@ -81,6 +81,7 @@ class RVSDG2IR(RegionVisitor[_Data]):
     branch_predicate: ir.Var | None
     _label_map: dict[str, int]
     _emit_debug_print = False
+    _ret_name = ".retval"
 
     def __init__(self, func_id):
         self.func_id = func_id
@@ -91,7 +92,6 @@ class RVSDG2IR(RegionVisitor[_Data]):
         self.vsmap = {}
         self._current_block = None
         self.last_block_label = None
-
         self._label_map = {}
 
     @property
@@ -126,6 +126,9 @@ class RVSDG2IR(RegionVisitor[_Data]):
         self._label_map[f"annoy.{num}"] = num
         return num
 
+    def _get_return_label(self) -> int:
+        return self._get_label("ret")
+
     def initialize(self) -> _Data:
         label = self._get_temp_label()
         with self.set_block(
@@ -138,12 +141,8 @@ class RVSDG2IR(RegionVisitor[_Data]):
             return data
 
     def finalize(self):
-        if self.last_block_label is not None:
-            last_block = self.blocks[self.last_block_label]
-            if not last_block.is_terminated:
-                last_block.append(
-                    ir.StaticRaise(AssertionError, ("Bad",), loc=self.loc)
-                )
+        with self.set_block(self._get_return_label(), ir.Block(scope=self.local_scope, loc=self.loc)):
+            self.append(ir.Return(self.local_scope.get_exact(self._ret_name), loc=self.loc))
 
     def visit_block(self, block: BasicBlock, data: _Data) -> _Data:
         if isinstance(block, DDGBlock):
@@ -815,8 +814,8 @@ class RVSDG2IR(RegionVisitor[_Data]):
 
     def op_RETURN_VALUE(self, op: Op, bc: dis.Instruction):
         [_env, retval] = op.inputs
-        self.append(ir.Return(self.vsmap[retval], loc=self.loc))
-        assert self.current_block.is_terminated
+        self.store(self.vsmap[retval], self._ret_name, redefine=False)
+        # No jump here because it is handled by RVSDG structuring
 
     def op_RAISE_VARARGS(self, op: Op, bc: dis.Instruction):
         [_env, exc] = op.inputs
@@ -877,18 +876,18 @@ def rvsdg_to_ir(
     # rvsdg2ir.blocks = ir_utils.simplify_CFG(rvsdg2ir.blocks)
     cfg = ir_utils.compute_cfg_from_blocks(rvsdg2ir.blocks)
     if len(cfg.dead_nodes()) > 0:
-        ## TO DEBUG
-        # defs = ir_utils.build_definitions(rvsdg2ir.blocks)
-        # fir = ir.FunctionIR(
-        #     blocks=rvsdg2ir.blocks,
-        #     is_generator=False,
-        #     func_id=func_id,
-        #     loc=rvsdg2ir.first_loc,
-        #     definitions=defs,
-        #     arg_count=len(func_id.arg_names),  # type: ignore
-        #     arg_names=func_id.arg_names,  # type: ignore
-        # )
-        # fir.render_dot().view()
+        if DEBUG_GRAPH:
+            defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+            fir = ir.FunctionIR(
+                blocks=rvsdg2ir.blocks,
+                is_generator=False,
+                func_id=func_id,
+                loc=rvsdg2ir.first_loc,
+                definitions=defs,
+                arg_count=len(func_id.arg_names),  # type: ignore
+                arg_names=func_id.arg_names,  # type: ignore
+            )
+            fir.render_dot().view()
         raise Exception("has dead blocks")
 
     # for dead in cfg.dead_nodes():
