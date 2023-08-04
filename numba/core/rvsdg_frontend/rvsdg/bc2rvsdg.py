@@ -606,9 +606,9 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     #     # show pre-canonicalization SCFG
     #     _render_scfg(byteflow)
     canonicalize_scfg(byteflow.scfg)
-    if DEBUG_GRAPH:
-        # show canonicalized SCFG
-        _render_scfg(byteflow)
+    # if DEBUG_GRAPH:
+    #     # show canonicalized SCFG
+    #     _render_scfg(byteflow)
     rvsdg = convert_to_dataflow(byteflow, argnames)
     rvsdg = propagate_states(rvsdg)
     if DEBUG_GRAPH:
@@ -1144,6 +1144,9 @@ class BC2DDG:
         self._kw_names = None
         return res
 
+    def op_NOP(self, inst: dis.Instruction):
+        pass # no-op
+
     def op_POP_TOP(self, inst: dis.Instruction):
         self.pop()
 
@@ -1395,3 +1398,16 @@ class BC2DDG:
 
     def op_JUMP_IF_FALSE_OR_POP(self, inst: dis.Instruction):
         self._JUMP_IF_X_OR_POP(inst, opname="jump.if_false")
+
+    def op_BEFORE_WITH(self, inst: dis.Instruction):
+        ctx_mngr = self.pop()
+
+        op = Op(inst.opname, bc_inst=inst)
+        op.add_input("env", self.effect)
+        op.add_input("ctxmngr", ctx_mngr)
+        self.replace_effect(op.add_output("env", is_effect=True))
+        yielded = op.add_output("yielded")
+        exitfn = op.add_output("exitfn")
+
+        self.push(exitfn)
+        self.push(yielded)

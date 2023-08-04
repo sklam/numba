@@ -26,3 +26,8 @@ htmlcov/
 __pycache__/
 
 docs/source/developer/autogen*
+# TEMP
+minibench*
+*.pdf
+*.dot
+*.prof

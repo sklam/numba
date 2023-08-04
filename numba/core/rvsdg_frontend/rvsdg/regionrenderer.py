@@ -250,6 +250,7 @@ class GraphvizRendererBackend(AbstractRendererBackend):
             elif edge.kind == "cfg":
                 attrs["style"] = "solid"
                 attrs["color"] = "blue"
+                # attrs["weight"] = "0"
             else:
                 raise ValueError(edge.kind)
 
@@ -310,6 +311,7 @@ class RVSDGRenderer(RegionVisitor):
 
         for dstnode in block.jump_targets:
             builder.graph.add_edge(nodename, dstnode, kind="cfg")
+
         return builder
 
     def _add_inout_ports(self, before_block, after_block, builder):
@@ -331,10 +333,10 @@ class RVSDGRenderer(RegionVisitor):
         )
         builder.graph.add_node(incoming_nodename, incoming_node)
 
-        # Add meta edge for implicit flow
-        builder.graph.add_edge(
-            incoming_nodename, outgoing_nodename, kind="meta"
-        )
+        # # Add meta edge for implicit flow
+        # builder.graph.add_edge(
+        #     incoming_nodename, outgoing_nodename, kind="meta"
+        # )
 
     def visit_linear(self, region: RegionBlock, builder: GraphBuilder):
         nodename = region.name
@@ -347,6 +349,11 @@ class RVSDGRenderer(RegionVisitor):
                 region,
                 replace(builder, node_maker=node_maker),
             )
+            # Add meta edge for implicit flow
+            topobody = self._toposort_graph(region.subregion)
+            head, tail = topobody[0][0], topobody[-1][-1]
+            builder.graph.add_edge(f"incoming_{nodename}", head, kind="meta")
+            builder.graph.add_edge(tail, f"outgoing_{nodename}", kind="meta")
 
         subbuilder = replace(
             builder,
@@ -449,7 +456,8 @@ class RVSDGRenderer(RegionVisitor):
         """Render a RVSDG into a GraphBacking"""
         builder = GraphBuilder.make()
         self.visit_graph(rvsdg, builder)
-        builder.graph.verify()
+        ### TODO: fix value-state that are not used; e.g. connect them to GND
+        # builder.graph.verify()
         return builder.graph
 
 
