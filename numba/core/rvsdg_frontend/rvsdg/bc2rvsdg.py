@@ -219,15 +219,32 @@ class DDGBlock(BasicBlock):
         reached_vs.update(self.in_vars.values())
 
         reached_op = {vs.parent for vs in reached_vs if vs.parent is not None}
-
+        unreached_vs = set()
         for vs in reached_vs:
             self._render_vs(builder, vs)
 
         for op in reached_op:
             self._render_op(builder, op)
+            for vs in op.outputs:
+                if vs not in reached_vs:
+                    unreached_vs.add(vs)
+
+        ground_nodename = f"gnd_{self.name}"
+        for vs in unreached_vs:
+            self._render_vs(builder, vs)
+            # connect unreached node to the ground
+            builder.graph.add_edge(
+                vs.short_identity(), ground_nodename,
+    )
+        if unreached_vs:
+            # draw ground
+            builder.graph.add_node(
+                ground_nodename,
+                builder.node_maker.make_node(kind="ground"),
+            )
 
         # Make outgoing node
-        ports = []
+        ports = ["env"]
         outgoing_nodename = f"outgoing_{self.name}"
         for k, vs in self.out_vars.items():
             ports.append(k)
@@ -244,7 +261,7 @@ class DDGBlock(BasicBlock):
         builder.graph.add_node(outgoing_nodename, outgoing_node)
 
         # Make incoming node
-        ports = []
+        ports = ["env"]
         incoming_nodename = f"incoming_{self.name}"
         for k, vs in self.in_vars.items():
             ports.append(k)
@@ -261,6 +278,17 @@ class DDGBlock(BasicBlock):
             data=dict(body="incoming"),
         )
         builder.graph.add_node(incoming_nodename, incoming_node)
+
+        # start env edge
+        builder.graph.add_edge(incoming_nodename,
+                               _just(_just(self.in_effect).parent).short_identity(),
+                               src_port="env",
+                               kind="effect")
+        builder.graph.add_edge(_just(self.out_effect).short_identity(),
+                               outgoing_nodename,
+                               dst_port="env",
+                               kind="effect")
+
 
         # Make jump target node for debugging
         jt_node = builder.node_maker.make_node(

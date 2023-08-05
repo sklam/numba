@@ -228,7 +228,11 @@ class GraphvizRendererBackend(AbstractRendererBackend):
             self.digraph.node(
                 k, label=node.data["body"], shape="plain", fontcolor="blue"
             )
+        elif node.kind == "ground":
+            self.digraph.node(k, shape="doublecircle", label="gnd",
+                              color="darkgrey", fontcolor="darkgrey")
         else:
+            assert not node.kind, f"unexpected node.kind={node.kind!r}"
             self.digraph.node(
                 k,
                 label=f"{k}\n{node.kind}\n{node.data.get('body', '')}",
@@ -332,11 +336,6 @@ class RVSDGRenderer(RegionVisitor):
             data=dict(body="incoming"),
         )
         builder.graph.add_node(incoming_nodename, incoming_node)
-
-        # # Add meta edge for implicit flow
-        # builder.graph.add_edge(
-        #     incoming_nodename, outgoing_nodename, kind="meta"
-        # )
 
     def visit_linear(self, region: RegionBlock, builder: GraphBuilder):
         nodename = region.name
@@ -456,8 +455,7 @@ class RVSDGRenderer(RegionVisitor):
         """Render a RVSDG into a GraphBacking"""
         builder = GraphBuilder.make()
         self.visit_graph(rvsdg, builder)
-        ### TODO: fix value-state that are not used; e.g. connect them to GND
-        # builder.graph.verify()
+        builder.graph.verify()
         return builder.graph
 
 
