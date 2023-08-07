@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass, replace, field, fields
 import dis
 import operator
-from functools import reduce
+from functools import reduce, total_ordering
 from typing import (
     Optional,
     Protocol,
@@ -51,13 +51,48 @@ def _just(v: Optional[T]) -> T:
     return v
 
 
-@dataclass(frozen=True)
+def _infinite_counter():
+    c = 0
+    while True:
+        c += 1
+        yield c
+
+
+@total_ordering
+class _lazy_uid:
+    __slots__ = ["_val"]
+    _counter = iter(_infinite_counter())
+
+    def get(self):
+        try:
+            return self._val
+        except AttributeError:
+            self._val = next(self._counter)
+        return self._val
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.get()})"
+
+    def __lt__(self, other) -> bool:
+        if not isinstance(other, _lazy_uid):
+            return NotImplemented
+        return self.get() < other.get()
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, _lazy_uid):
+            return NotImplemented
+        return self.get() == other.get()
+
+    def __hash__(self):
+        return hash(self.get())
+
+
+@dataclass(frozen=True, order=True)
 class ValueState:
     """For representing a RVSDG Value (State).
 
     For most compiler passes, Value and State can be treated as the same.
     """
-
     parent: Optional["Op"]
     """Optional. The parent Op that output this ValueState.
     """
@@ -72,14 +107,15 @@ class ValueState:
     """
 
     def short_identity(self) -> str:
-        args = f"{id(self.parent):x}, {self.name}, {self.out_index}"
+        h = _just(self.parent)._uid
+        args = f"{h}, {self.name}, {self.out_index}"
         return f"ValueState({args})"
 
-    def __hash__(self):
-        return id(self)
+    def __hash__(self) -> int:
+        return hash((_just(self.parent), self.name, self.out_index, self.is_effect))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Op:
     """For representing a RVSDG operation.
 
@@ -93,12 +129,13 @@ class Op:
     bc_inst: Optional[dis.Instruction]
     """Optional. The bytecode instruction.
     """
-    _inputs: dict[str, ValueState] = field(default_factory=dict)
+    _inputs: dict[str, ValueState] = field(default_factory=dict, compare=False)
     """The input ports.
     """
-    _outputs: dict[str, ValueState] = field(default_factory=dict)
+    _outputs: dict[str, ValueState] = field(default_factory=dict, compare=False)
     """The output ports.
     """
+    _uid: _lazy_uid = field(default_factory=_lazy_uid)
 
     def add_input(self, name, vs: ValueState):
         self._inputs[name] = vs
@@ -114,7 +151,8 @@ class Op:
         return vs
 
     def short_identity(self) -> str:
-        return f"Op({self.opname}, {id(self):x})"
+        h = self._uid
+        return f"Op({self.opname}, {h})"
 
     def summary(self) -> str:
         ins = ", ".join([k for k in self._inputs])
@@ -141,7 +179,7 @@ class Op:
         return self._outputs
 
     def __hash__(self):
-        return id(self)
+        return hash(self._uid)
 
 
 @runtime_checkable
@@ -202,8 +240,8 @@ class DDGBlock(BasicBlock):
         assert isinstance(self.out_vars, MutableSortedMap)
 
     def _gather_reachable(
-        self, vs: ValueState, reached: set[ValueState]
-    ) -> set[ValueState]:
+        self, vs: ValueState, reached: MutableSortedSet[ValueState]
+    ) -> MutableSortedSet[ValueState]:
         reached.add(vs)
         if vs.parent is not None:
             for ivs in vs.parent.inputs:
@@ -212,14 +250,14 @@ class DDGBlock(BasicBlock):
         return reached
 
     def render_graph(self, builder: "GraphBuilder"):
-        reached_vs: set[ValueState] = set()
+        reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
         for vs in [*self.out_vars.values(), _just(self.out_effect)]:
             self._gather_reachable(vs, reached_vs)
         reached_vs.add(_just(self.in_effect))
         reached_vs.update(self.in_vars.values())
 
-        reached_op = {vs.parent for vs in reached_vs if vs.parent is not None}
-        unreached_vs = set()
+        reached_op = MutableSortedSet({vs.parent for vs in reached_vs if vs.parent is not None})
+        unreached_vs: MutableSortedSet = MutableSortedSet()
         for vs in reached_vs:
             self._render_vs(builder, vs)
 
