@@ -10,6 +10,7 @@ The ``RVSDGRenderer`` class contains logic to convert a RVSDG into
 ``GraphBacking``.
 """
 import abc
+from copy import deepcopy
 from typing import Any
 from dataclasses import dataclass, replace, field
 from contextlib import contextmanager
@@ -30,7 +31,7 @@ from .bc2rvsdg import (
 )
 
 
-@dataclass(frozen=True)
+@dataclass
 class GraphNode:
     """A node in GraphBacking"""
 
@@ -87,6 +88,9 @@ class GraphBacking:
         self._groups = GraphGroup.make()
         self._edges = set()
 
+    def clone(self):
+        return deepcopy(self)
+
     def add_node(self, name: str, node: GraphNode):
         """Add a graph node"""
         assert name not in self._nodes
@@ -134,6 +138,28 @@ class GraphBacking:
                             f"missing port {edge.dst_port!r} in node {edge.dst!r}"
                         )
         self._edges -= edge_to_remove
+
+    def post_process(self) -> "GraphBacking":
+        out = self.clone()
+
+        # highlight value starting with
+        import os
+        start = (os.environ.get("RVSDG_HIGHLIGHT", None), None)
+        highlight = set()
+        todos = [start]
+        edge: GraphEdge
+        while todos:
+            cur = todos.pop()
+            if cur in highlight:
+                continue
+            for edge in out._edges:
+                if (edge.src, edge.src_port) == cur:
+                    highlight.add(cur)
+                    todos.append((edge.dst, edge.dst_port))
+        for k, _ in highlight:
+            if out._nodes[k].kind in {"valuestate", "op"}:
+                out._nodes[k].data["highlight"] = True
+        return out
 
     def render(self, renderer: "AbstractRendererBackend"):
         """Render this graph using the given backend."""
@@ -209,11 +235,22 @@ class GraphvizRendererBackend(AbstractRendererBackend):
 
     def render_node(self, k: str, node: GraphNode):
         if node.kind == "valuestate":
-            self.digraph.node(k, label=node.data["body"], shape="rect")
+            if node.data.get("highlight"):
+                self.digraph.node(k, label=node.data["body"], shape="rect",
+                                  fontcolor="red")
+            else:
+                self.digraph.node(k, label=node.data["body"], shape="rect")
         elif node.kind == "op":
-            self.digraph.node(
-                k, label=node.data["body"], shape="box", style="rounded"
-            )
+            if node.data.get("highlight"):
+                self.digraph.node(
+                    k, label=node.data["body"], shape="box", style="rounded",
+                    fontcolor="red",
+                )
+            else:
+                self.digraph.node(
+                    k, label=node.data["body"], shape="box", style="rounded",
+                )
+
         elif node.kind == "effect":
             self.digraph.node(k, label=node.data["body"], shape="circle")
         elif node.kind == "meta":
@@ -311,6 +348,7 @@ class RVSDGRenderer(RegionVisitor):
                     block,
                     block,
                     replace(builder, node_maker=node_maker),
+                    link_ports=True,
                 )
 
         for dstnode in block.jump_targets:
@@ -318,7 +356,8 @@ class RVSDGRenderer(RegionVisitor):
 
         return builder
 
-    def _add_inout_ports(self, before_block, after_block, builder):
+    def _add_inout_ports(self, before_block, after_block, builder, *,
+                         link_ports=False):
         # Make outgoing node
         outgoing_nodename = f"outgoing_{before_block.name}"
         outgoing_node = builder.node_maker.make_node(
@@ -336,6 +375,20 @@ class RVSDGRenderer(RegionVisitor):
             data=dict(body="incoming"),
         )
         builder.graph.add_node(incoming_nodename, incoming_node)
+
+        # Link ports
+        if link_ports:
+            outs = before_block.outgoing_states
+            ins = after_block.incoming_states
+            for dst, src in zip(outs, ins):
+                # link src to dst ports
+                builder.graph.add_edge(
+                    incoming_nodename,
+                    outgoing_nodename,
+                    src_port=src,
+                    dst_port=dst,
+                )
+
 
     def visit_linear(self, region: RegionBlock, builder: GraphBuilder):
         nodename = region.name

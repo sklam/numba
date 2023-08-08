@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+<script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+<div id="graph" style="text-align: center;"></div>
+<script>
+
+var DOT = `
+<<<COPY GRAPH HERE>>>
+`
+
+function flip_color(obj) {
+    var rgb_black = "rgb(0, 0, 0)";
+    var rgb_red = "rgb(255, 0, 0)";
+    if (obj.style("fill") == rgb_red) {
+        obj.style("fill", rgb_black);
+    } else if (obj.style("fill") == rgb_black) {
+        obj.style("fill", rgb_red);
+    }
+}
+
+d3.select("#graph").graphviz().renderDot(DOT,
+    function() {
+        var div = d3.select("#graph");
+        console.log(div)
+        var svg = d3.select(div.node().querySelector("svg"));
+        svg.selectAll("g.node").on("click", function(d) {
+            console.log("touch");
+            console.log(d);
+            console.log(d.key);   // This gives me the graphviz node id of the clicked object
+            navigator.clipboard.writeText(d.key); //copy name to clipboard
+            // flip node text color
+            var obj = d3.select(this);
+            flip_color(obj);
+        });
+        svg.selectAll("g.edge").on("click", function(d) {
+            console.log("touch");
+            console.log(d);
+            console.log(d.key);   // This gives me the graphviz node id of the clicked object
+            d3.select(this).style("fill", "red")
+            d3.select(this).selectAll('path').style("stroke", "red");
+            d3.select(this).selectAll('polygon').style("stroke", "red");
+        });
+    }
+)
+
+</script>

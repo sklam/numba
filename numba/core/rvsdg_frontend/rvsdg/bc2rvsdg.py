@@ -63,7 +63,7 @@ class _lazy_uid:
     __slots__ = ["_val"]
     _counter = iter(_infinite_counter())
 
-    def get(self):
+    def get(self) -> int:
         try:
             return self._val
         except AttributeError:
@@ -659,8 +659,17 @@ def _scfg_add_conditional_pop_stack(bcmap, scfg: SCFG):
 
 def render_rvsdg(rvsdg: SCFG, name: str = "rvsdg"):
     from .regionrenderer import RVSDGRenderer, to_graphviz
-
     to_graphviz(RVSDGRenderer().render(rvsdg)).view(name)
+
+
+def render_rvsdg_d3(rvsdg: SCFG, name: str = "rvsdg"):
+    from .regionrenderer import RVSDGRenderer, to_graphviz
+    # D3-Graphviz
+    dotstr = to_graphviz(RVSDGRenderer().render(rvsdg).post_process()).pipe(format="dot").decode()
+    with open(f"d3gv.html.template", "r") as fin:
+        out = fin.read().replace("<<<COPY GRAPH HERE>>>", dotstr)
+    with open(f"d3gv.html", "w") as fout:
+        print(out, file=fout)
 
 
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
@@ -680,6 +689,8 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     if DEBUG_GRAPH:
         # Show RVSDG
         render_rvsdg(rvsdg)
+    elif True:
+        render_rvsdg_d3(rvsdg)
     return rvsdg
 
 
