@@ -1115,7 +1115,7 @@ def _converter_to_ddgblock(block, converter) -> DDGBlock:
         in_effect=converter.in_effect,
         out_effect=converter.effect,
         in_stackvars=list(converter.incoming_stackvars),
-        out_stackvars=list(converter.stack),
+        out_stackvars=list(reversed(converter.stack)),
         in_vars=MutableSortedMap(converter.incoming_vars),
         out_vars=MutableSortedMap(converter.varmap),
     )
