@@ -1227,6 +1227,11 @@ class BC2DDG:
     def op_POP_TOP(self, inst: dis.Instruction):
         self.pop()
 
+    def op_SWAP(self, inst: dis.Instruction):
+        s = self.stack
+        idx = inst.argval
+        s[-1], s[-idx] = s[-idx], s[-1]
+
     def op_RESUME(self, inst: dis.Instruction):
         pass  # no-op
 
