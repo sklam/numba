@@ -159,7 +159,8 @@ class Op:
         outs = ", ".join([k for k in self._outputs])
         bc = "---"
         if self.bc_inst is not None:
-            bc = f"{self.bc_inst.opname}({self.bc_inst.argrepr})"
+            bc = self.bc_inst
+            bc = f"[{bc.offset}] {bc.opname}({bc.argrepr})"
         return f"Op\n{self.opname}\n{bc}\n({ins}) -> ({outs}) "
 
     @property
