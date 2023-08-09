@@ -240,9 +240,51 @@ class DDGBlock(BasicBlock):
         assert isinstance(self.in_vars, MutableSortedMap)
         assert isinstance(self.out_vars, MutableSortedMap)
 
+    def get_valuestates(self) -> dict[ValueState, bool]:
+        """Returns a dictionary of all ValueStates and a boolean indicating
+        if the ValueState is reachable from the io ports.
+
+        Returns
+        -------
+        dict[ValueState, bool]
+            A map from ValueState to whether it is reachable.
+        """
+        # Find reachable
+        reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
+        for vs in [*self.out_vars.values(), _just(self.out_effect)]:
+            self._gather_reachable(vs, reached_vs)
+        reached_vs.add(_just(self.in_effect))
+        reached_vs.update(self.in_vars.values())
+
+        result = dict.fromkeys(reached_vs, True)
+
+        # Find unreached
+        for vs in reached_vs:
+            op = vs.parent
+            if op is not None:
+                for out in op.outputs:
+                    if out not in reached_vs:
+                        result[out] = False
+        return result
+
     def _gather_reachable(
         self, vs: ValueState, reached: MutableSortedSet[ValueState]
     ) -> MutableSortedSet[ValueState]:
+        """Recursively traverse backwards from a ValueState to find reachable
+        states.
+
+        Parameters
+        ----------
+        vs : ValueState
+            The starting ValueState to traverse backwards from.
+        reached : MutableSortedSet[ValueState]
+            The set of reachable ValueStates, which will be mutated.
+
+        Returns
+        -------
+        MutableSortedSet[ValueState]
+            The updated reached set after traversal. Same object as ``reached``.
+        """
         reached.add(vs)
         if vs.parent is not None:
             for ivs in vs.parent.inputs:
@@ -251,31 +293,26 @@ class DDGBlock(BasicBlock):
         return reached
 
     def render_graph(self, builder: "GraphBuilder"):
-        reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
-        for vs in [*self.out_vars.values(), _just(self.out_effect)]:
-            self._gather_reachable(vs, reached_vs)
-        reached_vs.add(_just(self.in_effect))
-        reached_vs.update(self.in_vars.values())
+        vs_reachability = self.get_valuestates()
+        vs_reachable = [vs for vs, reached in vs_reachability.items() if reached]
+        vs_unreachable = [vs for vs, reached in vs_reachability.items() if not reached]
+        op_reachable = MutableSortedSet((vs.parent for vs in vs_reachable if vs.parent is not None))
 
-        reached_op = MutableSortedSet({vs.parent for vs in reached_vs if vs.parent is not None})
-        unreached_vs: MutableSortedSet = MutableSortedSet()
-        for vs in reached_vs:
+        for vs in vs_reachable:
             self._render_vs(builder, vs)
 
-        for op in reached_op:
+        for op in op_reachable:
             self._render_op(builder, op)
-            for vs in op.outputs:
-                if vs not in reached_vs:
-                    unreached_vs.add(vs)
 
         ground_nodename = f"gnd_{self.name}"
-        for vs in unreached_vs:
+        for vs in vs_unreachable:
             self._render_vs(builder, vs)
             # connect unreached node to the ground
             builder.graph.add_edge(
                 vs.short_identity(), ground_nodename,
-    )
-        if unreached_vs:
+            )
+
+        if vs_unreachable:
             # draw ground
             builder.graph.add_node(
                 ground_nodename,
