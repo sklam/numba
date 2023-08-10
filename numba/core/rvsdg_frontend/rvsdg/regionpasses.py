@@ -3,6 +3,7 @@ Define ``RegionVisitor`` and ``RegionTransformer`` classes to process SCFG
 """
 import abc
 from collections.abc import Mapping
+from contextlib import contextmanager
 from typing import TypeVar, Generic
 
 from numba_rvsdg.core.datastructures.scfg import SCFG
@@ -53,6 +54,15 @@ def toposort_graph(graph: Mapping[str, BasicBlock]) -> list[list[str]]:
     return toposorted
 
 
+@contextmanager
+def _add_exception_note(*args):
+    try:
+        yield
+    except Exception as e:
+        e.add_note(f"[region pass note] {' '.join(map(str, args))}")
+        raise
+
+
 Tdata = TypeVar("Tdata")
 
 
@@ -94,7 +104,10 @@ class RegionVisitor(abc.ABC, Generic[Tdata]):
 
     def visit_linear(self, region: RegionBlock, data: Tdata) -> Tdata:
         """This is called when a linear region is visited."""
-        return self.visit_graph(region.subregion, data)
+        with _add_exception_note(
+            type(self).__qualname__, "at region", region.name
+        ):
+            return self.visit_graph(region.subregion, data)
 
     def visit_graph(self, scfg: SCFG, data: Tdata) -> Tdata:
         """Process a SCFG in topological order."""
@@ -116,17 +129,20 @@ class RegionVisitor(abc.ABC, Generic[Tdata]):
 
     def visit(self, block: BasicBlock, data: Tdata) -> Tdata:
         """A generic visit method that will dispatch to the correct"""
-        if isinstance(block, RegionBlock):
-            if block.kind == "loop":
-                fn = self.visit_loop
-            elif block.kind == "switch":
-                fn = self.visit_switch
+        with _add_exception_note(
+            type(self).__qualname__, "at block", block.name
+        ):
+            if isinstance(block, RegionBlock):
+                if block.kind == "loop":
+                    fn = self.visit_loop
+                elif block.kind == "switch":
+                    fn = self.visit_switch
+                else:
+                    raise NotImplementedError("unreachable", block.kind)
+                data = fn(block, data)
             else:
-                raise NotImplementedError("unreachable", block.kind)
-            data = fn(block, data)
-        else:
-            data = self.visit_block(block, data)
-        return data
+                data = self.visit_block(block, data)
+            return data
 
 
 class RegionTransformer(abc.ABC, Generic[Tdata]):

@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass, replace, field, fields
 import dis
 import operator
-from functools import reduce, total_ordering
+from functools import reduce, total_ordering, cached_property
 from typing import (
     Optional,
     Protocol,
@@ -13,8 +13,8 @@ from typing import (
     TypeVar,
     TYPE_CHECKING,
 )
-
 from collections import ChainMap, defaultdict
+
 from numba_rvsdg.core.datastructures.byte_flow import ByteFlow, FlowInfo
 from numba_rvsdg.core.datastructures.scfg import SCFG
 from numba_rvsdg.core.datastructures.basic_block import (
@@ -28,7 +28,11 @@ from numba_rvsdg.rendering.rendering import ByteFlowRenderer
 from numba_rvsdg.core.datastructures import block_names
 
 
-from numba.core.utils import MutableSortedSet, MutableSortedMap
+from numba.core.utils import (
+    MutableSortedSet,
+    MutableSortedMap,
+    SortedSet,
+)
 
 from .regionpasses import (
     RegionVisitor,
@@ -62,6 +66,7 @@ def _infinite_counter():
 class _lazy_uid:
     __slots__ = ["_val"]
     _counter = iter(_infinite_counter())
+    _val: int
 
     def get(self) -> int:
         try:
@@ -93,6 +98,7 @@ class ValueState:
 
     For most compiler passes, Value and State can be treated as the same.
     """
+
     parent: Optional["Op"]
     """Optional. The parent Op that output this ValueState.
     """
@@ -112,7 +118,9 @@ class ValueState:
         return f"ValueState({args})"
 
     def __hash__(self) -> int:
-        return hash((_just(self.parent), self.name, self.out_index, self.is_effect))
+        return hash(
+            (_just(self.parent), self.name, self.out_index, self.is_effect)
+        )
 
 
 @dataclass(frozen=True, order=True)
@@ -159,8 +167,8 @@ class Op:
         outs = ", ".join([k for k in self._outputs])
         bc = "---"
         if self.bc_inst is not None:
-            bc = self.bc_inst
-            bc = f"[{bc.offset}] {bc.opname}({bc.argrepr})"
+            inst = self.bc_inst
+            bc = f"[{inst.offset}] {inst.opname}({inst.argrepr})"
         return f"Op\n{self.opname}\n{bc}\n({ins}) -> ({outs}) "
 
     @property
@@ -219,28 +227,57 @@ class DDGControlVariable(SyntheticAssignment):
     )
 
 
-@dataclass(frozen=True)
-class DDGBlock(BasicBlock):
-    in_effect: ValueState | None = None
-    out_effect: ValueState | None = None
-    in_stackvars: list[ValueState] = field(default_factory=list)
-    out_stackvars: list[ValueState] = field(default_factory=list)
-    in_vars: MutableSortedMap[str, ValueState] = field(
-        default_factory=MutableSortedMap
-    )
-    out_vars: MutableSortedMap[str, ValueState] = field(
-        default_factory=MutableSortedMap
-    )
+class DDGAnalysis:
+    """
+    DDGAnalysis contains analysis on a DDGBlock.
 
-    exported_stackvars: MutableSortedMap[str, ValueState] = field(
-        default_factory=MutableSortedMap
-    )
+    Parameters
+    ----------
+    parent : DDGBlock
+    The parent DDG block that contains this DDG.
+    """
 
-    def __post_init__(self):
-        assert isinstance(self.in_vars, MutableSortedMap)
-        assert isinstance(self.out_vars, MutableSortedMap)
+    _parent: "DDGBlock"
 
-    def get_valuestates(self) -> dict[ValueState, bool]:
+    def __init__(self, parent: "DDGBlock"):
+        self._parent = parent
+
+    @cached_property
+    def vs_reachability(self) -> dict[ValueState, bool]:
+        """Returns a dictionary of all ValueStates and a boolean indicating
+        if the ValueState is reachable from the io ports.
+        """
+        return self._compute_valuestates()
+
+    @cached_property
+    def vs_reachable(self) -> SortedSet[ValueState]:
+        """The set of reachable ValueStates."""
+        return SortedSet(
+            (vs for vs, reached in self.vs_reachability.items() if reached)
+        )
+
+    @cached_property
+    def vs_unreachable(self) -> SortedSet[ValueState]:
+        """The set of unreachable ValueStates."""
+        return SortedSet(
+            (vs for vs, reached in self.vs_reachability.items() if not reached)
+        )
+
+    @cached_property
+    def op_reachable(self) -> SortedSet[ValueState]:
+        """The set of reachable ValueStates that have a parent Op."""
+        return SortedSet(
+            (vs.parent for vs in self.vs_reachable if vs.parent is not None)
+        )
+
+    @cached_property
+    def all_ops(self) -> SortedSet[Op]:
+        """All the Ops contained in the DDG."""
+        return SortedSet(
+            (vs.parent for vs in self.vs_reachability if vs.parent is not None)
+        )
+
+    def _compute_valuestates(self) -> dict[ValueState, bool]:
         """Returns a dictionary of all ValueStates and a boolean indicating
         if the ValueState is reachable from the io ports.
 
@@ -251,10 +288,11 @@ class DDGBlock(BasicBlock):
         """
         # Find reachable
         reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
-        for vs in [*self.out_vars.values(), _just(self.out_effect)]:
+        parent = self._parent
+        for vs in [*parent.out_vars.values(), _just(parent.out_effect)]:
             self._gather_reachable(vs, reached_vs)
-        reached_vs.add(_just(self.in_effect))
-        reached_vs.update(self.in_vars.values())
+        reached_vs.add(_just(parent.in_effect))
+        reached_vs.update(parent.in_vars.values())
 
         result = dict.fromkeys(reached_vs, True)
 
@@ -292,27 +330,51 @@ class DDGBlock(BasicBlock):
                     self._gather_reachable(ivs, reached)
         return reached
 
-    def render_graph(self, builder: "GraphBuilder"):
-        vs_reachability = self.get_valuestates()
-        vs_reachable = [vs for vs, reached in vs_reachability.items() if reached]
-        vs_unreachable = [vs for vs, reached in vs_reachability.items() if not reached]
-        op_reachable = MutableSortedSet((vs.parent for vs in vs_reachable if vs.parent is not None))
 
-        for vs in vs_reachable:
+@dataclass(frozen=True)
+class DDGBlock(BasicBlock):
+    in_effect: ValueState | None = None
+    out_effect: ValueState | None = None
+    in_stackvars: list[ValueState] = field(default_factory=list)
+    out_stackvars: list[ValueState] = field(default_factory=list)
+    in_vars: MutableSortedMap[str, ValueState] = field(
+        default_factory=MutableSortedMap
+    )
+    out_vars: MutableSortedMap[str, ValueState] = field(
+        default_factory=MutableSortedMap
+    )
+
+    exported_stackvars: MutableSortedMap[str, ValueState] = field(
+        default_factory=MutableSortedMap
+    )
+
+    def __post_init__(self):
+        assert isinstance(self.in_vars, MutableSortedMap)
+        assert isinstance(self.out_vars, MutableSortedMap)
+
+    def get_analysis(self) -> DDGAnalysis:
+        return DDGAnalysis(self)
+
+    def render_graph(self, builder: "GraphBuilder"):
+        vs: ValueState
+        ddginfo = self.get_analysis()
+
+        for vs in ddginfo.vs_reachable:
             self._render_vs(builder, vs)
 
-        for op in op_reachable:
+        for op in ddginfo.op_reachable:
             self._render_op(builder, op)
 
         ground_nodename = f"gnd_{self.name}"
-        for vs in vs_unreachable:
+        for vs in ddginfo.vs_unreachable:
             self._render_vs(builder, vs)
             # connect unreached node to the ground
             builder.graph.add_edge(
-                vs.short_identity(), ground_nodename,
+                vs.short_identity(),
+                ground_nodename,
             )
 
-        if vs_unreachable:
+        if ddginfo.vs_unreachable:
             # draw ground
             builder.graph.add_node(
                 ground_nodename,
@@ -339,6 +401,7 @@ class DDGBlock(BasicBlock):
         # Make incoming node
         ports = ["env"]
         incoming_nodename = f"incoming_{self.name}"
+
         for k, vs in self.in_vars.items():
             ports.append(k)
 
@@ -356,15 +419,18 @@ class DDGBlock(BasicBlock):
         builder.graph.add_node(incoming_nodename, incoming_node)
 
         # start env edge
-        builder.graph.add_edge(incoming_nodename,
-                               _just(_just(self.in_effect).parent).short_identity(),
-                               src_port="env",
-                               kind="effect")
-        builder.graph.add_edge(_just(self.out_effect).short_identity(),
-                               outgoing_nodename,
-                               dst_port="env",
-                               kind="effect")
-
+        builder.graph.add_edge(
+            incoming_nodename,
+            _just(_just(self.in_effect).parent).short_identity(),
+            src_port="env",
+            kind="effect",
+        )
+        builder.graph.add_edge(
+            _just(self.out_effect).short_identity(),
+            outgoing_nodename,
+            dst_port="env",
+            kind="effect",
+        )
 
         # Make jump target node for debugging
         jt_node = builder.node_maker.make_node(
@@ -697,13 +763,36 @@ def _scfg_add_conditional_pop_stack(bcmap, scfg: SCFG):
 
 def render_rvsdg(rvsdg: SCFG, name: str = "rvsdg"):
     from .regionrenderer import RVSDGRenderer, to_graphviz
+
     to_graphviz(RVSDGRenderer().render(rvsdg)).view(name)
 
 
 def render_rvsdg_d3(rvsdg: SCFG, name: str = "rvsdg"):
     from .regionrenderer import RVSDGRenderer, to_graphviz
+
+    # HACK
+    from .rvsdgutils import ComputeUseDefs
+
+    usedefs = ComputeUseDefs().run(rvsdg)
+    try:
+        # df = usedefs.lookup("ValueState(_lazy_uid(55), exitfn, 2)")
+        df = usedefs.lookup("ValueState(_lazy_uid(67), exitfn, 2)")
+    except KeyError as e:
+        print(e)
+        edges = []
+    else:
+        fchain = usedefs.get_forwarded_vs_chain(df)
+        print(fchain.pformat())
+        from pprint import pprint
+
+        edges = fchain.get_edges()
+        pprint(edges)
+
     # D3-Graphviz
-    dotstr = to_graphviz(RVSDGRenderer().render(rvsdg).post_process()).pipe(format="dot").decode()
+    graph = RVSDGRenderer().render(rvsdg)
+    dotstr = (
+        to_graphviz(graph.highlight_edges(edges)).pipe(format="dot").decode()
+    )
     with open(f"d3gv.html.template", "r") as fin:
         out = fin.read().replace("<<<COPY GRAPH HERE>>>", dotstr)
     with open(f"d3gv.html", "w") as fout:
@@ -1260,7 +1349,7 @@ class BC2DDG:
         return res
 
     def op_NOP(self, inst: dis.Instruction):
-        pass # no-op
+        pass  # no-op
 
     def op_POP_TOP(self, inst: dis.Instruction):
         self.pop()

@@ -139,27 +139,23 @@ class GraphBacking:
                         )
         self._edges -= edge_to_remove
 
-    def post_process(self) -> "GraphBacking":
-        out = self.clone()
+    def highlight_edges(self, edges) -> "GraphBacking":
+        """Highlight edges in the graph for visualization.
 
-        # highlight value starting with
-        import os
-        start = (os.environ.get("RVSDG_HIGHLIGHT", None), None)
-        highlight = set()
-        todos = [start]
-        edge: GraphEdge
-        while todos:
-            cur = todos.pop()
-            if cur in highlight:
-                continue
-            for edge in out._edges:
-                if (edge.src, edge.src_port) == cur:
-                    highlight.add(cur)
-                    todos.append((edge.dst, edge.dst_port))
-        for k, _ in highlight:
-            if out._nodes[k].kind in {"valuestate", "op"}:
-                out._nodes[k].data["highlight"] = True
-        return out
+        Parameters
+        ----------
+        edges : List[Tuple[str, str]]
+            A list of (source, destination) node name pairs indicating the edges
+            to highlight.
+
+        Returns
+        -------
+        GraphBacking
+            Returns self after adding the highlight edges.
+        """
+        for src, dst in edges:
+            self.add_edge(src, dst, kind="highlight")
+        return self
 
     def render(self, renderer: "AbstractRendererBackend"):
         """Render this graph using the given backend."""
@@ -235,22 +231,11 @@ class GraphvizRendererBackend(AbstractRendererBackend):
 
     def render_node(self, k: str, node: GraphNode):
         if node.kind == "valuestate":
-            if node.data.get("highlight"):
-                self.digraph.node(k, label=node.data["body"], shape="rect",
-                                  fontcolor="red")
-            else:
-                self.digraph.node(k, label=node.data["body"], shape="rect")
+            self.digraph.node(k, label=node.data["body"], shape="rect")
         elif node.kind == "op":
-            if node.data.get("highlight"):
-                self.digraph.node(
-                    k, label=node.data["body"], shape="box", style="rounded",
-                    fontcolor="red",
-                )
-            else:
-                self.digraph.node(
-                    k, label=node.data["body"], shape="box", style="rounded",
-                )
-
+            self.digraph.node(
+                k, label=node.data["body"], shape="box", style="rounded"
+            )
         elif node.kind == "effect":
             self.digraph.node(k, label=node.data["body"], shape="circle")
         elif node.kind == "meta":
@@ -266,8 +251,13 @@ class GraphvizRendererBackend(AbstractRendererBackend):
                 k, label=node.data["body"], shape="plain", fontcolor="blue"
             )
         elif node.kind == "ground":
-            self.digraph.node(k, shape="doublecircle", label="gnd",
-                              color="darkgrey", fontcolor="darkgrey")
+            self.digraph.node(
+                k,
+                shape="plain",
+                label=chr(0x23DA),
+                fontname="sans-serif",
+                fontsize="30",
+            )
         else:
             assert not node.kind, f"unexpected node.kind={node.kind!r}"
             self.digraph.node(
@@ -291,7 +281,11 @@ class GraphvizRendererBackend(AbstractRendererBackend):
             elif edge.kind == "cfg":
                 attrs["style"] = "solid"
                 attrs["color"] = "blue"
-                # attrs["weight"] = "0"
+            elif edge.kind == "highlight":
+                attrs["style"] = "solid"
+                attrs["color"] = "green"
+                attrs["penwidth"] = "10"
+                attrs["weight"] = ".5"
             else:
                 raise ValueError(edge.kind)
 
@@ -333,9 +327,9 @@ class RVSDGRenderer(RegionVisitor):
         else:
             body = "(tbd)"
             if isinstance(block, DDGBranch):
-                body = f"branch_value_table:\n{block.branch_value_table}"
+                body = f"{block.name}: branch_value_table:\n{block.branch_value_table}"
             elif isinstance(block, DDGControlVariable):
-                body = f"variable_assignment:\n{block.variable_assignment}"
+                body = f"{block.name}: variable_assignment:\n{block.variable_assignment}"
             node = node_maker.make_node(
                 kind="cfg",
                 data=dict(body=body),
@@ -356,8 +350,9 @@ class RVSDGRenderer(RegionVisitor):
 
         return builder
 
-    def _add_inout_ports(self, before_block, after_block, builder, *,
-                         link_ports=False):
+    def _add_inout_ports(
+        self, before_block, after_block, builder, *, link_ports=False
+    ):
         # Make outgoing node
         outgoing_nodename = f"outgoing_{before_block.name}"
         outgoing_node = builder.node_maker.make_node(
@@ -389,13 +384,13 @@ class RVSDGRenderer(RegionVisitor):
                     dst_port=dst,
                 )
 
-
     def visit_linear(self, region: RegionBlock, builder: GraphBuilder):
         nodename = region.name
         node_maker = builder.node_maker.subgroup(f"regionouter_{nodename}")
 
         if isinstance(region, DDGProtocol):
             # Insert incoming and outgoing
+            assert isinstance(region, RegionBlock)  # for mypy
             self._add_inout_ports(
                 region,
                 region,

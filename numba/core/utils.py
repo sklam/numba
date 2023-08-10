@@ -29,9 +29,11 @@ from numba.core import types
 
 if PYVERSION <= (3, 8):
     # This is needed for Python-3.8 and before due to the lack of PEP-585.
-    from typing import MutableSet, MutableMapping, Mapping, Sequence
+    from typing import MutableSet, MutableMapping, Mapping, Sequence, Set
 else:
-    from collections.abc import Mapping, Sequence, MutableSet, MutableMapping
+    from collections.abc import (
+        Mapping, Sequence, MutableSet, MutableMapping, Set,
+    )
 
 
 def erase_traceback(exc_value):
@@ -361,8 +363,8 @@ def order_by_target_specificity(target, templates, fnkey=''):
 T = _tp.TypeVar('T')
 
 
-class MutableSortedSet(MutableSet[T], _tp.Generic[T]):
-    """Mutable Sorted Set
+class SortedSet(Set[T], _tp.Generic[T]):
+    """Sorted Set
     """
 
     def __init__(self, values: _tp.Iterable[T] = ()):
@@ -372,6 +374,23 @@ class MutableSortedSet(MutableSet[T], _tp.Generic[T]):
         return len(self._values)
 
     def __iter__(self):
+        return iter(k for k in sorted(self._values))
+
+    def __contains__(self, x: T) -> bool:
+        return self._values.__contains__(x)
+
+
+class MutableSortedSet(MutableSet[T], _tp.Generic[T]):
+    """Mutable Sorted Set
+    """
+
+    def __init__(self, values: _tp.Iterable[T] = ()):
+        self._values = set(values)
+
+    def __len__(self) -> int:
+        return len(self._values)
+
+    def __iter__(self) -> _tp.Iterator[T]:
         return iter(k for k in sorted(self._values))
 
     def __contains__(self, x: T) -> bool:
