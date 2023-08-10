@@ -96,9 +96,6 @@ class ForwardedDefs(list[Union[Def, "ForwardedDefs"]]):
     """ForwardedDefs is a list that can contain Def objects or nested ForwardedDefs.
     It is used to represent chains of definitions that are forwarded from block
     to block in dataflow analysis.
-
-    get_edges() traverses the chains and extracts the def-use edges between the
-    Def objects. It will recursively process nested ForwardedDefs chains.
     """
 
     def verify(self):
@@ -214,7 +211,7 @@ class UseDefs:
 
         Returns
         -------
-        list[Def|list]
+        ForwardedDefs
             A nested list tracing the forwarded Defs. Defs are appended to
             output, lists represent multiple uses.
         """
