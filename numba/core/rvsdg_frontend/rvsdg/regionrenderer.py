@@ -11,10 +11,11 @@ The ``RVSDGRenderer`` class contains logic to convert a RVSDG into
 """
 import abc
 from copy import deepcopy
-from typing import Any
+from typing import Any, Optional, Iterator
 from dataclasses import dataclass, replace, field
-from contextlib import contextmanager
+from contextlib import contextmanager, closing
 from collections import defaultdict
+import json
 
 from numba_rvsdg.core.datastructures.basic_block import (
     BasicBlock,
@@ -512,3 +513,52 @@ def to_graphviz(graph: GraphBacking):
     rgr = GraphvizRendererBackend()
     graph.render(rgr)
     return rgr.digraph
+
+
+class DebugSession:
+    active: Optional["DebugSession"] = None
+    refcount = 0
+    enabled = True
+    _graphs: dict[str, GraphBacking]
+
+    @classmethod
+    def get(cls) -> "DebugSession":
+        if cls.refcount == 0:
+            DebugSession.active = DebugSession()
+        cls.refcount += 1
+        return DebugSession.active
+
+    def __init__(self) -> None:
+        self._graphs = {}
+
+    @classmethod
+    def close(cls):
+        cls.refcount -= 1
+        if cls.refcount == 0:
+            cls.active = None
+
+    def add_graph(self, name: str, graph: GraphBacking) -> None:
+        idx = len(self._graphs)
+        name = f"{idx}-{name}"
+        self._graphs[name] = graph
+
+    def write_html(self, filename: str = "rvsdg_debug.html") -> None:
+        name2gv: list[tuple[str, str]] = []
+        for name, graph in self._graphs.items():
+            gv = to_graphviz(graph).pipe(format="dot").decode()
+            name2gv.append((name, gv))
+
+        json_payload = json.dumps(name2gv)
+
+        with open(f"rvsdg_debug.html.template", "r") as fin:
+            out = fin.read().replace("\"[[[PAYLOAD]]]\"", json_payload)
+
+        with open(filename, "w") as fout:
+            print(out, file=fout)
+
+
+@contextmanager
+def graph_debugger() -> Iterator[DebugSession]:
+    obj = DebugSession.get()
+    with closing(obj):
+        yield obj

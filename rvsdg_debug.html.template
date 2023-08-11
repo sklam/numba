@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+<script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+
+<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+<style>
+#pyscript {
+    width: 40em; 
+    position: absolute; 
+    float: left; 
+    border: solid lightgrey 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+</style>
+
+<h1>RVSDG DEBUG</h1>
+<div id="pyscript">
+    <py-config>
+        terminal = false
+    </py-config>
+    <pre>
+    # Available functions:
+    # menu()
+    #    Print the menu
+    # render(idx: int|str) 
+    #    For rendering selected graph
+    # transition(idx: int|str, [ms: int]) 
+    #    For rendering and animating the transition to the selected graph
+    </pre>
+    <py-script>
+        import js
+        graphs = js.payload.to_py()
+        graphmap = dict(graphs)
+        _render_dot = js.render_dot.to_py()
+        _transition_dot = js.transition_dot.to_py()
+
+        for i, (k, _) in enumerate(graphs):
+            print(f"[{i}] {k!r}")
+
+        def select(idx):
+            if isinstance(idx, int):
+                k, g = graphs[idx]
+                print('selected', k)
+            else:
+                g = graphmap[idx]
+                print('selected', idx)
+            return g
+
+        def render(idx):
+            _render_dot(select(idx))
+
+        def transition(idx, ms=4000):
+            _transition_dot(select(idx), ms)
+
+        def menu():
+            for i, (k, _) in enumerate(graphs):
+                print(f"[{i}] {k}")
+        
+        # show menu
+        menu()
+        # render the first element
+        render(0)
+    </py-script>
+    <py-repl>
+        menu()
+    </py-repl>
+</div>
+<div id="graph" style="text-align: center;"></div>
+
+<script>
+var payload = "[[[PAYLOAD]]]";
+
+
+function flip_color(obj) {
+    var rgb_black = "rgb(0, 0, 0)";
+    var rgb_red = "rgb(255, 0, 0)";
+    if (obj.style("fill") == rgb_red) {
+        obj.style("fill", rgb_black);
+    } else if (obj.style("fill") == rgb_black) {
+        obj.style("fill", rgb_red);
+    }
+}
+
+function render_dot(dot){
+    gv.renderDot(dot,
+        function() {
+            var div = d3.select("#graph");
+            console.log(div)
+            var svg = d3.select(div.node().querySelector("svg"));
+            svg.selectAll("g.node").on("click", function(d) {
+                console.log("touch");
+                console.log(d);
+                console.log(d.key);   // This gives me the graphviz node id of the clicked object
+                navigator.clipboard.writeText(d.key); //copy name to clipboard
+                // flip node text color
+                var obj = d3.select(this);
+                flip_color(obj);
+            });
+            svg.selectAll("g.edge").on("click", function(d) {
+                console.log("touch");
+                console.log(d);
+                console.log(d.key);   // This gives me the graphviz node id of the clicked object
+                d3.select(this).style("fill", "red")
+                d3.select(this).selectAll('path').style("stroke", "red");
+                d3.select(this).selectAll('polygon').style("stroke", "red");
+            });
+        }
+    )
+}
+
+function transition_dot(dot, ms) {
+    var t = d3.transition().duration(ms).ease(d3.easeLinear);
+
+    gv.transition(t).renderDot(dot);
+}
+
+var gv = d3.select("#graph").graphviz();
+// render_dot(payload[0][1]);
+
+</script>

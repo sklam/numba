@@ -767,6 +767,17 @@ def render_rvsdg(rvsdg: SCFG, name: str = "rvsdg"):
     to_graphviz(RVSDGRenderer().render(rvsdg)).view(name)
 
 
+def debug_rvsdg(rvsdg: SCFG, name: str, *, edges=()):
+    from .regionrenderer import graph_debugger, RVSDGRenderer
+
+    g = RVSDGRenderer().render(rvsdg)
+    if edges:
+        g.highlight_edges(edges)
+
+    with graph_debugger() as dbg:
+        dbg.add_graph(name, g)
+
+
 def render_rvsdg_d3(rvsdg: SCFG, name: str = "rvsdg"):
     from .regionrenderer import RVSDGRenderer, to_graphviz
 
@@ -816,8 +827,28 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     if DEBUG_GRAPH:
         # Show RVSDG
         render_rvsdg(rvsdg)
-    elif True:
-        render_rvsdg_d3(rvsdg)
+
+    debug_rvsdg(rvsdg, f"final rvsdg {code.co_name}")
+
+    if True:
+        from .rvsdgutils import ComputeUseDefs
+
+        usedefs = ComputeUseDefs().run(rvsdg)
+        try:
+            # df = usedefs.lookup("ValueState(_lazy_uid(55), exitfn, 2)")
+            df = usedefs.lookup("ValueState(_lazy_uid(67), exitfn, 2)")
+        except KeyError as e:
+            print(e)
+            edges = []
+        else:
+            fchain = usedefs.get_forwarded_vs_chain(df)
+            print(fchain.pformat())
+            from pprint import pprint
+
+            edges = fchain.get_edges()
+            pprint(edges)
+
+    debug_rvsdg(rvsdg, f"with highlight rvsdg {code.co_name}", edges=edges)
     return rvsdg
 
 
