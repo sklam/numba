@@ -94,7 +94,7 @@ class GraphBacking:
 
     def add_node(self, name: str, node: GraphNode):
         """Add a graph node"""
-        assert name not in self._nodes
+        assert name not in self._nodes, name
         self._nodes[name] = node
 
         group = self._groups

@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass, replace, field, fields
 import dis
 import operator
+from copy import deepcopy
 from functools import reduce, total_ordering, cached_property
 from typing import (
     Optional,
@@ -16,7 +17,7 @@ from typing import (
 from collections import ChainMap, defaultdict
 
 from numba_rvsdg.core.datastructures.byte_flow import ByteFlow, FlowInfo
-from numba_rvsdg.core.datastructures.scfg import SCFG
+from numba_rvsdg.core.datastructures.scfg import SCFG, NameGenerator
 from numba_rvsdg.core.datastructures.basic_block import (
     BasicBlock,
     PythonBytecodeBlock,
@@ -122,6 +123,15 @@ class ValueState:
             (_just(self.parent), self.name, self.out_index, self.is_effect)
         )
 
+    def __repr__(self) -> str:
+        buf = []
+        buf.append(repr(self.name))
+        buf.append(str(self.out_index))
+        buf.append(str(self.is_effect))
+        if self.parent:
+            buf.append(f"{self.parent.short_identity()}")
+        return f"ValueState({', '.join(buf)})"
+
 
 @dataclass(frozen=True, order=True)
 class Op:
@@ -186,6 +196,11 @@ class Op:
     @property
     def output_ports(self) -> Mapping[str, ValueState]:
         return self._outputs
+
+    def replace_inputs(self, repl: Mapping[str, ValueState]) -> None:
+        for k, vs in repl.items():
+            assert k in self._inputs
+            self._inputs[k] = vs
 
     def __hash__(self):
         return hash(self._uid)
@@ -290,7 +305,7 @@ class DDGAnalysis:
         reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
         parent = self._parent
         for vs in [*parent.out_vars.values(), _just(parent.out_effect)]:
-            self._gather_reachable(vs, reached_vs)
+            _gather_reachable(vs, reached_vs)
         reached_vs.add(_just(parent.in_effect))
         reached_vs.update(parent.in_vars.values())
 
@@ -305,30 +320,39 @@ class DDGAnalysis:
                         result[out] = False
         return result
 
-    def _gather_reachable(
-        self, vs: ValueState, reached: MutableSortedSet[ValueState]
-    ) -> MutableSortedSet[ValueState]:
-        """Recursively traverse backwards from a ValueState to find reachable
-        states.
 
-        Parameters
-        ----------
-        vs : ValueState
-            The starting ValueState to traverse backwards from.
-        reached : MutableSortedSet[ValueState]
-            The set of reachable ValueStates, which will be mutated.
+def _compute_reachable(ops: list[Op]) -> MutableSortedSet[ValueState]:
+    reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
+    for op in ops:
+        for vs in [*op.inputs, *op.outputs]:
+            reached_vs.add(vs)
+    return reached_vs
 
-        Returns
-        -------
-        MutableSortedSet[ValueState]
-            The updated reached set after traversal. Same object as ``reached``.
-        """
-        reached.add(vs)
-        if vs.parent is not None:
-            for ivs in vs.parent.inputs:
-                if ivs not in reached:
-                    self._gather_reachable(ivs, reached)
-        return reached
+
+def _gather_reachable(
+    vs: ValueState, reached: MutableSortedSet[ValueState]
+) -> MutableSortedSet[ValueState]:
+    """Recursively traverse backwards from a ValueState to find reachable
+    states.
+
+    Parameters
+    ----------
+    vs : ValueState
+        The starting ValueState to traverse backwards from.
+    reached : MutableSortedSet[ValueState]
+        The set of reachable ValueStates, which will be mutated.
+
+    Returns
+    -------
+    MutableSortedSet[ValueState]
+        The updated reached set after traversal. Same object as ``reached``.
+    """
+    reached.add(vs)
+    if vs.parent is not None:
+        for ivs in vs.parent.inputs:
+            if ivs not in reached:
+                _gather_reachable(ivs, reached)
+    return reached
 
 
 @dataclass(frozen=True)
@@ -387,8 +411,14 @@ class DDGBlock(BasicBlock):
         for k, vs in self.out_vars.items():
             ports.append(k)
 
+            style = {}
+            if vs.is_effect:
+                style["kind"] = "effect"
             builder.graph.add_edge(
-                vs.short_identity(), outgoing_nodename, dst_port=k
+                vs.short_identity(),
+                outgoing_nodename,
+                dst_port=k,
+                **style,
             )
 
         outgoing_node = builder.node_maker.make_node(
@@ -545,6 +575,99 @@ class DDGBlock(BasicBlock):
                     used_vars.add(vs)
         # Return in_vars that are not in used_vars
         return {k for k, vs in self.in_vars.items() if vs not in used_vars}
+
+    def split_after(
+        self, anchor_op: Op, name_gen: NameGenerator
+    ) -> tuple["DDGBlock", "DDGBlock"]:
+        """
+        Split the current DDGBlock after the given anchor_op into two blocks.
+
+        Parameters:
+        - anchor_op: The Op after which to split the block.
+        - name_gen: The NameGenerator to generate a name for the new block.
+
+        Returns:
+        - before: The new DDGBlock before the split point containing ops before
+                  anchor_op.
+        - after: The new DDGBlock after the split point containing ops after
+                 anchor_op.
+        """
+        topo_ops = self.get_toposorted_ops()
+        where = topo_ops.index(anchor_op)
+        after_ops = topo_ops[where + 1 :]
+        # compute reachable vs in before_ops
+        after_vs = _compute_reachable(after_ops)
+        middle_vs = set(after_vs)
+        for op in after_ops:
+            middle_vs -= set(op.outputs)
+
+        # introduce a new op to split
+        vs_repl: dict[ValueState, ValueState] = {}
+        vs_before_outputs: dict[str, ValueState] = {}
+        vs_after_inputs: dict[str, ValueState] = {}
+
+        def make_repl_op(k: str, vs: ValueState) -> ValueState:
+            """Make replacement Op.
+
+            Caches result by ValueState.
+            """
+            if vs in vs_repl:
+                out = vs_repl[vs]
+            else:
+                prefix = f"split_{len(vs_repl)}-{k}"
+                vs_before_outputs[prefix] = vs
+
+                op = Op(
+                    "start" if vs.is_effect else "var.incoming", bc_inst=None
+                )
+                out = op.add_output(vs.name, is_effect=vs.is_effect)
+
+                vs_repl[vs] = out
+                vs_after_inputs[prefix] = out
+            return out
+
+        for op in after_ops:
+            repl = {
+                k: make_repl_op(k, vs)
+                for k, vs in op.input_ports.items()
+                if vs in middle_vs
+            }
+            if repl:
+                op.replace_inputs(repl)
+
+        # make new blocks
+
+        after_name = name_gen.new_block_name("split")
+        before = DDGBlock(
+            name=self.name,
+            _jump_targets=(after_name,),
+            in_effect=self.in_effect,
+            out_effect=[v for v in vs_before_outputs.values() if v.is_effect][
+                0
+            ],
+            in_stackvars=list(self.in_stackvars),
+            out_stackvars=(),
+            in_vars=self.in_vars,
+            out_vars=MutableSortedMap(
+                {k: v for k, v in vs_before_outputs.items() if not v.is_effect}
+            ),
+        )
+
+        after = DDGBlock(
+            name=after_name,
+            _jump_targets=self._jump_targets,
+            in_effect=[v for v in vs_after_inputs.values() if v.is_effect][0],
+            out_effect=self.out_effect,
+            in_stackvars=(),
+            out_stackvars=self.out_stackvars,
+            in_vars=MutableSortedMap(
+                {k: v for k, v in vs_after_inputs.items() if not v.is_effect}
+            ),
+            out_vars=self.out_vars,
+            exported_stackvars=self.exported_stackvars,
+        )
+
+        return before, after
 
 
 def _render_scfg(byteflow):
@@ -833,23 +956,74 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     if True:
         from .rvsdgutils import ComputeUseDefs
 
+        #### Draw a graph with the def-use chain highlighted
         usedefs = ComputeUseDefs().run(rvsdg)
-        try:
-            # df = usedefs.lookup("ValueState(_lazy_uid(55), exitfn, 2)")
-            df = usedefs.lookup("ValueState(_lazy_uid(67), exitfn, 2)")
-        except KeyError as e:
-            print(e)
-            edges = []
-        else:
-            fchain = usedefs.get_forwarded_vs_chain(df)
-            print(fchain.pformat())
-            from pprint import pprint
+        # df = usedefs.lookup("ValueState(_lazy_uid(55), exitfn, 2)")
+        df = usedefs.lookup("ValueState(_lazy_uid(67), exitfn, 2)")
+        fchain = usedefs.get_forwarded_vs_chain(df)
+        print(fchain.pformat())
+        from pprint import pprint
 
-            edges = fchain.get_edges()
-            pprint(edges)
+        edges = fchain.get_edges()
+        pprint(edges)
+        debug_rvsdg(rvsdg, f"with highlight rvsdg {code.co_name}", edges=edges)
 
-    debug_rvsdg(rvsdg, f"with highlight rvsdg {code.co_name}", edges=edges)
+        # make split at BEFORE_WITH
+        first = fchain[0]
+        last_elems = fchain.get_last_elements()
+        [last] = set(last_elems)  # XXX only support one
+
+        first_op: Op = first.vs.parent
+        last_op: Op = usedefs.get_uses(last)[0].op
+
+        print(first_op, last_op)  # first.vsdef
+        splitted = deepcopy(rvsdg)
+        split_rvsdg(splitted, first_op, first.parent)
+        # split_rvsdg(splitted, first_op, first.parent)
+
+        debug_rvsdg(splitted, f"splitted rvsdg {code.co_name}")
+
     return rvsdg
+
+
+def split_rvsdg(rvsdg: SCFG, anchor: Op, block: DDGBlock):
+    SplitRVSDG(anchor, block.name).visit_graph(rvsdg, None)
+
+
+class SplitRVSDG(RegionTransformer[None]):
+    """Split the RVSDG at the given anchor Op."""
+
+    anchor: Op
+    anchor_block: str
+
+    def __init__(self, anchor: Op, anchor_block: str) -> None:
+        super().__init__()
+        self.anchor = anchor
+        self.anchor_block = anchor_block
+
+    def visit_block(self, parent: SCFG, block: BasicBlock, data: None) -> None:
+        if block.name == self.anchor_block:
+            assert isinstance(block, DDGBlock)
+            before, after = block.split_after(self.anchor, parent.name_gen)
+            assert before.name == block.name
+            parent.graph[block.name] = before
+            parent.graph[after.name] = after
+
+    def visit_loop(self, parent: SCFG, region: RegionBlock, data: None) -> None:
+        return self.visit_linear(parent, region, data)
+
+    def visit_switch(
+        self, parent: SCFG, region: RegionBlock, data: None
+    ) -> None:
+        self.visit_linear(
+            region.subregion, region.subregion.graph[region.header], data
+        )
+        for k, child in region.subregion.graph.items():
+            if child.kind == "branch":
+                self.visit_linear(region.subregion, child, data)
+        self.visit_linear(
+            region.subregion, region.subregion.graph[region.exiting], data
+        )
 
 
 DDGTypes = (DDGBlock, DDGControlVariable, DDGBranch)

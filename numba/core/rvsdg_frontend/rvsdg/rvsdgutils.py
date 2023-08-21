@@ -144,6 +144,21 @@ class ForwardedDefs(list[Union[Def, "ForwardedDefs"]]):
                 buf.extend(edges)
         return buf
 
+    def is_fork(self):
+        return all(isinstance(x, ForwardedDefs) for x in self)
+
+    def get_last_elements(self) -> list[Def]:
+        last = self[-1]
+        if self.is_fork():
+            out = []
+            for x in self:
+                out.extend(x.get_last_elements())
+            return out
+        elif isinstance(last, ForwardedDefs):
+            return last.get_last_elements()
+        else:
+            return [last]
+
 
 class UseDefs:
     """Provide analysis to track definitions and uses of values in a data
