@@ -14,7 +14,7 @@ from typing import (
     TypeVar,
     TYPE_CHECKING,
 )
-from collections import ChainMap, defaultdict
+from collections import ChainMap, defaultdict, deque
 
 from numba_rvsdg.core.datastructures.byte_flow import ByteFlow, FlowInfo
 from numba_rvsdg.core.datastructures.scfg import SCFG, NameGenerator
@@ -205,6 +205,9 @@ class Op:
     def __hash__(self):
         return hash(self._uid)
 
+    def is_init(self) -> bool:
+        return self.opname in {"start", "var.incoming", "stack.incoming"}
+
 
 @runtime_checkable
 class DDGProtocol(Protocol):
@@ -304,9 +307,13 @@ class DDGAnalysis:
         # Find reachable
         reached_vs: MutableSortedSet[ValueState] = MutableSortedSet()
         parent = self._parent
-        for vs in [*parent.out_vars.values(), _just(parent.out_effect)]:
+        all_out_vs = [*parent.out_vars.values()]
+        if parent.out_effect is not None:
+            all_out_vs.append(parent.out_effect)
+        for vs in all_out_vs:
             _gather_reachable(vs, reached_vs)
-        reached_vs.add(_just(parent.in_effect))
+        if parent.in_effect is not None:
+            reached_vs.add(parent.in_effect)
         reached_vs.update(parent.in_vars.values())
 
         result = dict.fromkeys(reached_vs, True)
@@ -530,37 +537,58 @@ class DDGBlock(BasicBlock):
         """
         res: list[Op] = []
 
+        analysis = self.get_analysis()
+        ops = analysis.all_ops
+
+
+        # #### Pull schedule
+        # # Seed the pending Operations using the outputs.
+        # pending: deque[Op] = deque([
+        #     vs.parent for vs in self.out_vars.values() if vs.parent is not None
+        # ])
+        # assert self.out_effect is not None  # for typing
+        # pending.append(_just(self.out_effect.parent))
+        # seen: set[Op] = set()
+
+        # while pending:
+        #     op = pending.pop()
+        #     if op in seen:
+        #         continue
+        #     if all(vs.parent is None or vs.parent in seen for vs in op.inputs):
+        #         seen |= {vs.parent for vs in op.inputs if vs.parent is not None}
+        #         seen.add(op)
+        #         res.append(op)
+        #     else:
+        #         pending.appendleft(op)
+        #         pending.extend(vs.parent for vs in op.inputs if vs.parent is not None)
+
+
+        #### Push schedule
+        #### As soon as inputs are ready
         # Initially, the available states are the inputs
         avail: set[ValueState] = {*self.in_vars.values(), _just(self.in_effect)}
-        # Seed the pending Operations using the outputs.
-        pending: list[Op] = [
-            vs.parent for vs in self.out_vars.values() if vs.parent is not None
-        ]
-        assert self.out_effect is not None  # for typing
-        pending.append(_just(self.out_effect.parent))
-        seen: set[Op] = set()
+        pending: list[tuple[Op, set[ValueState]]]
+        pending = [(op, set(op.inputs)) for op in ops]
+        def topo_key(op: Op):
+            return (op.opname != "start", "incoming" not in op.opname, not op.inputs, op)
+
+        pending.sort(key=lambda x: topo_key(x[0]))
 
         while pending:
-            op = pending[-1]
-            if op in seen:
-                pending.pop()
-                continue
-            # Get the set of incoming states that are not yet available
-            # to the current operation.
-            # NOTE: for stable ordering, change the following to a ordered-set.
-            incomings = set()
-            for vs in op._inputs.values():
-                if vs not in avail and vs.parent is not None:
-                    incomings.add(vs.parent)
-
-            if not incomings:
-                # All incoming states are already available
-                avail |= set(op._outputs.values())
-                pending.pop()
-                res.append(op)
-                seen.add(op)
-            else:
-                pending.extend(incomings)
+            layer = []
+            queue = []
+            for op, inputs in pending:
+                # remove available inputs
+                inputs -= avail
+                if not inputs:
+                    # all inputs are ready
+                    # add outputs to available states
+                    layer.append(op)
+                    avail |= frozenset(op.outputs)
+                else:
+                    queue.append((op, inputs))
+            pending = queue
+            res.extend(sorted(layer, key=topo_key))
         return res
 
     def get_unused_inputs(self) -> set[str]:
@@ -592,14 +620,41 @@ class DDGBlock(BasicBlock):
         - after: The new DDGBlock after the split point containing ops after
                  anchor_op.
         """
+        print("----anchor_op", anchor_op.summary())
         topo_ops = self.get_toposorted_ops()
+        print("((((topo))))")
+        for op in topo_ops:
+            print(op.summary())
+        print()
         where = topo_ops.index(anchor_op)
+        # find end of init
+        for idx, op in enumerate(topo_ops):
+            if not op.is_init():
+                break
+        if where < idx:
+            # move index to the end of initialization
+            item = topo_ops.pop(where)
+            topo_ops.insert(idx - 1, item)
+            where = idx - 1
+
+        raise NotImplementedError(
+            """
+ADD LOGIC TO MOVE any independent ops to later
+            """
+        )
+
+        before_ops = topo_ops[: where + 1]
         after_ops = topo_ops[where + 1 :]
-        # compute reachable vs in before_ops
+        # compute reachable vs in after_ops
         after_vs = _compute_reachable(after_ops)
-        middle_vs = set(after_vs)
-        for op in after_ops:
-            middle_vs -= set(op.outputs)
+
+        before_produced: set[ValueState] = set()
+        for op in before_ops:
+            before_produced |= frozenset(op.outputs)
+
+        middle_vs = before_produced & {*after_vs, *self.out_vars.values(), _just(self.out_effect)}
+        print(middle_vs)
+        print("(((middle_vs)))")
 
         # introduce a new op to split
         vs_repl: dict[ValueState, ValueState] = {}
@@ -626,7 +681,13 @@ class DDGBlock(BasicBlock):
                 vs_after_inputs[prefix] = out
             return out
 
+        # print("==== out_vs ====")
+        # for vs in out_vs:
+        #     make_repl_op(vs.name, vs)
+
+        print("==== after ops ====")
         for op in after_ops:
+            print(op.summary())
             repl = {
                 k: make_repl_op(k, vs)
                 for k, vs in op.input_ports.items()
@@ -635,6 +696,29 @@ class DDGBlock(BasicBlock):
             if repl:
                 op.replace_inputs(repl)
 
+        if self.out_effect in middle_vs:
+            out_effect = make_repl_op(self.out_effect.name, self.out_effect)
+        else:
+            out_effect = self.out_effect
+
+        out_vars = {}
+        for k, vs in self.out_vars.items():
+            if vs in middle_vs:
+                out_vars[k] = make_repl_op(k, vs)
+            else:
+                out_vars[k] = vs
+
+
+        if not vs_after_inputs:
+            return self, None
+
+
+        vs_before = [*vs_before_outputs.values()]
+        vs_after = [*vs_after_inputs.values()]
+
+        before_effect = [v for v in vs_before if v.is_effect]
+        after_effect = [v for v in vs_after if v.is_effect]
+
         # make new blocks
 
         after_name = name_gen.new_block_name("split")
@@ -642,9 +726,7 @@ class DDGBlock(BasicBlock):
             name=self.name,
             _jump_targets=(after_name,),
             in_effect=self.in_effect,
-            out_effect=[v for v in vs_before_outputs.values() if v.is_effect][
-                0
-            ],
+            out_effect=before_effect[0] if before_effect else None,
             in_stackvars=list(self.in_stackvars),
             out_stackvars=(),
             in_vars=self.in_vars,
@@ -653,19 +735,27 @@ class DDGBlock(BasicBlock):
             ),
         )
 
+        for k in DDGAnalysis(before).vs_reachable:
+            print(k)
+
         after = DDGBlock(
             name=after_name,
             _jump_targets=self._jump_targets,
-            in_effect=[v for v in vs_after_inputs.values() if v.is_effect][0],
-            out_effect=self.out_effect,
+            in_effect=after_effect[0] if after_effect else None,
+            out_effect=out_effect,
             in_stackvars=(),
             out_stackvars=self.out_stackvars,
             in_vars=MutableSortedMap(
                 {k: v for k, v in vs_after_inputs.items() if not v.is_effect}
             ),
-            out_vars=self.out_vars,
+            out_vars=MutableSortedMap(out_vars),
             exported_stackvars=self.exported_stackvars,
         )
+
+        print("+++")
+
+        for k in DDGAnalysis(after).vs_reachable:
+            print(k)
 
         return before, after
 
@@ -953,7 +1043,7 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
 
     debug_rvsdg(rvsdg, f"final rvsdg {code.co_name}")
 
-    if True:
+    if False:
         from .rvsdgutils import ComputeUseDefs
 
         #### Draw a graph with the def-use chain highlighted
@@ -976,10 +1066,12 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
         first_op: Op = first.vs.parent
         last_op: Op = usedefs.get_uses(last)[0].op
 
-        print(first_op, last_op)  # first.vsdef
+        print('=====')
+        print(first_op)  # first.vsdef
+        print(last_op.input_ports["callee"].parent)
         splitted = deepcopy(rvsdg)
         split_rvsdg(splitted, first_op, first.parent)
-        # split_rvsdg(splitted, first_op, first.parent)
+        split_rvsdg(splitted, last_op.input_ports["callee"].parent, last.parent)
 
         debug_rvsdg(splitted, f"splitted rvsdg {code.co_name}")
 
@@ -1005,9 +1097,10 @@ class SplitRVSDG(RegionTransformer[None]):
         if block.name == self.anchor_block:
             assert isinstance(block, DDGBlock)
             before, after = block.split_after(self.anchor, parent.name_gen)
-            assert before.name == block.name
-            parent.graph[block.name] = before
-            parent.graph[after.name] = after
+            if after is not None:
+                assert before.name == block.name
+                parent.graph[block.name] = before
+                parent.graph[after.name] = after
 
     def visit_loop(self, parent: SCFG, region: RegionBlock, data: None) -> None:
         return self.visit_linear(parent, region, data)
