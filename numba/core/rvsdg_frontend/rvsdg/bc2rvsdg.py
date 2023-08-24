@@ -1609,6 +1609,14 @@ class BC2DDG:
             self.incoming_stackvars.append(vs)
         return self.stack.pop()
 
+    def peek(self, which: int) -> ValueState:
+        popped = [self.pop() for i in range(which)]
+        # push everything back in
+        for elem in reversed(popped):
+            self.push(elem)
+        # return the last element
+        return popped[-1]
+
     def top(self) -> ValueState:
         tos = self.pop()
         self.push(tos)
@@ -1656,6 +1664,9 @@ class BC2DDG:
         s = self.stack
         idx = inst.argval
         s[-1], s[-idx] = s[-idx], s[-1]
+
+    def op_COPY(self, inst: dis.Instruction):
+        self.push(self.peek(inst.argval))
 
     def op_RESUME(self, inst: dis.Instruction):
         pass  # no-op
