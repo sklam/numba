@@ -495,7 +495,7 @@ class DDGBlock(BasicBlock):
 
         node = builder.node_maker.make_node(
             kind="op",
-            data=dict(body=str(op.summary())),
+            data=dict(body=str(op.summary()).replace('\n', r'\n')),
         )
         builder.graph.add_node(op_anchor, node)
 
@@ -988,7 +988,7 @@ def debug_rvsdg(rvsdg: SCFG, name: str, *, edges=()):
         g.highlight_edges(edges)
 
     with graph_debugger() as dbg:
-        dbg.add_graph(name, g)
+        dbg.add_graphbacking(name, g)
 
 
 def render_rvsdg_d3(rvsdg: SCFG, name: str = "rvsdg"):
@@ -1023,24 +1023,27 @@ def render_rvsdg_d3(rvsdg: SCFG, name: str = "rvsdg"):
         print(out, file=fout)
 
 
+def _debug_scfg(name, byteflow):
+    from .regionrenderer import graph_debugger
+
+    g = ByteFlowRenderer().render_byteflow(byteflow)
+
+    with graph_debugger() as dbg:
+        dbg.add_graphviz(name, g)
+
+
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     byteflow = ByteFlow.from_bytecode(code)
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
     _scfg_add_conditional_pop_stack(bcmap, byteflow.scfg)
     byteflow = byteflow.restructure()
-    # if DEBUG_GRAPH:
-    #     # show pre-canonicalization SCFG
-    #     _render_scfg(byteflow)
+    _debug_scfg("pre-canonicalization", byteflow)
     canonicalize_scfg(byteflow.scfg)
-    # if DEBUG_GRAPH:
-    #     # show canonicalized SCFG
-    #     _render_scfg(byteflow)
-    rvsdg = convert_to_dataflow(byteflow, argnames)
-    rvsdg = propagate_states(rvsdg)
-    if DEBUG_GRAPH:
-        # Show RVSDG
-        render_rvsdg(rvsdg)
+    _debug_scfg("post-canonicalization", byteflow)
 
+    rvsdg = convert_to_dataflow(byteflow, argnames)
+    debug_rvsdg(rvsdg, f"early rvsdg {code.co_name}")
+    rvsdg = propagate_states(rvsdg)
     debug_rvsdg(rvsdg, f"final rvsdg {code.co_name}")
 
     if False:

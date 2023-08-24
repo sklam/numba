@@ -519,7 +519,7 @@ class DebugSession:
     active: Optional["DebugSession"] = None
     refcount = 0
     enabled = True
-    _graphs: dict[str, GraphBacking]
+    _graphs: dict[str, str]
 
     @classmethod
     def get(cls) -> "DebugSession":
@@ -537,15 +537,20 @@ class DebugSession:
         if cls.refcount == 0:
             cls.active = None
 
-    def add_graph(self, name: str, graph: GraphBacking) -> None:
+    def _add_renderable(self, name: str, gv: str) -> None:
         idx = len(self._graphs)
         name = f"{idx}-{name}"
-        self._graphs[name] = graph
+        self._graphs[name] = gv
+
+    def add_graphviz(self, name: str, gv) -> None:
+        self._add_renderable(name, gv.source)
+
+    def add_graphbacking(self, name: str, graph: GraphBacking) -> None:
+        self._add_renderable(name, to_graphviz(graph).source)
 
     def write_html(self, filename: str = "rvsdg_debug.html") -> None:
         name2gv: list[tuple[str, str]] = []
-        for name, graph in self._graphs.items():
-            gv = to_graphviz(graph).pipe(format="dot").decode()
+        for name, gv in self._graphs.items():
             name2gv.append((name, gv))
 
         json_payload = json.dumps(name2gv)
