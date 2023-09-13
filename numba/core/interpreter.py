@@ -2541,6 +2541,24 @@ class Interpreter(object):
         expr = ir.Expr.getitem(target, index=index, loc=self.loc)
         self.store(expr, res)
 
+    def op_BINARY_SLICE(self, inst,
+                        start, end, container,
+                        slicevar, indexvar,
+                        res):
+        slicegv = ir.Global("slice", slice, loc=self.loc)
+        self.store(value=slicegv, name=slicevar)
+
+        index = ir.Expr.call(
+            self.get(slicevar),
+            (self.get(start), self.get(end)),
+            (),
+            loc=self.loc)
+        self.store(value=index, name=indexvar)
+
+        expr = ir.Expr.getitem(self.get(container), self.get(indexvar),
+                               loc=self.loc)
+        self.store(value=expr, name=res)
+
     def op_STORE_SUBSCR(self, inst, target, index, value):
         index = self.get(index)
         target = self.get(target)
