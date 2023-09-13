@@ -483,6 +483,11 @@ class TraceRunner(object):
         state.append(inst, res=res)
         state.push(res)
 
+    if PYVERSION == (3, 12):
+        op_LOAD_FAST_AND_CLEAR = op_LOAD_FAST
+    else:
+        assert PYVERSION < (3, 12)
+
     def op_DELETE_FAST(self, state, inst):
         state.append(inst)
 
@@ -1414,7 +1419,7 @@ class TraceRunner(object):
     op_BINARY_XOR = _binaryop
 
     def op_MAKE_FUNCTION(self, state, inst, MAKE_CLOSURE=False):
-        if PYVERSION == (3, 11):
+        if PYVERSION in [(3, 11), (3, 12)]:
             # https://github.com/python/cpython/commit/2f180ce
             # name set via co_qualname
             name = None

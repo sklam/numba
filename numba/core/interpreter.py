@@ -1703,7 +1703,8 @@ class Interpreter(object):
                 val = self.get(varname)
             except ir.NotDefinedError:
                 # Hack to make sure exception variables are defined
-                assert PYVERSION == (3, 11), "unexpected missing definition"
+                assert PYVERSION in [(3, 11), (3, 12)], \
+                    "unexpected missing definition"
                 val = ir.Const(value=None, loc=self.loc)
             stmt = ir.Assign(value=val, target=target,
                              loc=self.loc)
@@ -2145,6 +2146,11 @@ class Interpreter(object):
     def op_LOAD_FAST(self, inst, res):
         srcname = self.code_locals[inst.arg]
         self.store(value=self.get(srcname), name=res)
+
+    if PYVERSION == (3, 12):
+        op_LOAD_FAST_AND_CLEAR = op_LOAD_FAST
+    else:
+        assert PYVERSION < (3, 12)
 
     def op_STORE_FAST(self, inst, value):
         dstname = self.code_locals[inst.arg]
