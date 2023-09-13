@@ -2541,24 +2541,6 @@ class Interpreter(object):
         expr = ir.Expr.getitem(target, index=index, loc=self.loc)
         self.store(expr, res)
 
-    def op_BINARY_SLICE(self, inst,
-                        start, end, container,
-                        slicevar, indexvar,
-                        res):
-        slicegv = ir.Global("slice", slice, loc=self.loc)
-        self.store(value=slicegv, name=slicevar)
-
-        index = ir.Expr.call(
-            self.get(slicevar),
-            (self.get(start), self.get(end)),
-            (),
-            loc=self.loc)
-        self.store(value=index, name=indexvar)
-
-        expr = ir.Expr.getitem(self.get(container), self.get(indexvar),
-                               loc=self.loc)
-        self.store(value=expr, name=res)
-
     def op_STORE_SUBSCR(self, inst, target, index, value):
         index = self.get(index)
         target = self.get(target)
@@ -2572,6 +2554,38 @@ class Interpreter(object):
         target = self.get(target)
         stmt = ir.DelItem(target=target, index=index, loc=self.loc)
         self.current_block.append(stmt)
+
+    if PYVERSION == (3, 12):
+        def _prep_slice(self, start, end, slicevar, indexvar):
+            slicegv = ir.Global("slice", slice, loc=self.loc)
+            self.store(value=slicegv, name=slicevar)
+
+            index = ir.Expr.call(
+                self.get(slicevar),
+                (self.get(start), self.get(end)),
+                (),
+                loc=self.loc)
+            self.store(value=index, name=indexvar)
+
+        def op_BINARY_SLICE(self, inst,
+                            start, end, container,
+                            slicevar, indexvar,
+                            res):
+            self._prep_slice(start, end, slicevar, indexvar)
+            expr = ir.Expr.getitem(self.get(container), self.get(indexvar),
+                                loc=self.loc)
+            self.store(value=expr, name=res)
+
+        def op_STORE_SLICE(self, inst,
+                            start, end, container, values,
+                            slicevar, indexvar,
+                            res):
+            self._prep_slice(start, end, slicevar, indexvar)
+            stmt = ir.SetItem(target=self.get(container),
+                              index=self.get(indexvar),
+                              value=self.get(values),
+                              loc=self.loc)
+            self.current_block.append(stmt)
 
     def op_BUILD_TUPLE(self, inst, items, res):
         expr = ir.Expr.build_tuple(items=[self.get(x) for x in items],

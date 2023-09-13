@@ -1029,22 +1029,36 @@ class TraceRunner(object):
         state.append(inst, index=index, target=target, res=res)
         state.push(res)
 
-    def op_BINARY_SLICE(self, state, inst):
-        end = state.pop()
-        start = state.pop()
-        container = state.pop()
-        res = state.make_temp()
-        state.append(inst, start=start, end=end, container=container,
-                    slicevar=state.make_temp(),
-                    indexvar=state.make_temp(),
-                    res=res)
-        state.push(res)
-
     def op_STORE_SUBSCR(self, state, inst):
         index = state.pop()
         target = state.pop()
         value = state.pop()
         state.append(inst, target=target, index=index, value=value)
+
+    if PYVERSION == (3, 12):
+        def op_BINARY_SLICE(self, state, inst):
+            end = state.pop()
+            start = state.pop()
+            container = state.pop()
+            res = state.make_temp()
+            state.append(inst, start=start, end=end, container=container,
+                        slicevar=state.make_temp(),
+                        indexvar=state.make_temp(),
+                        res=res)
+            state.push(res)
+
+        def op_STORE_SLICE(self, state, inst):
+            end = state.pop()
+            start = state.pop()
+            container = state.pop()
+            values = state.pop()
+            res = state.make_temp()
+            state.append(inst, start=start, end=end,
+                        container=container, values=values,
+                        slicevar=state.make_temp(),
+                        indexvar=state.make_temp(),
+                        res=res)
+            state.push(res)
 
     def op_DELETE_SUBSCR(self, state, inst):
         index = state.pop()
