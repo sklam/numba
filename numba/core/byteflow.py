@@ -76,6 +76,8 @@ class Flow(object):
     """
     def __init__(self, bytecode):
         _logger.debug("bytecode dump:\n%s", bytecode.dump())
+        _logger.debug("bytecode exception entries:\n%s", bytecode.exception_entries)
+
         self._bytecode = bytecode
         self.block_infos = UniqueDict()
 
