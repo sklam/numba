@@ -19,9 +19,11 @@ _EXCEPT_STACK_OFFSET = 6
 _FINALLY_POP = _EXCEPT_STACK_OFFSET
 _NO_RAISE_OPS = frozenset({
     'LOAD_CONST',
+    'LOAD_FAST',
     'NOP',
     'LOAD_DEREF',
     'PRECALL',
+    'BUILD_LIST',
 })
 
 
@@ -1119,9 +1121,11 @@ class TraceRunner(object):
         vararg = state.pop()
         func = state.pop()
 
-        if PYVERSION == (3, 11):
+        if PYVERSION in [(3, 11), (3, 12)]:
             if _is_null_temp_reg(state.peek(1)):
                 state.pop() # pop NULL, it's not used
+        else:
+            assert PYVERSION < (3, 11)
 
         res = state.make_temp()
         state.append(inst, func=func, vararg=vararg, varkwarg=varkwarg, res=res)
@@ -1520,6 +1524,24 @@ class TraceRunner(object):
 
     def op_CALL_METHOD(self, state, inst):
         self.op_CALL_FUNCTION(state, inst)
+
+    if PYVERSION == (3, 12):
+        def op_CALL_INTRINSIC_1(self, state, inst):
+            # See https://github.com/python/cpython/blob/v3.12.0rc2/Include/internal/pycore_intrinsics.h#L3-L17C36
+            if inst.arg == 3:  # INTRINSIC_STOPITERATION_ERROR
+                state.append(inst, intrinsic="INTRINSIC_STOPITERATION_ERROR")
+                state.terminate()
+                return
+            elif inst.arg == 6:  # INTRINSIC_LIST_TO_TUPLE
+                tos = state.pop()
+                res = state.make_temp()
+                state.append(inst, intrinsic="INTRINSIC_LIST_TO_TUPLE",
+                             const_list=tos, res=res)
+                state.push(res)
+                return
+            raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+    else:
+        assert PYVERSION < (3, 12)
 
 
 @total_ordering
