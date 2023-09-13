@@ -50,12 +50,12 @@ call_trace(Py_tracefunc func, PyObject *obj,
     if (frame == NULL) {
         return -1;
     }
-    int old_what = tstate->tracing_what;
-    tstate->tracing_what = what;
-    PyThreadState_EnterTracing(tstate);
+    // int old_what = tstate->tracing_what;
+    // tstate->tracing_what = what;
+    // PyThreadState_EnterTracing(tstate);
     result = func(obj, frame, what, NULL);
-    PyThreadState_LeaveTracing(tstate);
-    tstate->tracing_what = old_what;
+    // PyThreadState_LeaveTracing(tstate);
+    // tstate->tracing_what = old_what;
     return result;
 }
 
@@ -649,7 +649,11 @@ call_cfunc(Dispatcher *self, PyObject *cfunc, PyObject *args, PyObject *kws, PyO
     fn = (PyCFunctionWithKeywords) PyCFunction_GET_FUNCTION(cfunc);
     tstate = PyThreadState_GET();
 
-#if (PY_MAJOR_VERSION >= 3) && (PY_MINOR_VERSION >= 11)
+
+#if (PY_MAJOR_VERSION >= 3) && (PY_MINOR_VERSION >= 12)
+    /* XXX JUST TURN IT OFF FOR NOW */
+    if (0)
+#elif (PY_MAJOR_VERSION >= 3) && (PY_MINOR_VERSION >= 11)
     /*
      * On Python 3.11, _PyEval_EvalFrameDefault stops using PyTraceInfo since 
      * it's now baked into ThreadState.
@@ -1270,7 +1274,7 @@ static PyTypeObject DispatcherType = {
 /* WARNING: Do not remove this, only modify it! It is a version guard to
  * act as a reminder to update this struct on Python version update! */
 #if (PY_MAJOR_VERSION == 3)
-#if ! ((PY_MINOR_VERSION == 8) || (PY_MINOR_VERSION == 9) || (PY_MINOR_VERSION == 10) || (PY_MINOR_VERSION == 11))
+#if ! ((PY_MINOR_VERSION == 8) || (PY_MINOR_VERSION == 9) || (PY_MINOR_VERSION == 10) || (PY_MINOR_VERSION == 11) || (PY_MINOR_VERSION == 12))
 #error "Python minor version is not supported."
 #endif
 #else

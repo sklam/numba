@@ -135,7 +135,7 @@ class Flow(object):
             self.block_infos[state.pc_initial] = si = adapt_state_infos(state)
             _logger.debug("block_infos %s:\n%s", state, si)
 
-    if PYVERSION == (3, 11):
+    if PYVERSION == (3, 11) or PYVERSION == (3, 12):
         def _run_handle_exception(self, runner, state):
             if not state.in_with() and (
                     state.has_active_try() and
@@ -317,9 +317,9 @@ class TraceRunner(object):
         return Loc(self.debug_filename, lineno)
 
     def dispatch(self, state):
-        if PYVERSION > (3, 11):
+        if PYVERSION > (3, 12):
             raise NotImplementedError(PYVERSION)
-        elif PYVERSION == (3, 11) and state._blockstack:
+        elif PYVERSION == (3, 11) and PYVERSION == (3, 12) and state._blockstack:
             state: State
             while state._blockstack:
                 topblk = state._blockstack[-1]
@@ -425,7 +425,7 @@ class TraceRunner(object):
     def op_POP_TOP(self, state, inst):
         state.pop()
 
-    if PYVERSION == (3, 11):
+    if PYVERSION == (3, 11) or PYVERSION == (3, 12):
         def op_LOAD_GLOBAL(self, state, inst):
             res = state.make_temp()
             idx = inst.arg >> 1
@@ -788,6 +788,10 @@ class TraceRunner(object):
         state.pop_block()
         state.fork(pc=end)
 
+    def op_RETURN_CONST(self, state, inst):
+        state.append(inst, retval=state.make_temp(), castval=state.make_temp())
+        state.terminate()
+
     def op_RETURN_VALUE(self, state, inst):
         state.append(inst, retval=state.pop(), castval=state.make_temp())
         state.terminate()
@@ -798,7 +802,7 @@ class TraceRunner(object):
         state.append(inst, value=val, res=res)
         state.push(res)
 
-    if PYVERSION == (3, 11):
+    if PYVERSION == (3, 11) or PYVERSION == (3, 12):
         def op_RAISE_VARARGS(self, state, inst):
             if inst.arg == 0:
                 exc = None
@@ -973,7 +977,7 @@ class TraceRunner(object):
             'FINALLY', state, next=inst.next, end=inst.get_jump_target(),
         )
 
-    if PYVERSION == (3, 11):
+    if PYVERSION == (3, 11) or PYVERSION == (3, 12):
         def op_POP_EXCEPT(self, state, inst):
             state.pop()
 
@@ -1410,7 +1414,7 @@ class TraceRunner(object):
         state.fork(pc=inst.next)
         state.fork(pc=inst.get_jump_target())
 
-    if PYVERSION == (3, 11):
+    if PYVERSION == (3, 11) or PYVERSION == (3, 12):
         def op_RERAISE(self, state, inst):
             # This isn't handled, but the state is set up anyway
             exc = state.pop()
@@ -1434,7 +1438,7 @@ class TraceRunner(object):
     # NOTE: Please see notes in `interpreter.py` surrounding the implementation
     # of LOAD_METHOD and CALL_METHOD.
 
-    if PYVERSION == (3, 11):
+    if PYVERSION == (3, 11) or PYVERSION == (3, 12):
         def op_LOAD_METHOD(self, state, inst):
             item = state.pop()
             extra = state.make_null()
@@ -1795,7 +1799,7 @@ class StatePy311(_State):
         return self.make_temp(prefix="null$")
 
 
-if PYVERSION == (3, 11):
+if PYVERSION == (3, 11) or PYVERSION == (3, 12):
     State = StatePy311
 elif PYVERSION < (3, 11):
     State = _State

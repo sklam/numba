@@ -357,8 +357,9 @@ class ByteCodePy311(_ByteCode):
             ent = max(candidates)[1]
             return ent
 
-
-if PYVERSION == (3, 11):
+if PYVERSION == (3, 12):
+    ByteCode = ByteCodePy311
+elif PYVERSION == (3, 11):
     ByteCode = ByteCodePy311
 elif PYVERSION < (3, 11):
     ByteCode = _ByteCode

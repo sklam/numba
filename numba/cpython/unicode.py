@@ -25,7 +25,7 @@ from numba.core.pythonapi import (
     PY_UNICODE_1BYTE_KIND,
     PY_UNICODE_2BYTE_KIND,
     PY_UNICODE_4BYTE_KIND,
-    PY_UNICODE_WCHAR_KIND,
+    # PY_UNICODE_WCHAR_KIND,
 )
 from numba._helperlib import c_helpers
 from numba.cpython.hashing import _Py_hash_t
