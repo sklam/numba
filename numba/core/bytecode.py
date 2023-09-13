@@ -173,6 +173,23 @@ def _unpack_opargs(code):
         yield (offset, op, arg, i)
         offset = i  # Mark inst offset at first extended
 
+if PYVERSION == (3, 12):
+
+    # Use stu's hack to fixup bytecode offset
+    def _unpack_opargs(code):
+        from dis import _unpack_opargs as _dis_unpack
+
+        i1  = _dis_unpack(code)
+        i2  = _dis_unpack(code)
+        next(i2)
+        for x2, x1 in zip(i2, i1):
+            yield (x1 + (x2[0],))
+        x1 = next(i1)
+        yield (x1 + (x1[0] + 2,))
+
+else:
+    assert PYVERSION < (3, 12)
+
 
 def _patched_opargs(bc_stream):
     """Patch the bytecode stream.
