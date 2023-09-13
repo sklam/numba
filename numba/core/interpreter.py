@@ -2939,6 +2939,10 @@ class Interpreter(object):
     def op_POP_JUMP_FORWARD_IF_NOT_NONE(self, inst, pred):
         self._jump_if_none(inst, pred, False)
 
+    if PYVERSION == (3, 12):
+        op_POP_JUMP_IF_NONE = op_POP_JUMP_FORWARD_IF_NONE
+        op_POP_JUMP_IF_NOT_NONE = op_POP_JUMP_FORWARD_IF_NOT_NONE
+
     def op_POP_JUMP_BACKWARD_IF_NONE(self, inst, pred):
         self._jump_if_none(inst, pred, True)
 

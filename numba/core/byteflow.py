@@ -764,6 +764,10 @@ class TraceRunner(object):
     def op_POP_JUMP_FORWARD_IF_NOT_NONE(self, state, inst):
         self._op_POP_JUMP_IF(state, inst)
 
+    if PYVERSION == (3, 12):
+        op_POP_JUMP_IF_NONE = op_POP_JUMP_FORWARD_IF_NONE
+        op_POP_JUMP_IF_NOT_NONE = op_POP_JUMP_FORWARD_IF_NOT_NONE
+
     def op_POP_JUMP_BACKWARD_IF_NONE(self, state, inst):
         self._op_POP_JUMP_IF(state, inst)
 
