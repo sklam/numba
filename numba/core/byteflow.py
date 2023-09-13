@@ -489,6 +489,7 @@ class TraceRunner(object):
 
     if PYVERSION == (3, 12):
         op_LOAD_FAST_AND_CLEAR = op_LOAD_FAST
+        op_LOAD_FAST_CHECK = op_LOAD_FAST
     else:
         assert PYVERSION < (3, 12)
 

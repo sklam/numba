@@ -2148,7 +2148,9 @@ class Interpreter(object):
         self.store(value=self.get(srcname), name=res)
 
     if PYVERSION == (3, 12):
+        # Ignoring the additional semantic of the new LOAD_FAST variants
         op_LOAD_FAST_AND_CLEAR = op_LOAD_FAST
+        op_LOAD_FAST_CHECK = op_LOAD_FAST
     else:
         assert PYVERSION < (3, 12)
 
