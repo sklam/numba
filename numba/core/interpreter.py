@@ -2793,7 +2793,11 @@ class Interpreter(object):
         self.current_block.append(ret)
 
     def op_COMPARE_OP(self, inst, lhs, rhs, res):
-        op = dis.cmp_op[inst.arg]
+        if PYVERSION == (3, 12):
+            op = dis.cmp_op[inst.arg >> 4]
+        else:
+            assert PYVERSION < (3, 12)
+            op = dis.cmp_op[inst.arg]
         if op == 'in' or op == 'not in':
             lhs, rhs = rhs, lhs
 
