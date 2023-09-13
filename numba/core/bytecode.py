@@ -90,7 +90,11 @@ class ByteCodeInst(object):
         # https://bugs.python.org/issue27129
         # https://github.com/python/cpython/pull/25069
         assert self.is_jump
-        if PYVERSION == (3, 11):
+        if PYVERSION == (3, 12):
+            if self.opcode in (dis.opmap[k]
+                               for k in ["JUMP_BACKWARD"]):
+                return self.offset - (self.arg - 1) * 2
+        elif PYVERSION == (3, 11):
             if self.opcode in (dis.opmap[k]
                                for k in ("JUMP_BACKWARD",
                                          "POP_JUMP_BACKWARD_IF_TRUE",
@@ -230,7 +234,6 @@ class ByteCodeIter(object):
             _offset, byte = next(self.iter)
             buf |= byte << (8 * i)
         return buf
-
 
 class _ByteCode(object):
     """

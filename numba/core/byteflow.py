@@ -1266,17 +1266,36 @@ class TraceRunner(object):
         state.append(inst, value=value, res=res)
         state.push(res)
 
-    def op_FOR_ITER(self, state, inst):
-        iterator = state.get_tos()
-        pair = state.make_temp()
-        indval = state.make_temp()
-        pred = state.make_temp()
-        state.append(inst, iterator=iterator, pair=pair, indval=indval,
-                     pred=pred)
-        state.push(indval)
-        end = inst.get_jump_target()
-        state.fork(pc=end, npop=2)
-        state.fork(pc=inst.next)
+    if PYVERSION == (3, 12):
+
+        def op_FOR_ITER(self, state, inst):
+            iterator = state.get_tos()
+            pair = state.make_temp()
+            indval = state.make_temp()
+            pred = state.make_temp()
+            state.append(inst, iterator=iterator, pair=pair, indval=indval,
+                        pred=pred)
+            state.push(indval)
+            end = inst.get_jump_target()
+            state.fork(pc=end, npop=0)
+            state.fork(pc=inst.next)
+
+        def op_END_FOR(self, state, inst):
+            state.pop()
+            state.pop()
+
+    else:
+        def op_FOR_ITER(self, state, inst):
+            iterator = state.get_tos()
+            pair = state.make_temp()
+            indval = state.make_temp()
+            pred = state.make_temp()
+            state.append(inst, iterator=iterator, pair=pair, indval=indval,
+                        pred=pred)
+            state.push(indval)
+            end = inst.get_jump_target()
+            state.fork(pc=end, npop=2)
+            state.fork(pc=inst.next)
 
     def op_GEN_START(self, state, inst):
         """Pops TOS. If TOS was not None, raises an exception. The kind
@@ -1711,7 +1730,7 @@ class _State(object):
                 stack.append(self.make_temp())
         # Handle changes on the blockstack
         blockstack = list(self._blockstack)
-        if PYVERSION == (3, 11):
+        if PYVERSION == (3, 11) or PYVERSION == (3, 12):
             # pop expired block in destination pc
             while blockstack:
                 top = blockstack[-1]
