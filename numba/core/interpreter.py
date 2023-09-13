@@ -2173,11 +2173,22 @@ class Interpreter(object):
         sa = ir.DelAttr(target=self.get(target), attr=attr, loc=self.loc)
         self.current_block.append(sa)
 
-    def op_LOAD_ATTR(self, inst, item, res):
-        item = self.get(item)
-        attr = self.code_names[inst.arg]
-        getattr = ir.Expr.getattr(item, attr, loc=self.loc)
-        self.store(getattr, res)
+    if PYVERSION == (3, 12):
+        def op_LOAD_ATTR(self, inst, item, res):
+            iname = inst.arg >> 1
+            item = self.get(item)
+            attr = self.code_names[iname]
+            getattr = ir.Expr.getattr(item, attr, loc=self.loc)
+            self.store(getattr, res)
+
+    else:
+        assert PYVERSION < (3, 12)
+
+        def op_LOAD_ATTR(self, inst, item, res):
+            item = self.get(item)
+            attr = self.code_names[inst.arg]
+            getattr = ir.Expr.getattr(item, attr, loc=self.loc)
+            self.store(getattr, res)
 
     def _load_const(self, iconst):
         value = self.code_consts[iconst]

@@ -458,11 +458,24 @@ class TraceRunner(object):
         state.push(res)
         state.append(inst, res=res)
 
-    def op_LOAD_ATTR(self, state, inst):
-        item = state.pop()
-        res = state.make_temp()
-        state.append(inst, item=item, res=res)
-        state.push(res)
+    if PYVERSION == (3, 12):
+
+        def op_LOAD_ATTR(self, state, inst):
+            item = state.pop()
+            res = state.make_temp()
+            state.append(inst, item=item, res=res)
+            if inst.arg & 1:
+                state.push(state.make_null())
+            state.push(res)
+
+    else:
+        assert PYVERSION < (3, 12)
+
+        def op_LOAD_ATTR(self, state, inst):
+            item = state.pop()
+            res = state.make_temp()
+            state.append(inst, item=item, res=res)
+            state.push(res)
 
     def op_LOAD_FAST(self, state, inst):
         name = state.get_varname(inst)
