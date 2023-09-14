@@ -1,0 +1,17 @@
+Parallel: 11. Serial: 0
+test_binarysort (numba.tests.test_sort.TestTimsortPurePython.test_binarysort) ... ok
+test_binarysort_with_values (numba.tests.test_sort.TestTimsortPurePython.test_binarysort_with_values) ... ok
+test_count_run (numba.tests.test_sort.TestTimsortPurePython.test_count_run) ... ok
+test_gallop_left (numba.tests.test_sort.TestTimsortPurePython.test_gallop_left) ... ok
+test_gallop_right (numba.tests.test_sort.TestTimsortPurePython.test_gallop_right) ... ok
+test_merge_at (numba.tests.test_sort.TestTimsortPurePython.test_merge_at) ... ok
+test_merge_compute_minrun (numba.tests.test_sort.TestTimsortPurePython.test_merge_compute_minrun) ... ok
+test_merge_force_collapse (numba.tests.test_sort.TestTimsortPurePython.test_merge_force_collapse) ... ok
+test_merge_lo_hi (numba.tests.test_sort.TestTimsortPurePython.test_merge_lo_hi) ... ok
+test_run_timsort (numba.tests.test_sort.TestTimsortPurePython.test_run_timsort) ... ok
+test_run_timsort_with_values (numba.tests.test_sort.TestTimsortPurePython.test_run_timsort_with_values) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.415s
+
+OK

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_cfunc_callback (numba.tests.test_cfunc.TestCffiStruct.test_cfunc_callback) ... skipped 'requires cffi'
+test_type_parsing (numba.tests.test_cfunc.TestCffiStruct.test_type_parsing) ... skipped 'requires cffi'
+test_unsupport_bitsize (numba.tests.test_cfunc.TestCffiStruct.test_unsupport_bitsize) ... skipped 'requires cffi'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.228s
+
+OK (skipped=3)

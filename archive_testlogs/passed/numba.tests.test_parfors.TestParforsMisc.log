@@ -1,0 +1,29 @@
+test_alias_analysis_for_parfor1 (numba.tests.test_parfors.TestParforsMisc.test_alias_analysis_for_parfor1) ... skipped 'needs subprocess harness'
+test_init_block_dce (numba.tests.test_parfors.TestParforsMisc.test_init_block_dce) ... skipped 'needs subprocess harness'
+test_issue3169 (numba.tests.test_parfors.TestParforsMisc.test_issue3169) ... skipped 'needs subprocess harness'
+test_issue3748 (numba.tests.test_parfors.TestParforsMisc.test_issue3748) ... skipped 'needs subprocess harness'
+test_issue4846 (numba.tests.test_parfors.TestParforsMisc.test_issue4846) ... skipped 'needs subprocess harness'
+test_issue4963_freevars (numba.tests.test_parfors.TestParforsMisc.test_issue4963_freevars) ... skipped 'needs subprocess harness'
+test_issue4963_globals (numba.tests.test_parfors.TestParforsMisc.test_issue4963_globals) ... skipped 'needs subprocess harness'
+test_issue5001 (numba.tests.test_parfors.TestParforsMisc.test_issue5001) ... skipped 'needs subprocess harness'
+test_issue5065 (numba.tests.test_parfors.TestParforsMisc.test_issue5065) ... skipped 'needs subprocess harness'
+test_issue5167 (numba.tests.test_parfors.TestParforsMisc.test_issue5167) ... skipped 'needs subprocess harness'
+test_issue5277 (numba.tests.test_parfors.TestParforsMisc.test_issue5277) ... skipped 'needs subprocess harness'
+test_issue5570_ssa_races (numba.tests.test_parfors.TestParforsMisc.test_issue5570_ssa_races) ... skipped 'needs subprocess harness'
+test_issue5942_1 (numba.tests.test_parfors.TestParforsMisc.test_issue5942_1) ... skipped 'needs subprocess harness'
+test_issue5942_2 (numba.tests.test_parfors.TestParforsMisc.test_issue5942_2) ... skipped 'needs subprocess harness'
+test_issue6095_numpy_max (numba.tests.test_parfors.TestParforsMisc.test_issue6095_numpy_max) ... skipped 'needs subprocess harness'
+test_issue6102 (numba.tests.test_parfors.TestParforsMisc.test_issue6102) ... skipped 'needs subprocess harness'
+test_issue6774 (numba.tests.test_parfors.TestParforsMisc.test_issue6774) ... skipped 'needs subprocess harness'
+test_issue_5098 (numba.tests.test_parfors.TestParforsMisc.test_issue_5098) ... skipped 'needs subprocess harness'
+test_no_state_change_in_gufunc_lowering_on_error (numba.tests.test_parfors.TestParforsMisc.test_no_state_change_in_gufunc_lowering_on_error) ... skipped 'needs subprocess harness'
+test_no_warn_if_cache_set (numba.tests.test_parfors.TestParforsMisc.test_no_warn_if_cache_set) ... skipped 'needs subprocess harness'
+test_oversized_tuple_as_arg_to_kernel (numba.tests.test_parfors.TestParforsMisc.test_oversized_tuple_as_arg_to_kernel) ... skipped 'needs subprocess harness'
+test_parfor_ufunc_typing (numba.tests.test_parfors.TestParforsMisc.test_parfor_ufunc_typing) ... skipped 'needs subprocess harness'
+test_statement_reordering_respects_aliasing (numba.tests.test_parfors.TestParforsMisc.test_statement_reordering_respects_aliasing) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.001s
+
+OK (skipped=23)
+Parallel: 0. Serial: 23

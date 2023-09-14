@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_build_heterogeneous_set (numba.tests.test_sets.TestSetLiterals.test_build_heterogeneous_set) ... ok
+test_build_set (numba.tests.test_sets.TestSetLiterals.test_build_set) ... ok
+test_build_set_nopython (numba.tests.test_sets.TestSetLiterals.test_build_set_nopython) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.381s
+
+OK

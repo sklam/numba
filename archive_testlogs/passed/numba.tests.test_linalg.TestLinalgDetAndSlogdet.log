@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_linalg_det (numba.tests.test_linalg.TestLinalgDetAndSlogdet.test_linalg_det) ... skipped 'LAPACK needs SciPy 1.0+'
+test_linalg_slogdet (numba.tests.test_linalg.TestLinalgDetAndSlogdet.test_linalg_slogdet) ... skipped 'LAPACK needs SciPy 1.0+'
+test_no_input_mutation (numba.tests.test_linalg.TestLinalgDetAndSlogdet.test_no_input_mutation) ... skipped 'LAPACK needs SciPy 1.0+'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.112s
+
+OK (skipped=3)

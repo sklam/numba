@@ -1,0 +1,13 @@
+Parallel: 4. Serial: 0
+test_exercise_code_path (numba.tests.test_annotations.TestAnnotation.test_exercise_code_path)
+Ensures template.html is available ... skipped "please install the 'jinja2' package"
+test_exercise_code_path_with_lifted_loop (numba.tests.test_annotations.TestAnnotation.test_exercise_code_path_with_lifted_loop)
+Ensures that lifted loops are handled correctly in obj mode ... skipped "please install the 'jinja2' package"
+test_html_output_with_lifted_loop (numba.tests.test_annotations.TestAnnotation.test_html_output_with_lifted_loop)
+Test some format and behavior of the html annotation with lifted loop ... skipped "please install the 'jinja2' package"
+test_pretty_print (numba.tests.test_annotations.TestAnnotation.test_pretty_print) ... skipped "please install the 'jinja2' package"
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.125s
+
+OK (skipped=4)

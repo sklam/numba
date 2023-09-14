@@ -1,0 +1,26 @@
+Parallel: 14. Serial: 4
+test_1 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeDecor.test_1) ... ok
+test_1 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeJitted.test_1) ... ok
+test_2 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeDecor.test_2) ... ok
+test_2 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeJitted.test_2) ... ok
+test_3 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeDecor.test_3) ... ok
+test_3 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeJitted.test_3) ... ok
+test_4 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeDecor.test_4) ... ok
+test_4 (numba.tests.npyufunc.test_vectorize_decor.TestCPUVectorizeJitted.test_4) ... ok
+test_target_cpu_nopython (numba.tests.npyufunc.test_vectorize_decor.TestVectorizeNopythonArg.test_target_cpu_nopython) ... ok
+test_target_cpu_nopython_no_sig (numba.tests.npyufunc.test_vectorize_decor.TestVectorizeNopythonArg.test_target_cpu_nopython_no_sig) ... ok
+test_target_cpu_unrecognized_arg (numba.tests.npyufunc.test_vectorize_decor.TestVectorizeUnrecognizedArg.test_target_cpu_unrecognized_arg) ... ok
+test_target_cpu_unrecognized_arg_no_sig (numba.tests.npyufunc.test_vectorize_decor.TestVectorizeUnrecognizedArg.test_target_cpu_unrecognized_arg_no_sig) ... ok
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_target_parallel_nopython (numba.tests.npyufunc.test_vectorize_decor.TestVectorizeNopythonArg.test_target_parallel_nopython) ... ok
+test_target_parallel_unrecognized_arg (numba.tests.npyufunc.test_vectorize_decor.TestVectorizeUnrecognizedArg.test_target_parallel_unrecognized_arg) ... ok
+test_1 (numba.tests.npyufunc.test_vectorize_decor.TestParallelVectorizeDecor.test_1) ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_2 (numba.tests.npyufunc.test_vectorize_decor.TestParallelVectorizeDecor.test_2) ... ok
+test_3 (numba.tests.npyufunc.test_vectorize_decor.TestParallelVectorizeDecor.test_3) ... ok
+test_4 (numba.tests.npyufunc.test_vectorize_decor.TestParallelVectorizeDecor.test_4) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 10.616s
+
+OK

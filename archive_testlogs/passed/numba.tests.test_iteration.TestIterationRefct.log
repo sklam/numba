@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_zip_with_arrays (numba.tests.test_iteration.TestIterationRefct.test_zip_with_arrays) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.917s
+
+OK

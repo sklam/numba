@@ -1,0 +1,23 @@
+Parallel: 17. Serial: 0
+test_aliased_variable (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_aliased_variable) ... ok
+test_biliteral (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_biliteral) ... ok
+test_inlined_literal (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_inlined_literal) ... ok
+test_literal_basic (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literal_basic) ... ok
+test_literal_nested (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literal_nested) ... ok
+test_literal_nested_multi_arg (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literal_nested_multi_arg) ... ok
+test_literally_defaults (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literally_defaults) ... expected failure
+test_literally_defaults_inner (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literally_defaults_inner) ... expected failure
+test_literally_freevar (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literally_freevar) ... ok
+test_literally_from_module (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literally_from_module) ... ok
+test_literally_varargs (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_literally_varargs) ... ok
+test_mutual_recursion_literal (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_mutual_recursion_literal) ... ok
+test_non_literal (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_non_literal) ... ok
+test_overload_error_loop (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_overload_error_loop) ... ok
+test_overload_explicit (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_overload_explicit) ... ok
+test_overload_implicit (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_overload_implicit) ... ok
+test_unsupported_literal_type (numba.tests.test_literal_dispatch.TestLiteralDispatch.test_unsupported_literal_type) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 4.017s
+
+OK (expected failures=2)

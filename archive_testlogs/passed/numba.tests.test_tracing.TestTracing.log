@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_class_method (numba.tests.test_tracing.TestTracing.test_class_method) ... ok
+test_function (numba.tests.test_tracing.TestTracing.test_function) ... ok
+test_injected (numba.tests.test_tracing.TestTracing.test_injected) ... skipped 'recursive decoration not yet implemented'
+test_method (numba.tests.test_tracing.TestTracing.test_method) ... ok
+test_property (numba.tests.test_tracing.TestTracing.test_property) ... ok
+test_static_method (numba.tests.test_tracing.TestTracing.test_static_method) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.177s
+
+OK (skipped=1)

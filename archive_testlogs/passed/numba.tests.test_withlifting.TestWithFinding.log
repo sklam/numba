@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_lift1 (numba.tests.test_withlifting.TestWithFinding.test_lift1) ... ok
+test_lift2 (numba.tests.test_withlifting.TestWithFinding.test_lift2) ... ok
+test_lift3 (numba.tests.test_withlifting.TestWithFinding.test_lift3) ... ok
+test_lift4 (numba.tests.test_withlifting.TestWithFinding.test_lift4) ... ok
+test_lift5 (numba.tests.test_withlifting.TestWithFinding.test_lift5) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.174s
+
+OK

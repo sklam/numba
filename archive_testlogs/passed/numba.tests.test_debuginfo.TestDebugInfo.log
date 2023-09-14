@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_debuginfo_in_asm (numba.tests.test_debuginfo.TestDebugInfo.test_debuginfo_in_asm) ... ok
+test_environment_override (numba.tests.test_debuginfo.TestDebugInfo.test_environment_override) ... ok
+test_llvm_inliner_flag_conflict (numba.tests.test_debuginfo.TestDebugInfo.test_llvm_inliner_flag_conflict) ... ok
+test_no_debuginfo_in_asm (numba.tests.test_debuginfo.TestDebugInfo.test_no_debuginfo_in_asm) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.257s
+
+OK

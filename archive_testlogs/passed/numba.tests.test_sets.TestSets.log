@@ -1,0 +1,44 @@
+Parallel: 37. Serial: 0
+test_add_discard (numba.tests.test_sets.TestSets.test_add_discard)
+Check that the insertion logic does not create an infinite lookup ... ok
+test_and (numba.tests.test_sets.TestSets.test_and) ... ok
+test_bool (numba.tests.test_sets.TestSets.test_bool) ... ok
+test_clear (numba.tests.test_sets.TestSets.test_clear) ... ok
+test_constructor (numba.tests.test_sets.TestSets.test_constructor) ... ok
+test_contains (numba.tests.test_sets.TestSets.test_contains) ... ok
+test_copy (numba.tests.test_sets.TestSets.test_copy) ... ok
+test_difference (numba.tests.test_sets.TestSets.test_difference) ... ok
+test_difference_update (numba.tests.test_sets.TestSets.test_difference_update) ... ok
+test_discard (numba.tests.test_sets.TestSets.test_discard) ... ok
+test_eq (numba.tests.test_sets.TestSets.test_eq) ... ok
+test_ge (numba.tests.test_sets.TestSets.test_ge) ... ok
+test_gt (numba.tests.test_sets.TestSets.test_gt) ... ok
+test_iand (numba.tests.test_sets.TestSets.test_iand) ... ok
+test_intersection (numba.tests.test_sets.TestSets.test_intersection) ... ok
+test_intersection_update (numba.tests.test_sets.TestSets.test_intersection_update) ... ok
+test_ior (numba.tests.test_sets.TestSets.test_ior) ... ok
+test_isdisjoint (numba.tests.test_sets.TestSets.test_isdisjoint) ... ok
+test_issubset (numba.tests.test_sets.TestSets.test_issubset) ... ok
+test_issuperset (numba.tests.test_sets.TestSets.test_issuperset) ... ok
+test_isub (numba.tests.test_sets.TestSets.test_isub) ... ok
+test_iterator (numba.tests.test_sets.TestSets.test_iterator) ... ok
+test_ixor (numba.tests.test_sets.TestSets.test_ixor) ... ok
+test_le (numba.tests.test_sets.TestSets.test_le) ... ok
+test_lt (numba.tests.test_sets.TestSets.test_lt) ... ok
+test_ne (numba.tests.test_sets.TestSets.test_ne) ... ok
+test_or (numba.tests.test_sets.TestSets.test_or) ... ok
+test_pop (numba.tests.test_sets.TestSets.test_pop) ... ok
+test_remove (numba.tests.test_sets.TestSets.test_remove) ... ok
+test_remove_error (numba.tests.test_sets.TestSets.test_remove_error) ... ok
+test_set_return (numba.tests.test_sets.TestSets.test_set_return) ... ok
+test_sub (numba.tests.test_sets.TestSets.test_sub) ... ok
+test_symmetric_difference (numba.tests.test_sets.TestSets.test_symmetric_difference) ... ok
+test_symmetric_difference_update (numba.tests.test_sets.TestSets.test_symmetric_difference_update) ... ok
+test_union (numba.tests.test_sets.TestSets.test_union) ... ok
+test_update (numba.tests.test_sets.TestSets.test_update) ... ok
+test_xor (numba.tests.test_sets.TestSets.test_xor) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 78.886s
+
+OK

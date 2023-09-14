@@ -1,0 +1,54 @@
+Parallel: 5. Serial: 0
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir_utils.py:2174: NumbaPendingDeprecationWarning: 
+Encountered the use of a type that is scheduled for deprecation: type 'reflected list' found for argument 'x' of function 'noop'.
+
+For more information visit https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types
+
+File "numba/tests/test_lists.py", line 28:
+
+def noop(x):
+^
+
+  warnings.warn(NumbaPendingDeprecationWarning(msg, loc=loc))
+test_errors (numba.tests.test_lists.TestUnboxing.test_errors) ... ERROR
+test_list_inside_tuple (numba.tests.test_lists.TestUnboxing.test_list_inside_tuple) ... ok
+test_list_of_tuples_inside_tuple (numba.tests.test_lists.TestUnboxing.test_list_of_tuples_inside_tuple) ... ok
+test_numbers (numba.tests.test_lists.TestUnboxing.test_numbers) ... ok
+test_tuples (numba.tests.test_lists.TestUnboxing.test_tuples) ... ok
+
+======================================================================
+ERROR: test_errors (numba.tests.test_lists.TestUnboxing.test_errors)
+----------------------------------------------------------------------
+TypeError: can't unbox heterogeneous list: int64 != float64
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_lists.py", line 810, in test_errors
+    with self.assert_type_error(msg):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_lists.py", line 774, in assert_type_error
+    self.assertRegexpMatches(str(raises.exception), msg)
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestUnboxing' object has no attribute 'assertRegexpMatches'
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir_utils.py:2174: NumbaPendingDeprecationWarning: 
+Encountered the use of a type that is scheduled for deprecation: type 'reflected list' found for argument 'x' of function 'noop'.
+
+For more information visit https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types
+
+File "numba/tests/test_lists.py", line 28:
+
+def noop(x):
+^
+
+  warnings.warn(NumbaPendingDeprecationWarning(msg, loc=loc))
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.934s
+
+FAILED (errors=1)

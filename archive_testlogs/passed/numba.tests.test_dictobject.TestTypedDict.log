@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_basic (numba.tests.test_dictobject.TestTypedDict.test_basic) ... ok
+test_compiled (numba.tests.test_dictobject.TestTypedDict.test_compiled) ... ok
+test_copy_from_dict (numba.tests.test_dictobject.TestTypedDict.test_copy_from_dict) ... ok
+test_gh7908 (numba.tests.test_dictobject.TestTypedDict.test_gh7908) ... ok
+test_repr (numba.tests.test_dictobject.TestTypedDict.test_repr) ... ok
+test_str (numba.tests.test_dictobject.TestTypedDict.test_str) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 10.850s
+
+OK

@@ -1,0 +1,155 @@
+Parallel: 7. Serial: 0
+test_bulk_use_cases (numba.tests.test_closure.TestInlinedClosure.test_bulk_use_cases)
+Tests the large number of use cases defined below ... ERROR
+test_closure_renaming_scheme (numba.tests.test_closure.TestInlinedClosure.test_closure_renaming_scheme) ... ok
+test_inner_function (numba.tests.test_closure.TestInlinedClosure.test_inner_function) ... ok
+test_inner_function_nested (numba.tests.test_closure.TestInlinedClosure.test_inner_function_nested) ... ok
+test_inner_function_with_closure (numba.tests.test_closure.TestInlinedClosure.test_inner_function_with_closure) ... ok
+test_inner_function_with_closure_2 (numba.tests.test_closure.TestInlinedClosure.test_inner_function_with_closure_2) ... ok
+test_inner_function_with_closure_3 (numba.tests.test_closure.TestInlinedClosure.test_inner_function_with_closure_3) ... ok
+
+======================================================================
+ERROR: test_bulk_use_cases (numba.tests.test_closure.TestInlinedClosure.test_bulk_use_cases)
+Tests the large number of use cases defined below
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 't'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 't' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 't'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+    return fn(inst, **kws)
+           ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+    self.store(value=self.get(srcname), name=res)
+                     ^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+    var = self.current_scope.get(name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+    return self.parent.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 't' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_closure.py", line 397, in test_bulk_use_cases
+    self.assertEqual(cfunc(var), ref(var))
+                     ^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 476, in _compile_for_args
+    error_rewrite(e, 'interpreter')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 226, in run_pass
+    inline_pass.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/inline_closurecall.py", line 106, in run
+    if guard(self._inline_closure,
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir_utils.py", line 1549, in guard
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/inline_closurecall.py", line 263, in _inline_closure
+    inline_closure_call(self.func_ir,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/inline_closurecall.py", line 609, in inline_closure_call
+    callee_ir = get_ir_of_code(glbls, callee_code)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir_utils.py", line 1771, in get_ir_of_code
+    ir = compiler.run_frontend(f)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 334, in run_frontend
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+    self._dispatch(inst, kws)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+    raise err
+numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: inline calls to locally defined closures)
+The compiler failed to analyze the bytecode. Variable 't' is not defined.
+
+File "numba/tests/test_closure.py", line 246:
+            def inner1(x):
+                <source elided>
+                z = y + x + 2
+                return [t for t in range(z)]
+                ^
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.552s
+
+FAILED (errors=1)

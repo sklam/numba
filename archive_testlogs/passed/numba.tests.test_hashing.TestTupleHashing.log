@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_heterogeneous_tuples (numba.tests.test_hashing.TestTupleHashing.test_heterogeneous_tuples) ... ok
+test_homogeneous_tuples (numba.tests.test_hashing.TestTupleHashing.test_homogeneous_tuples) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 9.486s
+
+OK

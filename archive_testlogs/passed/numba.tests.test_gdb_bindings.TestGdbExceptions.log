@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_call_gdb (numba.tests.test_gdb_bindings.TestGdbExceptions.test_call_gdb) ... skipped 'non unix-like OS is required'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.108s
+
+OK (skipped=1)

@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_array (numba.tests.test_datamodel.TestMemInfo.test_array) ... ok
+test_number (numba.tests.test_datamodel.TestMemInfo.test_number) ... ok
+test_tuple_of_array (numba.tests.test_datamodel.TestMemInfo.test_tuple_of_array) ... ok
+test_tuple_of_number (numba.tests.test_datamodel.TestMemInfo.test_tuple_of_number) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.188s
+
+OK

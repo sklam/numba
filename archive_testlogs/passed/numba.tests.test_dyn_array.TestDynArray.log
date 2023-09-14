@@ -1,0 +1,26 @@
+Parallel: 17. Serial: 0
+test_allocation_mt (numba.tests.test_dyn_array.TestDynArray.test_allocation_mt)
+This test exercises the array allocation in multithreaded usecase. ... ok
+test_array_pass_through (numba.tests.test_dyn_array.TestDynArray.test_array_pass_through) ... ok
+test_array_pass_through_sliced (numba.tests.test_dyn_array.TestDynArray.test_array_pass_through_sliced) ... ok
+test_empty_0d (numba.tests.test_dyn_array.TestDynArray.test_empty_0d) ... ok
+test_empty_1d (numba.tests.test_dyn_array.TestDynArray.test_empty_1d) ... ok
+test_empty_2d (numba.tests.test_dyn_array.TestDynArray.test_empty_2d) ... ok
+test_empty_2d_sliced (numba.tests.test_dyn_array.TestDynArray.test_empty_2d_sliced) ... ok
+test_empty_3d (numba.tests.test_dyn_array.TestDynArray.test_empty_3d) ... ok
+test_invalid_size_array (numba.tests.test_dyn_array.TestDynArray.test_invalid_size_array) ... ok
+test_issue_with_return_leak (numba.tests.test_dyn_array.TestDynArray.test_issue_with_return_leak)
+Dispatcher returns a new reference. ... ok
+test_refct_mt (numba.tests.test_dyn_array.TestDynArray.test_refct_mt)
+This test exercises the refct in multithreaded code ... ok
+test_return_global_array (numba.tests.test_dyn_array.TestDynArray.test_return_global_array) ... ok
+test_return_global_array_sliced (numba.tests.test_dyn_array.TestDynArray.test_return_global_array_sliced) ... ok
+test_return_tuple_of_array (numba.tests.test_dyn_array.TestDynArray.test_return_tuple_of_array) ... ok
+test_return_tuple_of_array_created (numba.tests.test_dyn_array.TestDynArray.test_return_tuple_of_array_created) ... ok
+test_swap (numba.tests.test_dyn_array.TestDynArray.test_swap) ... ok
+test_ufunc_with_allocated_output (numba.tests.test_dyn_array.TestDynArray.test_ufunc_with_allocated_output) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 7.242s
+
+OK

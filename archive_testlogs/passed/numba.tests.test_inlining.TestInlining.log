@@ -1,0 +1,13 @@
+Parallel: 6. Serial: 0
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_inline_call_after_parfor (numba.tests.test_inlining.TestInlining.test_inline_call_after_parfor) ... ok
+test_inline_call_branch_pruning (numba.tests.test_inlining.TestInlining.test_inline_call_branch_pruning) ... ok
+test_inline_update_target_def (numba.tests.test_inlining.TestInlining.test_inline_update_target_def) ... ok
+test_inline_var_dict_ret (numba.tests.test_inlining.TestInlining.test_inline_var_dict_ret) ... ok
+test_inner_function (numba.tests.test_inlining.TestInlining.test_inner_function) ... ok
+test_multiple_inner_functions (numba.tests.test_inlining.TestInlining.test_multiple_inner_functions) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.613s
+
+OK

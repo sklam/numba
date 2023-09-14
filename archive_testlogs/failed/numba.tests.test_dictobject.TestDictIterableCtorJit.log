@@ -1,0 +1,46 @@
+Parallel: 4. Serial: 0
+test_exception_dict_mapping (numba.tests.test_dictobject.TestDictIterableCtorJit.test_exception_dict_mapping) ... ok
+test_exception_no_iterable_arg (numba.tests.test_dictobject.TestDictIterableCtorJit.test_exception_no_iterable_arg) ... ok
+test_exception_setitem (numba.tests.test_dictobject.TestDictIterableCtorJit.test_exception_setitem) ... ok
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/runtests.py", line 22, in <module>
+    runpy.run_module('numba.runtests', run_name='__main__')
+  File "<frozen runpy>", line 229, in run_module
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/runtests.py", line 9, in <module>
+    sys.exit(0 if _main(sys.argv) else 1)
+                  ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/_runtests.py", line 25, in _main
+    return run_tests(argv, defaultTest='numba.tests',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/__init__.py", line 54, in run_tests
+    prog = NumbaTestProgram(argv=argv,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 204, in __init__
+    super(NumbaTestProgram, self).__init__(*args, **kwargs)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/main.py", line 105, in __init__
+    self.runTests()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 376, in runTests
+    run_tests_real()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 361, in run_tests_real
+    super(NumbaTestProgram, self).runTests()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/main.py", line 281, in runTests
+    self.result = testRunner.run(self.test)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 830, in run
+    return super(ParallelTestRunner, self).run(self._run_inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/runner.py", line 240, in run
+    test(result)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 779, in _run_inner
+    self._run_parallel_tests(result, pool, child_runner, tests)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 815, in _run_parallel_tests
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 806, in _run_parallel_tests
+    child_result = it.__next__(self.timeout)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/multiprocessing/pool.py", line 868, in next
+    raise TimeoutError from None
+multiprocessing.context.TimeoutError: Tests didn't finish before timeout (or crashed):
+- 'numba.tests.test_dictobject.TestDictIterableCtorJit.test_iterable_type_constructor'
+

@@ -1,0 +1,18 @@
+Parallel: 12. Serial: 0
+test_arithmetic_logical (numba.tests.test_jitclasses.TestJitClassOverloads.test_arithmetic_logical) ... ok
+test_arithmetic_logical_inplace (numba.tests.test_jitclasses.TestJitClassOverloads.test_arithmetic_logical_inplace) ... ok
+test_arithmetic_logical_reflection (numba.tests.test_jitclasses.TestJitClassOverloads.test_arithmetic_logical_reflection) ... ok
+test_bool_fallback (numba.tests.test_jitclasses.TestJitClassOverloads.test_bool_fallback) ... ok
+test_bool_fallback_default (numba.tests.test_jitclasses.TestJitClassOverloads.test_bool_fallback_default) ... ok
+test_bool_fallback_len (numba.tests.test_jitclasses.TestJitClassOverloads.test_bool_fallback_len) ... ok
+test_hash_eq_ne (numba.tests.test_jitclasses.TestJitClassOverloads.test_hash_eq_ne) ... ok
+test_implicit_hash_compiles (numba.tests.test_jitclasses.TestJitClassOverloads.test_implicit_hash_compiles) ... ok
+test_matmul_operator (numba.tests.test_jitclasses.TestJitClassOverloads.test_matmul_operator) ... skipped 'SciPy needed for test'
+test_numeric_fallback (numba.tests.test_jitclasses.TestJitClassOverloads.test_numeric_fallback) ... ok
+test_operator_reflection (numba.tests.test_jitclasses.TestJitClassOverloads.test_operator_reflection) ... ok
+test_overloads (numba.tests.test_jitclasses.TestJitClassOverloads.test_overloads) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 49.531s
+
+OK (skipped=1)

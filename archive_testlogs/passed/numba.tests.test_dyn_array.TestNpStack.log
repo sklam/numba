@@ -1,0 +1,17 @@
+Parallel: 8. Serial: 0
+test_0d (numba.tests.test_dyn_array.TestNpStack.test_0d)
+stack(0d arrays) ... ok
+test_3d (numba.tests.test_dyn_array.TestNpStack.test_3d)
+stack(3d arrays, axis) ... ok
+test_3d_no_axis (numba.tests.test_dyn_array.TestNpStack.test_3d_no_axis)
+stack(3d arrays) ... ok
+test_bad_arrays (numba.tests.test_dyn_array.TestNpStack.test_bad_arrays) ... ok
+test_column_stack (numba.tests.test_dyn_array.TestNpStack.test_column_stack) ... ok
+test_dstack (numba.tests.test_dyn_array.TestNpStack.test_dstack) ... ok
+test_hstack (numba.tests.test_dyn_array.TestNpStack.test_hstack) ... ok
+test_vstack (numba.tests.test_dyn_array.TestNpStack.test_vstack) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 70.778s
+
+OK

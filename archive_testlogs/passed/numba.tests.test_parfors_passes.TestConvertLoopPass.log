@@ -1,0 +1,21 @@
+Parallel: 14. Serial: 0
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_init_prange (numba.tests.test_parfors_passes.TestConvertLoopPass.test_init_prange) ... ok
+test_numpy_fill_method (numba.tests.test_parfors_passes.TestConvertLoopPass.test_numpy_fill_method) ... ok
+test_numpy_sum (numba.tests.test_parfors_passes.TestConvertLoopPass.test_numpy_sum) ... ok
+test_numpy_sum_bool_array_masked (numba.tests.test_parfors_passes.TestConvertLoopPass.test_numpy_sum_bool_array_masked) ... ok
+test_numpy_sum_int_array_masked (numba.tests.test_parfors_passes.TestConvertLoopPass.test_numpy_sum_int_array_masked) ... ok
+test_pndindex (numba.tests.test_parfors_passes.TestConvertLoopPass.test_pndindex) ... ok
+test_prange_map_inner_loop (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_map_inner_loop) ... ok
+test_prange_map_nested_prange (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_map_nested_prange) ... ok
+test_prange_map_none_index (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_map_none_index) ... ok
+test_prange_map_overwrite_index (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_map_overwrite_index) ... ok
+test_prange_map_simple (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_map_simple) ... ok
+test_prange_reduce_simple (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_reduce_simple) ... ok
+test_prange_three_args (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_three_args) ... ok
+test_prange_two_args (numba.tests.test_parfors_passes.TestConvertLoopPass.test_prange_two_args) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 22.254s
+
+OK

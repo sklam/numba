@@ -1,0 +1,33 @@
+Parallel: 23. Serial: 0
+test_array_values (numba.tests.test_typeof.TestTypeof.test_array_values)
+Test special.typeof() with ndarray values. ... ok
+test_buffers (numba.tests.test_typeof.TestTypeof.test_buffers) ... ok
+test_cffi (numba.tests.test_typeof.TestTypeof.test_cffi) ... skipped 'requires cffi'
+test_ctypes (numba.tests.test_typeof.TestTypeof.test_ctypes) ... ok
+test_custom (numba.tests.test_typeof.TestTypeof.test_custom) ... ok
+test_datetime_values (numba.tests.test_typeof.TestTypeof.test_datetime_values)
+Test special.typeof() with np.timedelta64 values. ... ok
+test_dtype (numba.tests.test_typeof.TestTypeof.test_dtype) ... ok
+test_dtype_values (numba.tests.test_typeof.TestTypeof.test_dtype_values) ... ok
+test_ellipsis (numba.tests.test_typeof.TestTypeof.test_ellipsis) ... ok
+test_enum (numba.tests.test_typeof.TestTypeof.test_enum) ... ok
+test_enum_class (numba.tests.test_typeof.TestTypeof.test_enum_class) ... ok
+test_lists (numba.tests.test_typeof.TestTypeof.test_lists) ... ok
+test_namedtuple (numba.tests.test_typeof.TestTypeof.test_namedtuple) ... ok
+test_none (numba.tests.test_typeof.TestTypeof.test_none) ... ok
+test_np_random (numba.tests.test_typeof.TestTypeof.test_np_random) ... ok
+test_number_values (numba.tests.test_typeof.TestTypeof.test_number_values)
+Test special.typeof() with scalar number values. ... ok
+test_omitted_args (numba.tests.test_typeof.TestTypeof.test_omitted_args) ... ok
+test_sets (numba.tests.test_typeof.TestTypeof.test_sets) ... ok
+test_slices (numba.tests.test_typeof.TestTypeof.test_slices) ... ok
+test_str (numba.tests.test_typeof.TestTypeof.test_str) ... ok
+test_structured_arrays (numba.tests.test_typeof.TestTypeof.test_structured_arrays) ... ok
+test_timedelta_values (numba.tests.test_typeof.TestTypeof.test_timedelta_values)
+Test special.typeof() with np.timedelta64 values. ... ok
+test_tuples (numba.tests.test_typeof.TestTypeof.test_tuples) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.339s
+
+OK (skipped=1)

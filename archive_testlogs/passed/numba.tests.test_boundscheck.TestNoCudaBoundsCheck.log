@@ -1,0 +1,7 @@
+test_no_cuda_boundscheck (numba.tests.test_boundscheck.TestNoCudaBoundsCheck.test_no_cuda_boundscheck) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.301s
+
+OK
+Parallel: 0. Serial: 1

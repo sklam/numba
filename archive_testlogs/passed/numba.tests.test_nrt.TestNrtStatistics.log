@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_nrt_explicit_stats_query_raises_exception_when_disabled (numba.tests.test_nrt.TestNrtStatistics.test_nrt_explicit_stats_query_raises_exception_when_disabled) ... ok
+test_rtsys_stats_query_raises_exception_when_disabled (numba.tests.test_nrt.TestNrtStatistics.test_rtsys_stats_query_raises_exception_when_disabled) ... ok
+test_stats_env_var_default_off (numba.tests.test_nrt.TestNrtStatistics.test_stats_env_var_default_off) ... ok
+test_stats_env_var_explicit_off (numba.tests.test_nrt.TestNrtStatistics.test_stats_env_var_explicit_off) ... ok
+test_stats_env_var_explicit_on (numba.tests.test_nrt.TestNrtStatistics.test_stats_env_var_explicit_on) ... ok
+test_stats_status_toggle (numba.tests.test_nrt.TestNrtStatistics.test_stats_status_toggle) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.852s
+
+OK

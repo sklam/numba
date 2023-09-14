@@ -1,0 +1,12 @@
+test_parfor_bitmask1 (numba.tests.test_parfors.TestParforsBitMask.test_parfor_bitmask1) ... skipped 'needs subprocess harness'
+test_parfor_bitmask2 (numba.tests.test_parfors.TestParforsBitMask.test_parfor_bitmask2) ... skipped 'needs subprocess harness'
+test_parfor_bitmask3 (numba.tests.test_parfors.TestParforsBitMask.test_parfor_bitmask3) ... skipped 'needs subprocess harness'
+test_parfor_bitmask4 (numba.tests.test_parfors.TestParforsBitMask.test_parfor_bitmask4) ... skipped 'needs subprocess harness'
+test_parfor_bitmask5 (numba.tests.test_parfors.TestParforsBitMask.test_parfor_bitmask5) ... skipped 'needs subprocess harness'
+test_parfor_bitmask6 (numba.tests.test_parfors.TestParforsBitMask.test_parfor_bitmask6) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK (skipped=6)
+Parallel: 0. Serial: 6

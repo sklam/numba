@@ -1,0 +1,26 @@
+Parallel: 4. Serial: 0
+test_objmode (numba.tests.test_try_except.TestTryExceptOtherControlFlow.test_objmode) ... FAIL
+test_objmode_output_type (numba.tests.test_try_except.TestTryExceptOtherControlFlow.test_objmode_output_type) ... FAIL
+test_reraise_opcode_unreachable (numba.tests.test_try_except.TestTryExceptOtherControlFlow.test_reraise_opcode_unreachable) ... ok
+test_yield (numba.tests.test_try_except.TestTryExceptOtherControlFlow.test_yield) ... ok
+
+======================================================================
+FAIL: test_objmode (numba.tests.test_try_except.TestTryExceptOtherControlFlow.test_objmode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py", line 706, in test_objmode
+    self.assertIn(
+AssertionError: 'unsupported control flow: with-context contains branches (i.e. break/return/raise) that can leave the block ' not found in 'Failed in nopython mode pipeline (step: Handle with contexts)\nwith\'s head-block must have exactly 1 JUMP\n\nFile "numba/tests/test_try_except.py", line 697:\n        def udt():\n            <source elided>\n            try:\n                with objmode():\n                ^\n'
+
+======================================================================
+FAIL: test_objmode_output_type (numba.tests.test_try_except.TestTryExceptOtherControlFlow.test_objmode_output_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py", line 732, in test_objmode_output_type
+    self.assertIn(
+AssertionError: 'unsupported control flow: with-context contains branches (i.e. break/return/raise) that can leave the block ' not found in 'Failed in nopython mode pipeline (step: Handle with contexts)\nwith\'s head-block must have exactly 1 JUMP\n\nFile "numba/tests/test_try_except.py", line 721:\n        def test_objmode():\n            <source elided>\n            try:\n                with objmode(y=\'intp[:]\'):  # annotate return type\n                ^\n'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.727s
+
+FAILED (failures=2)

@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_module_not_in_namespace (numba.tests.test_funcdesc.TestModule.test_module_not_in_namespace)
+Test of trying to run a compiled function ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.520s
+
+OK

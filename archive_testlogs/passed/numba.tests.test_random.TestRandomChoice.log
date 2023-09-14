@@ -1,0 +1,19 @@
+Parallel: 7. Serial: 0
+test_choice_array_1 (numba.tests.test_random.TestRandomChoice.test_choice_array_1)
+Test choice(array) ... ok
+test_choice_array_2 (numba.tests.test_random.TestRandomChoice.test_choice_array_2)
+Test choice(array, size) ... ok
+test_choice_array_3 (numba.tests.test_random.TestRandomChoice.test_choice_array_3)
+Test choice(array, size, replace) ... ok
+test_choice_follows_seed (numba.tests.test_random.TestRandomChoice.test_choice_follows_seed) ... ok
+test_choice_scalar_1 (numba.tests.test_random.TestRandomChoice.test_choice_scalar_1)
+Test choice(int) ... ok
+test_choice_scalar_2 (numba.tests.test_random.TestRandomChoice.test_choice_scalar_2)
+Test choice(int, size) ... ok
+test_choice_scalar_3 (numba.tests.test_random.TestRandomChoice.test_choice_scalar_3)
+Test choice(int, size, replace) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 8.223s
+
+OK

@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_argument_name_reused (numba.tests.test_ssa.TestSSA.test_argument_name_reused) ... ok
+test_if_else_redefine (numba.tests.test_ssa.TestSSA.test_if_else_redefine) ... ok
+test_phi_propagation (numba.tests.test_ssa.TestSSA.test_phi_propagation) ... ok
+test_sum_2d_loop (numba.tests.test_ssa.TestSSA.test_sum_2d_loop) ... ok
+test_sum_loop (numba.tests.test_ssa.TestSSA.test_sum_loop) ... ok
+test_sum_loop_2vars (numba.tests.test_ssa.TestSSA.test_sum_loop_2vars) ... ok
+test_undefined_var (numba.tests.test_ssa.TestSSA.test_undefined_var) ... ok
+test_unhandled_undefined (numba.tests.test_ssa.TestSSA.test_unhandled_undefined) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.308s
+
+OK

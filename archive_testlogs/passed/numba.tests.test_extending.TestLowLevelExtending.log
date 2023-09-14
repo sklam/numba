@@ -1,0 +1,12 @@
+Parallel: 5. Serial: 0
+test_cast_mydummy (numba.tests.test_extending.TestLowLevelExtending.test_cast_mydummy) ... ok
+test_func1 (numba.tests.test_extending.TestLowLevelExtending.test_func1) ... ok
+test_func1_isolated (numba.tests.test_extending.TestLowLevelExtending.test_func1_isolated) ... ok
+test_mk_func_literal (numba.tests.test_extending.TestLowLevelExtending.test_mk_func_literal)
+make sure make_function is passed to typer class as a literal ... ok
+test_type_callable_keeps_function (numba.tests.test_extending.TestLowLevelExtending.test_type_callable_keeps_function) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.972s
+
+OK

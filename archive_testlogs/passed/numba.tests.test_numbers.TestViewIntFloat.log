@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_32_bits (numba.tests.test_numbers.TestViewIntFloat.test_32_bits) ... ok
+test_64_bits (numba.tests.test_numbers.TestViewIntFloat.test_64_bits) ... ok
+test_8_bits (numba.tests.test_numbers.TestViewIntFloat.test_8_bits) ... ok
+test_exceptions32 (numba.tests.test_numbers.TestViewIntFloat.test_exceptions32) ... ok
+test_exceptions64 (numba.tests.test_numbers.TestViewIntFloat.test_exceptions64) ... ok
+test_python_scalar_exception (numba.tests.test_numbers.TestViewIntFloat.test_python_scalar_exception) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.986s
+
+OK

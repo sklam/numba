@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_broadcasting (numba.tests.npyufunc.test_ufunc.TestUFuncs.test_broadcasting) ... ok
+test_exp2 (numba.tests.npyufunc.test_ufunc.TestUFuncsMisc.test_exp2) ... ok
+test_implicit_broadcasting (numba.tests.npyufunc.test_ufunc.TestUFuncs.test_implicit_broadcasting) ... ok
+test_log2 (numba.tests.npyufunc.test_ufunc.TestUFuncsMisc.test_log2) ... ok
+test_optional_type_handling (numba.tests.npyufunc.test_ufunc.TestUFuncs.test_optional_type_handling) ... ok
+test_ufunc_attributes (numba.tests.npyufunc.test_ufunc.TestUFuncs.test_ufunc_attributes) ... ok
+test_ufunc_exception_on_write_to_readonly (numba.tests.npyufunc.test_ufunc.TestUFuncs.test_ufunc_exception_on_write_to_readonly) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.958s
+
+OK

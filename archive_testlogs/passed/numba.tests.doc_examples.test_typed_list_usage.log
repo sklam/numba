@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_ex_inferred_list (numba.tests.doc_examples.test_typed_list_usage.DocsTypedListUsageTest.test_ex_inferred_list) ... ok
+test_ex_inferred_list_jit (numba.tests.doc_examples.test_typed_list_usage.DocsTypedListUsageTest.test_ex_inferred_list_jit) ... ok
+test_ex_nested_list (numba.tests.doc_examples.test_typed_list_usage.DocsTypedListUsageTest.test_ex_nested_list) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.061s
+
+OK

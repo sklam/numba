@@ -1,0 +1,12 @@
+test_basic_block_1 (numba.tests.test_refop_pruning.TestRefOpPruning.test_basic_block_1) ... ok
+test_diamond_1 (numba.tests.test_refop_pruning.TestRefOpPruning.test_diamond_1) ... ok
+test_diamond_2 (numba.tests.test_refop_pruning.TestRefOpPruning.test_diamond_2) ... ok
+test_fanout_1 (numba.tests.test_refop_pruning.TestRefOpPruning.test_fanout_1) ... ok
+test_fanout_2 (numba.tests.test_refop_pruning.TestRefOpPruning.test_fanout_2) ... ok
+test_fanout_3 (numba.tests.test_refop_pruning.TestRefOpPruning.test_fanout_3) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.935s
+
+OK
+Parallel: 0. Serial: 6

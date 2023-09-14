@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_np_implicit_initialization (numba.tests.test_random.TestThreads.test_np_implicit_initialization) ... ok
+test_np_thread_safety (numba.tests.test_random.TestThreads.test_np_thread_safety) ... ok
+test_py_implicit_initialization (numba.tests.test_random.TestThreads.test_py_implicit_initialization) ... ok
+test_py_thread_safety (numba.tests.test_random.TestThreads.test_py_thread_safety) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.124s
+
+OK

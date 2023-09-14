@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_jitclass_as_value (numba.tests.test_dictobject.TestDictWithJitclass.test_jitclass_as_value) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.193s
+
+OK

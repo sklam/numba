@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_array_tuple (numba.tests.test_tuples.TestTupleReturn.test_array_tuple) ... ok
+test_hetero_tuple (numba.tests.test_tuples.TestTupleReturn.test_hetero_tuple) ... ok
+test_scalar_tuple (numba.tests.test_tuples.TestTupleReturn.test_scalar_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.025s
+
+OK

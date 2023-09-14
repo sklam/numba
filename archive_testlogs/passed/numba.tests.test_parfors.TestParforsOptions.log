@@ -1,0 +1,7 @@
+test_parfor_options (numba.tests.test_parfors.TestParforsOptions.test_parfor_options) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK (skipped=1)
+Parallel: 0. Serial: 1

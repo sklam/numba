@@ -1,0 +1,20 @@
+Parallel: 14. Serial: 0
+test_boolean_as_float (numba.tests.test_conversion.TestConversion.test_boolean_as_float) ... ok
+test_boolean_as_int (numba.tests.test_conversion.TestConversion.test_boolean_as_int) ... ok
+test_boolean_eq_boolean (numba.tests.test_conversion.TestConversion.test_boolean_eq_boolean) ... ok
+test_cleanup_buffer (numba.tests.test_conversion.TestConversion.test_cleanup_buffer) ... ok
+test_cleanup_optional (numba.tests.test_conversion.TestConversion.test_cleanup_optional) ... ok
+test_cleanup_record (numba.tests.test_conversion.TestConversion.test_cleanup_record) ... ok
+test_cleanup_tuple (numba.tests.test_conversion.TestConversion.test_cleanup_tuple) ... ok
+test_complex_addition (numba.tests.test_conversion.TestConversion.test_complex_addition) ... ok
+test_complex_identity (numba.tests.test_conversion.TestConversion.test_complex_identity) ... ok
+test_multiple_args_negative_to_unsigned (numba.tests.test_conversion.TestConversion.test_multiple_args_negative_to_unsigned) ... ok
+test_multiple_args_records (numba.tests.test_conversion.TestConversion.test_multiple_args_records) ... ok
+test_negative_to_unsigned (numba.tests.test_conversion.TestConversion.test_negative_to_unsigned) ... ok
+test_stringliteral_to_unicode (numba.tests.test_conversion.TestConversion.test_stringliteral_to_unicode) ... ok
+test_with_no_parameters (numba.tests.test_conversion.TestConversion.test_with_no_parameters) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 4.288s
+
+OK

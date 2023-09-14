@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_empty_tuples (numba.tests.test_datamodel.TestArgInfo.test_empty_tuples) ... ok
+test_int32_array_complex (numba.tests.test_datamodel.TestArgInfo.test_int32_array_complex) ... ok
+test_nested_empty_tuples (numba.tests.test_datamodel.TestArgInfo.test_nested_empty_tuples) ... ok
+test_tuples (numba.tests.test_datamodel.TestArgInfo.test_tuples) ... ok
+test_two_0d_arrays (numba.tests.test_datamodel.TestArgInfo.test_two_0d_arrays) ... ok
+test_two_arrays (numba.tests.test_datamodel.TestArgInfo.test_two_arrays) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.195s
+
+OK

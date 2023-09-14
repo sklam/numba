@@ -1,0 +1,25 @@
+test_caching_mutliple_files_with_signature (numba.tests.test_caching.TestCacheMultipleFilesWithSignature.test_caching_mutliple_files_with_signature) ... FAIL
+
+======================================================================
+FAIL: test_caching_mutliple_files_with_signature (numba.tests.test_caching.TestCacheMultipleFilesWithSignature.test_caching_mutliple_files_with_signature)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_caching.py", line 1009, in test_caching_mutliple_files_with_signature
+    self.assertEqual(popen.returncode, 0, msg=msg)
+AssertionError: 1 != 0 : stdout:
+
+
+stderr:
+Traceback (most recent call last):
+  File "/tmp/numba-tests.1002/test_cache_file_loc-i55v1w90/file1.py", line 2, in <module>
+    from file2 import function2
+  File "/tmp/numba-tests.1002/test_cache_file_loc-i55v1w90/file2.py", line 2, in <module>
+    from numba import njit
+ModuleNotFoundError: No module named 'numba'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.026s
+
+FAILED (failures=1)
+Parallel: 0. Serial: 1

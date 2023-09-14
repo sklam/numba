@@ -1,0 +1,21 @@
+Parallel: 15. Serial: 0
+test_add (numba.tests.test_operators.TestMixedIntsOperatorModule.test_add) ... ok
+test_and (numba.tests.test_operators.TestMixedIntsOperatorModule.test_and) ... ok
+test_floordiv (numba.tests.test_operators.TestMixedIntsOperatorModule.test_floordiv) ... ok
+test_invert (numba.tests.test_operators.TestMixedIntsOperatorModule.test_invert) ... ok
+test_lshift (numba.tests.test_operators.TestMixedIntsOperatorModule.test_lshift) ... ok
+test_mod (numba.tests.test_operators.TestMixedIntsOperatorModule.test_mod) ... ok
+test_mul (numba.tests.test_operators.TestMixedIntsOperatorModule.test_mul) ... ok
+test_or (numba.tests.test_operators.TestMixedIntsOperatorModule.test_or) ... ok
+test_pow (numba.tests.test_operators.TestMixedIntsOperatorModule.test_pow) ... ok
+test_rshift (numba.tests.test_operators.TestMixedIntsOperatorModule.test_rshift) ... ok
+test_sub (numba.tests.test_operators.TestMixedIntsOperatorModule.test_sub) ... ok
+test_truediv (numba.tests.test_operators.TestMixedIntsOperatorModule.test_truediv) ... ok
+test_unary_negative (numba.tests.test_operators.TestMixedIntsOperatorModule.test_unary_negative) ... ok
+test_unary_positive (numba.tests.test_operators.TestMixedIntsOperatorModule.test_unary_positive) ... ok
+test_xor (numba.tests.test_operators.TestMixedIntsOperatorModule.test_xor) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 45.756s
+
+OK

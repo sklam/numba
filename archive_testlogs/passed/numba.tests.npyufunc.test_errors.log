@@ -1,0 +1,20 @@
+Parallel: 12. Serial: 0
+test_floordiv_float (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_floordiv_float) ... ok
+test_floordiv_int (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_floordiv_int) ... ok
+test_gufunc_raise (numba.tests.npyufunc.test_errors.TestExceptions.test_gufunc_raise) ... ok
+test_gufunc_raise_objmode (numba.tests.npyufunc.test_errors.TestExceptions.test_gufunc_raise_objmode) ... ok
+test_power_float (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_power_float)
+Test 0 ** -1 and 2 ** <big number>. ... ok
+test_power_integer (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_power_integer)
+Test 0 ** -1. ... ok
+test_remainder_float (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_remainder_float) ... ok
+test_remainder_int (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_remainder_int) ... ok
+test_truediv_float (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_truediv_float) ... ok
+test_truediv_integer (numba.tests.npyufunc.test_errors.TestFloatingPointExceptions.test_truediv_integer) ... ok
+test_ufunc_raise (numba.tests.npyufunc.test_errors.TestExceptions.test_ufunc_raise) ... ok
+test_ufunc_raise_objmode (numba.tests.npyufunc.test_errors.TestExceptions.test_ufunc_raise_objmode) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 2.234s
+
+OK

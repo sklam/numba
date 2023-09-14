@@ -1,0 +1,103 @@
+Parallel: 77. Serial: 0
+test_acos (numba.tests.test_mathlib.TestMathLib.test_acos) ... ok
+test_acos_npm (numba.tests.test_mathlib.TestMathLib.test_acos_npm) ... ok
+test_acosh (numba.tests.test_mathlib.TestMathLib.test_acosh) ... ok
+test_acosh_npm (numba.tests.test_mathlib.TestMathLib.test_acosh_npm) ... ok
+test_asin (numba.tests.test_mathlib.TestMathLib.test_asin) ... ok
+test_asin_npm (numba.tests.test_mathlib.TestMathLib.test_asin_npm) ... ok
+test_asinh (numba.tests.test_mathlib.TestMathLib.test_asinh) ... ok
+test_asinh_npm (numba.tests.test_mathlib.TestMathLib.test_asinh_npm) ... ok
+test_atan (numba.tests.test_mathlib.TestMathLib.test_atan) ... ok
+test_atan2 (numba.tests.test_mathlib.TestMathLib.test_atan2) ... ok
+test_atan2_npm (numba.tests.test_mathlib.TestMathLib.test_atan2_npm) ... ok
+test_atan_npm (numba.tests.test_mathlib.TestMathLib.test_atan_npm) ... ok
+test_atanh (numba.tests.test_mathlib.TestMathLib.test_atanh) ... ok
+test_atanh_npm (numba.tests.test_mathlib.TestMathLib.test_atanh_npm) ... ok
+test_ceil (numba.tests.test_mathlib.TestMathLib.test_ceil) ... ok
+test_ceil_npm (numba.tests.test_mathlib.TestMathLib.test_ceil_npm) ... ok
+test_constants (numba.tests.test_mathlib.TestMathLib.test_constants) ... ok
+test_copysign (numba.tests.test_mathlib.TestMathLib.test_copysign) ... ok
+test_copysign_npm (numba.tests.test_mathlib.TestMathLib.test_copysign_npm) ... ok
+test_cos (numba.tests.test_mathlib.TestMathLib.test_cos) ... ok
+test_cos_npm (numba.tests.test_mathlib.TestMathLib.test_cos_npm) ... ok
+test_cosh (numba.tests.test_mathlib.TestMathLib.test_cosh) ... ok
+test_cosh_npm (numba.tests.test_mathlib.TestMathLib.test_cosh_npm) ... ok
+test_degrees (numba.tests.test_mathlib.TestMathLib.test_degrees) ... ok
+test_degrees_npm (numba.tests.test_mathlib.TestMathLib.test_degrees_npm) ... ok
+test_erf (numba.tests.test_mathlib.TestMathLib.test_erf) ... ok
+test_erf_npm (numba.tests.test_mathlib.TestMathLib.test_erf_npm) ... ok
+test_erfc (numba.tests.test_mathlib.TestMathLib.test_erfc) ... ok
+test_erfc_npm (numba.tests.test_mathlib.TestMathLib.test_erfc_npm) ... ok
+test_exp (numba.tests.test_mathlib.TestMathLib.test_exp) ... ok
+test_exp_npm (numba.tests.test_mathlib.TestMathLib.test_exp_npm) ... ok
+test_expm1 (numba.tests.test_mathlib.TestMathLib.test_expm1) ... ok
+test_expm1_npm (numba.tests.test_mathlib.TestMathLib.test_expm1_npm) ... ok
+test_floor (numba.tests.test_mathlib.TestMathLib.test_floor) ... ok
+test_floor_npm (numba.tests.test_mathlib.TestMathLib.test_floor_npm) ... ok
+test_frexp (numba.tests.test_mathlib.TestMathLib.test_frexp) ... ok
+test_frexp_npm (numba.tests.test_mathlib.TestMathLib.test_frexp_npm) ... ok
+test_gamma (numba.tests.test_mathlib.TestMathLib.test_gamma) ... ok
+test_gamma_npm (numba.tests.test_mathlib.TestMathLib.test_gamma_npm) ... ok
+test_gcd (numba.tests.test_mathlib.TestMathLib.test_gcd) ... ok
+test_gcd_npm (numba.tests.test_mathlib.TestMathLib.test_gcd_npm) ... ok
+test_hypot (numba.tests.test_mathlib.TestMathLib.test_hypot) ... ERROR
+test_hypot_npm (numba.tests.test_mathlib.TestMathLib.test_hypot_npm) ... ERROR
+test_isfinite (numba.tests.test_mathlib.TestMathLib.test_isfinite) ... ok
+test_isfinite_npm (numba.tests.test_mathlib.TestMathLib.test_isfinite_npm) ... ok
+test_isinf (numba.tests.test_mathlib.TestMathLib.test_isinf) ... ok
+test_isinf_npm (numba.tests.test_mathlib.TestMathLib.test_isinf_npm) ... ok
+test_isnan (numba.tests.test_mathlib.TestMathLib.test_isnan) ... ok
+test_isnan_npm (numba.tests.test_mathlib.TestMathLib.test_isnan_npm) ... ok
+test_ldexp (numba.tests.test_mathlib.TestMathLib.test_ldexp) ... ok
+test_ldexp_npm (numba.tests.test_mathlib.TestMathLib.test_ldexp_npm) ... ok
+test_lgamma (numba.tests.test_mathlib.TestMathLib.test_lgamma) ... ok
+test_lgamma_npm (numba.tests.test_mathlib.TestMathLib.test_lgamma_npm) ... ok
+test_log (numba.tests.test_mathlib.TestMathLib.test_log) ... ok
+test_log10 (numba.tests.test_mathlib.TestMathLib.test_log10) ... ok
+test_log10_npm (numba.tests.test_mathlib.TestMathLib.test_log10_npm) ... ok
+test_log1p (numba.tests.test_mathlib.TestMathLib.test_log1p) ... ok
+test_log1p_npm (numba.tests.test_mathlib.TestMathLib.test_log1p_npm) ... ok
+test_log_npm (numba.tests.test_mathlib.TestMathLib.test_log_npm) ... ok
+test_npy_sqrt (numba.tests.test_mathlib.TestMathLib.test_npy_sqrt) ... ok
+test_npy_sqrt_npm (numba.tests.test_mathlib.TestMathLib.test_npy_sqrt_npm) ... ok
+test_pow (numba.tests.test_mathlib.TestMathLib.test_pow) ... ok
+test_pow_npm (numba.tests.test_mathlib.TestMathLib.test_pow_npm) ... ok
+test_radians (numba.tests.test_mathlib.TestMathLib.test_radians) ... ok
+test_radians_npm (numba.tests.test_mathlib.TestMathLib.test_radians_npm) ... ok
+test_sin (numba.tests.test_mathlib.TestMathLib.test_sin) ... ok
+test_sin_npm (numba.tests.test_mathlib.TestMathLib.test_sin_npm) ... ok
+test_sinh (numba.tests.test_mathlib.TestMathLib.test_sinh) ... ok
+test_sinh_npm (numba.tests.test_mathlib.TestMathLib.test_sinh_npm) ... ok
+test_sqrt (numba.tests.test_mathlib.TestMathLib.test_sqrt) ... ok
+test_sqrt_npm (numba.tests.test_mathlib.TestMathLib.test_sqrt_npm) ... ok
+test_tan (numba.tests.test_mathlib.TestMathLib.test_tan) ... ok
+test_tan_npm (numba.tests.test_mathlib.TestMathLib.test_tan_npm) ... ok
+test_tanh (numba.tests.test_mathlib.TestMathLib.test_tanh) ... ok
+test_tanh_npm (numba.tests.test_mathlib.TestMathLib.test_tanh_npm) ... ok
+test_trunc (numba.tests.test_mathlib.TestMathLib.test_trunc) ... ok
+test_trunc_npm (numba.tests.test_mathlib.TestMathLib.test_trunc_npm) ... ok
+
+======================================================================
+ERROR: test_hypot (numba.tests.test_mathlib.TestMathLib.test_hypot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_mathlib.py", line 518, in test_hypot
+    self.assertRaisesRegexp(RuntimeWarning,
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestMathLib' object has no attribute 'assertRaisesRegexp'. Did you mean: 'assertRaisesRegex'?
+
+======================================================================
+ERROR: test_hypot_npm (numba.tests.test_mathlib.TestMathLib.test_hypot_npm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_mathlib.py", line 523, in test_hypot_npm
+    self.test_hypot(flags=no_pyobj_flags)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_mathlib.py", line 518, in test_hypot
+    self.assertRaisesRegexp(RuntimeWarning,
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestMathLib' object has no attribute 'assertRaisesRegexp'. Did you mean: 'assertRaisesRegex'?
+
+----------------------------------------------------------------------
+Ran 77 tests in 45.985s
+
+FAILED (errors=2)

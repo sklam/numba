@@ -1,0 +1,37 @@
+Parallel: 31. Serial: 0
+test_numpy_beta (numba.tests.test_random.TestRandomArrays.test_numpy_beta) ... ok
+test_numpy_binomial (numba.tests.test_random.TestRandomArrays.test_numpy_binomial) ... ok
+test_numpy_chisquare (numba.tests.test_random.TestRandomArrays.test_numpy_chisquare) ... ok
+test_numpy_exponential (numba.tests.test_random.TestRandomArrays.test_numpy_exponential) ... ok
+test_numpy_f (numba.tests.test_random.TestRandomArrays.test_numpy_f) ... ok
+test_numpy_gamma (numba.tests.test_random.TestRandomArrays.test_numpy_gamma) ... ok
+test_numpy_geometric (numba.tests.test_random.TestRandomArrays.test_numpy_geometric) ... ok
+test_numpy_gumbel (numba.tests.test_random.TestRandomArrays.test_numpy_gumbel) ... ok
+test_numpy_hypergeometric (numba.tests.test_random.TestRandomArrays.test_numpy_hypergeometric) ... ok
+test_numpy_laplace (numba.tests.test_random.TestRandomArrays.test_numpy_laplace) ... ok
+test_numpy_logistic (numba.tests.test_random.TestRandomArrays.test_numpy_logistic) ... ok
+test_numpy_lognormal (numba.tests.test_random.TestRandomArrays.test_numpy_lognormal) ... ok
+test_numpy_logseries (numba.tests.test_random.TestRandomArrays.test_numpy_logseries) ... ok
+test_numpy_normal (numba.tests.test_random.TestRandomArrays.test_numpy_normal) ... ok
+test_numpy_pareto (numba.tests.test_random.TestRandomArrays.test_numpy_pareto) ... ok
+test_numpy_poisson (numba.tests.test_random.TestRandomArrays.test_numpy_poisson) ... ok
+test_numpy_power (numba.tests.test_random.TestRandomArrays.test_numpy_power) ... ok
+test_numpy_rand (numba.tests.test_random.TestRandomArrays.test_numpy_rand) ... ok
+test_numpy_randint (numba.tests.test_random.TestRandomArrays.test_numpy_randint) ... ok
+test_numpy_randn (numba.tests.test_random.TestRandomArrays.test_numpy_randn) ... ok
+test_numpy_random_random (numba.tests.test_random.TestRandomArrays.test_numpy_random_random) ... ok
+test_numpy_rayleigh (numba.tests.test_random.TestRandomArrays.test_numpy_rayleigh) ... ok
+test_numpy_standard_cauchy (numba.tests.test_random.TestRandomArrays.test_numpy_standard_cauchy) ... ok
+test_numpy_standard_exponential (numba.tests.test_random.TestRandomArrays.test_numpy_standard_exponential) ... ok
+test_numpy_standard_gamma (numba.tests.test_random.TestRandomArrays.test_numpy_standard_gamma) ... ok
+test_numpy_standard_normal (numba.tests.test_random.TestRandomArrays.test_numpy_standard_normal) ... ok
+test_numpy_triangular (numba.tests.test_random.TestRandomArrays.test_numpy_triangular) ... ok
+test_numpy_uniform (numba.tests.test_random.TestRandomArrays.test_numpy_uniform) ... ok
+test_numpy_vonmises (numba.tests.test_random.TestRandomArrays.test_numpy_vonmises) ... ok
+test_numpy_wald (numba.tests.test_random.TestRandomArrays.test_numpy_wald) ... ok
+test_numpy_zipf (numba.tests.test_random.TestRandomArrays.test_numpy_zipf) ... ok
+
+----------------------------------------------------------------------
+Ran 31 tests in 35.149s
+
+OK

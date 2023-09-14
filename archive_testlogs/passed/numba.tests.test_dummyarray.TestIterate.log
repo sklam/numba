@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_for_loop (numba.tests.test_dummyarray.TestIterate.test_for_loop) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.353s
+
+OK

@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_squeeze (numba.tests.test_dummyarray.TestSqueeze.test_squeeze) ... ok
+test_squeeze_invalid_axis (numba.tests.test_dummyarray.TestSqueeze.test_squeeze_invalid_axis) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.177s
+
+OK

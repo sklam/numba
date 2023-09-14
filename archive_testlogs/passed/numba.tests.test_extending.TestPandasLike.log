@@ -1,0 +1,18 @@
+Parallel: 10. Serial: 0
+test_index_get_data (numba.tests.test_extending.TestPandasLike.test_index_get_data) ... ok
+test_index_getitem (numba.tests.test_extending.TestPandasLike.test_index_getitem) ... ok
+test_index_is_monotonic (numba.tests.test_extending.TestPandasLike.test_index_is_monotonic) ... ok
+test_index_len (numba.tests.test_extending.TestPandasLike.test_index_len) ... ok
+test_index_ufunc (numba.tests.test_extending.TestPandasLike.test_index_ufunc)
+Check Numpy ufunc on an Index object. ... ok
+test_series_clip (numba.tests.test_extending.TestPandasLike.test_series_clip) ... ok
+test_series_constructor (numba.tests.test_extending.TestPandasLike.test_series_constructor) ... ok
+test_series_get_index (numba.tests.test_extending.TestPandasLike.test_series_get_index) ... ok
+test_series_len (numba.tests.test_extending.TestPandasLike.test_series_len) ... ok
+test_series_ufunc (numba.tests.test_extending.TestPandasLike.test_series_ufunc)
+Check Numpy ufunc on an Series object. ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.463s
+
+OK

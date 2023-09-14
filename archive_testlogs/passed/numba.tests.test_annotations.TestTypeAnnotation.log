@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_delete (numba.tests.test_annotations.TestTypeAnnotation.test_delete) ... ok
+test_delete_extended_lifetimes (numba.tests.test_annotations.TestTypeAnnotation.test_delete_extended_lifetimes) ... ok
+test_delete_standard_lifetimes (numba.tests.test_annotations.TestTypeAnnotation.test_delete_standard_lifetimes) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.616s
+
+OK

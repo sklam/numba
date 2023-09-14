@@ -1,0 +1,34 @@
+test_out_kwarg_w_cval (numba.tests.test_stencils.TestStencil.test_out_kwarg_w_cval)
+Issue #3518, out kwarg did not work with cval. ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_out_kwarg_w_cval_np_attr (numba.tests.test_stencils.TestStencil.test_out_kwarg_w_cval_np_attr)
+Test issue #7286 where the cval is a np attr/string-based numerical ... ok
+test_stencil1 (numba.tests.test_stencils.TestStencil.test_stencil1)
+Tests whether the optional out argument to stencil calls works. ... ok
+test_stencil2 (numba.tests.test_stencils.TestStencil.test_stencil2)
+Tests whether the optional neighborhood argument to the stencil ... ok
+test_stencil3 (numba.tests.test_stencils.TestStencil.test_stencil3)
+Tests whether a non-zero optional cval argument to the stencil ... ok
+test_stencil_call (numba.tests.test_stencils.TestStencil.test_stencil_call)
+Tests 2D numba.stencil calls. ... ok
+test_stencil_call_1D (numba.tests.test_stencils.TestStencil.test_stencil_call_1D)
+Tests 1D numba.stencil calls. ... ok
+test_stencil_call_const (numba.tests.test_stencils.TestStencil.test_stencil_call_const)
+Tests numba.stencil call that has an index that can be inferred as ... ok
+test_stencil_mixed_types (numba.tests.test_stencils.TestStencil.test_stencil_mixed_types) ... ok
+test_stencil_multiple_inputs (numba.tests.test_stencils.TestStencil.test_stencil_multiple_inputs)
+Tests whether multiple inputs of the same size work. ... ok
+test_stencil_nested1 (numba.tests.test_stencils.TestStencil.test_stencil_nested1)
+Tests whether nested stencil decorator works. ... ok
+test_stencil_parallel_off (numba.tests.test_stencils.TestStencil.test_stencil_parallel_off)
+Tests 1D numba.stencil calls without parallel translation ... ok
+test_stencil_standard_indexing_1d (numba.tests.test_stencils.TestStencil.test_stencil_standard_indexing_1d)
+Tests standard indexing with a 1d array. ... ok
+test_stencil_standard_indexing_2d (numba.tests.test_stencils.TestStencil.test_stencil_standard_indexing_2d)
+Tests standard indexing with a 2d array and multiple stencil calls. ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 77.011s
+
+OK
+Parallel: 0. Serial: 14

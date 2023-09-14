@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_dev (numba.tests.test_init_utils.TestGenerateVersionInfo.test_dev) ... ok
+test_full_rev (numba.tests.test_init_utils.TestGenerateVersionInfo.test_full_rev) ... ok
+test_major_minor_patch (numba.tests.test_init_utils.TestGenerateVersionInfo.test_major_minor_patch) ... ok
+test_unknown (numba.tests.test_init_utils.TestGenerateVersionInfo.test_unknown) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.112s
+
+OK

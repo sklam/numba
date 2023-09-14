@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_list_pop_empty_index_error_no_index (numba.tests.test_listobject.TestPop.test_list_pop_empty_index_error_no_index) ... ok
+test_list_pop_empty_index_error_with_index (numba.tests.test_listobject.TestPop.test_list_pop_empty_index_error_with_index) ... ok
+test_list_pop_integer_types_as_index (numba.tests.test_listobject.TestPop.test_list_pop_integer_types_as_index) ... ok
+test_list_pop_multiple (numba.tests.test_listobject.TestPop.test_list_pop_multiple) ... ok
+test_list_pop_multiple_index (numba.tests.test_listobject.TestPop.test_list_pop_multiple_index) ... ok
+test_list_pop_mutiple_index_error_with_index (numba.tests.test_listobject.TestPop.test_list_pop_mutiple_index_error_with_index) ... ok
+test_list_pop_singleton (numba.tests.test_listobject.TestPop.test_list_pop_singleton) ... ok
+test_list_pop_singleton_index (numba.tests.test_listobject.TestPop.test_list_pop_singleton_index) ... ok
+test_list_pop_singleton_typing_error_on_index (numba.tests.test_listobject.TestPop.test_list_pop_singleton_typing_error_on_index) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.358s
+
+OK

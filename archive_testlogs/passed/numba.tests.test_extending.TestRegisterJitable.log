@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_flags_no_nrt (numba.tests.test_extending.TestRegisterJitable.test_flags_no_nrt) ... ok
+test_no_flags (numba.tests.test_extending.TestRegisterJitable.test_no_flags) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.589s
+
+OK

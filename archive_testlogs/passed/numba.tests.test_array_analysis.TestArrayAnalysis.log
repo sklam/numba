@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_base_cases (numba.tests.test_array_analysis.TestArrayAnalysis.test_base_cases) ... ok
+test_numpy_calls (numba.tests.test_array_analysis.TestArrayAnalysis.test_numpy_calls) ... skipped 'SciPy needed for test'
+test_slice (numba.tests.test_array_analysis.TestArrayAnalysis.test_slice) ... ok
+test_stencilcall (numba.tests.test_array_analysis.TestArrayAnalysis.test_stencilcall) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.197s
+
+OK (skipped=1)

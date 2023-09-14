@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_error_w_invalid_field (numba.tests.test_record_dtype.TestRecordArraySetItem.test_error_w_invalid_field) ... ok
+test_literal_unroll (numba.tests.test_record_dtype.TestRecordArraySetItem.test_literal_unroll) ... ok
+test_literal_unroll_free_var_tuple (numba.tests.test_record_dtype.TestRecordArraySetItem.test_literal_unroll_free_var_tuple) ... ok
+test_literal_unroll_global_tuple (numba.tests.test_record_dtype.TestRecordArraySetItem.test_literal_unroll_global_tuple) ... ok
+test_literal_variable (numba.tests.test_record_dtype.TestRecordArraySetItem.test_literal_variable) ... ok
+test_literal_variable_global_tuple (numba.tests.test_record_dtype.TestRecordArraySetItem.test_literal_variable_global_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.329s
+
+OK

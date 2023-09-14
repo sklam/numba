@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_list_extend_forceobj (numba.tests.test_interpreter.TestListExtendInStarArgNonTupleIterable.test_list_extend_forceobj) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.515s
+
+OK

@@ -1,0 +1,31 @@
+Parallel: 25. Serial: 0
+test_multiprocessing_fork_concurrent_guvectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_fork_concurrent_guvectorize) ... skipped 'Threading layer not explicit'
+test_multiprocessing_fork_concurrent_jit (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_fork_concurrent_jit) ... skipped 'Threading layer not explicit'
+test_multiprocessing_fork_concurrent_mix_use (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_fork_concurrent_mix_use) ... skipped 'Threading layer not explicit'
+test_multiprocessing_fork_concurrent_mix_use_masks (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_fork_concurrent_mix_use_masks) ... skipped 'Threading layer not explicit'
+test_multiprocessing_fork_concurrent_vectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_fork_concurrent_vectorize) ... skipped 'Threading layer not explicit'
+test_multiprocessing_forkserver_concurrent_guvectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_forkserver_concurrent_guvectorize) ... skipped 'Threading layer not explicit'
+test_multiprocessing_forkserver_concurrent_jit (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_forkserver_concurrent_jit) ... skipped 'Threading layer not explicit'
+test_multiprocessing_forkserver_concurrent_mix_use (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_forkserver_concurrent_mix_use) ... skipped 'Threading layer not explicit'
+test_multiprocessing_forkserver_concurrent_mix_use_masks (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_forkserver_concurrent_mix_use_masks) ... skipped 'Threading layer not explicit'
+test_multiprocessing_forkserver_concurrent_vectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_forkserver_concurrent_vectorize) ... skipped 'Threading layer not explicit'
+test_multiprocessing_spawn_concurrent_guvectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_spawn_concurrent_guvectorize) ... skipped 'Threading layer not explicit'
+test_multiprocessing_spawn_concurrent_jit (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_spawn_concurrent_jit) ... skipped 'Threading layer not explicit'
+test_multiprocessing_spawn_concurrent_mix_use (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_spawn_concurrent_mix_use) ... skipped 'Threading layer not explicit'
+test_multiprocessing_spawn_concurrent_mix_use_masks (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_spawn_concurrent_mix_use_masks) ... skipped 'Threading layer not explicit'
+test_multiprocessing_spawn_concurrent_vectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_multiprocessing_spawn_concurrent_vectorize) ... skipped 'Threading layer not explicit'
+test_random_concurrent_guvectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_random_concurrent_guvectorize) ... skipped 'Threading layer not explicit'
+test_random_concurrent_jit (numba.tests.test_parallel_backend.TestParallelBackend.test_random_concurrent_jit) ... skipped 'Threading layer not explicit'
+test_random_concurrent_mix_use (numba.tests.test_parallel_backend.TestParallelBackend.test_random_concurrent_mix_use) ... skipped 'Threading layer not explicit'
+test_random_concurrent_mix_use_masks (numba.tests.test_parallel_backend.TestParallelBackend.test_random_concurrent_mix_use_masks) ... skipped 'Threading layer not explicit'
+test_random_concurrent_vectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_random_concurrent_vectorize) ... skipped 'Threading layer not explicit'
+test_threading_concurrent_guvectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_threading_concurrent_guvectorize) ... skipped 'Threading layer not explicit'
+test_threading_concurrent_jit (numba.tests.test_parallel_backend.TestParallelBackend.test_threading_concurrent_jit) ... skipped 'Threading layer not explicit'
+test_threading_concurrent_mix_use (numba.tests.test_parallel_backend.TestParallelBackend.test_threading_concurrent_mix_use) ... skipped 'Threading layer not explicit'
+test_threading_concurrent_mix_use_masks (numba.tests.test_parallel_backend.TestParallelBackend.test_threading_concurrent_mix_use_masks) ... skipped 'Threading layer not explicit'
+test_threading_concurrent_vectorize (numba.tests.test_parallel_backend.TestParallelBackend.test_threading_concurrent_vectorize) ... skipped 'Threading layer not explicit'
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.112s
+
+OK (skipped=25)

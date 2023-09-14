@@ -1,0 +1,237 @@
+Parallel: 11. Serial: 0
+test_del_before_definition (numba.tests.test_obj_lifetime.TestObjLifetime.test_del_before_definition) ... ok
+test_generator1 (numba.tests.test_obj_lifetime.TestObjLifetime.test_generator1) ... ERROR
+test_generator2 (numba.tests.test_obj_lifetime.TestObjLifetime.test_generator2) ... ERROR
+test_inf_loop_multiple_back_edge (numba.tests.test_obj_lifetime.TestObjLifetime.test_inf_loop_multiple_back_edge) ... ERROR
+test_looping1 (numba.tests.test_obj_lifetime.TestObjLifetime.test_looping1) ... ok
+test_looping2 (numba.tests.test_obj_lifetime.TestObjLifetime.test_looping2) ... ok
+test_raising1 (numba.tests.test_obj_lifetime.TestObjLifetime.test_raising1) ... ok
+test_raising2 (numba.tests.test_obj_lifetime.TestObjLifetime.test_raising2) ... ok
+test_raising3 (numba.tests.test_obj_lifetime.TestObjLifetime.test_raising3) ... ok
+test_simple1 (numba.tests.test_obj_lifetime.TestObjLifetime.test_simple1) ... ok
+test_simple2 (numba.tests.test_obj_lifetime.TestObjLifetime.test_simple2) ... ok
+
+======================================================================
+ERROR: test_generator1 (numba.tests.test_obj_lifetime.TestObjLifetime.test_generator1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 357, in test_generator1
+    self.exercise_generator(generator_usecase1)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 330, in exercise_generator
+    cfunc = self.compile(genfunc)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 253, in compile
+    cfunc = jit((types.pyobject,), forceobj=True, looplift=False)(pyfunc)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py", line 241, in wrapper
+    disp.compile(sig)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 120, in run_pass
+    lowered = backend_object_mode()
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 115, in backend_object_mode
+    return self._py_lowering_stage(state.targetctx,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 78, in _py_lowering_stage
+    lower.lower()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 193, in lower
+    self.genlower.lower_next_func(self)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/generators.py", line 157, in lower_next_func
+    entry_block_tail = lower.lower_function_body()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 271, in lower_function_body
+    self.lower_block(block)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 285, in lower_block
+    self.lower_inst(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/pylowering.py", line 173, in lower_inst
+    raise NumbaNotImplementedError(msg)
+numba.core.errors.NumbaNotImplementedError: Failed in object mode pipeline (step: object mode backend)
+<class 'numba.core.ir.StaticRaise'>, <static> raise <class 'numba.core.interpreter.INTRINSIC_STOPITERATION_ERROR'>()
+During: lowering "<static> raise <class 'numba.core.interpreter.INTRINSIC_STOPITERATION_ERROR'>()" at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py (167)
+
+======================================================================
+ERROR: test_generator2 (numba.tests.test_obj_lifetime.TestObjLifetime.test_generator2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 360, in test_generator2
+    self.exercise_generator(generator_usecase2)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 330, in exercise_generator
+    cfunc = self.compile(genfunc)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 253, in compile
+    cfunc = jit((types.pyobject,), forceobj=True, looplift=False)(pyfunc)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py", line 241, in wrapper
+    disp.compile(sig)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 120, in run_pass
+    lowered = backend_object_mode()
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 115, in backend_object_mode
+    return self._py_lowering_stage(state.targetctx,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 78, in _py_lowering_stage
+    lower.lower()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 193, in lower
+    self.genlower.lower_next_func(self)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/generators.py", line 157, in lower_next_func
+    entry_block_tail = lower.lower_function_body()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 271, in lower_function_body
+    self.lower_block(block)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 285, in lower_block
+    self.lower_inst(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/pylowering.py", line 173, in lower_inst
+    raise NumbaNotImplementedError(msg)
+numba.core.errors.NumbaNotImplementedError: Failed in object mode pipeline (step: object mode backend)
+<class 'numba.core.ir.StaticRaise'>, <static> raise <class 'numba.core.interpreter.INTRINSIC_STOPITERATION_ERROR'>()
+During: lowering "<static> raise <class 'numba.core.interpreter.INTRINSIC_STOPITERATION_ERROR'>()" at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py (174)
+
+======================================================================
+ERROR: test_inf_loop_multiple_back_edge (numba.tests.test_obj_lifetime.TestObjLifetime.test_inf_loop_multiple_back_edge)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 382, in test_inf_loop_multiple_back_edge
+    cfunc = self.compile(inf_loop_multiple_back_edge)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py", line 253, in compile
+    cfunc = jit((types.pyobject,), forceobj=True, looplift=False)(pyfunc)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py", line 241, in wrapper
+    disp.compile(sig)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 120, in run_pass
+    lowered = backend_object_mode()
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 115, in backend_object_mode
+    return self._py_lowering_stage(state.targetctx,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py", line 78, in _py_lowering_stage
+    lower.lower()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 193, in lower
+    self.genlower.lower_next_func(self)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/generators.py", line 157, in lower_next_func
+    entry_block_tail = lower.lower_function_body()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 271, in lower_function_body
+    self.lower_block(block)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 285, in lower_block
+    self.lower_inst(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/pylowering.py", line 173, in lower_inst
+    raise NumbaNotImplementedError(msg)
+numba.core.errors.NumbaNotImplementedError: Failed in object mode pipeline (step: object mode backend)
+<class 'numba.core.ir.StaticRaise'>, <static> raise <class 'numba.core.interpreter.INTRINSIC_STOPITERATION_ERROR'>()
+During: lowering "<static> raise <class 'numba.core.interpreter.INTRINSIC_STOPITERATION_ERROR'>()" at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_obj_lifetime.py (236)
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.508s
+
+FAILED (errors=3)

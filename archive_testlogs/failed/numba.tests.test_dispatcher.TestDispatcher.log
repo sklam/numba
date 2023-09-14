@@ -1,0 +1,58 @@
+Parallel: 19. Serial: 0
+test_ambiguous_new_version (numba.tests.test_dispatcher.TestDispatcher.test_ambiguous_new_version)
+Test compiling new version in an ambiguous case ... ok
+test_coerce_input_types (numba.tests.test_dispatcher.TestDispatcher.test_coerce_input_types) ... ok
+test_disabled_compilation (numba.tests.test_dispatcher.TestDispatcher.test_disabled_compilation) ... ok
+test_disabled_compilation_nested_call (numba.tests.test_dispatcher.TestDispatcher.test_disabled_compilation_nested_call) ... ok
+test_disabled_compilation_through_list (numba.tests.test_dispatcher.TestDispatcher.test_disabled_compilation_through_list) ... ok
+test_dispatch_recompiles_for_scalars (numba.tests.test_dispatcher.TestDispatcher.test_dispatch_recompiles_for_scalars) ... ok
+test_dispatcher_raises_for_invalid_decoration (numba.tests.test_dispatcher.TestDispatcher.test_dispatcher_raises_for_invalid_decoration) ... ok
+test_dyn_pyfunc (numba.tests.test_dispatcher.TestDispatcher.test_dyn_pyfunc) ... ok
+test_equality (numba.tests.test_dispatcher.TestDispatcher.test_equality) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:207: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit("(int64,int64)")(add)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:211: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit(["(int64,int64)", "(float64,float64)"])(add)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:223: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit(["(float32,float32)", "(float64,float64)"])(add)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:227: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit(["(float32,float64)",
+test_explicit_signatures (numba.tests.test_dispatcher.TestDispatcher.test_explicit_signatures) ... ERROR
+test_fingerprint_failure (numba.tests.test_dispatcher.TestDispatcher.test_fingerprint_failure)
+Failure in computing the fingerprint cannot affect a nopython=False ... ok
+test_immutability_in_array_dispatch (numba.tests.test_dispatcher.TestDispatcher.test_immutability_in_array_dispatch) ... ok
+test_lock (numba.tests.test_dispatcher.TestDispatcher.test_lock)
+Test that (lazy) compiling from several threads at once doesn't ... ok
+test_matching_error_message (numba.tests.test_dispatcher.TestDispatcher.test_matching_error_message) ... ok
+test_misaligned_array_dispatch (numba.tests.test_dispatcher.TestDispatcher.test_misaligned_array_dispatch) ... skipped 'LAPACK needs SciPy 1.0+'
+test_misaligned_high_dimension_array_dispatch (numba.tests.test_dispatcher.TestDispatcher.test_misaligned_high_dimension_array_dispatch) ... skipped 'LAPACK needs SciPy 1.0+'
+test_no_argument (numba.tests.test_dispatcher.TestDispatcher.test_no_argument) ... ok
+test_serialization (numba.tests.test_dispatcher.TestDispatcher.test_serialization)
+Test serialization of Dispatcher objects ... ok
+test_signature_mismatch (numba.tests.test_dispatcher.TestDispatcher.test_signature_mismatch) ... ok
+
+======================================================================
+ERROR: test_explicit_signatures (numba.tests.test_dispatcher.TestDispatcher.test_explicit_signatures)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py", line 234, in test_explicit_signatures
+    self.assertRegexpMatches(
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestDispatcher' object has no attribute 'assertRegexpMatches'
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:207: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit("(int64,int64)")(add)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:211: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit(["(int64,int64)", "(float64,float64)"])(add)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:223: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit(["(float32,float32)", "(float64,float64)"])(add)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:227: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit(["(float32,float64)",
+
+----------------------------------------------------------------------
+Ran 19 tests in 3.711s
+
+FAILED (errors=1, skipped=2)

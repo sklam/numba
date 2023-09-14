@@ -1,0 +1,11 @@
+test_array_debug_opt_stats (numba.tests.test_debug.TestParforsDebug.test_array_debug_opt_stats)
+Test that NUMBA_DEBUG_ARRAY_OPT_STATS produces valid output ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_warns (numba.tests.test_debug.TestParforsDebug.test_warns)
+Test that using parallel=True on a function that does not have parallel ... skipped 'BLAS needs SciPy 1.0+'
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.422s
+
+OK (skipped=1)
+Parallel: 0. Serial: 2

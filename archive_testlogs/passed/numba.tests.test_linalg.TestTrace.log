@@ -1,0 +1,9 @@
+Parallel: 2. Serial: 0
+test_trace (numba.tests.test_linalg.TestTrace.test_trace) ... ok
+test_trace_w_optional_input (numba.tests.test_linalg.TestTrace.test_trace_w_optional_input)
+Issue 2314 ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 7.523s
+
+OK

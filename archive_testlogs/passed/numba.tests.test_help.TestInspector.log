@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_inspect_cli (numba.tests.test_help.TestInspector.test_inspect_cli) ... ok
+test_inspect_function_on_np_all (numba.tests.test_help.TestInspector.test_inspect_function_on_np_all) ... ok
+test_inspect_function_on_range (numba.tests.test_help.TestInspector.test_inspect_function_on_range) ... ok
+test_inspect_module (numba.tests.test_help.TestInspector.test_inspect_module) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.890s
+
+OK

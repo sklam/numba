@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_basic_reduce_closure (numba.tests.test_map_filter_reduce.TestReduce.test_basic_reduce_closure) ... ok
+test_basic_reduce_external_func (numba.tests.test_map_filter_reduce.TestReduce.test_basic_reduce_external_func) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.864s
+
+OK

@@ -1,0 +1,18 @@
+Parallel: 12. Serial: 0
+test_basic_apply_like_case (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_basic_apply_like_case) ... ok
+test_close_over_consts (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_close_over_consts) ... ok
+test_close_over_consts_w_args (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_close_over_consts_w_args) ... ok
+test_closure_in_escaper (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_closure_in_escaper) ... ok
+test_escape (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_escape) ... ok
+test_escape_with_kwargs (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_escape_with_kwargs) ... ok
+test_escape_with_kwargs_override_kwargs (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_escape_with_kwargs_override_kwargs) ... ok
+test_jit_option_inheritance (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_jit_option_inheritance) ... skipped 'Needs option/flag inheritance to work'
+test_multiply_defined_freevar (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_multiply_defined_freevar) ... ok
+test_nested_escape (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_nested_escape) ... ok
+test_non_const_in_escapee (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_non_const_in_escapee) ... ok
+test_with_overload (numba.tests.test_make_function_to_jit_function.TestMakeFunctionToJITFunction.test_with_overload) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 5.205s
+
+OK (skipped=1)

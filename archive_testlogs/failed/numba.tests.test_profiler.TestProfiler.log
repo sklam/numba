@@ -1,0 +1,19 @@
+Parallel: 3. Serial: 0
+test_issue_3229 (numba.tests.test_profiler.TestProfiler.test_issue_3229) ... ok
+test_profiler (numba.tests.test_profiler.TestProfiler.test_profiler) ... FAIL
+test_profiler_np_dot (numba.tests.test_profiler.TestProfiler.test_profiler_np_dot) ... skipped 'BLAS needs SciPy 1.0+'
+
+======================================================================
+FAIL: test_profiler (numba.tests.test_profiler.TestProfiler.test_profiler)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_profiler.py", line 51, in test_profiler
+    self.check_profiler_dot(dot)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_profiler.py", line 48, in check_profiler_dot
+    self.assertIn(expected_key, stats.stats)
+AssertionError: ('test_profiler.py', 14, 'dot') not found in {('~', 0, "<method 'disable' of '_lsprof.Profiler' objects>"): (1, 1, 6.2327e-05, 6.2327e-05, {})}
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.097s
+
+FAILED (failures=1, skipped=1)

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_check_types (numba.tests.test_np_randomgen.TestHelperFuncs.test_check_types) ... ok
+test_integers_arg_check (numba.tests.test_np_randomgen.TestHelperFuncs.test_integers_arg_check) ... ok
+test_proper_func_provider (numba.tests.test_np_randomgen.TestHelperFuncs.test_proper_func_provider) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.931s
+
+OK

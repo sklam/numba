@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_instcombine_effect (numba.tests.test_vectorization.TestVectorization.test_instcombine_effect) ... ok
+test_nditer_loop (numba.tests.test_vectorization.TestVectorization.test_nditer_loop) ... ok
+test_slp (numba.tests.test_vectorization.TestVectorization.test_slp) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.197s
+
+OK

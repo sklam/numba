@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_issue2921 (numba.tests.test_datamodel.TestMisc.test_issue2921) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.656s
+
+OK

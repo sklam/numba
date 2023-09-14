@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_dict_create_no_jit_using_Dict (numba.tests.test_dictobject.TestNoJit.test_dict_create_no_jit_using_Dict) ... ok
+test_dict_create_no_jit_using_empty (numba.tests.test_dictobject.TestNoJit.test_dict_create_no_jit_using_empty) ... ok
+test_dict_create_no_jit_using_new_dict (numba.tests.test_dictobject.TestNoJit.test_dict_create_no_jit_using_new_dict) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.095s
+
+OK

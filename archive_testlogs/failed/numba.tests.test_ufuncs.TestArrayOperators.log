@@ -1,0 +1,188 @@
+Parallel: 34. Serial: 0
+test_add_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_add_array_op) ... ok
+test_bitwise_and_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_bitwise_and_array_op) ... ok
+test_bitwise_or_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_bitwise_or_array_op) ... ok
+test_bitwise_xor_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_bitwise_xor_array_op) ... ok
+test_divide_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_divide_array_op) ... ok
+test_equal_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_equal_array_op) ... ok
+test_floor_divide_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_floor_divide_array_op) ... ok
+test_greater_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_greater_array_op) ... ok
+test_greater_equal_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_greater_equal_array_op) ... ok
+test_inplace_add (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_add) ... ok
+test_inplace_and (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_and) ... ok
+test_inplace_div (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_div) ... ok
+test_inplace_floordiv (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_floordiv) ... ok
+test_inplace_lshift (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_lshift) ... ok
+test_inplace_mul (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_mul) ... ok
+test_inplace_or (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_or) ... ok
+test_inplace_pow (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_pow) ... ok
+test_inplace_remainder (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_remainder) ... ok
+test_inplace_rshift (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_rshift) ... ok
+test_inplace_sub (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_sub) ... ok
+test_inplace_xor (numba.tests.test_ufuncs.TestArrayOperators.test_inplace_xor) ... ok
+test_left_shift_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_left_shift_array_op) ... ok
+test_less_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_less_array_op) ... ok
+test_less_equal_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_less_equal_array_op) ... ok
+test_multiply_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_multiply_array_op) ... ok
+test_not_equal_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_not_equal_array_op) ... ok
+test_power_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_power_array_op) ... ok
+test_remainder_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_remainder_array_op) ... ok
+test_right_shift_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_right_shift_array_op) ... ok
+test_subtract_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_subtract_array_op) ... ok
+test_unary_invert_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_unary_invert_array_op) ... ok
+test_unary_negative_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_unary_negative_array_op) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+test_unary_positive_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_unary_positive_array_op) ... ERROR
+test_unary_positive_array_op_2 (numba.tests.test_ufuncs.TestArrayOperators.test_unary_positive_array_op_2)
+Verify that the unary positive operator copies values, and doesn't ... ERROR
+
+======================================================================
+ERROR: test_unary_positive_array_op (numba.tests.test_ufuncs.TestArrayOperators.test_unary_positive_array_op)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ufuncs.py", line 1060, in test_unary_positive_array_op
+    self.unary_op_test('+')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ufuncs.py", line 943, in unary_op_test
+    cfunc = self._compile(pyfunc, (input_type,), nrt=nrt)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ufuncs.py", line 131, in _compile
+    return njit(args, _nrt=nrt, no_rewrites=True)(pyfunc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py", line 241, in wrapper
+    disp.compile(sig)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 341, in dispatch
+    fn(state, inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+NotImplementedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+op_CALL_INTRINSIC_1(5)
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+
+======================================================================
+ERROR: test_unary_positive_array_op_2 (numba.tests.test_ufuncs.TestArrayOperators.test_unary_positive_array_op_2)
+Verify that the unary positive operator copies values, and doesn't
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ufuncs.py", line 1150, in test_unary_positive_array_op_2
+    a4 = njit(f)(a3)
+         ^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 487, in _compile_for_args
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 341, in dispatch
+    fn(state, inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+NotImplementedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+op_CALL_INTRINSIC_1(5)
+
+----------------------------------------------------------------------
+Ran 34 tests in 137.522s
+
+FAILED (errors=2)

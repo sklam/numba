@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_list_reverse_empty (numba.tests.test_listobject.TestReverse.test_list_reverse_empty) ... ok
+test_list_reverse_multiple (numba.tests.test_listobject.TestReverse.test_list_reverse_multiple) ... ok
+test_list_reverse_singleton (numba.tests.test_listobject.TestReverse.test_list_reverse_singleton) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.394s
+
+OK

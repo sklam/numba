@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_vendors (numba.tests.test_parallel_backend.TestOpenMPVendors.test_vendors)
+Checks the OpenMP vendor strings are correct ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.110s
+
+OK

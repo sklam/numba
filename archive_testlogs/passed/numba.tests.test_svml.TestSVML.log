@@ -1,0 +1,10 @@
+test_scalar_context (numba.tests.test_svml.TestSVML.test_scalar_context) ... skipped 'SVML tests need SVML to be present'
+test_svml (numba.tests.test_svml.TestSVML.test_svml) ... skipped 'SVML tests need SVML to be present'
+test_svml_disabled (numba.tests.test_svml.TestSVML.test_svml_disabled) ... skipped 'SVML tests need SVML to be present'
+test_svml_working_in_non_isolated_context (numba.tests.test_svml.TestSVML.test_svml_working_in_non_isolated_context) ... skipped 'SVML tests need SVML to be present'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK (skipped=4)
+Parallel: 0. Serial: 4

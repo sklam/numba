@@ -1,0 +1,15 @@
+Parallel: 8. Serial: 0
+test_conjugate (numba.tests.test_complex.TestComplex.test_conjugate) ... ok
+test_conjugate_npm (numba.tests.test_complex.TestComplex.test_conjugate_npm) ... ok
+test_div (numba.tests.test_complex.TestComplex.test_div)
+Test complex.__div__ implementation with non-trivial values. ... ok
+test_div_npm (numba.tests.test_complex.TestComplex.test_div_npm) ... ok
+test_imag (numba.tests.test_complex.TestComplex.test_imag) ... ok
+test_imag_npm (numba.tests.test_complex.TestComplex.test_imag_npm) ... ok
+test_real (numba.tests.test_complex.TestComplex.test_real) ... ok
+test_real_npm (numba.tests.test_complex.TestComplex.test_real_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 7.101s
+
+OK

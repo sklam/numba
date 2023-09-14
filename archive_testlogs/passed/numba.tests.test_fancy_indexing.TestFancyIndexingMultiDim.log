@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_getitem (numba.tests.test_fancy_indexing.TestFancyIndexingMultiDim.test_getitem) ... ok
+test_setitem (numba.tests.test_fancy_indexing.TestFancyIndexingMultiDim.test_setitem) ... ok
+test_unsupported_condition_exceptions (numba.tests.test_fancy_indexing.TestFancyIndexingMultiDim.test_unsupported_condition_exceptions) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 76.451s
+
+OK

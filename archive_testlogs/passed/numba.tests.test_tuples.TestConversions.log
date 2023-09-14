@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_conversions (numba.tests.test_tuples.TestConversions.test_conversions) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.992s
+
+OK

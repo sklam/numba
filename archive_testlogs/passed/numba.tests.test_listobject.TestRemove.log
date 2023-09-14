@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_list_remove_empty (numba.tests.test_listobject.TestRemove.test_list_remove_empty) ... ok
+test_list_remove_multiple (numba.tests.test_listobject.TestRemove.test_list_remove_multiple) ... ok
+test_list_remove_multiple_value_error (numba.tests.test_listobject.TestRemove.test_list_remove_multiple_value_error) ... ok
+test_list_remove_singleton (numba.tests.test_listobject.TestRemove.test_list_remove_singleton) ... ok
+test_list_remove_singleton_value_error (numba.tests.test_listobject.TestRemove.test_list_remove_singleton_value_error) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.446s
+
+OK

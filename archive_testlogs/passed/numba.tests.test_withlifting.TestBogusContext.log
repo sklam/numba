@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_invalid (numba.tests.test_withlifting.TestBogusContext.test_invalid) ... ok
+test_undefined_global (numba.tests.test_withlifting.TestBogusContext.test_undefined_global) ... ok
+test_with_as_fails_gracefully (numba.tests.test_withlifting.TestBogusContext.test_with_as_fails_gracefully) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.390s
+
+OK

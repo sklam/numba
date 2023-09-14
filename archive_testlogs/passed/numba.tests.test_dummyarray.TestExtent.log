@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_extent_1d (numba.tests.test_dummyarray.TestExtent.test_extent_1d) ... ok
+test_extent_2d (numba.tests.test_dummyarray.TestExtent.test_extent_2d) ... ok
+test_extent_iter_1d (numba.tests.test_dummyarray.TestExtent.test_extent_iter_1d) ... ok
+test_extent_iter_2d (numba.tests.test_dummyarray.TestExtent.test_extent_iter_2d) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.278s
+
+OK

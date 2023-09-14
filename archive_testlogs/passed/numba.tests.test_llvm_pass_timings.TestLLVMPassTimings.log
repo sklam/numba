@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_analyze (numba.tests.test_llvm_pass_timings.TestLLVMPassTimings.test_analyze) ... ok
+test_parse_raw (numba.tests.test_llvm_pass_timings.TestLLVMPassTimings.test_parse_raw) ... ok
+test_usage (numba.tests.test_llvm_pass_timings.TestLLVMPassTimings.test_usage) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.685s
+
+OK

@@ -1,0 +1,7 @@
+test_bound_function_error_string (numba.tests.test_errorhandling.TestDeveloperSpecificErrorMessages.test_bound_function_error_string) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.028s
+
+OK
+Parallel: 0. Serial: 1

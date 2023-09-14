@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_write_input_arg (numba.tests.test_ufuncs.TestUfuncWriteInput.test_write_input_arg) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.523s
+
+OK

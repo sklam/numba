@@ -1,0 +1,2212 @@
+Parallel: 7. Serial: 0
+test_01 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_01) ... ERROR
+test_02 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_02) ... ERROR
+test_03 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_03) ... ERROR
+test_04 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_04) ... ERROR
+test_05 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_05) ... ERROR
+test_exceptions_sorted (numba.tests.test_sort.TestSortSlashSortedWithKey.test_exceptions_sorted) ... ok
+test_optional_on_key (numba.tests.test_sort.TestSortSlashSortedWithKey.test_optional_on_key) ... ok
+
+======================================================================
+ERROR: test_01 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_01)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 462, in get_call_type
+    raise errors.TypingError(nested_msg('literal', literal_e) +
+numba.core.errors.TypingError: - Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=none)
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=none)':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1043)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py", line 1046, in test_01
+    self.assertPreciseEqual(foo(a[:]), foo.py_func(a[:]))
+                            ^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+- Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=none)
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=none)':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1043)
+
+
+File "numba/tests/test_sort.py", line 1043:
+        def foo(x, key=None):
+            <source elided>
+            new_x = x[:]
+            new_x.sort(key=key)
+            ^
+
+
+======================================================================
+ERROR: test_02 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_02)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 462, in get_call_type
+    raise errors.TypingError(nested_msg('literal', literal_e) +
+numba.core.errors.TypingError: - Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_key at 0x7f7543d8f880>)))
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_key at 0x7f7543d8f880>)))':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1059)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py", line 1062, in test_02
+    self.assertPreciseEqual(foo(a[:]), foo.py_func(a[:]))
+                            ^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+- Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_key at 0x7f7543d8f880>)))
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_key at 0x7f7543d8f880>)))':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1059)
+
+
+File "numba/tests/test_sort.py", line 1059:
+            def closure_key(z):
+                <source elided>
+            new_x = x[:]
+            new_x.sort(key=closure_key)
+            ^
+
+
+======================================================================
+ERROR: test_03 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_03)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 462, in get_call_type
+    raise errors.TypingError(nested_msg('literal', literal_e) +
+numba.core.errors.TypingError: - Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_escapee_key at 0x7f7543c19120>)))
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_escapee_key at 0x7f7543c19120>)))':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1073)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+    self.dispatcher.get_call_template(args, kws)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+    self.compile(tuple(args))
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+    self.dispatcher.get_call_template(args, kws)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+    self.compile(tuple(args))
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+- Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_escapee_key at 0x7f7543c19120>)))
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_escapee_key at 0x7f7543c19120>)))':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1073)
+
+
+File "numba/tests/test_sort.py", line 1073:
+            def bar(x, func):
+                <source elided>
+                new_x = x[:]
+                new_x.sort(key=func)
+                ^
+
+During: resolving callee type: type(CPUDispatcher(<function TestSortSlashSortedWithKey.test_03.<locals>.gen.<locals>.bar at 0x7f7543d468e0>))
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1080)
+
+During: resolving callee type: type(CPUDispatcher(<function TestSortSlashSortedWithKey.test_03.<locals>.gen.<locals>.bar at 0x7f7543d468e0>))
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1080)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py", line 1084, in test_03
+    self.assertPreciseEqual(gen(njit)(a[:]), gen(nop_compiler)(a[:]))
+                            ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+Failed in nopython mode pipeline (step: nopython frontend)
+- Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_escapee_key at 0x7f7543c19120>)))
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(int64)<iv=None>, key=type(CPUDispatcher(<function closure.<locals>.closure_escapee_key at 0x7f7543c19120>)))':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(int64)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1073)
+
+
+File "numba/tests/test_sort.py", line 1073:
+            def bar(x, func):
+                <source elided>
+                new_x = x[:]
+                new_x.sort(key=func)
+                ^
+
+During: resolving callee type: type(CPUDispatcher(<function TestSortSlashSortedWithKey.test_03.<locals>.gen.<locals>.bar at 0x7f7543d468e0>))
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1080)
+
+During: resolving callee type: type(CPUDispatcher(<function TestSortSlashSortedWithKey.test_03.<locals>.gen.<locals>.bar at 0x7f7543d468e0>))
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1080)
+
+
+File "numba/tests/test_sort.py", line 1080:
+                def closure_escapee_key(z):
+                    <source elided>
+                    return 1. / z
+                return bar(x, closure_escapee_key)
+                ^
+
+
+======================================================================
+ERROR: test_04 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_04)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 462, in get_call_type
+    raise errors.TypingError(nested_msg('literal', literal_e) +
+numba.core.errors.TypingError: - Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(unicode_type)<iv=None>, key=none)
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(unicode_type)<iv=None>, key=none)':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(unicode_type)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1097)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py", line 1100, in test_04
+    self.assertPreciseEqual(foo(a[:]), foo.py_func(a[:]))
+                            ^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+- Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(unicode_type)<iv=None>, key=none)
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(unicode_type)<iv=None>, key=none)':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(unicode_type)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1097)
+
+
+File "numba/tests/test_sort.py", line 1097:
+        def foo(x, key=None):
+            <source elided>
+            new_x = x[:]
+            new_x.sort(key=key)
+            ^
+
+
+======================================================================
+ERROR: test_05 (numba.tests.test_sort.TestSortSlashSortedWithKey.test_05)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 462, in get_call_type
+    raise errors.TypingError(nested_msg('literal', literal_e) +
+numba.core.errors.TypingError: - Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(unicode_type)<iv=None>, key=none, reverse=bool)
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(unicode_type)<iv=None>, key=none, reverse=bool)':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(unicode_type)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1115)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py", line 1120, in test_05
+    self.assertPreciseEqual(foo(a[:], key, rev),
+                            ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+- Resolution failure for literal arguments:
+No implementation of function Function(<function ol_list_sort at 0x7f754427e020>) found for signature:
+
+ >>> ol_list_sort(reflected list(unicode_type)<iv=None>, key=none, reverse=bool)
+
+There are 2 candidate implementations:
+      - Of which 2 did not match due to:
+      Overload in function 'ol_list_sort': File: numba/cpython/listobj.py: Line 1081.
+        With argument(s): '(reflected list(unicode_type)<iv=None>, key=none, reverse=bool)':
+       Rejected as the implementation raised a specific error:
+         NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+
+       File "numba/cpython/listobj.py", line 1098:
+           def impl(lst, key=None, reverse=False):
+               <source elided>
+               if KEY is True:
+                   _lst = [key(x) for x in lst]
+                   ^
+
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+               return self._con[name]
+                      ~~~~~~~~~^^^^^^
+           KeyError: 'x'
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+               return fn(inst, **kws)
+                      ^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+               self.store(value=self.get(srcname), name=res)
+                                ^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+               var = self.current_scope.get(name)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+               return self.parent.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+               return self.get_exact(name)
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+               return self.localvars.get(name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+               raise NotDefinedError(name)
+           numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           During handling of the above exception, another exception occurred:
+           Traceback (most recent call last):
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+               sig = temp.apply(nolitargs, nolitkws)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+               sig = generic(args, kws)
+                     ^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+               disp, new_args = self._get_impl(args, kws)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+               impl, args = self._build_impl(cache_key, args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+               disp_type.get_call_type(self.context, args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+               self.dispatcher.get_call_template(args, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+               self.compile(tuple(args))
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+               cres = self._compiler.compile(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+               status, retval = self._compile_cached(args, return_type)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+               retval = self._compile_core(args, return_type)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+               cres = compiler.compile_extra(self.targetdescr.typing_context,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+               return pipeline.compile_extra(func)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+               return self._compile_bytecode()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+               return self._compile_core()
+                      ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+               raise e
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+               pm.run(self.state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+               raise patched_exception
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+               self._runPass(idx, pass_inst, state)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+               return func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+               mutated |= check(pss.run_pass, internal_state)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+               mangled = func(compiler_state)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+               func_ir = interp.interpret(bc)
+                         ^^^^^^^^^^^^^^^^^^^^
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+               self._dispatch(inst, kws)
+             File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+               raise err
+           numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+           The compiler failed to analyze the bytecode. Variable 'x' is not defined.
+           File "numba/cpython/listobj.py", line 1098:
+               def impl(lst, key=None, reverse=False):
+                   <source elided>
+                   if KEY is True:
+                       _lst = [key(x) for x in lst]
+                       ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py:1794
+
+- Resolution failure for non-literal arguments:
+None
+
+During: resolving callee type: BoundFunction((<class 'numba.core.types.containers.List'>, 'sort') for reflected list(unicode_type)<iv=None>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_sort.py (1115)
+
+
+File "numba/tests/test_sort.py", line 1115:
+        def foo(x, key=None, reverse=False):
+            <source elided>
+            new_x = x[:]
+            new_x.sort(key=key, reverse=reverse)
+            ^
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.824s
+
+FAILED (errors=5)

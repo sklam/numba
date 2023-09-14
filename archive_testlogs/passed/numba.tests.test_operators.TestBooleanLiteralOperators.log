@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_bool (numba.tests.test_operators.TestBooleanLiteralOperators.test_bool) ... ok
+test_bool_to_str (numba.tests.test_operators.TestBooleanLiteralOperators.test_bool_to_str) ... ok
+test_eq (numba.tests.test_operators.TestBooleanLiteralOperators.test_eq) ... ok
+test_is (numba.tests.test_operators.TestBooleanLiteralOperators.test_is) ... ok
+test_ne (numba.tests.test_operators.TestBooleanLiteralOperators.test_ne) ... ok
+test_not (numba.tests.test_operators.TestBooleanLiteralOperators.test_not) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.542s
+
+OK

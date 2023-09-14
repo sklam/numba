@@ -1,0 +1,21 @@
+Parallel: 8. Serial: 0
+test_cmp_op (numba.tests.test_array_exprs.TestArrayExpressions.test_cmp_op)
+Verify that comparison operators are supported by the rewriter. ... ok
+test_common_subexpressions (numba.tests.test_array_exprs.TestArrayExpressions.test_common_subexpressions)
+Attempt to verify that rewriting will incorporate user common ... ok
+test_complex_subexpression (numba.tests.test_array_exprs.TestArrayExpressions.test_complex_subexpression) ... ok
+test_complicated_expr (numba.tests.test_array_exprs.TestArrayExpressions.test_complicated_expr)
+Using the polynomial root function, ensure the full expression is ... ok
+test_explicit_output (numba.tests.test_array_exprs.TestArrayExpressions.test_explicit_output)
+Check that ufunc calls with explicit outputs are not rewritten. ... ok
+test_simple_expr (numba.tests.test_array_exprs.TestArrayExpressions.test_simple_expr)
+Using a simple array expression, verify that rewriting is taking ... ok
+test_trivial_expr (numba.tests.test_array_exprs.TestArrayExpressions.test_trivial_expr)
+Ensure even a non-nested expression is rewritten, as it can enable ... ok
+test_ufunc_and_dufunc_calls (numba.tests.test_array_exprs.TestArrayExpressions.test_ufunc_and_dufunc_calls)
+Verify that ufunc and DUFunc calls are being properly included in ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 8.610s
+
+OK

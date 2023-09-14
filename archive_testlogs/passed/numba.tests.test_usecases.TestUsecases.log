@@ -1,0 +1,19 @@
+Parallel: 13. Serial: 0
+test_andor (numba.tests.test_usecases.TestUsecases.test_andor) ... ok
+test_blackscholes_cnd (numba.tests.test_usecases.TestUsecases.test_blackscholes_cnd) ... ok
+test_copy_arrays (numba.tests.test_usecases.TestUsecases.test_copy_arrays) ... ok
+test_copy_arrays2d (numba.tests.test_usecases.TestUsecases.test_copy_arrays2d) ... ok
+test_string_comparisons (numba.tests.test_usecases.TestUsecases.test_string_comparisons) ... ok
+test_string_concat (numba.tests.test_usecases.TestUsecases.test_string_concat) ... ok
+test_string_conversion (numba.tests.test_usecases.TestUsecases.test_string_conversion) ... ok
+test_string_len (numba.tests.test_usecases.TestUsecases.test_string_len) ... ok
+test_string_slicing (numba.tests.test_usecases.TestUsecases.test_string_slicing) ... ok
+test_sum1d (numba.tests.test_usecases.TestUsecases.test_sum1d) ... ok
+test_sum1d_pyobj (numba.tests.test_usecases.TestUsecases.test_sum1d_pyobj) ... ok
+test_sum2d (numba.tests.test_usecases.TestUsecases.test_sum2d) ... ok
+test_while_count (numba.tests.test_usecases.TestUsecases.test_while_count) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 8.428s
+
+OK

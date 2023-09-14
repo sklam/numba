@@ -1,0 +1,151 @@
+Parallel: 13. Serial: 0
+test_conditionally_defined_in_loop (numba.tests.test_looplifting.TestLoopLiftingInAction.test_conditionally_defined_in_loop) ... ok
+test_define_in_loop_body (numba.tests.test_looplifting.TestLoopLiftingInAction.test_define_in_loop_body) ... ok
+test_invalid_argument (numba.tests.test_looplifting.TestLoopLiftingInAction.test_invalid_argument)
+Test a problem caused by invalid discovery of loop argument ... ok
+test_issue_2368 (numba.tests.test_looplifting.TestLoopLiftingInAction.test_issue_2368) ... ok
+test_issue_734 (numba.tests.test_looplifting.TestLoopLiftingInAction.test_issue_734) ... ok
+test_issue_812 (numba.tests.test_looplifting.TestLoopLiftingInAction.test_issue_812) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:573: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit()(foo)
+test_lift_listcomp_block0 (numba.tests.test_looplifting.TestLoopLiftingInAction.test_lift_listcomp_block0) ... ERROR
+test_lift_objectmode_issue_4223 (numba.tests.test_looplifting.TestLoopLiftingInAction.test_lift_objectmode_issue_4223) ... ok
+test_no_iteration (numba.tests.test_looplifting.TestLoopLiftingInAction.test_no_iteration) ... ok
+test_no_iteration_w_redef (numba.tests.test_looplifting.TestLoopLiftingInAction.test_no_iteration_w_redef) ... ok
+test_recompilation_loop (numba.tests.test_looplifting.TestLoopLiftingInAction.test_recompilation_loop)
+https://github.com/numba/numba/issues/2481 ... ok
+test_stack_offset_error_when_has_no_return (numba.tests.test_looplifting.TestLoopLiftingInAction.test_stack_offset_error_when_has_no_return) ... ok
+test_variable_scope_bug (numba.tests.test_looplifting.TestLoopLiftingInAction.test_variable_scope_bug)
+https://github.com/numba/numba/issues/2179 ... ok
+
+======================================================================
+ERROR: test_lift_listcomp_block0 (numba.tests.test_looplifting.TestLoopLiftingInAction.test_lift_listcomp_block0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 'y'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'y' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 'y'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+    return fn(inst, **kws)
+           ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+    self.store(value=self.get(srcname), name=res)
+                     ^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+    var = self.current_scope.get(name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+    return self.parent.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'y' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py", line 574, in test_lift_listcomp_block0
+    f(1)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 476, in _compile_for_args
+    error_rewrite(e, 'interpreter')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+    self._dispatch(inst, kws)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+    raise err
+numba.core.errors.NotDefinedError: Failed in object mode pipeline (step: analyzing bytecode)
+The compiler failed to analyze the bytecode. Variable 'y' is not defined.
+
+File "numba/tests/test_looplifting.py", line 559:
+        def foo(X):
+            [y for y in (1,)]
+            ^
+
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:573: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  f = jit()(foo)
+
+----------------------------------------------------------------------
+Ran 13 tests in 10.117s
+
+FAILED (errors=1)

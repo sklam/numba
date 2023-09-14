@@ -1,0 +1,127 @@
+Parallel: 5. Serial: 0
+test_lift1 (numba.tests.test_withlifting.TestLiftByPass.test_lift1) ... ok
+test_lift2 (numba.tests.test_withlifting.TestLiftByPass.test_lift2) ... ok
+test_lift3 (numba.tests.test_withlifting.TestLiftByPass.test_lift3) ... ERROR
+test_lift4 (numba.tests.test_withlifting.TestLiftByPass.test_lift4) ... ERROR
+test_lift5 (numba.tests.test_withlifting.TestLiftByPass.test_lift5) ... ok
+
+======================================================================
+ERROR: test_lift3 (numba.tests.test_withlifting.TestLiftByPass.test_lift3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 237, in test_lift3
+    self.check_extracted_with(lift3, expect_count=1,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 209, in check_extracted_with
+    cres = self.compile_ir(new_ir)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 222, in compile_ir
+    return compile_ir(typingctx, targetctx, the_ir, args,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 833, in compile_ir
+    return pipeline.compile_ir(func_ir=func_ir, lifted=lifted,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 471, in compile_ir
+    return self._compile_ir()
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 536, in _compile_ir
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+    infer.build_constraint()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+    self.constrain_statement(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1413, in constrain_statement
+    raise UnsupportedError(msg, loc=inst.loc)
+numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+Unsupported constraint encountered: enter_with $phi48.0
+
+File "numba/tests/test_withlifting.py", line 67:
+def lift3():
+    <source elided>
+    print("A", x, y)
+    with bypass_context:
+    ^
+
+
+======================================================================
+ERROR: test_lift4 (numba.tests.test_withlifting.TestLiftByPass.test_lift4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 241, in test_lift4
+    self.check_extracted_with(lift4, expect_count=2,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 209, in check_extracted_with
+    cres = self.compile_ir(new_ir)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 222, in compile_ir
+    return compile_ir(typingctx, targetctx, the_ir, args,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 833, in compile_ir
+    return pipeline.compile_ir(func_ir=func_ir, lifted=lifted,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 471, in compile_ir
+    return self._compile_ir()
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 536, in _compile_ir
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+    infer.build_constraint()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+    self.constrain_statement(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1413, in constrain_statement
+    raise UnsupportedError(msg, loc=inst.loc)
+numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+Unsupported constraint encountered: enter_with $phi52.0
+
+File "numba/tests/test_withlifting.py", line 84:
+def lift4():
+    <source elided>
+    x += 10
+    with bypass_context:
+    ^
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.967s
+
+FAILED (errors=2)

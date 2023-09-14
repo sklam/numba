@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_dict_iterator (numba.tests.test_dictobject.TestDictIterator.test_dict_iterator) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.176s
+
+OK

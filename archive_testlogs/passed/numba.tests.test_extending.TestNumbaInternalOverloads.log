@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_signatures_match_overloaded_api (numba.tests.test_extending.TestNumbaInternalOverloads.test_signatures_match_overloaded_api) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.571s
+
+OK

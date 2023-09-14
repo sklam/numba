@@ -1,0 +1,13 @@
+Parallel: 4. Serial: 0
+test_omp_stack_overflow (numba.tests.test_parallel_backend.TestMiscBackendIssues.test_omp_stack_overflow)
+Tests that OMP does not overflow stack ... ok
+test_single_thread_tbb (numba.tests.test_parallel_backend.TestMiscBackendIssues.test_single_thread_tbb)
+Tests that TBB works well with single thread ... skipped 'TBB threadpool required'
+test_workqueue_aborts_on_nested_parallelism (numba.tests.test_parallel_backend.TestMiscBackendIssues.test_workqueue_aborts_on_nested_parallelism)
+Tests workqueue raises sigabrt if a nested parallel call is performed ... ok
+test_workqueue_handles_fork_from_non_main_thread (numba.tests.test_parallel_backend.TestMiscBackendIssues.test_workqueue_handles_fork_from_non_main_thread) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 9.451s
+
+OK (skipped=1)

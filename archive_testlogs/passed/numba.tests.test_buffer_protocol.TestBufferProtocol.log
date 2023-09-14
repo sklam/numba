@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_getitem (numba.tests.test_buffer_protocol.TestBufferProtocol.test_getitem) ... ok
+test_getslice (numba.tests.test_buffer_protocol.TestBufferProtocol.test_getslice) ... ok
+test_iter (numba.tests.test_buffer_protocol.TestBufferProtocol.test_iter) ... ok
+test_len (numba.tests.test_buffer_protocol.TestBufferProtocol.test_len) ... ok
+test_setitem (numba.tests.test_buffer_protocol.TestBufferProtocol.test_setitem) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 8.460s
+
+OK

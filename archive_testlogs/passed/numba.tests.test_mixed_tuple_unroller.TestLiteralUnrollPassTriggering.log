@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_literal_unroll_assess_empty_function (numba.tests.test_mixed_tuple_unroller.TestLiteralUnrollPassTriggering.test_literal_unroll_assess_empty_function) ... ok
+test_literal_unroll_globals_and_locals (numba.tests.test_mixed_tuple_unroller.TestLiteralUnrollPassTriggering.test_literal_unroll_globals_and_locals) ... ok
+test_literal_unroll_is_invoked (numba.tests.test_mixed_tuple_unroller.TestLiteralUnrollPassTriggering.test_literal_unroll_is_invoked) ... ok
+test_literal_unroll_is_invoked_via_alias (numba.tests.test_mixed_tuple_unroller.TestLiteralUnrollPassTriggering.test_literal_unroll_is_invoked_via_alias) ... ok
+test_literal_unroll_not_in_globals (numba.tests.test_mixed_tuple_unroller.TestLiteralUnrollPassTriggering.test_literal_unroll_not_in_globals) ... ok
+test_literal_unroll_not_invoked (numba.tests.test_mixed_tuple_unroller.TestLiteralUnrollPassTriggering.test_literal_unroll_not_invoked) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.735s
+
+OK

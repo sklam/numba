@@ -1,0 +1,39 @@
+Parallel: 17. Serial: 0
+test_experimental_feature_warning (numba.tests.test_function_type.TestFunctionType.test_experimental_feature_warning) ... ok
+test_in__ (numba.tests.test_function_type.TestFunctionType.test_in__)
+Function is passed in as an argument. ... ok
+test_in_call__ (numba.tests.test_function_type.TestFunctionType.test_in_call__)
+Function is passed in as an argument and called. ... ok
+test_in_call_out (numba.tests.test_function_type.TestFunctionType.test_in_call_out)
+Function is passed in as an argument, called, and returned. ... ok
+test_in_choose (numba.tests.test_function_type.TestFunctionType.test_in_choose)
+Functions are passed in as arguments and called conditionally. ... ok
+test_in_choose_func_value (numba.tests.test_function_type.TestFunctionType.test_in_choose_func_value)
+Functions are passed in as arguments, selected conditionally and ... ok
+test_in_choose_out (numba.tests.test_function_type.TestFunctionType.test_in_choose_out)
+Functions are passed in as arguments and returned conditionally. ... ok
+test_in_iter_func_call (numba.tests.test_function_type.TestFunctionType.test_in_iter_func_call)
+Functions are passed in as items of tuple argument, retrieved via ... ok
+test_in_ns_seq_call (numba.tests.test_function_type.TestFunctionType.test_in_ns_seq_call)
+Functions are passed in as an argument and via namespace scoping ... ok
+test_in_overload (numba.tests.test_function_type.TestFunctionType.test_in_overload)
+Function is passed in as an argument and called with different ... ok
+test_in_pick_func_call (numba.tests.test_function_type.TestFunctionType.test_in_pick_func_call)
+Functions are passed in as items of tuple argument, retrieved via ... ok
+test_in_seq_call (numba.tests.test_function_type.TestFunctionType.test_in_seq_call)
+Functions are passed in as arguments, used as tuple items, and ... ok
+test_ns_call (numba.tests.test_function_type.TestFunctionType.test_ns_call)
+Function is passed in via namespace scoping and called. ... ok
+test_ns_call_out (numba.tests.test_function_type.TestFunctionType.test_ns_call_out)
+Function is passed in via namespace scoping, called, and then ... ok
+test_ns_choose (numba.tests.test_function_type.TestFunctionType.test_ns_choose)
+Functions are passed in via namespace scoping and called ... ok
+test_ns_out (numba.tests.test_function_type.TestFunctionType.test_ns_out)
+Function is passed in via namespace scoping and returned. ... ok
+test_ns_overload (numba.tests.test_function_type.TestFunctionType.test_ns_overload)
+Function is passed in via namespace scoping and called with ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 28.239s
+
+OK

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_cpu_vs_parallel (numba.tests.test_dispatcher.TestVectorizeDifferentTargets.test_cpu_vs_parallel) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.287s
+
+OK

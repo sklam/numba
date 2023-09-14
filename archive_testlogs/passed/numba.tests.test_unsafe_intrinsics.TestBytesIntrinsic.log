@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_memcpy_region (numba.tests.test_unsafe_intrinsics.TestBytesIntrinsic.test_memcpy_region) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.509s
+
+OK

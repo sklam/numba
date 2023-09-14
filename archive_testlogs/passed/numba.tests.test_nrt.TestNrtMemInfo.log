@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_allocate_invalid_size (numba.tests.test_nrt.TestNrtMemInfo.test_allocate_invalid_size) ... ok
+test_allocate_negative_size (numba.tests.test_nrt.TestNrtMemInfo.test_allocate_negative_size) ... ok
+test_buffer (numba.tests.test_nrt.TestNrtMemInfo.test_buffer) ... ok
+test_fake_memoryview (numba.tests.test_nrt.TestNrtMemInfo.test_fake_memoryview) ... ok
+test_meminfo_refct_1 (numba.tests.test_nrt.TestNrtMemInfo.test_meminfo_refct_1) ... ok
+test_meminfo_refct_2 (numba.tests.test_nrt.TestNrtMemInfo.test_meminfo_refct_2) ... ok
+test_memoryview (numba.tests.test_nrt.TestNrtMemInfo.test_memoryview) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.219s
+
+OK

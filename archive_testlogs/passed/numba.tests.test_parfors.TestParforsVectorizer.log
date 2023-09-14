@@ -1,0 +1,12 @@
+test_signed_vs_unsigned_vec_asm (numba.tests.test_parfors.TestParforsVectorizer.test_signed_vs_unsigned_vec_asm)
+This checks vectorization for signed vs unsigned variants of a ... skipped 'needs subprocess harness'
+test_unsigned_refusal_to_vectorize (numba.tests.test_parfors.TestParforsVectorizer.test_unsigned_refusal_to_vectorize)
+This checks that if fastmath is set and the underlying hardware ... skipped 'needs subprocess harness'
+test_vectorizer_fastmath_asm (numba.tests.test_parfors.TestParforsVectorizer.test_vectorizer_fastmath_asm)
+This checks that if fastmath is set and the underlying hardware ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK (skipped=3)
+Parallel: 0. Serial: 3

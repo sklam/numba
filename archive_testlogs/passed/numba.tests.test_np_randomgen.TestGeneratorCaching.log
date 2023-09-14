@@ -1,0 +1,7 @@
+test_randomgen_caching (numba.tests.test_np_randomgen.TestGeneratorCaching.test_randomgen_caching) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.621s
+
+OK
+Parallel: 0. Serial: 1

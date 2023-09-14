@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_literally_usage (numba.tests.doc_examples.test_literally_usage.DocsLiterallyUsageTest.test_literally_usage) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.266s
+
+OK

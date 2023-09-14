@@ -1,0 +1,10 @@
+test_error_in_overload (numba.tests.test_errorhandling.TestCapturedErrorHandling.test_error_in_overload) ... ok
+test_new_style_no_warnings (numba.tests.test_errorhandling.TestCapturedErrorHandling.test_new_style_no_warnings) ... ok
+test_old_style_deprecation (numba.tests.test_errorhandling.TestCapturedErrorHandling.test_old_style_deprecation) ... ok
+test_old_style_no_deprecation (numba.tests.test_errorhandling.TestCapturedErrorHandling.test_old_style_no_deprecation) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 4.393s
+
+OK
+Parallel: 0. Serial: 4

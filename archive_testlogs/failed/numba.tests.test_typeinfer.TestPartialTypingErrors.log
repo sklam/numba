@@ -1,0 +1,31 @@
+Parallel: 1. Serial: 0
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_typeinfer.py:827: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/site-packages/numpy/__init__.py", line 328, in __getattr__
+    raise AttributeError("module {!r} has no attribute "
+
+  a = str(1)
+test_partial_typing_error (numba.tests.test_typeinfer.TestPartialTypingErrors.test_partial_typing_error) ... FAIL
+
+======================================================================
+FAIL: test_partial_typing_error (numba.tests.test_typeinfer.TestPartialTypingErrors.test_partial_typing_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_typeinfer.py", line 832, in test_partial_typing_error
+    self.assertTrue(isinstance(typing_errs[0], errors.TypingError) and
+AssertionError: False is not true
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_typeinfer.py:827: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/site-packages/numpy/__init__.py", line 328, in __getattr__
+    raise AttributeError("module {!r} has no attribute "
+
+  a = str(1)
+
+----------------------------------------------------------------------
+Ran 1 test in 98.039s
+
+FAILED (failures=1)

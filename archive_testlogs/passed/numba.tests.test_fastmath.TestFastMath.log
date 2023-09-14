@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_guvectorize (numba.tests.test_fastmath.TestFastMath.test_guvectorize) ... ok
+test_jit (numba.tests.test_fastmath.TestFastMath.test_jit) ... ok
+test_jit_subset_behaviour (numba.tests.test_fastmath.TestFastMath.test_jit_subset_behaviour) ... ok
+test_jit_subset_code (numba.tests.test_fastmath.TestFastMath.test_jit_subset_code) ... ok
+test_jit_subset_errors (numba.tests.test_fastmath.TestFastMath.test_jit_subset_errors) ... ok
+test_vectorize (numba.tests.test_fastmath.TestFastMath.test_vectorize) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.144s
+
+OK

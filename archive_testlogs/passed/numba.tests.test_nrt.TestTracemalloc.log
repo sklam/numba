@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_snapshot (numba.tests.test_nrt.TestTracemalloc.test_snapshot) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.672s
+
+OK

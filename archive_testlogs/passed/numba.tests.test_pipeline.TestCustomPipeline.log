@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_cfunc_custom_pipeline (numba.tests.test_pipeline.TestCustomPipeline.test_cfunc_custom_pipeline) ... ok
+test_generated_jit_custom_pipeline (numba.tests.test_pipeline.TestCustomPipeline.test_generated_jit_custom_pipeline) ... ok
+test_jit_custom_pipeline (numba.tests.test_pipeline.TestCustomPipeline.test_jit_custom_pipeline) ... ok
+test_objmode_custom_pipeline (numba.tests.test_pipeline.TestCustomPipeline.test_objmode_custom_pipeline) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.766s
+
+OK

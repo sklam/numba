@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_int_return_type (numba.tests.test_python_int.TestPythonInt.test_int_return_type) ... ok
+test_int_return_type_npm (numba.tests.test_python_int.TestPythonInt.test_int_return_type_npm) ... ok
+test_long_int_return_type (numba.tests.test_python_int.TestPythonInt.test_long_int_return_type) ... ok
+test_long_int_return_type_npm (numba.tests.test_python_int.TestPythonInt.test_long_int_return_type_npm) ... ok
+test_longer_int_return_type (numba.tests.test_python_int.TestPythonInt.test_longer_int_return_type) ... ok
+test_unsigned_int_return_type (numba.tests.test_python_int.TestPythonInt.test_unsigned_int_return_type) ... ok
+test_unsigned_int_return_type_npm (numba.tests.test_python_int.TestPythonInt.test_unsigned_int_return_type_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.287s
+
+OK

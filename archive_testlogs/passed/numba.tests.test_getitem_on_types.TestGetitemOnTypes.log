@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_shorthand_syntax (numba.tests.test_getitem_on_types.TestGetitemOnTypes.test_shorthand_syntax) ... ok
+test_standard_getitem_on_type (numba.tests.test_getitem_on_types.TestGetitemOnTypes.test_standard_getitem_on_type) ... ok
+test_static_getitem_on_invalid_type (numba.tests.test_getitem_on_types.TestGetitemOnTypes.test_static_getitem_on_invalid_type) ... ok
+test_static_getitem_on_type (numba.tests.test_getitem_on_types.TestGetitemOnTypes.test_static_getitem_on_type) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 12.850s
+
+OK

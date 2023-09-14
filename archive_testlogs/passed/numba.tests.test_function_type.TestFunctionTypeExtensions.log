@@ -1,0 +1,10 @@
+Parallel: 2. Serial: 0
+test_compilation_results (numba.tests.test_function_type.TestFunctionTypeExtensions.test_compilation_results)
+Turn the existing compilation results of a dispatcher instance to ... ok
+test_wrapper_address_protocol_libm (numba.tests.test_function_type.TestFunctionTypeExtensions.test_wrapper_address_protocol_libm)
+Call cos and sinf from standard math library. ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.065s
+
+OK

@@ -1,0 +1,14 @@
+Parallel: 4. Serial: 0
+test_carray (numba.tests.test_cfunc.TestCArray.test_carray)
+Test pure Python carray(). ... ok
+test_farray (numba.tests.test_cfunc.TestCArray.test_farray)
+Test pure Python farray(). ... ok
+test_numba_carray (numba.tests.test_cfunc.TestCArray.test_numba_carray)
+Test Numba-compiled carray() against pure Python carray() ... ok
+test_numba_farray (numba.tests.test_cfunc.TestCArray.test_numba_farray)
+Test Numba-compiled farray() against pure Python farray() ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 12.138s
+
+OK

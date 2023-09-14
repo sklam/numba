@@ -1,0 +1,12 @@
+Parallel: 4. Serial: 0
+test1 (numba.tests.test_copy_propagate.TestCopyPropagate.test1) ... ok
+test2 (numba.tests.test_copy_propagate.TestCopyPropagate.test2) ... ok
+test_input_ir_copy_remove_transform (numba.tests.test_copy_propagate.TestCopyPropagate.test_input_ir_copy_remove_transform)
+make sure Interpreter._remove_unused_temporaries() does not generate ... ok
+test_input_ir_extra_copies (numba.tests.test_copy_propagate.TestCopyPropagate.test_input_ir_extra_copies)
+make sure Interpreter._remove_unused_temporaries() has removed extra copies ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.891s
+
+OK

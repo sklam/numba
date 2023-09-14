@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test (numba.tests.gdb.test_basic.Test.test) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.171s
+
+OK (skipped=1)

@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_mangling_abi_tags (numba.tests.test_funcdesc.TestFuncDescMangledName.test_mangling_abi_tags)
+This is a minimal test for the abi-tags support in the mangler. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.187s
+
+OK

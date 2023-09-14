@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_call_by_name (numba.tests.test_random.TestNumPyRandomAPI.test_call_by_name) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 21.540s
+
+OK

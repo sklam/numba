@@ -1,0 +1,11 @@
+Parallel: 4. Serial: 0
+test_bitwidth (numba.tests.test_types.TestNumbers.test_bitwidth)
+All numeric types have bitwidth attribute ... ok
+test_from_bidwidth (numba.tests.test_types.TestNumbers.test_from_bidwidth) ... ok
+test_minval_maxval (numba.tests.test_types.TestNumbers.test_minval_maxval) ... ok
+test_ordering (numba.tests.test_types.TestNumbers.test_ordering) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.209s
+
+OK

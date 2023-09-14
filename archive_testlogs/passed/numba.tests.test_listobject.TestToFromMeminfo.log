@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_list_to_from_meminfo (numba.tests.test_listobject.TestToFromMeminfo.test_list_to_from_meminfo)
+Exercise listobject.{_as_meminfo, _from_meminfo} ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.279s
+
+OK

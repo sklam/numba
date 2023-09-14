@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_datetime (numba.tests.test_npdatetime.TestMetadataScalingFactor.test_datetime) ... ok
+test_datetime_npm (numba.tests.test_npdatetime.TestMetadataScalingFactor.test_datetime_npm) ... ok
+test_timedelta (numba.tests.test_npdatetime.TestMetadataScalingFactor.test_timedelta) ... ok
+test_timedelta_npm (numba.tests.test_npdatetime.TestMetadataScalingFactor.test_timedelta_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.551s
+
+OK

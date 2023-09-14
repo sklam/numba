@@ -1,0 +1,21 @@
+Parallel: 8. Serial: 0
+test_contiguity_warnings (numba.tests.test_linalg.TestProduct.test_contiguity_warnings) ... skipped 'BLAS needs SciPy 1.0+'
+test_dot_mm (numba.tests.test_linalg.TestProduct.test_dot_mm)
+Test matrix * matrix np.dot() ... skipped 'BLAS needs SciPy 1.0+'
+test_dot_vm (numba.tests.test_linalg.TestProduct.test_dot_vm)
+Test vector * matrix and matrix * vector np.dot() ... skipped 'BLAS needs SciPy 1.0+'
+test_dot_vv (numba.tests.test_linalg.TestProduct.test_dot_vv)
+Test vector * vector np.dot() ... skipped 'BLAS needs SciPy 1.0+'
+test_matmul_mm (numba.tests.test_linalg.TestProduct.test_matmul_mm)
+Test matrix @ matrix ... skipped 'BLAS needs SciPy 1.0+'
+test_matmul_vm (numba.tests.test_linalg.TestProduct.test_matmul_vm)
+Test vector @ matrix and matrix @ vector ... skipped 'BLAS needs SciPy 1.0+'
+test_matmul_vv (numba.tests.test_linalg.TestProduct.test_matmul_vv)
+Test vector @ vector ... skipped 'BLAS needs SciPy 1.0+'
+test_vdot (numba.tests.test_linalg.TestProduct.test_vdot)
+Test np.vdot() ... skipped 'BLAS needs SciPy 1.0+'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.124s
+
+OK (skipped=8)

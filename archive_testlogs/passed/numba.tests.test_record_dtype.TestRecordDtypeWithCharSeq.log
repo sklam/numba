@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_npm_argument_charseq (numba.tests.test_record_dtype.TestRecordDtypeWithCharSeq.test_npm_argument_charseq) ... ok
+test_py_argument_char_seq_near_overflow (numba.tests.test_record_dtype.TestRecordDtypeWithCharSeq.test_py_argument_char_seq_near_overflow) ... ok
+test_py_argument_char_seq_truncate (numba.tests.test_record_dtype.TestRecordDtypeWithCharSeq.test_py_argument_char_seq_truncate) ... ok
+test_py_argument_charseq (numba.tests.test_record_dtype.TestRecordDtypeWithCharSeq.test_py_argument_charseq) ... ok
+test_return_charseq (numba.tests.test_record_dtype.TestRecordDtypeWithCharSeq.test_return_charseq) ... ok
+test_return_charseq_tuple (numba.tests.test_record_dtype.TestRecordDtypeWithCharSeq.test_return_charseq_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.425s
+
+OK

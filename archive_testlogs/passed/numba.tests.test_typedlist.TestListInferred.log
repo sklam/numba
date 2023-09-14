@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_refine_extend_list (numba.tests.test_typedlist.TestListInferred.test_refine_extend_list) ... ok
+test_refine_extend_set (numba.tests.test_typedlist.TestListInferred.test_refine_extend_set) ... ok
+test_refine_list_extend_iter (numba.tests.test_typedlist.TestListInferred.test_refine_list_extend_iter) ... ok
+test_simple_refine_append (numba.tests.test_typedlist.TestListInferred.test_simple_refine_append) ... ok
+test_simple_refine_insert (numba.tests.test_typedlist.TestListInferred.test_simple_refine_insert) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.262s
+
+OK

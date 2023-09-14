@@ -1,0 +1,8 @@
+test_multiple_reduction_vars (numba.tests.test_parfors.TestParforsLeaks.test_multiple_reduction_vars) ... skipped 'needs subprocess harness'
+test_reduction (numba.tests.test_parfors.TestParforsLeaks.test_reduction) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK (skipped=2)
+Parallel: 0. Serial: 2

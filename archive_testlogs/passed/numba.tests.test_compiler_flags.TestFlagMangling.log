@@ -1,0 +1,11 @@
+Parallel: 4. Serial: 0
+test_demangle (numba.tests.test_compiler_flags.TestFlagMangling.test_demangle) ... ok
+test_demangling_from_mangled_symbols (numba.tests.test_compiler_flags.TestFlagMangling.test_demangling_from_mangled_symbols)
+Test demangling of flags from mangled symbol ... ok
+test_mangled_flags_is_shorter (numba.tests.test_compiler_flags.TestFlagMangling.test_mangled_flags_is_shorter) ... ok
+test_mangled_flags_with_fastmath_parfors_inline (numba.tests.test_compiler_flags.TestFlagMangling.test_mangled_flags_with_fastmath_parfors_inline) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.116s
+
+OK

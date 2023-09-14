@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_hetero_tuple (numba.tests.test_tuples.TestTuplePassing.test_hetero_tuple) ... ok
+test_size_mismatch (numba.tests.test_tuples.TestTuplePassing.test_size_mismatch) ... ok
+test_unituple (numba.tests.test_tuples.TestTuplePassing.test_unituple) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.987s
+
+OK

@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_loc (numba.tests.test_ir.TestIRMeta.test_loc) ... ok
+test_scope (numba.tests.test_ir.TestIRMeta.test_scope) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.187s
+
+OK

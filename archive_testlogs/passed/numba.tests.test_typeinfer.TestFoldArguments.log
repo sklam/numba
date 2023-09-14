@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_fold_arguments_list_inputs (numba.tests.test_typeinfer.TestFoldArguments.test_fold_arguments_list_inputs) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.251s
+
+OK

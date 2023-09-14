@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_module_func (numba.tests.test_return_values.TestReturnValues.test_module_func) ... ok
+test_module_func_npm (numba.tests.test_return_values.TestReturnValues.test_module_func_npm) ... ok
+test_nopython_func (numba.tests.test_return_values.TestReturnValues.test_nopython_func) ... ok
+test_nopython_func_npm (numba.tests.test_return_values.TestReturnValues.test_nopython_func_npm) ... ok
+test_pyobj_func (numba.tests.test_return_values.TestReturnValues.test_pyobj_func) ... ok
+test_pyobj_func_npm (numba.tests.test_return_values.TestReturnValues.test_pyobj_func_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.016s
+
+OK

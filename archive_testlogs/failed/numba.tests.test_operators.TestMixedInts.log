@@ -1,0 +1,89 @@
+Parallel: 15. Serial: 0
+test_add (numba.tests.test_operators.TestMixedInts.test_add) ... ok
+test_and (numba.tests.test_operators.TestMixedInts.test_and) ... ok
+test_floordiv (numba.tests.test_operators.TestMixedInts.test_floordiv) ... ok
+test_invert (numba.tests.test_operators.TestMixedInts.test_invert) ... ok
+test_lshift (numba.tests.test_operators.TestMixedInts.test_lshift) ... ok
+test_mod (numba.tests.test_operators.TestMixedInts.test_mod) ... ok
+test_mul (numba.tests.test_operators.TestMixedInts.test_mul) ... ok
+test_or (numba.tests.test_operators.TestMixedInts.test_or) ... ok
+test_pow (numba.tests.test_operators.TestMixedInts.test_pow) ... ok
+test_rshift (numba.tests.test_operators.TestMixedInts.test_rshift) ... ok
+test_sub (numba.tests.test_operators.TestMixedInts.test_sub) ... ok
+test_truediv (numba.tests.test_operators.TestMixedInts.test_truediv) ... ok
+test_unary_negative (numba.tests.test_operators.TestMixedInts.test_unary_negative) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+test_unary_positive (numba.tests.test_operators.TestMixedInts.test_unary_positive) ... ERROR
+test_xor (numba.tests.test_operators.TestMixedInts.test_xor) ... ok
+
+======================================================================
+ERROR: test_unary_positive (numba.tests.test_operators.TestMixedInts.test_unary_positive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_operators.py", line 1416, in test_unary_positive
+    self.run_unary(pyfunc, control, samples, self.int_types)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_operators.py", line 1272, in run_unary
+    cr = compile_isolated(pyfunc, (xt,), flags=Noflags)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 341, in dispatch
+    fn(state, inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+NotImplementedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+op_CALL_INTRINSIC_1(5)
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+
+----------------------------------------------------------------------
+Ran 15 tests in 44.778s
+
+FAILED (errors=1)

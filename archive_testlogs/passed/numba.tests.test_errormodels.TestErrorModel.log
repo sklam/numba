@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_div_by_zero_numpy (numba.tests.test_errormodels.TestErrorModel.test_div_by_zero_numpy) ... ok
+test_div_by_zero_python (numba.tests.test_errormodels.TestErrorModel.test_div_by_zero_python) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.619s
+
+OK

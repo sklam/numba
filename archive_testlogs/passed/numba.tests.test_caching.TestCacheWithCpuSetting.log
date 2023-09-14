@@ -1,0 +1,8 @@
+test_user_set_cpu_features (numba.tests.test_caching.TestCacheWithCpuSetting.test_user_set_cpu_features) ... ok
+test_user_set_cpu_name (numba.tests.test_caching.TestCacheWithCpuSetting.test_user_set_cpu_name) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 5.330s
+
+OK
+Parallel: 0. Serial: 2

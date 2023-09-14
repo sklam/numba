@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_type_inference (numba.tests.test_vectorization_type_inference.TestVectTypeInfer.test_type_inference)
+This is testing numpy ufunc dispatch machinery ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.146s
+
+OK

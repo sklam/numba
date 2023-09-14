@@ -1,0 +1,182 @@
+Parallel: 5. Serial: 0
+test_liftcall1 (numba.tests.test_withlifting.TestLiftCall.test_liftcall1) ... ok
+test_liftcall2 (numba.tests.test_withlifting.TestLiftCall.test_liftcall2) ... ok
+test_liftcall3 (numba.tests.test_withlifting.TestLiftCall.test_liftcall3) ... ok
+test_liftcall4 (numba.tests.test_withlifting.TestLiftCall.test_liftcall4) ... ERROR
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/controlflow.py", line 113, in add_edge
+    raise ValueError("Cannot add edge as dest node %s not in nodes %s" %
+
+  warnings.warn(msg,
+test_liftcall5 (numba.tests.test_withlifting.TestLiftCall.test_liftcall5) ... ERROR
+
+======================================================================
+ERROR: test_liftcall4 (numba.tests.test_withlifting.TestLiftCall.test_liftcall4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 282, in test_liftcall4
+    njit(liftcall4)()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 471, in _compile_for_args
+    error_rewrite(e, 'unsupported_error')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 278, in run_pass
+    cres = compile_ir(state.typingctx, state.targetctx, main,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 833, in compile_ir
+    return pipeline.compile_ir(func_ir=func_ir, lifted=lifted,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 471, in compile_ir
+    return self._compile_ir()
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 536, in _compile_ir
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+    infer.build_constraint()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+    self.constrain_statement(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1413, in constrain_statement
+    raise UnsupportedError(msg, loc=inst.loc)
+numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: Handle with contexts)
+Failed in nopython mode pipeline (step: nopython frontend)
+Unsupported constraint encountered: enter_with $phi14.0
+
+File "numba/tests/test_withlifting.py", line 142:
+def liftcall4():
+    with call_context:
+    ^
+
+
+======================================================================
+ERROR: test_liftcall5 (numba.tests.test_withlifting.TestLiftCall.test_liftcall5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 293, in test_liftcall5
+    self.check_extracted_with(liftcall5, expect_count=1,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 209, in check_extracted_with
+    cres = self.compile_ir(new_ir)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_withlifting.py", line 222, in compile_ir
+    return compile_ir(typingctx, targetctx, the_ir, args,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 833, in compile_ir
+    return pipeline.compile_ir(func_ir=func_ir, lifted=lifted,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 471, in compile_ir
+    return self._compile_ir()
+           ^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 536, in _compile_ir
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 141, in run_pass
+    post_proc.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/postproc.py", line 79, in run
+    self.func_ir.blocks = transforms.canonicalize_cfg(self.func_ir.blocks)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/transforms.py", line 358, in canonicalize_cfg
+    return canonicalize_cfg_single_backedge(blocks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/transforms.py", line 287, in canonicalize_cfg_single_backedge
+    cfg = compute_cfg_from_blocks(blocks)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/analysis.py", line 243, in compute_cfg_from_blocks
+    cfg.add_edge(k, target)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/controlflow.py", line 113, in add_edge
+    raise ValueError("Cannot add edge as dest node %s not in nodes %s" %
+ValueError: Failed in nopython mode pipeline (step: processing IR)
+Cannot add edge as dest node 26 not in nodes {0, 145, 80}
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/controlflow.py", line 113, in add_edge
+    raise ValueError("Cannot add edge as dest node %s not in nodes %s" %
+
+  warnings.warn(msg,
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.748s
+
+FAILED (errors=2)

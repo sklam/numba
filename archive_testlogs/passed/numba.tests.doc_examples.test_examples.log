@@ -1,0 +1,16 @@
+Parallel: 10. Serial: 0
+test_guvectorize (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_guvectorize) ... ok
+test_guvectorize_dynamic (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_guvectorize_dynamic) ... ok
+test_guvectorize_overwrite (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_guvectorize_overwrite) ... ok
+test_guvectorize_scalar_return (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_guvectorize_scalar_return) ... ok
+test_mandelbrot (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_mandelbrot) ... ok
+test_moving_average (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_moving_average) ... ok
+test_nogil (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_nogil) ... ok
+test_vectorize_dynamic (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_vectorize_dynamic) ... ok
+test_vectorize_multiple_signatures (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_vectorize_multiple_signatures) ... ok
+test_vectorize_one_signature (numba.tests.doc_examples.test_examples.DocsExamplesTest.test_vectorize_one_signature) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.995s
+
+OK

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_find_file_nonexistent_path (numba.tests.test_findlib.TestFindlib.test_find_file_nonexistent_path) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.110s
+
+OK

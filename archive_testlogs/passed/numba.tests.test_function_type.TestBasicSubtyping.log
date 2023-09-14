@@ -1,0 +1,15 @@
+Parallel: 5. Serial: 0
+test_basic (numba.tests.test_function_type.TestBasicSubtyping.test_basic)
+Test that a dispatcher object *with* a pre-compiled overload ... ok
+test_basic2 (numba.tests.test_function_type.TestBasicSubtyping.test_basic2)
+Test that a dispatcher object *without* a pre-compiled overload ... ok
+test_basic3 (numba.tests.test_function_type.TestBasicSubtyping.test_basic3)
+Test that a dispatcher object *without* a pre-compiled overload ... ok
+test_basic4 (numba.tests.test_function_type.TestBasicSubtyping.test_basic4)
+Test that a dispatcher object can be used as input to another ... ok
+test_basic5 (numba.tests.test_function_type.TestBasicSubtyping.test_basic5) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.739s
+
+OK

@@ -1,0 +1,18 @@
+Parallel: 12. Serial: 0
+test_empty_vs_empty (numba.tests.test_typedlist.TestComparisons.test_empty_vs_empty) ... ok
+test_empty_vs_singleton (numba.tests.test_typedlist.TestComparisons.test_empty_vs_singleton) ... ok
+test_equal (numba.tests.test_typedlist.TestComparisons.test_equal) ... ok
+test_equals_non_list (numba.tests.test_typedlist.TestComparisons.test_equals_non_list) ... ok
+test_first_greater_than (numba.tests.test_typedlist.TestComparisons.test_first_greater_than) ... ok
+test_first_less_than (numba.tests.test_typedlist.TestComparisons.test_first_less_than) ... ok
+test_first_shorter (numba.tests.test_typedlist.TestComparisons.test_first_shorter) ... ok
+test_second_shorter (numba.tests.test_typedlist.TestComparisons.test_second_shorter) ... ok
+test_singleton_vs_empty (numba.tests.test_typedlist.TestComparisons.test_singleton_vs_empty) ... ok
+test_singleton_vs_singleton_equal (numba.tests.test_typedlist.TestComparisons.test_singleton_vs_singleton_equal) ... ok
+test_singleton_vs_singleton_greater_than (numba.tests.test_typedlist.TestComparisons.test_singleton_vs_singleton_greater_than) ... ok
+test_singleton_vs_singleton_less_than (numba.tests.test_typedlist.TestComparisons.test_singleton_vs_singleton_less_than) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 4.883s
+
+OK

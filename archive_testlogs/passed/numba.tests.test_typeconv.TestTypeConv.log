@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_castgraph_propagate (numba.tests.test_typeconv.TestTypeConv.test_castgraph_propagate) ... ok
+test_default_rules (numba.tests.test_typeconv.TestTypeConv.test_default_rules) ... ok
+test_overload1 (numba.tests.test_typeconv.TestTypeConv.test_overload1) ... ok
+test_overload2 (numba.tests.test_typeconv.TestTypeConv.test_overload2) ... ok
+test_overload3 (numba.tests.test_typeconv.TestTypeConv.test_overload3) ... ok
+test_overload4 (numba.tests.test_typeconv.TestTypeConv.test_overload4) ... ok
+test_type_casting_rules (numba.tests.test_typeconv.TestTypeConv.test_type_casting_rules) ... ok
+test_typeconv (numba.tests.test_typeconv.TestTypeConv.test_typeconv) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.182s
+
+OK

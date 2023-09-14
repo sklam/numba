@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_boxer (numba.tests.test_extending.TestBoxingCallingJIT.test_boxer) ... ok
+test_boxer_raise (numba.tests.test_extending.TestBoxingCallingJIT.test_boxer_raise) ... ok
+test_unboxer_basic (numba.tests.test_extending.TestBoxingCallingJIT.test_unboxer_basic) ... ok
+test_unboxer_raise (numba.tests.test_extending.TestBoxingCallingJIT.test_unboxer_raise) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.727s
+
+OK

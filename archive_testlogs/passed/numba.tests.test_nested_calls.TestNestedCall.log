@@ -1,0 +1,24 @@
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py:262: NumbaDeprecationWarning: numba.generated_jit is deprecated. Please see the documentation at: https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-generated-jit for more information and advice on a suitable replacement.
+  warnings.warn(msg, NumbaDeprecationWarning)
+Parallel: 10. Serial: 0
+test_argcast (numba.tests.test_nested_calls.TestNestedCall.test_argcast)
+Issue #1488: implicitly casting an argument variable should not ... ok
+test_boolean_return (numba.tests.test_nested_calls.TestNestedCall.test_boolean_return) ... ok
+test_call_generated (numba.tests.test_nested_calls.TestNestedCall.test_call_generated)
+Test a nested function call to a generated jit function. ... ok
+test_default_args (numba.tests.test_nested_calls.TestNestedCall.test_default_args)
+Test a nested function call using default argument values. ... ok
+test_default_args_objmode (numba.tests.test_nested_calls.TestNestedCall.test_default_args_objmode) ... ok
+test_named_args (numba.tests.test_nested_calls.TestNestedCall.test_named_args)
+Test a nested function call with named (keyword) arguments. ... ok
+test_named_args_objmode (numba.tests.test_nested_calls.TestNestedCall.test_named_args_objmode) ... ok
+test_star_args (numba.tests.test_nested_calls.TestNestedCall.test_star_args)
+Test a nested function call to a function with *args in its signature. ... ok
+test_star_call (numba.tests.test_nested_calls.TestNestedCall.test_star_call)
+Test a function call with a *args. ... ok
+test_star_call_objmode (numba.tests.test_nested_calls.TestNestedCall.test_star_call_objmode) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.209s
+
+OK

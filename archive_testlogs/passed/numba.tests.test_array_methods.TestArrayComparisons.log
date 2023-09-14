@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_identity (numba.tests.test_array_methods.TestArrayComparisons.test_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.574s
+
+OK

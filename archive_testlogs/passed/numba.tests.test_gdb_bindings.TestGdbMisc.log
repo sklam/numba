@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_call_gdb_twice (numba.tests.test_gdb_bindings.TestGdbMisc.test_call_gdb_twice) ... skipped 'functioning gdb with correct ptrace permissions is required'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.111s
+
+OK (skipped=1)

@@ -1,0 +1,12 @@
+Parallel: 3. Serial: 0
+test_datetime_values (numba.tests.test_numpy_support.TestArrayScalars.test_datetime_values)
+Test map_arrayscalar_type() with np.datetime64 values. ... ok
+test_number_values (numba.tests.test_numpy_support.TestArrayScalars.test_number_values)
+Test map_arrayscalar_type() with scalar number values. ... ok
+test_timedelta_values (numba.tests.test_numpy_support.TestArrayScalars.test_timedelta_values)
+Test map_arrayscalar_type() with np.timedelta64 values. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.120s
+
+OK

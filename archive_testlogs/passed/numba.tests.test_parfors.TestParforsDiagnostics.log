@@ -1,0 +1,15 @@
+test_allocation_hoisting (numba.tests.test_parfors.TestParforsDiagnostics.test_allocation_hoisting) ... skipped 'needs subprocess harness'
+test_array_expr (numba.tests.test_parfors.TestParforsDiagnostics.test_array_expr) ... skipped 'needs subprocess harness'
+test_function_replacement (numba.tests.test_parfors.TestParforsDiagnostics.test_function_replacement) ... skipped 'needs subprocess harness'
+test_nested_prange (numba.tests.test_parfors.TestParforsDiagnostics.test_nested_prange) ... skipped 'needs subprocess harness'
+test_prange (numba.tests.test_parfors.TestParforsDiagnostics.test_prange) ... skipped 'needs subprocess harness'
+test_reduction (numba.tests.test_parfors.TestParforsDiagnostics.test_reduction) ... skipped 'needs subprocess harness'
+test_setitem (numba.tests.test_parfors.TestParforsDiagnostics.test_setitem) ... skipped 'needs subprocess harness'
+test_user_varname (numba.tests.test_parfors.TestParforsDiagnostics.test_user_varname)
+make sure original user variable name is used in fusion info ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK (skipped=8)
+Parallel: 0. Serial: 8

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_tuple_length_error (numba.tests.test_tuples.TestTupleLengthError.test_tuple_length_error) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.400s
+
+OK

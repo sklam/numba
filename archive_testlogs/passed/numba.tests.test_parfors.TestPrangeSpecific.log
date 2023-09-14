@@ -1,0 +1,35 @@
+test_argument_alias_recarray_field (numba.tests.test_parfors.TestPrangeSpecific.test_argument_alias_recarray_field) ... skipped 'needs subprocess harness'
+test_check_alias_analysis (numba.tests.test_parfors.TestPrangeSpecific.test_check_alias_analysis) ... skipped 'needs subprocess harness'
+test_check_error_model (numba.tests.test_parfors.TestPrangeSpecific.test_check_error_model) ... skipped 'needs subprocess harness'
+test_copy_global_for_parfor (numba.tests.test_parfors.TestPrangeSpecific.test_copy_global_for_parfor)
+issue4903: a global is copied next to a parfor so that ... skipped 'needs subprocess harness'
+test_issue7501 (numba.tests.test_parfors.TestPrangeSpecific.test_issue7501) ... skipped 'needs subprocess harness'
+test_issue7578 (numba.tests.test_parfors.TestPrangeSpecific.test_issue7578) ... skipped 'needs subprocess harness'
+test_issue_due_to_max_label (numba.tests.test_parfors.TestPrangeSpecific.test_issue_due_to_max_label) ... skipped 'needs subprocess harness'
+test_kde_example (numba.tests.test_parfors.TestPrangeSpecific.test_kde_example) ... skipped 'needs subprocess harness'
+test_list_comprehension_prange (numba.tests.test_parfors.TestPrangeSpecific.test_list_comprehension_prange) ... skipped 'needs subprocess harness'
+test_list_setitem_hoisting (numba.tests.test_parfors.TestPrangeSpecific.test_list_setitem_hoisting) ... skipped 'needs subprocess harness'
+test_multiple_call_getattr_object (numba.tests.test_parfors.TestPrangeSpecific.test_multiple_call_getattr_object) ... skipped 'needs subprocess harness'
+test_mutable_list_param (numba.tests.test_parfors.TestPrangeSpecific.test_mutable_list_param)
+issue3699: test that mutable variable to call in loop ... skipped 'needs subprocess harness'
+test_nested_parfor_push_call_vars (numba.tests.test_parfors.TestPrangeSpecific.test_nested_parfor_push_call_vars)
+issue 3686: if a prange has something inside it that causes ... skipped 'needs subprocess harness'
+test_parfor_alias1 (numba.tests.test_parfors.TestPrangeSpecific.test_parfor_alias1) ... skipped 'needs subprocess harness'
+test_parfor_alias2 (numba.tests.test_parfors.TestPrangeSpecific.test_parfor_alias2) ... skipped 'needs subprocess harness'
+test_parfor_alias3 (numba.tests.test_parfors.TestPrangeSpecific.test_parfor_alias3) ... skipped 'needs subprocess harness'
+test_parfor_race_1 (numba.tests.test_parfors.TestPrangeSpecific.test_parfor_race_1) ... skipped 'needs subprocess harness'
+test_prange_conflicting_reduction_ops (numba.tests.test_parfors.TestPrangeSpecific.test_prange_conflicting_reduction_ops) ... skipped 'needs subprocess harness'
+test_prange_fastmath_check_works (numba.tests.test_parfors.TestPrangeSpecific.test_prange_fastmath_check_works) ... skipped 'needs subprocess harness'
+test_prange_nested_reduction1 (numba.tests.test_parfors.TestPrangeSpecific.test_prange_nested_reduction1) ... skipped 'needs subprocess harness'
+test_prange_raises_invalid_step_size (numba.tests.test_parfors.TestPrangeSpecific.test_prange_raises_invalid_step_size) ... skipped 'needs subprocess harness'
+test_prange_two_conditional_reductions (numba.tests.test_parfors.TestPrangeSpecific.test_prange_two_conditional_reductions) ... skipped 'needs subprocess harness'
+test_prange_two_instances_same_reduction_var (numba.tests.test_parfors.TestPrangeSpecific.test_prange_two_instances_same_reduction_var) ... skipped 'needs subprocess harness'
+test_record_array_setitem (numba.tests.test_parfors.TestPrangeSpecific.test_record_array_setitem) ... skipped 'needs subprocess harness'
+test_record_array_setitem_yield_array (numba.tests.test_parfors.TestPrangeSpecific.test_record_array_setitem_yield_array) ... skipped 'needs subprocess harness'
+test_ssa_false_reduction (numba.tests.test_parfors.TestPrangeSpecific.test_ssa_false_reduction) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.001s
+
+OK (skipped=26)
+Parallel: 0. Serial: 26

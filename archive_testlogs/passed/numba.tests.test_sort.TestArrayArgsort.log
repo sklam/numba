@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_exceptions (numba.tests.test_sort.TestArrayArgsort.test_exceptions) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.293s
+
+OK

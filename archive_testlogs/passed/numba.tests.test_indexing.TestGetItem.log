@@ -1,0 +1,57 @@
+Parallel: 48. Serial: 0
+test_1d_integer_indexing (numba.tests.test_indexing.TestGetItem.test_1d_integer_indexing) ... ok
+test_1d_integer_indexing_npm (numba.tests.test_indexing.TestGetItem.test_1d_integer_indexing_npm) ... ok
+test_1d_slicing (numba.tests.test_indexing.TestGetItem.test_1d_slicing) ... ok
+test_1d_slicing2 (numba.tests.test_indexing.TestGetItem.test_1d_slicing2) ... ok
+test_1d_slicing2_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing2_npm) ... ok
+test_1d_slicing3 (numba.tests.test_indexing.TestGetItem.test_1d_slicing3) ... ok
+test_1d_slicing3_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing3_npm) ... ok
+test_1d_slicing4 (numba.tests.test_indexing.TestGetItem.test_1d_slicing4) ... ok
+test_1d_slicing4_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing4_npm) ... ok
+test_1d_slicing5 (numba.tests.test_indexing.TestGetItem.test_1d_slicing5) ... ok
+test_1d_slicing5_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing5_npm) ... ok
+test_1d_slicing6 (numba.tests.test_indexing.TestGetItem.test_1d_slicing6) ... ok
+test_1d_slicing6_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing6_npm) ... ok
+test_1d_slicing7 (numba.tests.test_indexing.TestGetItem.test_1d_slicing7) ... ok
+test_1d_slicing7_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing7_npm) ... ok
+test_1d_slicing8 (numba.tests.test_indexing.TestGetItem.test_1d_slicing8) ... ok
+test_1d_slicing8_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing8_npm) ... ok
+test_1d_slicing_npm (numba.tests.test_indexing.TestGetItem.test_1d_slicing_npm) ... ok
+test_2d_float_indexing (numba.tests.test_indexing.TestGetItem.test_2d_float_indexing) ... ok
+test_2d_integer_indexing (numba.tests.test_indexing.TestGetItem.test_2d_integer_indexing) ... ok
+test_2d_integer_indexing2 (numba.tests.test_indexing.TestGetItem.test_2d_integer_indexing2) ... ok
+test_2d_integer_indexing_npm (numba.tests.test_indexing.TestGetItem.test_2d_integer_indexing_npm) ... ok
+test_2d_integer_indexing_via_call (numba.tests.test_indexing.TestGetItem.test_2d_integer_indexing_via_call) ... ok
+test_2d_slicing (numba.tests.test_indexing.TestGetItem.test_2d_slicing)
+arr_2d[a:b:c] ... ok
+test_2d_slicing2 (numba.tests.test_indexing.TestGetItem.test_2d_slicing2)
+arr_2d[a:b:c, d:e:f] ... ok
+test_2d_slicing2_npm (numba.tests.test_indexing.TestGetItem.test_2d_slicing2_npm) ... ok
+test_2d_slicing3 (numba.tests.test_indexing.TestGetItem.test_2d_slicing3)
+arr_2d[a:b:c, d] ... ok
+test_2d_slicing3_npm (numba.tests.test_indexing.TestGetItem.test_2d_slicing3_npm) ... ok
+test_2d_slicing_npm (numba.tests.test_indexing.TestGetItem.test_2d_slicing_npm) ... ok
+test_3d_slicing (numba.tests.test_indexing.TestGetItem.test_3d_slicing) ... ok
+test_3d_slicing2 (numba.tests.test_indexing.TestGetItem.test_3d_slicing2) ... ok
+test_3d_slicing2_npm (numba.tests.test_indexing.TestGetItem.test_3d_slicing2_npm) ... ok
+test_3d_slicing_npm (numba.tests.test_indexing.TestGetItem.test_3d_slicing_npm) ... ok
+test_ellipsis1 (numba.tests.test_indexing.TestGetItem.test_ellipsis1) ... ok
+test_ellipsis1_npm (numba.tests.test_indexing.TestGetItem.test_ellipsis1_npm) ... ok
+test_ellipsis2 (numba.tests.test_indexing.TestGetItem.test_ellipsis2) ... ok
+test_ellipsis2_npm (numba.tests.test_indexing.TestGetItem.test_ellipsis2_npm) ... ok
+test_ellipsis3 (numba.tests.test_indexing.TestGetItem.test_ellipsis3) ... ok
+test_ellipsis3_npm (numba.tests.test_indexing.TestGetItem.test_ellipsis3_npm) ... ok
+test_ellipsis_issue1498 (numba.tests.test_indexing.TestGetItem.test_ellipsis_issue1498) ... ok
+test_ellipsis_issue1499 (numba.tests.test_indexing.TestGetItem.test_ellipsis_issue1499) ... ok
+test_empty_tuple_indexing (numba.tests.test_indexing.TestGetItem.test_empty_tuple_indexing) ... ok
+test_empty_tuple_indexing_npm (numba.tests.test_indexing.TestGetItem.test_empty_tuple_indexing_npm) ... ok
+test_integer_indexing_1d_for_2d (numba.tests.test_indexing.TestGetItem.test_integer_indexing_1d_for_2d) ... ok
+test_integer_indexing_1d_for_2d_npm (numba.tests.test_indexing.TestGetItem.test_integer_indexing_1d_for_2d_npm) ... ok
+test_none_index (numba.tests.test_indexing.TestGetItem.test_none_index) ... ok
+test_none_index_npm (numba.tests.test_indexing.TestGetItem.test_none_index_npm) ... ok
+test_partial_1d_indexing (numba.tests.test_indexing.TestGetItem.test_partial_1d_indexing) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 21.358s
+
+OK

@@ -1,0 +1,12 @@
+test_function_def_param (numba.tests.test_dispatcher.TestMultiprocessingDefaultParameters.test_function_def_param)
+Tests a function as a default parameter ... ok
+test_int_def_param (numba.tests.test_dispatcher.TestMultiprocessingDefaultParameters.test_int_def_param)
+Tests issue #4888 ... ok
+test_none_def_param (numba.tests.test_dispatcher.TestMultiprocessingDefaultParameters.test_none_def_param)
+Tests None as a default parameter ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.049s
+
+OK
+Parallel: 0. Serial: 3

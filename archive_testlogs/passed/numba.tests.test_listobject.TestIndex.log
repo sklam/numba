@@ -1,0 +1,16 @@
+Parallel: 10. Serial: 0
+test_index_duplicate (numba.tests.test_listobject.TestIndex.test_index_duplicate) ... ok
+test_index_duplicate_with_start (numba.tests.test_listobject.TestIndex.test_index_duplicate_with_start) ... ok
+test_index_multiple (numba.tests.test_listobject.TestIndex.test_index_multiple) ... ok
+test_index_multiple_value_error (numba.tests.test_listobject.TestIndex.test_index_multiple_value_error) ... ok
+test_index_multiple_value_error_end (numba.tests.test_listobject.TestIndex.test_index_multiple_value_error_end) ... ok
+test_index_multiple_value_error_start (numba.tests.test_listobject.TestIndex.test_index_multiple_value_error_start) ... ok
+test_index_singleton (numba.tests.test_listobject.TestIndex.test_index_singleton) ... ok
+test_index_singleton_value_error (numba.tests.test_listobject.TestIndex.test_index_singleton_value_error) ... ok
+test_index_typing_error_end (numba.tests.test_listobject.TestIndex.test_index_typing_error_end) ... ok
+test_index_typing_error_start (numba.tests.test_listobject.TestIndex.test_index_typing_error_start) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.392s
+
+OK

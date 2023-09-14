@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_delattr (numba.tests.test_objects.TestAttributes.test_delattr) ... ok
+test_delattr_attribute_error (numba.tests.test_objects.TestAttributes.test_delattr_attribute_error) ... ok
+test_setattr (numba.tests.test_objects.TestAttributes.test_setattr) ... ok
+test_setattr_attribute_error (numba.tests.test_objects.TestAttributes.test_setattr_attribute_error) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.883s
+
+OK

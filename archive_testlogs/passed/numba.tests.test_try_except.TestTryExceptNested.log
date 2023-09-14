@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_try_except_else (numba.tests.test_try_except.TestTryExceptNested.test_try_except_else) ... ok
+test_try_except_finally (numba.tests.test_try_except.TestTryExceptNested.test_try_except_finally) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.668s
+
+OK

@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_heterogeneous_but_castable_to_homogeneous (numba.tests.test_lists.TestListInitialValues.test_heterogeneous_but_castable_to_homogeneous) ... ok
+test_homogeneous_and_literal (numba.tests.test_lists.TestListInitialValues.test_homogeneous_and_literal) ... ok
+test_list_of_list_ctor (numba.tests.test_lists.TestListInitialValues.test_list_of_list_ctor) ... ok
+test_mutation_not_carried (numba.tests.test_lists.TestListInitialValues.test_mutation_not_carried) ... ok
+test_mutation_not_carried_single_function (numba.tests.test_lists.TestListInitialValues.test_mutation_not_carried_single_function) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.577s
+
+OK

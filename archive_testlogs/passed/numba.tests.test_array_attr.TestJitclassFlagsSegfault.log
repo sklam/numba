@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test (numba.tests.test_array_attr.TestJitclassFlagsSegfault.test) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.871s
+
+OK

@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_four_level (numba.tests.test_recursion.TestMutualRecursion.test_four_level) ... ok
+test_inner_error (numba.tests.test_recursion.TestMutualRecursion.test_inner_error) ... ok
+test_mutual_1 (numba.tests.test_recursion.TestMutualRecursion.test_mutual_1) ... ok
+test_mutual_2 (numba.tests.test_recursion.TestMutualRecursion.test_mutual_2) ... ok
+test_raise (numba.tests.test_recursion.TestMutualRecursion.test_raise) ... ok
+test_runaway (numba.tests.test_recursion.TestMutualRecursion.test_runaway) ... ok
+test_type_change (numba.tests.test_recursion.TestMutualRecursion.test_type_change) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.663s
+
+OK

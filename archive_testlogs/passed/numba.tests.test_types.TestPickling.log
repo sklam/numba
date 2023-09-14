@@ -1,0 +1,17 @@
+Parallel: 11. Serial: 0
+test_arrays (numba.tests.test_types.TestPickling.test_arrays) ... ok
+test_atomic_types (numba.tests.test_types.TestPickling.test_atomic_types) ... ok
+test_enums (numba.tests.test_types.TestPickling.test_enums) ... ok
+test_external_function_pointers (numba.tests.test_types.TestPickling.test_external_function_pointers) ... expected failure
+test_generator (numba.tests.test_types.TestPickling.test_generator) ... ok
+test_lists (numba.tests.test_types.TestPickling.test_lists) ... ok
+test_namedtuples (numba.tests.test_types.TestPickling.test_namedtuples) ... ok
+test_optional (numba.tests.test_types.TestPickling.test_optional) ... ok
+test_predefined_types (numba.tests.test_types.TestPickling.test_predefined_types) ... ok
+test_records (numba.tests.test_types.TestPickling.test_records) ... ok
+test_tuples (numba.tests.test_types.TestPickling.test_tuples) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.580s
+
+OK (expected failures=1)

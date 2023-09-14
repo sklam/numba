@@ -1,0 +1,10 @@
+Parallel: 3. Serial: 0
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_dtype_conversion (numba.tests.test_parfors_passes.TestPreParforPass.test_dtype_conversion) ... ok
+test_replacement_map (numba.tests.test_parfors_passes.TestPreParforPass.test_replacement_map) ... ok
+test_sum_replacement (numba.tests.test_parfors_passes.TestPreParforPass.test_sum_replacement) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.884s
+
+OK

@@ -1,0 +1,23 @@
+Parallel: 16. Serial: 0
+test_add_td (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_add_td) ... ok
+test_add_td_no_match (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_add_td_no_match) ... ok
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_add_td_parallel (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_add_td_parallel) ... ok
+test_max_func (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_max_func) ... ok
+test_max_func_parallel (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_max_func_parallel) ... ok
+test_max_method (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_max_method) ... ok
+test_max_method_parallel (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_max_method_parallel) ... ok
+test_min_func (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_min_func) ... ok
+test_min_func_parallel (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_min_func_parallel) ... ok
+test_min_method (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_min_method) ... ok
+test_min_method_parallel (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_min_method_parallel) ... ok
+test_np_max_func (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_np_max_func) ... ok
+test_np_min_func (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_np_min_func) ... ok
+test_sub_td (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_sub_td) ... ok
+test_sub_td_no_match (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_sub_td_no_match) ... ok
+test_sub_td_parallel (numba.tests.test_npdatetime.TestDatetimeArrayOps.test_sub_td_parallel) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 29.241s
+
+OK

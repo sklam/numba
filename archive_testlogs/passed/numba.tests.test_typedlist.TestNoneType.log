@@ -1,0 +1,15 @@
+Parallel: 8. Serial: 0
+test_append_none (numba.tests.test_typedlist.TestNoneType.test_append_none) ... ok
+test_equals_none (numba.tests.test_typedlist.TestNoneType.test_equals_none) ... ok
+test_getitem_none (numba.tests.test_typedlist.TestNoneType.test_getitem_none) ... ok
+test_iter_none (numba.tests.test_typedlist.TestNoneType.test_iter_none) ... ok
+test_len_none (numba.tests.test_typedlist.TestNoneType.test_len_none) ... ok
+test_none_typed_method_fails (numba.tests.test_typedlist.TestNoneType.test_none_typed_method_fails)
+Test that unsupported operations on List[None] raise. ... ok
+test_not_equals_none (numba.tests.test_typedlist.TestNoneType.test_not_equals_none) ... ok
+test_setitem_none (numba.tests.test_typedlist.TestNoneType.test_setitem_none) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 9.272s
+
+OK

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_list_contains_empty (numba.tests.test_listobject.TestContains.test_list_contains_empty) ... ok
+test_list_contains_multiple (numba.tests.test_listobject.TestContains.test_list_contains_multiple) ... ok
+test_list_contains_singleton (numba.tests.test_listobject.TestContains.test_list_contains_singleton) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.455s
+
+OK

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_getting_function (numba.tests.test_extending.TestImportCythonFunction.test_getting_function) ... skipped 'Only run if SciPy >= 0.19 is installed'
+test_missing_function (numba.tests.test_extending.TestImportCythonFunction.test_missing_function) ... skipped 'Only run if SciPy >= 0.19 is installed'
+test_missing_module (numba.tests.test_extending.TestImportCythonFunction.test_missing_module) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.109s
+
+OK (skipped=2)

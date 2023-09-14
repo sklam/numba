@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_linalg_cond (numba.tests.test_linalg.TestLinalgCond.test_linalg_cond)
+Test np.linalg.cond ... skipped 'LAPACK needs SciPy 1.0+'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.112s
+
+OK (skipped=1)

@@ -1,0 +1,20 @@
+test_issue_5618 (numba.tests.test_analysis.TestBranchPrunePredicates.test_issue_5618) ... ok
+test_literal_const_code_gen (numba.tests.test_analysis.TestBranchPrunePredicates.test_literal_const_code_gen) ... ok
+test_single_if_const (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_const) ... ok
+test_single_if_else_const (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_else_const) ... ok
+test_single_if_else_freevar (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_else_freevar) ... ok
+test_single_if_else_global (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_else_global) ... ok
+test_single_if_else_negate_const (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_else_negate_const) ... ok
+test_single_if_else_negate_freevar (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_else_negate_freevar) ... ok
+test_single_if_else_negate_global (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_else_negate_global) ... ok
+test_single_if_freevar (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_freevar) ... ok
+test_single_if_global (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_global) ... ok
+test_single_if_negate_const (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_negate_const) ... ok
+test_single_if_negate_freevar (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_negate_freevar) ... ok
+test_single_if_negate_global (numba.tests.test_analysis.TestBranchPrunePredicates.test_single_if_negate_global) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 33.633s
+
+OK
+Parallel: 0. Serial: 14

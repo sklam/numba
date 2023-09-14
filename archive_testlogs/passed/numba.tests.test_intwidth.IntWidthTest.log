@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_bit_length (numba.tests.test_intwidth.IntWidthTest.test_bit_length) ... ok
+test_constant_int64 (numba.tests.test_intwidth.IntWidthTest.test_constant_int64) ... ok
+test_constant_int64_npm (numba.tests.test_intwidth.IntWidthTest.test_constant_int64_npm) ... ok
+test_constant_uint64 (numba.tests.test_intwidth.IntWidthTest.test_constant_uint64) ... ok
+test_constant_uint64_function_call (numba.tests.test_intwidth.IntWidthTest.test_constant_uint64_function_call) ... ok
+test_constant_uint64_function_call_npm (numba.tests.test_intwidth.IntWidthTest.test_constant_uint64_function_call_npm) ... ok
+test_constant_uint64_npm (numba.tests.test_intwidth.IntWidthTest.test_constant_uint64_npm) ... ok
+test_global_uint64 (numba.tests.test_intwidth.IntWidthTest.test_global_uint64) ... ok
+test_global_uint64_npm (numba.tests.test_intwidth.IntWidthTest.test_global_uint64_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.028s
+
+OK

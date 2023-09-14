@@ -1,0 +1,21 @@
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_chained_assign.py:8: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_chained_assign.py:14: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_chained_assign.py:19: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+Parallel: 9. Serial: 0
+test_chain1 (numba.tests.test_chained_assign.TestChainedAssign.test_chain1) ... ok
+test_chain2 (numba.tests.test_chained_assign.TestChainedAssign.test_chain2) ... ok
+test_chain3 (numba.tests.test_chained_assign.TestChainedAssign.test_chain3) ... ok
+test_unpack1 (numba.tests.test_chained_assign.TestChainedAssign.test_unpack1) ... ok
+test_unpack2 (numba.tests.test_chained_assign.TestChainedAssign.test_unpack2) ... ok
+test_unpack3 (numba.tests.test_chained_assign.TestChainedAssign.test_unpack3) ... ok
+test_unpack4 (numba.tests.test_chained_assign.TestChainedAssign.test_unpack4) ... ok
+test_unpack5 (numba.tests.test_chained_assign.TestChainedAssign.test_unpack5) ... ok
+test_unpack6 (numba.tests.test_chained_assign.TestChainedAssign.test_unpack6) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.873s
+
+OK

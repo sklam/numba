@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_extend_empty_refiend (numba.tests.test_typedlist.TestExtend.test_extend_empty_refiend) ... ok
+test_extend_empty_unrefined (numba.tests.test_typedlist.TestExtend.test_extend_empty_unrefined) ... ok
+test_extend_other (numba.tests.test_typedlist.TestExtend.test_extend_other) ... ok
+test_extend_self (numba.tests.test_typedlist.TestExtend.test_extend_self) ... ok
+test_extend_single_value_container (numba.tests.test_typedlist.TestExtend.test_extend_single_value_container) ... ok
+test_extend_tuple (numba.tests.test_typedlist.TestExtend.test_extend_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 5.379s
+
+OK

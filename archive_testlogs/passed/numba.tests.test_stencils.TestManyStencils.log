@@ -1,0 +1,217 @@
+test_basic00 (numba.tests.test_stencils.TestManyStencils.test_basic00)
+rel index ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_basic01 (numba.tests.test_stencils.TestManyStencils.test_basic01)
+rel index add const ... ok
+test_basic02 (numba.tests.test_stencils.TestManyStencils.test_basic02)
+rel index add const ... ok
+test_basic03 (numba.tests.test_stencils.TestManyStencils.test_basic03)
+rel index add const ... ok
+test_basic04 (numba.tests.test_stencils.TestManyStencils.test_basic04)
+rel index add const ... ok
+test_basic05 (numba.tests.test_stencils.TestManyStencils.test_basic05)
+rel index add const ... ok
+test_basic06 (numba.tests.test_stencils.TestManyStencils.test_basic06)
+rel index add const ... ok
+test_basic07 (numba.tests.test_stencils.TestManyStencils.test_basic07)
+rel index add const ... ok
+test_basic08 (numba.tests.test_stencils.TestManyStencils.test_basic08)
+rel index add const ... ok
+test_basic09 (numba.tests.test_stencils.TestManyStencils.test_basic09)
+rel index add const ... ok
+test_basic10 (numba.tests.test_stencils.TestManyStencils.test_basic10)
+rel index add const ... ok
+test_basic11 (numba.tests.test_stencils.TestManyStencils.test_basic11)
+rel index add const ... ok
+test_basic12 (numba.tests.test_stencils.TestManyStencils.test_basic12)
+rel index add const ... ok
+test_basic13 (numba.tests.test_stencils.TestManyStencils.test_basic13)
+rel index add const ... ok
+test_basic14 (numba.tests.test_stencils.TestManyStencils.test_basic14)
+rel index add domain change const ... ok
+test_basic14b (numba.tests.test_stencils.TestManyStencils.test_basic14b)
+rel index add domain change const ... ok
+test_basic15 (numba.tests.test_stencils.TestManyStencils.test_basic15)
+two rel index, add const ... ok
+test_basic17 (numba.tests.test_stencils.TestManyStencils.test_basic17)
+two rel index boundary test, add const ... ok
+test_basic18 (numba.tests.test_stencils.TestManyStencils.test_basic18)
+two rel index boundary test, add const ... ok
+test_basic19 (numba.tests.test_stencils.TestManyStencils.test_basic19)
+two rel index boundary test, add const ... ok
+test_basic20 (numba.tests.test_stencils.TestManyStencils.test_basic20)
+two rel index boundary test, add const ... ok
+test_basic21 (numba.tests.test_stencils.TestManyStencils.test_basic21)
+same rel, add const ... ok
+test_basic22 (numba.tests.test_stencils.TestManyStencils.test_basic22)
+rel idx const expr folding, add const ... ok
+test_basic23 (numba.tests.test_stencils.TestManyStencils.test_basic23)
+rel idx, work in body ... ok
+test_basic23a (numba.tests.test_stencils.TestManyStencils.test_basic23a)
+rel idx, dead code should not impact rel idx ... ok
+test_basic24 (numba.tests.test_stencils.TestManyStencils.test_basic24)
+1d idx on 2d arr ... ok
+test_basic25 (numba.tests.test_stencils.TestManyStencils.test_basic25)
+no idx on 2d arr ... ok
+test_basic26 (numba.tests.test_stencils.TestManyStencils.test_basic26)
+3d arr ... ok
+test_basic27 (numba.tests.test_stencils.TestManyStencils.test_basic27)
+4d arr ... ok
+test_basic28 (numba.tests.test_stencils.TestManyStencils.test_basic28)
+type widen ... ok
+test_basic29 (numba.tests.test_stencils.TestManyStencils.test_basic29)
+const index from func ... ok
+test_basic30 (numba.tests.test_stencils.TestManyStencils.test_basic30)
+signed zeros ... ok
+test_basic31 (numba.tests.test_stencils.TestManyStencils.test_basic31)
+does a const propagate? 2D ... ok
+test_basic31b (numba.tests.test_stencils.TestManyStencils.test_basic31b)
+does a const propagate? ... skipped 'constant folding not implemented'
+test_basic31c (numba.tests.test_stencils.TestManyStencils.test_basic31c)
+does a const propagate? 1D ... ok
+test_basic32 (numba.tests.test_stencils.TestManyStencils.test_basic32)
+typed int index ... ok
+test_basic33 (numba.tests.test_stencils.TestManyStencils.test_basic33)
+add 0d array ... ok
+test_basic34 (numba.tests.test_stencils.TestManyStencils.test_basic34)
+More complex rel index with dependency on addition rel index ... ok
+test_basic35 (numba.tests.test_stencils.TestManyStencils.test_basic35)
+simple cval where cval is int but castable to dtype of float ... ok
+test_basic36 (numba.tests.test_stencils.TestManyStencils.test_basic36)
+more complex with cval ... ok
+test_basic37 (numba.tests.test_stencils.TestManyStencils.test_basic37)
+cval is expr ... ok
+test_basic38 (numba.tests.test_stencils.TestManyStencils.test_basic38)
+cval is complex ... ok
+test_basic39 (numba.tests.test_stencils.TestManyStencils.test_basic39)
+cval is func expr ... ok
+test_basic40 (numba.tests.test_stencils.TestManyStencils.test_basic40)
+2 args! ... ok
+test_basic41 (numba.tests.test_stencils.TestManyStencils.test_basic41)
+2 args! rel arrays wildly not same size! ... ok
+test_basic42 (numba.tests.test_stencils.TestManyStencils.test_basic42)
+2 args! rel arrays very close in size ... ok
+test_basic43 (numba.tests.test_stencils.TestManyStencils.test_basic43)
+2 args more complexity ... ok
+test_basic44 (numba.tests.test_stencils.TestManyStencils.test_basic44)
+2 args, has assignment before use ... ok
+test_basic45 (numba.tests.test_stencils.TestManyStencils.test_basic45)
+2 args, has assignment and then cross dependency ... ok
+test_basic46 (numba.tests.test_stencils.TestManyStencils.test_basic46)
+2 args, has cross relidx assignment ... ok
+test_basic47 (numba.tests.test_stencils.TestManyStencils.test_basic47)
+3 args ... ok
+test_basic48 (numba.tests.test_stencils.TestManyStencils.test_basic48)
+2 args, has assignment before use via memory alias ... ok
+test_basic49 (numba.tests.test_stencils.TestManyStencils.test_basic49)
+2 args, standard_indexing on second ... ok
+test_basic50 (numba.tests.test_stencils.TestManyStencils.test_basic50)
+2 args, standard_indexing OOB ... skipped 'dynamic range checking not implemented'
+test_basic51 (numba.tests.test_stencils.TestManyStencils.test_basic51)
+2 args, standard_indexing, no relidx ... ok
+test_basic52 (numba.tests.test_stencils.TestManyStencils.test_basic52)
+3 args, standard_indexing on middle arg ... ok
+test_basic53 (numba.tests.test_stencils.TestManyStencils.test_basic53)
+2 args, standard_indexing on variable that does not exist ... ok
+test_basic54 (numba.tests.test_stencils.TestManyStencils.test_basic54)
+2 args, standard_indexing, index from var ... ok
+test_basic55 (numba.tests.test_stencils.TestManyStencils.test_basic55)
+2 args, standard_indexing, index from more complex var ... ok
+test_basic56 (numba.tests.test_stencils.TestManyStencils.test_basic56)
+2 args, standard_indexing, added complexity ... ok
+test_basic57 (numba.tests.test_stencils.TestManyStencils.test_basic57)
+2 args, standard_indexing, split index operation ... ok
+test_basic58 (numba.tests.test_stencils.TestManyStencils.test_basic58)
+2 args, standard_indexing, split index with broadcast mutation ... ok
+test_basic59 (numba.tests.test_stencils.TestManyStencils.test_basic59)
+3 args, mix of array, relative and standard indexing and const ... ok
+test_basic60 (numba.tests.test_stencils.TestManyStencils.test_basic60)
+3 args, mix of array, relative and standard indexing, ... ok
+test_basic61 (numba.tests.test_stencils.TestManyStencils.test_basic61)
+2 args, standard_indexing on first ... ok
+test_basic62 (numba.tests.test_stencils.TestManyStencils.test_basic62)
+2 args, standard_indexing and cval ... ok
+test_basic63 (numba.tests.test_stencils.TestManyStencils.test_basic63)
+2 args, standard_indexing applied to relative, should fail, ... ok
+test_basic64 (numba.tests.test_stencils.TestManyStencils.test_basic64)
+1 arg that uses standard_indexing ... ok
+test_basic65 (numba.tests.test_stencils.TestManyStencils.test_basic65)
+basic induced neighborhood test ... ok
+test_basic66 (numba.tests.test_stencils.TestManyStencils.test_basic66)
+basic const neighborhood test ... ok
+test_basic67 (numba.tests.test_stencils.TestManyStencils.test_basic67)
+basic 2d induced neighborhood test ... ok
+test_basic67b (numba.tests.test_stencils.TestManyStencils.test_basic67b)
+basic 2d induced 1D neighborhood ... ok
+test_basic68 (numba.tests.test_stencils.TestManyStencils.test_basic68)
+basic 2d one induced, one cost neighborhood test ... ok
+test_basic69 (numba.tests.test_stencils.TestManyStencils.test_basic69)
+basic 2d two cost neighborhood test ... ok
+test_basic70 (numba.tests.test_stencils.TestManyStencils.test_basic70)
+neighborhood adding complexity ... ok
+test_basic71 (numba.tests.test_stencils.TestManyStencils.test_basic71)
+neighborhood, type change ... ok
+test_basic72 (numba.tests.test_stencils.TestManyStencils.test_basic72)
+neighborhood, narrower range than specified ... ok
+test_basic73 (numba.tests.test_stencils.TestManyStencils.test_basic73)
+neighborhood, +ve range ... ok
+test_basic73b (numba.tests.test_stencils.TestManyStencils.test_basic73b)
+neighborhood, -ve range ... ok
+test_basic74 (numba.tests.test_stencils.TestManyStencils.test_basic74)
+neighborhood, -ve->+ve range span ... ok
+test_basic75 (numba.tests.test_stencils.TestManyStencils.test_basic75)
+neighborhood, -ve->-ve range span ... ok
+test_basic76 (numba.tests.test_stencils.TestManyStencils.test_basic76)
+neighborhood, mixed range span ... ok
+test_basic77 (numba.tests.test_stencils.TestManyStencils.test_basic77)
+neighborhood, two args ... ok
+test_basic78 (numba.tests.test_stencils.TestManyStencils.test_basic78)
+neighborhood, two args, -ve range, -ve range ... ok
+test_basic78b (numba.tests.test_stencils.TestManyStencils.test_basic78b)
+neighborhood, two args, -ve range, +ve range ... ok
+test_basic79 (numba.tests.test_stencils.TestManyStencils.test_basic79)
+neighborhood, two incompatible args ... ok
+test_basic80 (numba.tests.test_stencils.TestManyStencils.test_basic80)
+neighborhood, type change ... ok
+test_basic81 (numba.tests.test_stencils.TestManyStencils.test_basic81)
+neighborhood, dimensionally incompatible arrays ... ok
+test_basic82 (numba.tests.test_stencils.TestManyStencils.test_basic82)
+neighborhood, with standard_indexing ... ok
+test_basic83 (numba.tests.test_stencils.TestManyStencils.test_basic83)
+neighborhood, with standard_indexing and cval ... ok
+test_basic84 (numba.tests.test_stencils.TestManyStencils.test_basic84)
+kernel calls njit ... ok
+test_basic85 (numba.tests.test_stencils.TestManyStencils.test_basic85)
+kernel calls njit(parallel=True) ... ok
+test_basic86 (numba.tests.test_stencils.TestManyStencils.test_basic86)
+bad kwarg ... ok
+test_basic87 (numba.tests.test_stencils.TestManyStencils.test_basic87)
+reserved arg name in use ... ok
+test_basic88 (numba.tests.test_stencils.TestManyStencils.test_basic88)
+use of reserved word ... ok
+test_basic89 (numba.tests.test_stencils.TestManyStencils.test_basic89)
+basic multiple return ... ok
+test_basic90 (numba.tests.test_stencils.TestManyStencils.test_basic90)
+neighborhood, with standard_indexing and cval, multiple returns ... ok
+test_basic91 (numba.tests.test_stencils.TestManyStencils.test_basic91)
+Issue #3454, const(int) == const(int) evaluating incorrectly. ... ok
+test_basic92 (numba.tests.test_stencils.TestManyStencils.test_basic92)
+Issue #3497, bool return type evaluating incorrectly. ... ok
+test_basic93 (numba.tests.test_stencils.TestManyStencils.test_basic93)
+Issue #3497, bool return type evaluating incorrectly. ... ok
+test_basic94 (numba.tests.test_stencils.TestManyStencils.test_basic94)
+Issue #3528. Support for slices. ... ok
+test_basic95 (numba.tests.test_stencils.TestManyStencils.test_basic95)
+Slice, calculate neighborhood. ... skipped 'not yet supported'
+test_basic96 (numba.tests.test_stencils.TestManyStencils.test_basic96)
+1D slice. ... ok
+test_basic97 (numba.tests.test_stencils.TestManyStencils.test_basic97)
+2D slice and index. ... skipped 'not yet supported'
+test_basic98 (numba.tests.test_stencils.TestManyStencils.test_basic98)
+Test issue #7286 where the cval is a np attr/string-based numerical ... ok
+
+----------------------------------------------------------------------
+Ran 105 tests in 234.687s
+
+OK (skipped=4)
+Parallel: 0. Serial: 105

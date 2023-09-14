@@ -1,0 +1,9 @@
+Parallel: 2. Serial: 0
+test_array_return (numba.tests.test_array_return.TestArrayReturn.test_array_return) ... ok
+test_array_return_start_with_loop (numba.tests.test_array_return.TestArrayReturn.test_array_return_start_with_loop)
+A bug breaks array return if the function starts with a loop ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.813s
+
+OK

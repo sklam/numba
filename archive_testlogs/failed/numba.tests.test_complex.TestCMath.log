@@ -1,0 +1,388 @@
+Parallel: 46. Serial: 0
+test_acos (numba.tests.test_complex.TestCMath.test_acos) ... ok
+test_acos_npm (numba.tests.test_complex.TestCMath.test_acos_npm) ... ok
+test_acosh (numba.tests.test_complex.TestCMath.test_acosh) ... ok
+test_acosh_npm (numba.tests.test_complex.TestCMath.test_acosh_npm) ... ok
+test_asin (numba.tests.test_complex.TestCMath.test_asin) ... ok
+test_asin_npm (numba.tests.test_complex.TestCMath.test_asin_npm) ... ok
+test_asinh (numba.tests.test_complex.TestCMath.test_asinh) ... ok
+test_asinh_npm (numba.tests.test_complex.TestCMath.test_asinh_npm) ... ok
+test_atan (numba.tests.test_complex.TestCMath.test_atan) ... ok
+test_atan_npm (numba.tests.test_complex.TestCMath.test_atan_npm) ... ERROR
+test_atanh (numba.tests.test_complex.TestCMath.test_atanh) ... ok
+test_atanh_npm (numba.tests.test_complex.TestCMath.test_atanh_npm) ... ERROR
+test_cos (numba.tests.test_complex.TestCMath.test_cos) ... ok
+test_cos_npm (numba.tests.test_complex.TestCMath.test_cos_npm) ... ok
+test_cosh (numba.tests.test_complex.TestCMath.test_cosh) ... ok
+test_cosh_npm (numba.tests.test_complex.TestCMath.test_cosh_npm) ... ok
+test_exp (numba.tests.test_complex.TestCMath.test_exp) ... ok
+test_exp_npm (numba.tests.test_complex.TestCMath.test_exp_npm) ... ok
+test_isfinite (numba.tests.test_complex.TestCMath.test_isfinite) ... ok
+test_isfinite_npm (numba.tests.test_complex.TestCMath.test_isfinite_npm) ... ok
+test_isinf (numba.tests.test_complex.TestCMath.test_isinf) ... ok
+test_isinf_npm (numba.tests.test_complex.TestCMath.test_isinf_npm) ... ok
+test_isnan (numba.tests.test_complex.TestCMath.test_isnan) ... ok
+test_isnan_npm (numba.tests.test_complex.TestCMath.test_isnan_npm) ... ok
+test_log (numba.tests.test_complex.TestCMath.test_log) ... ok
+test_log10 (numba.tests.test_complex.TestCMath.test_log10) ... ok
+test_log10_npm (numba.tests.test_complex.TestCMath.test_log10_npm) ... ok
+test_log_base (numba.tests.test_complex.TestCMath.test_log_base) ... ok
+test_log_base_npm (numba.tests.test_complex.TestCMath.test_log_base_npm) ... ok
+test_log_npm (numba.tests.test_complex.TestCMath.test_log_npm) ... ok
+test_phase (numba.tests.test_complex.TestCMath.test_phase) ... ok
+test_phase_npm (numba.tests.test_complex.TestCMath.test_phase_npm) ... ok
+test_polar (numba.tests.test_complex.TestCMath.test_polar) ... ok
+test_polar_npm (numba.tests.test_complex.TestCMath.test_polar_npm) ... ok
+test_rect (numba.tests.test_complex.TestCMath.test_rect) ... ok
+test_rect_npm (numba.tests.test_complex.TestCMath.test_rect_npm) ... ok
+test_sin (numba.tests.test_complex.TestCMath.test_sin) ... ok
+test_sin_npm (numba.tests.test_complex.TestCMath.test_sin_npm) ... ok
+test_sinh (numba.tests.test_complex.TestCMath.test_sinh) ... ok
+test_sinh_npm (numba.tests.test_complex.TestCMath.test_sinh_npm) ... ok
+test_sqrt (numba.tests.test_complex.TestCMath.test_sqrt) ... ok
+test_sqrt_npm (numba.tests.test_complex.TestCMath.test_sqrt_npm) ... ok
+test_tan (numba.tests.test_complex.TestCMath.test_tan) ... ok
+test_tan_npm (numba.tests.test_complex.TestCMath.test_tan_npm) ... ok
+test_tanh (numba.tests.test_complex.TestCMath.test_tanh) ... ok
+test_tanh_npm (numba.tests.test_complex.TestCMath.test_tanh_npm) ... ok
+
+======================================================================
+ERROR: test_atan_npm (numba.tests.test_complex.TestCMath.test_atan_npm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_complex.py", line 254, in test_atan_npm
+    self.check_unary_func(atan_usecase, no_pyobj_flags, ulps=2,)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_complex.py", line 138, in check_unary_func
+    self.run_unary(pyfunc, [types.complex128],
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_complex.py", line 42, in run_unary
+    cr = compile_isolated(pyfunc, [tx], flags=flags)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 466, in run_pass
+    lower.lower()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 187, in lower
+    self.lower_normal_function(self.fndesc)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 241, in lower_normal_function
+    entry_block_tail = self.lower_function_body()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 271, in lower_function_body
+    self.lower_block(block)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 285, in lower_block
+    self.lower_inst(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 463, in lower_inst
+    val = self.lower_assign(ty, inst)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 675, in lower_assign
+    return self.lower_expr(ty, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 1211, in lower_expr
+    res = self.lower_call(resty, expr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 940, in lower_call
+    res = self._lower_call_normal(fnty, expr, signature)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 1182, in _lower_call_normal
+    res = impl(self.builder, argvals, self.loc)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 1187, in __call__
+    res = self._imp(self._context, builder, self._sig, args, loc=loc)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 1217, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/cpython/cmathimpl.py", line 487, in atan_impl
+    res = context.compile_internal(builder, atan_impl, sig, args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 878, in compile_internal
+    cres = self.compile_subroutine(builder, impl, sig, locals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 863, in compile_subroutine
+    cres = self._compile_subroutine_no_cache(builder, impl, sig,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 834, in _compile_subroutine_no_cache
+    cres = compiler.compile_internal(self.typing_context, self,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 844, in compile_internal
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 466, in run_pass
+    lower.lower()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 187, in lower
+    self.lower_normal_function(self.fndesc)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 241, in lower_normal_function
+    entry_block_tail = self.lower_function_body()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 271, in lower_function_body
+    self.lower_block(block)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 285, in lower_block
+    self.lower_inst(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 463, in lower_inst
+    val = self.lower_assign(ty, inst)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 675, in lower_assign
+    return self.lower_expr(ty, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 1211, in lower_expr
+    res = self.lower_call(resty, expr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 940, in lower_call
+    res = self._lower_call_normal(fnty, expr, signature)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 1182, in _lower_call_normal
+    res = impl(self.builder, argvals, self.loc)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 1187, in __call__
+    res = self._imp(self._context, builder, self._sig, args, loc=loc)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 1217, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/cpython/cmathimpl.py", line 541, in atanh_impl
+    res = context.compile_internal(builder, atanh_impl, sig, args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 878, in compile_internal
+    cres = self.compile_subroutine(builder, impl, sig, locals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 863, in compile_subroutine
+    cres = self._compile_subroutine_no_cache(builder, impl, sig,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 834, in _compile_subroutine_no_cache
+    cres = compiler.compile_internal(self.typing_context, self,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 844, in compile_internal
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 344, in dispatch
+    raise UnsupportedError(msg, loc=self.get_debug_loc(inst.lineno))
+numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: native lowering)
+Failed in nopython mode pipeline (step: native lowering)
+Failed in nopython mode pipeline (step: analyzing bytecode)
+Use of unsupported opcode (EXTENDED_ARG) found
+
+File "numba/cpython/cmathimpl.py", line 517:
+    def atanh_impl(z):
+        <source elided>
+                real = z.real/4./h/h
+            imag = -math.copysign(PI_12, -z.imag)
+            ^
+
+During: lowering "r = call $14load_attr.2($90call.10, func=$14load_attr.2, args=[Var($90call.10, cmathimpl.py:480)], kws=(), vararg=None, varkwarg=None, target=None)" at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/cpython/cmathimpl.py (480)
+During: lowering "$36call.4 = call $14load_attr.2(x, func=$14load_attr.2, args=[Var(x, complex_usecases.py:30)], kws=(), vararg=None, varkwarg=None, target=None)" at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/complex_usecases.py (31)
+
+======================================================================
+ERROR: test_atanh_npm (numba.tests.test_complex.TestCMath.test_atanh_npm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_complex.py", line 293, in test_atanh_npm
+    self.check_unary_func(atanh_usecase, no_pyobj_flags, ulps=2)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_complex.py", line 138, in check_unary_func
+    self.run_unary(pyfunc, [types.complex128],
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_complex.py", line 42, in run_unary
+    cr = compile_isolated(pyfunc, [tx], flags=flags)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 466, in run_pass
+    lower.lower()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 187, in lower
+    self.lower_normal_function(self.fndesc)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 241, in lower_normal_function
+    entry_block_tail = self.lower_function_body()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 271, in lower_function_body
+    self.lower_block(block)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 285, in lower_block
+    self.lower_inst(inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 463, in lower_inst
+    val = self.lower_assign(ty, inst)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 675, in lower_assign
+    return self.lower_expr(ty, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 1211, in lower_expr
+    res = self.lower_call(resty, expr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 940, in lower_call
+    res = self._lower_call_normal(fnty, expr, signature)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/lowering.py", line 1182, in _lower_call_normal
+    res = impl(self.builder, argvals, self.loc)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 1187, in __call__
+    res = self._imp(self._context, builder, self._sig, args, loc=loc)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 1217, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/cpython/cmathimpl.py", line 541, in atanh_impl
+    res = context.compile_internal(builder, atanh_impl, sig, args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 878, in compile_internal
+    cres = self.compile_subroutine(builder, impl, sig, locals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 863, in compile_subroutine
+    cres = self._compile_subroutine_no_cache(builder, impl, sig,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/base.py", line 834, in _compile_subroutine_no_cache
+    cres = compiler.compile_internal(self.typing_context, self,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 844, in compile_internal
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 344, in dispatch
+    raise UnsupportedError(msg, loc=self.get_debug_loc(inst.lineno))
+numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: native lowering)
+Failed in nopython mode pipeline (step: analyzing bytecode)
+Use of unsupported opcode (EXTENDED_ARG) found
+
+File "numba/cpython/cmathimpl.py", line 517:
+    def atanh_impl(z):
+        <source elided>
+                real = z.real/4./h/h
+            imag = -math.copysign(PI_12, -z.imag)
+            ^
+
+During: lowering "$36call.4 = call $14load_attr.2(x, func=$14load_attr.2, args=[Var(x, complex_usecases.py:48)], kws=(), vararg=None, varkwarg=None, target=None)" at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/complex_usecases.py (49)
+
+----------------------------------------------------------------------
+Ran 46 tests in 36.902s
+
+FAILED (errors=2)

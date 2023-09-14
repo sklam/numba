@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_identity (numba.tests.test_dyn_array.TestNdIdentity.test_identity) ... ok
+test_identity_dtype (numba.tests.test_dyn_array.TestNdIdentity.test_identity_dtype) ... ok
+test_like_dtype_non_const_str_kwarg (numba.tests.test_dyn_array.TestNdIdentity.test_like_dtype_non_const_str_kwarg) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.329s
+
+OK

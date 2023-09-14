@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_direct_call (numba.tests.test_dispatcher.TestNoRetryFailedSignature.test_direct_call) ... ok
+test_error_count (numba.tests.test_dispatcher.TestNoRetryFailedSignature.test_error_count) ... ok
+test_nested_call (numba.tests.test_dispatcher.TestNoRetryFailedSignature.test_nested_call) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.472s
+
+OK

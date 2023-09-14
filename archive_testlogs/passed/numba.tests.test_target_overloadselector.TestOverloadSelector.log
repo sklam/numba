@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_ambiguous_detection (numba.tests.test_target_overloadselector.TestOverloadSelector.test_ambiguous_detection) ... ok
+test_cache (numba.tests.test_target_overloadselector.TestOverloadSelector.test_cache) ... ok
+test_match (numba.tests.test_target_overloadselector.TestOverloadSelector.test_match) ... ok
+test_select_and_sort_1 (numba.tests.test_target_overloadselector.TestOverloadSelector.test_select_and_sort_1) ... ok
+test_select_and_sort_2 (numba.tests.test_target_overloadselector.TestOverloadSelector.test_select_and_sort_2) ... ok
+test_subclass_specialization (numba.tests.test_target_overloadselector.TestOverloadSelector.test_subclass_specialization) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.181s
+
+OK

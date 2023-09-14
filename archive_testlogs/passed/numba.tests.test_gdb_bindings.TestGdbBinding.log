@@ -1,0 +1,15 @@
+test_gdb_cmd_lang_cpython_quick (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_cmd_lang_cpython_quick) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_cmd_lang_nopython_quick (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_cmd_lang_nopython_quick) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_cmd_lang_objmode_quick (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_cmd_lang_objmode_quick) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_split_init_and_break_cpython (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_split_init_and_break_cpython) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_split_init_and_break_nopython (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_split_init_and_break_nopython) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_split_init_and_break_objmode (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_split_init_and_break_objmode) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_split_init_and_break_w_parallel_cpython (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_split_init_and_break_w_parallel_cpython) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_split_init_and_break_w_parallel_nopython (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_split_init_and_break_w_parallel_nopython) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_gdb_split_init_and_break_w_parallel_objmode (numba.tests.test_gdb_bindings.TestGdbBinding.test_gdb_split_init_and_break_w_parallel_objmode) ... skipped 'functioning gdb with correct ptrace permissions is required'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK (skipped=9)
+Parallel: 0. Serial: 9

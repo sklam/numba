@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_scalar_binary_mixed_ufunc (numba.tests.test_ufuncs.TestScalarUFuncs.test_scalar_binary_mixed_ufunc) ... ok
+test_scalar_binary_uniform_ufunc (numba.tests.test_ufuncs.TestScalarUFuncs.test_scalar_binary_uniform_ufunc) ... ok
+test_scalar_unary_ufunc (numba.tests.test_ufuncs.TestScalarUFuncs.test_scalar_unary_ufunc) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.278s
+
+OK

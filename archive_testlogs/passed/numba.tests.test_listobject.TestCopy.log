@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_list_copy_empty (numba.tests.test_listobject.TestCopy.test_list_copy_empty) ... ok
+test_list_copy_multiple (numba.tests.test_listobject.TestCopy.test_list_copy_multiple) ... ok
+test_list_copy_singleton (numba.tests.test_listobject.TestCopy.test_list_copy_singleton) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.263s
+
+OK

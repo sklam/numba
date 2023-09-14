@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_global_func_lifetime (numba.tests.test_func_lifetime.TestFuncLifetime.test_global_func_lifetime) ... ok
+test_global_func_lifetime_npm (numba.tests.test_func_lifetime.TestFuncLifetime.test_global_func_lifetime_npm) ... ok
+test_global_obj_lifetime (numba.tests.test_func_lifetime.TestFuncLifetime.test_global_obj_lifetime) ... ok
+test_inner_function_lifetime (numba.tests.test_func_lifetime.TestFuncLifetime.test_inner_function_lifetime) ... ok
+test_inner_function_lifetime_npm (numba.tests.test_func_lifetime.TestFuncLifetime.test_inner_function_lifetime_npm) ... ok
+test_local_func_lifetime (numba.tests.test_func_lifetime.TestFuncLifetime.test_local_func_lifetime) ... ok
+test_local_func_lifetime_npm (numba.tests.test_func_lifetime.TestFuncLifetime.test_local_func_lifetime_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.210s
+
+OK

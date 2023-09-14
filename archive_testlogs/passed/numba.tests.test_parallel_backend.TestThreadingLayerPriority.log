@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_invalid_env_var (numba.tests.test_parallel_backend.TestThreadingLayerPriority.test_invalid_env_var) ... skipped 'TBB threadpool required'
+test_omp (numba.tests.test_parallel_backend.TestThreadingLayerPriority.test_omp) ... ok
+test_tbb (numba.tests.test_parallel_backend.TestThreadingLayerPriority.test_tbb) ... skipped 'TBB threadpool required'
+test_valid_env_var (numba.tests.test_parallel_backend.TestThreadingLayerPriority.test_valid_env_var) ... skipped 'TBB threadpool required'
+test_workqueue (numba.tests.test_parallel_backend.TestThreadingLayerPriority.test_workqueue) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 12.245s
+
+OK (skipped=3)

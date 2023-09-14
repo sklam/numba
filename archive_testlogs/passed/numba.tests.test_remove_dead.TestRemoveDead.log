@@ -1,0 +1,21 @@
+test1 (numba.tests.test_remove_dead.TestRemoveDead.test1) ... ok
+test2 (numba.tests.test_remove_dead.TestRemoveDead.test2) ... ok
+test_alias_ctypes (numba.tests.test_remove_dead.TestRemoveDead.test_alias_ctypes) ... skipped 'BLAS needs SciPy 1.0+'
+test_alias_flat (numba.tests.test_remove_dead.TestRemoveDead.test_alias_flat) ... ok
+test_alias_func_ext (numba.tests.test_remove_dead.TestRemoveDead.test_alias_func_ext) ... ok
+test_alias_parfor_extension (numba.tests.test_remove_dead.TestRemoveDead.test_alias_parfor_extension)
+Make sure aliases are considered in remove dead extension for ... ok
+test_alias_ravel (numba.tests.test_remove_dead.TestRemoveDead.test_alias_ravel) ... ok
+test_alias_reshape1 (numba.tests.test_remove_dead.TestRemoveDead.test_alias_reshape1) ... ok
+test_alias_reshape2 (numba.tests.test_remove_dead.TestRemoveDead.test_alias_reshape2) ... ok
+test_alias_transpose1 (numba.tests.test_remove_dead.TestRemoveDead.test_alias_transpose1) ... ok
+test_alias_transpose2 (numba.tests.test_remove_dead.TestRemoveDead.test_alias_transpose2) ... ok
+test_alias_transpose3 (numba.tests.test_remove_dead.TestRemoveDead.test_alias_transpose3) ... ok
+test_rm_dead_rhs_vars (numba.tests.test_remove_dead.TestRemoveDead.test_rm_dead_rhs_vars)
+make sure lhs variable of assignment is considered live if used in ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.422s
+
+OK (skipped=1)
+Parallel: 0. Serial: 13

@@ -1,0 +1,691 @@
+test_TestParforBasic (numba.tests.test_parfors.TestParforsRunner.test_TestParforBasic) ... ok
+test_TestParforNumPy (numba.tests.test_parfors.TestParforsRunner.test_TestParforNumPy) ... ok
+test_TestParforNumericalMisc (numba.tests.test_parfors.TestParforsRunner.test_TestParforNumericalMisc) ... FAIL
+test_TestParfors (numba.tests.test_parfors.TestParforsRunner.test_TestParfors) ... ok
+test_TestParforsBitMask (numba.tests.test_parfors.TestParforsRunner.test_TestParforsBitMask) ... ok
+test_TestParforsDiagnostics (numba.tests.test_parfors.TestParforsRunner.test_TestParforsDiagnostics) ... ok
+test_TestParforsLeaks (numba.tests.test_parfors.TestParforsRunner.test_TestParforsLeaks) ... ok
+test_TestParforsMisc (numba.tests.test_parfors.TestParforsRunner.test_TestParforsMisc) ... ok
+test_TestParforsOptions (numba.tests.test_parfors.TestParforsRunner.test_TestParforsOptions) ... FAIL
+test_TestParforsSlice (numba.tests.test_parfors.TestParforsRunner.test_TestParforsSlice) ... ok
+test_TestParforsVectorizer (numba.tests.test_parfors.TestParforsRunner.test_TestParforsVectorizer) ... ok
+test_TestPrangeBasic (numba.tests.test_parfors.TestParforsRunner.test_TestPrangeBasic) ... FAIL
+test_TestPrangeSpecific (numba.tests.test_parfors.TestParforsRunner.test_TestPrangeSpecific) ... FAIL
+
+======================================================================
+FAIL: test_TestParforNumericalMisc (numba.tests.test_parfors.TestParforsRunner.test_TestParforNumericalMisc)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 92, in test_TestParforNumericalMisc
+    self.runner()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 84, in runner
+    self.subprocess_test_runner(test_module=themod,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/support.py", line 632, in subprocess_test_runner
+    self.assertEqual(status.returncode, 0, streams)
+AssertionError: 1 != 0 : 
+captured stdout: 
+captured stderr: .EsOMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+.
+======================================================================
+ERROR: test_kmeans (numba.tests.test_parfors.TestParforNumericalMisc.test_kmeans)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 880, in test_kmeans
+    self.check(example_kmeans_test, A, centers, 3, init_centroids,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 288, in check
+    cfunc, cpfunc = self.compile_all(pyfunc, *args)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 188, in compile_all
+    cpfunc = self.compile_parallel(pyfunc, sig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 176, in compile_parallel
+    return self._compile_this(func, sig, flags=self.pflags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 173, in _compile_this
+    return compile_isolated(func, sig, flags=flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 344, in dispatch
+    raise UnsupportedError(msg, loc=self.get_debug_loc(inst.lineno))
+numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+Use of unsupported opcode (EXTENDED_ARG) found
+
+File "numba/tests/test_parfors.py", line 462:
+def example_kmeans_test(A, numCenter, numIter, init_centroids):
+    <source elided>
+
+    for l in range(numIter):
+    ^
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 7.102s
+
+FAILED (errors=1, skipped=1)
+
+
+======================================================================
+FAIL: test_TestParforsOptions (numba.tests.test_parfors.TestParforsRunner.test_TestParforsOptions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 113, in test_TestParforsOptions
+    self.runner()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 84, in runner
+    self.subprocess_test_runner(test_module=themod,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/support.py", line 632, in subprocess_test_runner
+    self.assertEqual(status.returncode, 0, streams)
+AssertionError: 1 != 0 : 
+captured stdout: 
+captured stderr: E
+======================================================================
+ERROR: test_parfor_options (numba.tests.test_parfors.TestParforsOptions.test_parfor_options)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 'i'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'i' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 'i'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+    return fn(inst, **kws)
+           ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+    self.store(value=self.get(srcname), name=res)
+                     ^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+    var = self.current_scope.get(name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+    return self.parent.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'i' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 2654, in test_parfor_options
+    self.check(test_impl, np.ones(10))
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 288, in check
+    cfunc, cpfunc = self.compile_all(pyfunc, *args)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 188, in compile_all
+    cpfunc = self.compile_parallel(pyfunc, sig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 176, in compile_parallel
+    return self._compile_this(func, sig, flags=self.pflags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 173, in _compile_this
+    return compile_isolated(func, sig, flags=flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+    self._dispatch(inst, kws)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+    raise err
+numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+The compiler failed to analyze the bytecode. Variable 'i' is not defined.
+
+File "numba/tests/test_parfors.py", line 2648:
+        def test_impl(a):
+            <source elided>
+            b = np.ones(n)
+            c = np.array([ i for i in range(n) ])
+            ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.246s
+
+FAILED (errors=1)
+
+
+======================================================================
+FAIL: test_TestPrangeBasic (numba.tests.test_parfors.TestParforsRunner.test_TestPrangeBasic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 122, in test_TestPrangeBasic
+    self.runner()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 84, in runner
+    self.subprocess_test_runner(test_module=themod,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/support.py", line 632, in subprocess_test_runner
+    self.assertEqual(status.returncode, 0, streams)
+AssertionError: 1 != 0 : 
+captured stdout: 
+captured stderr: OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+............FFs.............F.F...
+======================================================================
+FAIL: test_prange09 (numba.tests.test_parfors.TestPrangeBasic.test_prange09)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3650, in test_prange09
+    self.prange_tester(test_impl, patch_instance=[1],
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3484, in prange_tester
+    pfunc = self.generate_prange_func(pyfunc, patch_instance)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3389, in generate_prange_func
+    if _fix_LOAD_GLOBAL_arg(instr.arg) == range_idx:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_prange10 (numba.tests.test_parfors.TestPrangeBasic.test_prange10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3665, in test_prange10
+    self.prange_tester(test_impl, patch_instance=[0],
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3484, in prange_tester
+    pfunc = self.generate_prange_func(pyfunc, patch_instance)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3389, in generate_prange_func
+    if _fix_LOAD_GLOBAL_arg(instr.arg) == range_idx:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_prange25 (numba.tests.test_parfors.TestPrangeBasic.test_prange25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3829, in test_prange25
+    self.prange_tester(test_impl, A,  patch_instance=[1],
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3484, in prange_tester
+    pfunc = self.generate_prange_func(pyfunc, patch_instance)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3389, in generate_prange_func
+    if _fix_LOAD_GLOBAL_arg(instr.arg) == range_idx:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_prange27 (numba.tests.test_parfors.TestPrangeBasic.test_prange27)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3857, in test_prange27
+    self.prange_tester(test_impl,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3484, in prange_tester
+    pfunc = self.generate_prange_func(pyfunc, patch_instance)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3389, in generate_prange_func
+    if _fix_LOAD_GLOBAL_arg(instr.arg) == range_idx:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 34 tests in 48.627s
+
+FAILED (failures=4, skipped=1)
+
+
+======================================================================
+FAIL: test_TestPrangeSpecific (numba.tests.test_parfors.TestParforsRunner.test_TestPrangeSpecific)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 125, in test_TestPrangeSpecific
+    self.runner()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 84, in runner
+    self.subprocess_test_runner(test_module=themod,
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/support.py", line 632, in subprocess_test_runner
+    self.assertEqual(status.returncode, 0, streams)
+AssertionError: 1 != 0 : 
+captured stdout: 
+captured stderr: /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py:334: NumbaPerformanceWarning: 
+The keyword argument 'parallel=True' was specified but no transformation for parallel execution was possible.
+
+To find out why, try turning on parallel diagnostics, see https://numba.readthedocs.io/en/stable/user/parallel.html#diagnostics for help.
+
+File "numba/tests/test_parfors.py", line 4176:
+        # Test for issue4007.
+        def test_impl(n):
+        ^
+
+  warnings.warn(errors.NumbaPerformanceWarning(msg,
+./mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py", line 469, in __setitem__
+    raise AssertionError("key already in dictionary: %r" % (key,))
+
+  warnings.warn(msg,
+FsFOMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+....E../mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir_utils.py:2174: NumbaPendingDeprecationWarning: 
+Encountered the use of a type that is scheduled for deprecation: type 'reflected list' found for argument 'X' of function 'TestPrangeSpecific.test_mutable_list_param.<locals>.list_check'.
+
+For more information visit https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types
+
+File "numba/tests/test_parfors.py", line 4202:
+        @njit
+        def list_check(X):
+        ^
+
+  warnings.warn(NumbaPendingDeprecationWarning(msg, loc=loc))
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor_lowering.py:1144: NumbaParallelSafetyWarning: Variable a used in parallel loop may be written to simultaneously by multiple workers and may result in non-deterministic or unintended results.
+
+File "numba/tests/test_parfors.py", line 4212:
+        def test_impl(n):
+            for i in prange(n):
+            ^
+
+  warnings.warn(NumbaParallelSafetyWarning(msg, loc))
+......E....E...
+======================================================================
+ERROR: test_list_comprehension_prange (numba.tests.test_parfors.TestPrangeSpecific.test_list_comprehension_prange)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 'i'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'i' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 271, in get
+    return self._con[name]
+           ~~~~~~~~~^^^^^^
+KeyError: 'i'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1783, in _dispatch
+    return fn(inst, **kws)
+           ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 2148, in op_LOAD_FAST
+    self.store(value=self.get(srcname), name=res)
+                     ^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1829, in get
+    var = self.current_scope.get(name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1181, in get_exact
+    return self.parent.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1170, in get
+    return self.get_exact(name)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 1178, in get_exact
+    return self.localvars.get(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/ir.py", line 273, in get
+    raise NotDefinedError(name)
+numba.core.errors.NotDefinedError: The compiler failed to analyze the bytecode. Variable 'i' is not defined.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 4228, in test_list_comprehension_prange
+    self.prange_tester(test_impl, x)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3489, in prange_tester
+    cfunc = self.compile_njit(pyfunc, sig)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 182, in compile_njit
+    return self._compile_this(func, sig, flags=self.cflags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 173, in _compile_this
+    return compile_isolated(func, sig, flags=flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1379, in interpret
+    self._dispatch(inst, kws)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1794, in _dispatch
+    raise err
+numba.core.errors.NotDefinedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+The compiler failed to analyze the bytecode. Variable 'i' is not defined.
+
+File "numba/tests/test_parfors.py", line 4226:
+        def test_impl(x):
+            return np.array([len(x[i]) for i in range(len(x))])
+            ^
+
+
+======================================================================
+ERROR: test_prange_conflicting_reduction_ops (numba.tests.test_parfors.TestPrangeSpecific.test_prange_conflicting_reduction_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3956, in test_prange_conflicting_reduction_ops
+    self.prange_tester(test_impl, 9)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3494, in prange_tester
+    cpfunc = self.compile_parallel(pfunc, sig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 176, in compile_parallel
+    return self._compile_this(func, sig, flags=self.pflags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 173, in _compile_this
+    return compile_isolated(func, sig, flags=flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 395, in run_pass
+    parfor_pass.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor.py", line 3093, in run
+    p.redvars, p.reddict = get_parfor_reductions(self.func_ir,
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor.py", line 3733, in get_parfor_reductions
+    reduce_nodes = get_reduce_nodes(param, param_nodes[param], func_ir)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor.py", line 3854, in get_reduce_nodes
+    raise ValueError(
+ValueError: Failed in nopython mode pipeline (step: parfor prelowering)
+Use of reduction variable 'c' other than in a supported reduction function is not permitted.
+
+======================================================================
+ERROR: test_prange_two_instances_same_reduction_var (numba.tests.test_parfors.TestPrangeSpecific.test_prange_two_instances_same_reduction_var)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3944, in test_prange_two_instances_same_reduction_var
+    self.prange_tester(test_impl, 9)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3494, in prange_tester
+    cpfunc = self.compile_parallel(pfunc, sig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 176, in compile_parallel
+    return self._compile_this(func, sig, flags=self.pflags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 173, in _compile_this
+    return compile_isolated(func, sig, flags=flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 395, in run_pass
+    parfor_pass.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor.py", line 3093, in run
+    p.redvars, p.reddict = get_parfor_reductions(self.func_ir,
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor.py", line 3733, in get_parfor_reductions
+    reduce_nodes = get_reduce_nodes(param, param_nodes[param], func_ir)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/parfors/parfor.py", line 3854, in get_reduce_nodes
+    raise ValueError(
+ValueError: Failed in nopython mode pipeline (step: parfor prelowering)
+Use of reduction variable 'c' other than in a supported reduction function is not permitted.
+
+======================================================================
+FAIL: test_check_alias_analysis (numba.tests.test_parfors.TestPrangeSpecific.test_check_alias_analysis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 4018, in test_check_alias_analysis
+    self.prange_tester(test_impl, A, scheduler_type='unsigned',
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3489, in prange_tester
+    cfunc = self.compile_njit(pyfunc, sig)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 182, in compile_njit
+    return self._compile_this(func, sig, flags=self.cflags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 173, in _compile_this
+    return compile_isolated(func, sig, flags=flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 111, in run
+    first_encounter[state.pc_initial] = state
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py", line 469, in __setitem__
+    raise AssertionError("key already in dictionary: %r" % (key,))
+AssertionError: Failed in nopython mode pipeline (step: analyzing bytecode)
+key already in dictionary: 44
+
+======================================================================
+FAIL: test_copy_global_for_parfor (numba.tests.test_parfors.TestPrangeSpecific.test_copy_global_for_parfor)
+issue4903: a global is copied next to a parfor so that
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 4161, in test_copy_global_for_parfor
+    self.prange_tester(test_impl, zz, tc, patch_instance=[0])
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3484, in prange_tester
+    pfunc = self.generate_prange_func(pyfunc, patch_instance)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parfors.py", line 3389, in generate_prange_func
+    if _fix_LOAD_GLOBAL_arg(instr.arg) == range_idx:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 26 tests in 24.452s
+
+FAILED (failures=2, errors=3, skipped=1)
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 1231.341s
+
+FAILED (failures=4)
+Parallel: 0. Serial: 13

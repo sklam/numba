@@ -1,0 +1,24 @@
+Parallel: 18. Serial: 0
+test_reciprocal_B_B (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_B_B) ... ok
+test_reciprocal_D_D (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_D_D) ... ok
+test_reciprocal_F_F (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_F_F) ... ok
+test_reciprocal_G_G (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_G_G) ... ok
+test_reciprocal_H_H (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_H_H) ... ok
+test_reciprocal_I_I (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_I_I) ... ok
+test_reciprocal_L_L (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_L_L) ... ok
+test_reciprocal_O_O (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_O_O) ... ok
+test_reciprocal_Q_Q (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_Q_Q) ... ok
+test_reciprocal_b_b (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_b_b) ... ok
+test_reciprocal_d_d (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_d_d) ... ok
+test_reciprocal_e_e (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_e_e) ... ok
+test_reciprocal_f_f (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_f_f) ... ok
+test_reciprocal_g_g (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_g_g) ... ok
+test_reciprocal_h_h (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_h_h) ... ok
+test_reciprocal_i_i (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_i_i) ... ok
+test_reciprocal_l_l (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_l_l) ... ok
+test_reciprocal_q_q (numba.tests.test_ufuncs.TestLoopTypesReciprocal.test_reciprocal_q_q) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 3.171s
+
+OK

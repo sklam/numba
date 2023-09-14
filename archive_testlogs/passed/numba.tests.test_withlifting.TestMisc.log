@@ -1,0 +1,7 @@
+test_no_fork_in_compilation (numba.tests.test_withlifting.TestMisc.test_no_fork_in_compilation) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.892s
+
+OK
+Parallel: 0. Serial: 1

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_overload_attribute (numba.tests.test_struct_ref.TestStructRefForwardTyping.test_overload_attribute) ... ok
+test_overload_method (numba.tests.test_struct_ref.TestStructRefForwardTyping.test_overload_method) ... ok
+test_same_type_assignment (numba.tests.test_struct_ref.TestStructRefForwardTyping.test_same_type_assignment) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.283s
+
+OK

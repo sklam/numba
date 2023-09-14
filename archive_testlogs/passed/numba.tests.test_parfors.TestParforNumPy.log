@@ -1,0 +1,30 @@
+test_0d_array (numba.tests.test_parfors.TestParforNumPy.test_0d_array) ... skipped 'needs subprocess harness'
+test_arange (numba.tests.test_parfors.TestParforNumPy.test_arange) ... skipped 'needs subprocess harness'
+test_arange_dtype (numba.tests.test_parfors.TestParforNumPy.test_arange_dtype) ... skipped 'needs subprocess harness'
+test_argmax (numba.tests.test_parfors.TestParforNumPy.test_argmax) ... skipped 'needs subprocess harness'
+test_argmin (numba.tests.test_parfors.TestParforNumPy.test_argmin) ... skipped 'needs subprocess harness'
+test_dead_randoms (numba.tests.test_parfors.TestParforNumPy.test_dead_randoms) ... skipped 'needs subprocess harness'
+test_fuse_argmin_argmax_max_min (numba.tests.test_parfors.TestParforNumPy.test_fuse_argmin_argmax_max_min) ... skipped 'needs subprocess harness'
+test_linspace (numba.tests.test_parfors.TestParforNumPy.test_linspace) ... skipped 'needs subprocess harness'
+test_max (numba.tests.test_parfors.TestParforNumPy.test_max) ... skipped 'needs subprocess harness'
+test_mean (numba.tests.test_parfors.TestParforNumPy.test_mean) ... skipped 'needs subprocess harness'
+test_min (numba.tests.test_parfors.TestParforNumPy.test_min) ... skipped 'needs subprocess harness'
+test_mvdot (numba.tests.test_parfors.TestParforNumPy.test_mvdot) ... skipped 'needs subprocess harness'
+test_ndarray_fill (numba.tests.test_parfors.TestParforNumPy.test_ndarray_fill) ... skipped 'needs subprocess harness'
+test_ndarray_fill2d (numba.tests.test_parfors.TestParforNumPy.test_ndarray_fill2d) ... skipped 'needs subprocess harness'
+test_np_random_func_direct_import (numba.tests.test_parfors.TestParforNumPy.test_np_random_func_direct_import) ... skipped 'needs subprocess harness'
+test_random_parfor (numba.tests.test_parfors.TestParforNumPy.test_random_parfor)
+Test function with only a random call to make sure a random function ... skipped 'needs subprocess harness'
+test_randoms (numba.tests.test_parfors.TestParforNumPy.test_randoms) ... skipped 'needs subprocess harness'
+test_real_imag_attr (numba.tests.test_parfors.TestParforNumPy.test_real_imag_attr) ... skipped 'needs subprocess harness'
+test_reshape_with_large_neg (numba.tests.test_parfors.TestParforNumPy.test_reshape_with_large_neg) ... skipped 'needs subprocess harness'
+test_reshape_with_neg_one (numba.tests.test_parfors.TestParforNumPy.test_reshape_with_neg_one) ... skipped 'needs subprocess harness'
+test_reshape_with_too_many_neg_one (numba.tests.test_parfors.TestParforNumPy.test_reshape_with_too_many_neg_one) ... skipped 'needs subprocess harness'
+test_std (numba.tests.test_parfors.TestParforNumPy.test_std) ... skipped 'needs subprocess harness'
+test_var (numba.tests.test_parfors.TestParforNumPy.test_var) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.001s
+
+OK (skipped=23)
+Parallel: 0. Serial: 23

@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_layout (numba.tests.test_indexing.TestTyping.test_layout)
+Check an appropriate layout is inferred for the result of array ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.108s
+
+OK

@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_commented_func_definition_is_not_a_definition (numba.tests.test_errorhandling.TestMiscErrorHandling.test_commented_func_definition_is_not_a_definition) ... ok
+test_handling_forgotten_numba_internal_import (numba.tests.test_errorhandling.TestMiscErrorHandling.test_handling_forgotten_numba_internal_import) ... ok
+test_handling_of_write_to_reflected_global (numba.tests.test_errorhandling.TestMiscErrorHandling.test_handling_of_write_to_reflected_global) ... ok
+test_handling_of_write_to_typed_dict_global (numba.tests.test_errorhandling.TestMiscErrorHandling.test_handling_of_write_to_typed_dict_global) ... ok
+test_handling_undefined_variable (numba.tests.test_errorhandling.TestMiscErrorHandling.test_handling_undefined_variable) ... ok
+test_handling_unsupported_generator_expression (numba.tests.test_errorhandling.TestMiscErrorHandling.test_handling_unsupported_generator_expression) ... ok
+test_use_of_exception_for_flow_control (numba.tests.test_errorhandling.TestMiscErrorHandling.test_use_of_exception_for_flow_control) ... ok
+test_use_of_ir_unknown_loc (numba.tests.test_errorhandling.TestMiscErrorHandling.test_use_of_ir_unknown_loc) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.856s
+
+OK

@@ -1,0 +1,36 @@
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/serialize_usecases.py:12: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit((types.int32, types.int32))
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/serialize_usecases.py:16: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py:262: NumbaDeprecationWarning: numba.generated_jit is deprecated. Please see the documentation at: https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-generated-jit for more information and advice on a suitable replacement.
+  warnings.warn(msg, NumbaDeprecationWarning)
+Parallel: 17. Serial: 0
+test_call_closure (numba.tests.test_serialize.TestDispatcherPickling.test_call_closure) ... ok
+test_call_closure_calling_other_closure (numba.tests.test_serialize.TestDispatcherPickling.test_call_closure_calling_other_closure) ... ok
+test_call_closure_calling_other_function (numba.tests.test_serialize.TestDispatcherPickling.test_call_closure_calling_other_function) ... ok
+test_call_closure_with_globals_nopython (numba.tests.test_serialize.TestDispatcherPickling.test_call_closure_with_globals_nopython) ... ok
+test_call_closure_with_globals_objmode (numba.tests.test_serialize.TestDispatcherPickling.test_call_closure_with_globals_objmode) ... ok
+test_call_dyn_func (numba.tests.test_serialize.TestDispatcherPickling.test_call_dyn_func) ... ok
+test_call_dyn_func_objmode (numba.tests.test_serialize.TestDispatcherPickling.test_call_dyn_func_objmode) ... ok
+test_call_generated (numba.tests.test_serialize.TestDispatcherPickling.test_call_generated) ... ok
+test_call_nopython (numba.tests.test_serialize.TestDispatcherPickling.test_call_nopython) ... ok
+test_call_nopython_fail (numba.tests.test_serialize.TestDispatcherPickling.test_call_nopython_fail) ... ok
+test_call_objmode_with_global (numba.tests.test_serialize.TestDispatcherPickling.test_call_objmode_with_global) ... ok
+test_call_with_sig (numba.tests.test_serialize.TestDispatcherPickling.test_call_with_sig) ... ok
+test_call_without_sig (numba.tests.test_serialize.TestDispatcherPickling.test_call_without_sig) ... ok
+test_imp_deprecation (numba.tests.test_serialize.TestDispatcherPickling.test_imp_deprecation)
+The imp module was deprecated in v3.4 in favour of importlib ... ok
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/serialize_usecases.py:79: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  return other_inner(y) + x
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/serialize_usecases.py:79: NumbaDeprecationWarning: numba.generated_jit is deprecated. Please see the documentation at: https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-generated-jit for more information and advice on a suitable replacement.
+  return other_inner(y) + x
+test_other_process (numba.tests.test_serialize.TestDispatcherPickling.test_other_process)
+Check that reconstructing doesn't depend on resources already ... ok
+test_renamed_module (numba.tests.test_serialize.TestDispatcherPickling.test_renamed_module) ... ok
+test_reuse (numba.tests.test_serialize.TestDispatcherPickling.test_reuse)
+Check that deserializing the same function multiple times re-uses ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 5.507s
+
+OK

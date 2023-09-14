@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_ssa_replace_phi (numba.tests.test_analysis.TestBranchPruneSSA.test_ssa_replace_phi) ... ok
+test_ssa_update_phi (numba.tests.test_analysis.TestBranchPruneSSA.test_ssa_update_phi) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.651s
+
+OK

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_list_clear_empty (numba.tests.test_listobject.TestClear.test_list_clear_empty) ... ok
+test_list_clear_multiple (numba.tests.test_listobject.TestClear.test_list_clear_multiple) ... ok
+test_list_clear_singleton (numba.tests.test_listobject.TestClear.test_list_clear_singleton) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.318s
+
+OK

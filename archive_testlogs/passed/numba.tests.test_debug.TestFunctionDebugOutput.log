@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_dump_assembly (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_assembly) ... ok
+test_dump_bytecode (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_bytecode) ... ok
+test_dump_cfg (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_cfg) ... ok
+test_dump_func_opt_llvm (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_func_opt_llvm) ... ok
+test_dump_ir (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_ir) ... ok
+test_dump_llvm (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_llvm) ... ok
+test_dump_optimized_llvm (numba.tests.test_debug.TestFunctionDebugOutput.test_dump_optimized_llvm) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.360s
+
+OK

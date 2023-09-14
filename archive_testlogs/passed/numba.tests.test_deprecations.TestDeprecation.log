@@ -1,0 +1,28 @@
+Parallel: 22. Serial: 0
+test_default_missing_nopython_kwarg (numba.tests.test_deprecations.TestDeprecation.test_default_missing_nopython_kwarg) ... ok
+test_default_missing_nopython_kwarg_silent_if_forceobj (numba.tests.test_deprecations.TestDeprecation.test_default_missing_nopython_kwarg_silent_if_forceobj) ... ok
+test_explicit_false_nopython_kwarg (numba.tests.test_deprecations.TestDeprecation.test_explicit_false_nopython_kwarg) ... ok
+test_generated_jit (numba.tests.test_deprecations.TestDeprecation.test_generated_jit) ... ok
+test_guvectorize_forceobj_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_guvectorize_forceobj_no_warnings) ... ok
+test_guvectorize_implicit_nopython_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_guvectorize_implicit_nopython_no_warnings) ... ok
+test_guvectorize_parallel_forceobj_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_guvectorize_parallel_forceobj_no_warnings) ... ok
+test_guvectorize_parallel_implicit_nopython_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_guvectorize_parallel_implicit_nopython_no_warnings) ... ok
+test_jitfallback (numba.tests.test_deprecations.TestDeprecation.test_jitfallback) ... ok
+test_pycc_CC (numba.tests.test_deprecations.TestDeprecation.test_pycc_CC) ... ok
+test_pycc_module (numba.tests.test_deprecations.TestDeprecation.test_pycc_module) ... ok
+test_reflection_of_mutable_container (numba.tests.test_deprecations.TestDeprecation.test_reflection_of_mutable_container) ... ok
+test_vectorize_calling_jit_with_nopython_false_warns_from_jit (numba.tests.test_deprecations.TestDeprecation.test_vectorize_calling_jit_with_nopython_false_warns_from_jit) ... ok
+test_vectorize_missing_nopython_kwarg_not_reported (numba.tests.test_deprecations.TestDeprecation.test_vectorize_missing_nopython_kwarg_not_reported) ... ok
+test_vectorize_nopython_false_is_reported (numba.tests.test_deprecations.TestDeprecation.test_vectorize_nopython_false_is_reported) ... ok
+test_vectorize_objmode_compilation_nopython_false_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_vectorize_objmode_compilation_nopython_false_no_warnings) ... ok
+test_vectorize_objmode_direct_compilation_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_vectorize_objmode_direct_compilation_no_warnings) ... ok
+test_vectorize_objmode_missing_nopython_kwarg_not_reported (numba.tests.test_deprecations.TestDeprecation.test_vectorize_objmode_missing_nopython_kwarg_not_reported) ... ok
+test_vectorize_objmode_nopython_false_is_reported (numba.tests.test_deprecations.TestDeprecation.test_vectorize_objmode_nopython_false_is_reported) ... ok
+test_vectorize_parallel_true_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_vectorize_parallel_true_no_warnings) ... ok
+test_vectorize_parallel_true_nopython_false_warns (numba.tests.test_deprecations.TestDeprecation.test_vectorize_parallel_true_nopython_false_warns) ... ok
+test_vectorize_parallel_true_nopython_true_no_warnings (numba.tests.test_deprecations.TestDeprecation.test_vectorize_parallel_true_nopython_true_no_warnings) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 31.984s
+
+OK

@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_threading_layer_selector_omp (numba.tests.test_parallel_backend.TestThreadingLayerSelection.test_threading_layer_selector_omp) ... ok
+test_threading_layer_selector_tbb (numba.tests.test_parallel_backend.TestThreadingLayerSelection.test_threading_layer_selector_tbb) ... skipped 'TBB threadpool required'
+test_threading_layer_selector_workqueue (numba.tests.test_parallel_backend.TestThreadingLayerSelection.test_threading_layer_selector_workqueue) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 7.275s
+
+OK (skipped=1)

@@ -1,0 +1,14 @@
+Parallel: 5. Serial: 0
+test_combine_gen0_gen1 (numba.tests.test_generators.TestNrtArrayGen.test_combine_gen0_gen1)
+Issue #1163 is observed when two generator with NRT object arguments ... ok
+test_nrt_gen0 (numba.tests.test_generators.TestNrtArrayGen.test_nrt_gen0) ... ok
+test_nrt_gen0_no_iter (numba.tests.test_generators.TestNrtArrayGen.test_nrt_gen0_no_iter)
+Test cleanup for a initialized but never iterated (never call next()) ... ok
+test_nrt_gen0_stop_iteration (numba.tests.test_generators.TestNrtArrayGen.test_nrt_gen0_stop_iteration)
+Test cleanup on StopIteration ... ok
+test_nrt_gen1 (numba.tests.test_generators.TestNrtArrayGen.test_nrt_gen1) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.583s
+
+OK

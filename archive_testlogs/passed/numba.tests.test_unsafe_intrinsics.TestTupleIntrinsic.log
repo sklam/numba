@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_slice_tuple (numba.tests.test_unsafe_intrinsics.TestTupleIntrinsic.test_slice_tuple) ... ok
+test_tuple_setitem (numba.tests.test_unsafe_intrinsics.TestTupleIntrinsic.test_tuple_setitem) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.425s
+
+OK

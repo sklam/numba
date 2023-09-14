@@ -1,0 +1,10 @@
+test_blackscholes (numba.tests.test_parfors.TestParforNumericalMisc.test_blackscholes) ... skipped 'needs subprocess harness'
+test_kmeans (numba.tests.test_parfors.TestParforNumericalMisc.test_kmeans) ... skipped 'needs subprocess harness'
+test_logistic_regression (numba.tests.test_parfors.TestParforNumericalMisc.test_logistic_regression) ... skipped 'needs subprocess harness'
+test_pi (numba.tests.test_parfors.TestParforNumericalMisc.test_pi) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK (skipped=4)
+Parallel: 0. Serial: 4

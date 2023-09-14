@@ -1,0 +1,25 @@
+Parallel: 2. Serial: 0
+test_bound_jit_method_with_loop_lift (numba.tests.test_jitmethod.TestJITMethod.test_bound_jit_method_with_loop_lift) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_jitmethod.py:42: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+test_unbound_jit_method (numba.tests.test_jitmethod.TestJITMethod.test_unbound_jit_method) ... ERROR
+
+======================================================================
+ERROR: test_unbound_jit_method (numba.tests.test_jitmethod.TestJITMethod.test_unbound_jit_method)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_jitmethod.py", line 47, in test_unbound_jit_method
+    self.assertEquals(Something.method(something), 3)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: 'TestJITMethod' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_jitmethod.py:42: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.097s
+
+FAILED (errors=1)

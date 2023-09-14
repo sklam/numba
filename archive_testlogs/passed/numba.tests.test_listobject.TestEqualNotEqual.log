@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_list_empty_equal (numba.tests.test_listobject.TestEqualNotEqual.test_list_empty_equal) ... ok
+test_list_length_mismatch (numba.tests.test_listobject.TestEqualNotEqual.test_list_length_mismatch) ... ok
+test_list_multiple_equal (numba.tests.test_listobject.TestEqualNotEqual.test_list_multiple_equal) ... ok
+test_list_multiple_not_equal (numba.tests.test_listobject.TestEqualNotEqual.test_list_multiple_not_equal) ... ok
+test_list_singleton_equal (numba.tests.test_listobject.TestEqualNotEqual.test_list_singleton_equal) ... ok
+test_list_singleton_not_equal (numba.tests.test_listobject.TestEqualNotEqual.test_list_singleton_not_equal) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.134s
+
+OK

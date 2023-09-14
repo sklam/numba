@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_eye_n (numba.tests.test_dyn_array.TestNdEye.test_eye_n) ... ok
+test_eye_n_dtype (numba.tests.test_dyn_array.TestNdEye.test_eye_n_dtype) ... ok
+test_eye_n_m (numba.tests.test_dyn_array.TestNdEye.test_eye_n_m) ... ok
+test_eye_n_m_k (numba.tests.test_dyn_array.TestNdEye.test_eye_n_m_k) ... ok
+test_eye_n_m_k_dtype (numba.tests.test_dyn_array.TestNdEye.test_eye_n_m_k_dtype) ... ok
+test_eye_n_m_k_dtype_instance (numba.tests.test_dyn_array.TestNdEye.test_eye_n_m_k_dtype_instance) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.135s
+
+OK

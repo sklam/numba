@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_allocate (numba.tests.test_nrt.TestNrtExternalCFFI.test_allocate) ... skipped 'requires cffi'
+test_get_api (numba.tests.test_nrt.TestNrtExternalCFFI.test_get_api) ... skipped 'requires cffi'
+test_manage_memory (numba.tests.test_nrt.TestNrtExternalCFFI.test_manage_memory) ... skipped 'requires cffi'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.113s
+
+OK (skipped=3)

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_numpy_gen_usage (numba.tests.doc_examples.test_numpy_generators.NumpyGeneratorUsageTest.test_numpy_gen_usage) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.098s
+
+OK

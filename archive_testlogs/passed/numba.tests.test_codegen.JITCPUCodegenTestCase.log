@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_cache_disabled_inspection (numba.tests.test_codegen.JITCPUCodegenTestCase.test_cache_disabled_inspection) ... ok
+test_get_pointer_to_function (numba.tests.test_codegen.JITCPUCodegenTestCase.test_get_pointer_to_function) ... ok
+test_library_lifetime (numba.tests.test_codegen.JITCPUCodegenTestCase.test_library_lifetime) ... expected failure
+test_magic_tuple (numba.tests.test_codegen.JITCPUCodegenTestCase.test_magic_tuple) ... ok
+test_serialize_unserialize_bitcode (numba.tests.test_codegen.JITCPUCodegenTestCase.test_serialize_unserialize_bitcode) ... ok
+test_serialize_unserialize_object_code (numba.tests.test_codegen.JITCPUCodegenTestCase.test_serialize_unserialize_object_code) ... ok
+test_unserialize_other_process_bitcode (numba.tests.test_codegen.JITCPUCodegenTestCase.test_unserialize_other_process_bitcode) ... ok
+test_unserialize_other_process_object_code (numba.tests.test_codegen.JITCPUCodegenTestCase.test_unserialize_other_process_object_code) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.440s
+
+OK (expected failures=1)

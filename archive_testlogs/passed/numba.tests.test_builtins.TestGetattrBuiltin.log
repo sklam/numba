@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_getattr_func_retty (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_func_retty) ... ok
+test_getattr_module_obj (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_module_obj) ... ok
+test_getattr_module_obj_not_implemented (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_module_obj_not_implemented) ... ok
+test_getattr_no_optional_type_generated (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_no_optional_type_generated) ... ok
+test_getattr_non_literal_str (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_non_literal_str) ... ok
+test_getattr_raises_attribute_error (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_raises_attribute_error) ... ok
+test_getattr_value_retty (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_value_retty) ... ok
+test_getattr_with_default (numba.tests.test_builtins.TestGetattrBuiltin.test_getattr_with_default) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.904s
+
+OK

@@ -1,0 +1,33 @@
+test_inplace_alias (numba.tests.test_parfors.TestParforBasic.test_inplace_alias) ... skipped 'needs subprocess harness'
+test_simple01 (numba.tests.test_parfors.TestParforBasic.test_simple01) ... skipped 'needs subprocess harness'
+test_simple02 (numba.tests.test_parfors.TestParforBasic.test_simple02) ... skipped 'needs subprocess harness'
+test_simple03 (numba.tests.test_parfors.TestParforBasic.test_simple03) ... skipped 'needs subprocess harness'
+test_simple04 (numba.tests.test_parfors.TestParforBasic.test_simple04) ... skipped 'needs subprocess harness'
+test_simple07 (numba.tests.test_parfors.TestParforBasic.test_simple07) ... skipped 'needs subprocess harness'
+test_simple08 (numba.tests.test_parfors.TestParforBasic.test_simple08) ... skipped 'needs subprocess harness'
+test_simple09 (numba.tests.test_parfors.TestParforBasic.test_simple09) ... skipped 'needs subprocess harness'
+test_simple10 (numba.tests.test_parfors.TestParforBasic.test_simple10) ... skipped 'needs subprocess harness'
+test_simple11 (numba.tests.test_parfors.TestParforBasic.test_simple11) ... skipped 'needs subprocess harness'
+test_simple12 (numba.tests.test_parfors.TestParforBasic.test_simple12) ... skipped 'needs subprocess harness'
+test_simple13 (numba.tests.test_parfors.TestParforBasic.test_simple13) ... skipped 'needs subprocess harness'
+test_simple14 (numba.tests.test_parfors.TestParforBasic.test_simple14) ... skipped 'needs subprocess harness'
+test_simple15 (numba.tests.test_parfors.TestParforBasic.test_simple15) ... skipped 'needs subprocess harness'
+test_simple16 (numba.tests.test_parfors.TestParforBasic.test_simple16) ... skipped 'needs subprocess harness'
+test_simple17 (numba.tests.test_parfors.TestParforBasic.test_simple17) ... skipped 'needs subprocess harness'
+test_simple18 (numba.tests.test_parfors.TestParforBasic.test_simple18) ... skipped 'needs subprocess harness'
+test_simple19 (numba.tests.test_parfors.TestParforBasic.test_simple19) ... skipped 'needs subprocess harness'
+test_simple20 (numba.tests.test_parfors.TestParforBasic.test_simple20) ... skipped 'needs subprocess harness'
+test_simple21 (numba.tests.test_parfors.TestParforBasic.test_simple21) ... skipped 'needs subprocess harness'
+test_simple22 (numba.tests.test_parfors.TestParforBasic.test_simple22) ... skipped 'needs subprocess harness'
+test_simple23 (numba.tests.test_parfors.TestParforBasic.test_simple23) ... skipped 'needs subprocess harness'
+test_simple24 (numba.tests.test_parfors.TestParforBasic.test_simple24) ... skipped 'needs subprocess harness'
+test_simple_operator_15 (numba.tests.test_parfors.TestParforBasic.test_simple_operator_15)
+same as corresponding test_simple_<n> case but using operator.add ... skipped 'needs subprocess harness'
+test_simple_operator_16 (numba.tests.test_parfors.TestParforBasic.test_simple_operator_16) ... skipped 'needs subprocess harness'
+test_simple_operator_17 (numba.tests.test_parfors.TestParforBasic.test_simple_operator_17) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.001s
+
+OK (skipped=26)
+Parallel: 0. Serial: 26

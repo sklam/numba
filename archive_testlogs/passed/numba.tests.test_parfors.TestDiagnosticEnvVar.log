@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_diagnostics_env_var1 (numba.tests.test_parfors.TestDiagnosticEnvVar.test_diagnostics_env_var1) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.496s
+
+OK

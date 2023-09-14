@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_noinline_on_main_call (numba.tests.test_codegen.TestWrappers.test_noinline_on_main_call) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.727s
+
+OK

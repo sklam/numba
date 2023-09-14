@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_layout_checker (numba.tests.test_numpy_support.TestUFuncs.test_layout_checker) ... ok
+test_ufunc_find_matching_loop (numba.tests.test_numpy_support.TestUFuncs.test_ufunc_find_matching_loop) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.124s
+
+OK

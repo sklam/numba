@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_decorated_function (numba.tests.test_jitmethod.TestDisabledJIT.test_decorated_function) ... ok
+test_decorated_function_with_kwargs (numba.tests.test_jitmethod.TestDisabledJIT.test_decorated_function_with_kwargs) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.114s
+
+OK

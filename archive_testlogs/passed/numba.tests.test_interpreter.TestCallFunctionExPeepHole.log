@@ -1,0 +1,32 @@
+Parallel: 13. Serial: 0
+test_all_args (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_all_args)
+Tests calling a function when n_args > 30 and ... ok
+test_all_args_inline_controlflow (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_all_args_inline_controlflow)
+Tests generating only large args when one of the inputs ... ok
+test_all_args_noninlined_controlflow (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_all_args_noninlined_controlflow)
+Tests generating large args when one of the inputs ... ok
+test_all_kws (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_all_kws)
+Tests calling a function when n_kws > 15 and ... ok
+test_large_args_inline_controlflow (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_args_inline_controlflow)
+Tests generating large args when one of the inputs ... ok
+test_large_args_large_kws (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_args_large_kws)
+Tests calling a function when (n_args / 2) + n_kws > 15, ... ok
+test_large_args_noninlined_controlflow (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_args_noninlined_controlflow)
+Tests generating large args when one of the inputs ... ok
+test_large_args_small_kws (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_args_small_kws)
+Tests calling a function when (n_args / 2) + n_kws > 15, ... ok
+test_large_kws_inline_controlflow (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_kws_inline_controlflow)
+Tests generating large kws when one of the inputs ... ok
+test_large_kws_noninlined_controlflow (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_kws_noninlined_controlflow)
+Tests generating large kws when one of the inputs ... ok
+test_large_kws_objmode (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_large_kws_objmode)
+Tests calling an objectmode function with > 15 return values. ... ok
+test_small_args_large_kws (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_small_args_large_kws)
+Tests calling a function when (n_args / 2) + n_kws > 15, ... ok
+test_small_args_small_kws (numba.tests.test_interpreter.TestCallFunctionExPeepHole.test_small_args_small_kws)
+Tests calling a function when (n_args / 2) + n_kws > 15, ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 7.280s
+
+OK

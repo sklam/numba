@@ -1,0 +1,35 @@
+test_parfor_array_access_lower_slice (numba.tests.test_parfors.TestParforsSlice.test_parfor_array_access_lower_slice) ... skipped 'needs subprocess harness'
+test_parfor_slice1 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice1) ... skipped 'needs subprocess harness'
+test_parfor_slice10 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice10) ... skipped 'needs subprocess harness'
+test_parfor_slice11 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice11) ... skipped 'needs subprocess harness'
+test_parfor_slice12 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice12) ... skipped 'needs subprocess harness'
+test_parfor_slice13 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice13) ... skipped 'needs subprocess harness'
+test_parfor_slice14 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice14) ... skipped 'needs subprocess harness'
+test_parfor_slice15 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice15) ... skipped 'needs subprocess harness'
+test_parfor_slice16 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice16)
+This test is disabled because if n is larger than the array size ... skipped 'needs subprocess harness'
+test_parfor_slice17 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice17) ... skipped 'needs subprocess harness'
+test_parfor_slice18 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice18) ... skipped 'needs subprocess harness'
+test_parfor_slice19 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice19) ... skipped 'needs subprocess harness'
+test_parfor_slice2 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice2) ... skipped 'needs subprocess harness'
+test_parfor_slice20 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice20) ... skipped 'needs subprocess harness'
+test_parfor_slice21 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice21) ... skipped 'needs subprocess harness'
+test_parfor_slice22 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice22) ... skipped 'needs subprocess harness'
+test_parfor_slice23 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice23) ... skipped 'needs subprocess harness'
+test_parfor_slice24 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice24) ... skipped 'needs subprocess harness'
+test_parfor_slice25 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice25) ... skipped 'needs subprocess harness'
+test_parfor_slice26 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice26) ... skipped 'needs subprocess harness'
+test_parfor_slice27 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice27) ... skipped 'needs subprocess harness'
+test_parfor_slice3 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice3) ... skipped 'needs subprocess harness'
+test_parfor_slice4 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice4) ... skipped 'needs subprocess harness'
+test_parfor_slice5 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice5) ... skipped 'needs subprocess harness'
+test_parfor_slice6 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice6) ... skipped 'needs subprocess harness'
+test_parfor_slice7 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice7) ... skipped 'needs subprocess harness'
+test_parfor_slice8 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice8) ... skipped 'needs subprocess harness'
+test_parfor_slice9 (numba.tests.test_parfors.TestParforsSlice.test_parfor_slice9) ... skipped 'needs subprocess harness'
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.001s
+
+OK (skipped=28)
+Parallel: 0. Serial: 28

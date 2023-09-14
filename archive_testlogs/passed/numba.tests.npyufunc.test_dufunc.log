@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_frozen (numba.tests.npyufunc.test_dufunc.TestDUFunc.test_frozen) ... ok
+test_npm_call (numba.tests.npyufunc.test_dufunc.TestDUFunc.test_npm_call) ... ok
+test_npm_call_implicit_output (numba.tests.npyufunc.test_dufunc.TestDUFunc.test_npm_call_implicit_output) ... ok
+test_restricted (numba.tests.npyufunc.test_dufunc.TestDUFuncPickling.test_restricted) ... ok
+test_scalar (numba.tests.npyufunc.test_dufunc.TestDUFunc.test_scalar) ... ok
+test_ufunc_props (numba.tests.npyufunc.test_dufunc.TestDUFunc.test_ufunc_props) ... ok
+test_unrestricted (numba.tests.npyufunc.test_dufunc.TestDUFuncPickling.test_unrestricted) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.610s
+
+OK

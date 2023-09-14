@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_as_module_exit_code (numba.tests.test_cli.TestCLI.test_as_module_exit_code) ... ok
+test_gdb_status_from_module (numba.tests.test_cli.TestCLI.test_gdb_status_from_module) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_json_sysinfo_from_module (numba.tests.test_cli.TestCLI.test_json_sysinfo_from_module) ... ok
+test_sysinfo_from_module (numba.tests.test_cli.TestCLI.test_sysinfo_from_module) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 9.660s
+
+OK (skipped=1)

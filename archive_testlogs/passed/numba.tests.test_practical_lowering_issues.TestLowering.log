@@ -1,0 +1,20 @@
+Parallel: 7. Serial: 0
+test_issue4156_loop_vars_leak (numba.tests.test_practical_lowering_issues.TestLowering.test_issue4156_loop_vars_leak)
+Test issues with zero-filling of refct'ed variables inside loops. ... ok
+test_issue4156_loop_vars_leak_variant1 (numba.tests.test_practical_lowering_issues.TestLowering.test_issue4156_loop_vars_leak_variant1)
+Variant of test_issue4156_loop_vars_leak. ... ok
+test_issue4156_loop_vars_leak_variant2 (numba.tests.test_practical_lowering_issues.TestLowering.test_issue4156_loop_vars_leak_variant2)
+Variant of test_issue4156_loop_vars_leak. ... ok
+test_issue4156_loop_vars_leak_variant3 (numba.tests.test_practical_lowering_issues.TestLowering.test_issue4156_loop_vars_leak_variant3)
+Variant of test_issue4156_loop_vars_leak. ... ok
+test_issue4156_loop_vars_leak_variant4 (numba.tests.test_practical_lowering_issues.TestLowering.test_issue4156_loop_vars_leak_variant4)
+Variant of test_issue4156_loop_vars_leak. ... ok
+test_issue7507 (numba.tests.test_practical_lowering_issues.TestLowering.test_issue7507)
+Test a problem with BaseContext.get_function() because of changes ... ok
+test_issue_with_literal_in_static_getitem (numba.tests.test_practical_lowering_issues.TestLowering.test_issue_with_literal_in_static_getitem)
+Test an issue with literal type used as index of static_getitem ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.074s
+
+OK

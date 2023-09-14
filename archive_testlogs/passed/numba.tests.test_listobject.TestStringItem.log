@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_string_item (numba.tests.test_listobject.TestStringItem.test_string_item) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.420s
+
+OK

@@ -1,0 +1,17 @@
+Parallel: 2. Serial: 0
+test_box_runtime_error (numba.tests.test_dispatcher.TestBoxingDefaultError.test_box_runtime_error) ... ERROR
+test_unbox_runtime_error (numba.tests.test_dispatcher.TestBoxingDefaultError.test_unbox_runtime_error) ... ok
+
+======================================================================
+ERROR: test_box_runtime_error (numba.tests.test_dispatcher.TestBoxingDefaultError.test_box_runtime_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py", line 1051, in test_box_runtime_error
+    self.assertRegexpMatches(str(raises.exception), pat)
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestBoxingDefaultError' object has no attribute 'assertRegexpMatches'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.531s
+
+FAILED (errors=1)

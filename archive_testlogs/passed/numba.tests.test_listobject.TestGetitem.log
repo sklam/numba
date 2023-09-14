@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_list_getitem_different_sized_int_index (numba.tests.test_listobject.TestGetitem.test_list_getitem_different_sized_int_index) ... ok
+test_list_getitem_different_sized_uint_index (numba.tests.test_listobject.TestGetitem.test_list_getitem_different_sized_uint_index) ... ok
+test_list_getitem_empty_index_error (numba.tests.test_listobject.TestGetitem.test_list_getitem_empty_index_error) ... ok
+test_list_getitem_empty_typing_error (numba.tests.test_listobject.TestGetitem.test_list_getitem_empty_typing_error) ... ok
+test_list_getitem_integer_types_as_index (numba.tests.test_listobject.TestGetitem.test_list_getitem_integer_types_as_index) ... ok
+test_list_getitem_multiple (numba.tests.test_listobject.TestGetitem.test_list_getitem_multiple) ... ok
+test_list_getitem_multiple_index_error (numba.tests.test_listobject.TestGetitem.test_list_getitem_multiple_index_error) ... ok
+test_list_getitem_singleton (numba.tests.test_listobject.TestGetitem.test_list_getitem_singleton) ... ok
+test_list_getitem_singleton_negtive_index (numba.tests.test_listobject.TestGetitem.test_list_getitem_singleton_negtive_index) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.723s
+
+OK

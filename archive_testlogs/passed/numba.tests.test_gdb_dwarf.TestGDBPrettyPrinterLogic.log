@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_np_array_printer_chr_array (numba.tests.test_gdb_dwarf.TestGDBPrettyPrinterLogic.test_np_array_printer_chr_array) ... ok
+test_np_array_printer_nested_array_structured_dtype (numba.tests.test_gdb_dwarf.TestGDBPrettyPrinterLogic.test_np_array_printer_nested_array_structured_dtype) ... ok
+test_np_array_printer_simple_numeric_types (numba.tests.test_gdb_dwarf.TestGDBPrettyPrinterLogic.test_np_array_printer_simple_numeric_types) ... ok
+test_np_array_printer_simple_numeric_types_strided (numba.tests.test_gdb_dwarf.TestGDBPrettyPrinterLogic.test_np_array_printer_simple_numeric_types_strided) ... ok
+test_np_array_printer_simple_structured_dtype (numba.tests.test_gdb_dwarf.TestGDBPrettyPrinterLogic.test_np_array_printer_simple_structured_dtype) ... ok
+test_np_array_printer_unichr_structured_dtype (numba.tests.test_gdb_dwarf.TestGDBPrettyPrinterLogic.test_np_array_printer_unichr_structured_dtype) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.121s
+
+OK

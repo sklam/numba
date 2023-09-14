@@ -1,0 +1,113 @@
+Parallel: 43. Serial: 0
+test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) ... 
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=None, _bitgen=None) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=None, _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=(), _bitgen=None) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=(), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=(100,), _bitgen=None) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=(100,), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=(10, 20, 30), _bitgen=None) ... ERROR
+  test_beta (numba.tests.test_np_randomgen.TestRandomGenerators.test_beta) (_size=(10, 20, 30), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) ... 
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=None, _bitgen=None) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=None, _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=(), _bitgen=None) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=(), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=(100,), _bitgen=None) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=(100,), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=(10, 20, 30), _bitgen=None) ... ERROR
+  test_binomial (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial) (_size=(10, 20, 30), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+test_binomial_cases (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial_cases) ... 
+  test_binomial_cases (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial_cases) (n=1, p=0.1) ... ERROR
+  test_binomial_cases (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial_cases) (n=50, p=0.9) ... ERROR
+  test_binomial_cases (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial_cases) (n=100, p=0.4) ... ERROR
+  test_binomial_cases (numba.tests.test_np_randomgen.TestRandomGenerators.test_binomial_cases) (n=100, p=0.9) ... ERROR
+test_bitgen_funcs (numba.tests.test_np_randomgen.TestRandomGenerators.test_bitgen_funcs) ... ok
+test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) ... 
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=None, _bitgen=None) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=None, _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=(), _bitgen=None) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=(), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=(100,), _bitgen=None) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=(100,), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=(10, 20, 30), _bitgen=None) ... ERROR
+  test_chisquare (numba.tests.test_np_randomgen.TestRandomGenerators.test_chisquare) (_size=(10, 20, 30), _bitgen=<class 'numpy.random._mt19937.MT19937'>) ... ERROR
+test_exponential (numba.tests.test_np_randomgen.TestRandomGenerators.test_exponential) ... ok
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/runtests.py", line 22, in <module>
+    runpy.run_module('numba.runtests', run_name='__main__')
+  File "<frozen runpy>", line 229, in run_module
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/runtests.py", line 9, in <module>
+    sys.exit(0 if _main(sys.argv) else 1)
+                  ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/_runtests.py", line 25, in _main
+    return run_tests(argv, defaultTest='numba.tests',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/__init__.py", line 54, in run_tests
+    prog = NumbaTestProgram(argv=argv,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 204, in __init__
+    super(NumbaTestProgram, self).__init__(*args, **kwargs)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/main.py", line 105, in __init__
+    self.runTests()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 376, in runTests
+    run_tests_real()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 361, in run_tests_real
+    super(NumbaTestProgram, self).runTests()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/main.py", line 281, in runTests
+    self.result = testRunner.run(self.test)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 830, in run
+    return super(ParallelTestRunner, self).run(self._run_inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/runner.py", line 240, in run
+    test(result)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 779, in _run_inner
+    self._run_parallel_tests(result, pool, child_runner, tests)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 815, in _run_parallel_tests
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 806, in _run_parallel_tests
+    child_result = it.__next__(self.timeout)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/multiprocessing/pool.py", line 868, in next
+    raise TimeoutError from None
+multiprocessing.context.TimeoutError: Tests didn't finish before timeout (or crashed):
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_f'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_gamma'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_geometric'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_integers'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_integers_cases'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_laplace'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_logistic'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_lognormal'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_logseries'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_negative_binomial'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_noncentral_chisquare'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_noncentral_f'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_normal'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_npgen_boxing_refcount'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_npgen_boxing_unboxing'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_pareto'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_permutation'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_permutation_empty'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_permutation_exception'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_poisson'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_power'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_random'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_rayleigh'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_shuffle'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_shuffle_check'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_shuffle_empty'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_standard_cauchy'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_standard_exponential'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_standard_exponential_inv'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_standard_gamma'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_standard_normal'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_standard_t'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_triangular'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_uniform'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_wald'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_weibull'
+- 'numba.tests.test_np_randomgen.TestRandomGenerators.test_zipf'
+

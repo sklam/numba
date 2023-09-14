@@ -1,0 +1,12 @@
+Parallel: 3. Serial: 0
+test_add (numba.tests.test_wrapper.TestWrapper.test_add)
+This seems to be about the amount of work to balance out the overhead ... ok
+test_array_overhead (numba.tests.test_wrapper.TestWrapper.test_array_overhead)
+The time to set two array element seems to be more expensive than ... ok
+test_overhead (numba.tests.test_wrapper.TestWrapper.test_overhead)
+This will show higher overhead due to unboxing in the native version. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.215s
+
+OK

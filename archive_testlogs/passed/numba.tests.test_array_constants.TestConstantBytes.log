@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_constant_bytes (numba.tests.test_array_constants.TestConstantBytes.test_constant_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.583s
+
+OK

@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_catch_exception (numba.tests.test_try_except.TestTryExceptCaught.test_catch_exception) ... ok
+test_division_operator (numba.tests.test_try_except.TestTryExceptCaught.test_division_operator) ... ok
+test_return_in_catch (numba.tests.test_try_except.TestTryExceptCaught.test_return_in_catch) ... ok
+test_save_caught (numba.tests.test_try_except.TestTryExceptCaught.test_save_caught) ... ok
+test_try_except_reraise (numba.tests.test_try_except.TestTryExceptCaught.test_try_except_reraise) ... ok
+test_try_except_reraise_chain (numba.tests.test_try_except.TestTryExceptCaught.test_try_except_reraise_chain) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.978s
+
+OK

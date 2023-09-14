@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_leading_zeros_error (numba.tests.test_unsafe_intrinsics.TestZeroCounts.test_leading_zeros_error) ... ok
+test_trailing_zeros_error (numba.tests.test_unsafe_intrinsics.TestZeroCounts.test_trailing_zeros_error) ... ok
+test_zero_count (numba.tests.test_unsafe_intrinsics.TestZeroCounts.test_zero_count) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.663s
+
+OK

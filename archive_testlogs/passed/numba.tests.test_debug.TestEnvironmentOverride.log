@@ -1,0 +1,7 @@
+test_debug (numba.tests.test_debug.TestEnvironmentOverride.test_debug) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.758s
+
+OK
+Parallel: 0. Serial: 1

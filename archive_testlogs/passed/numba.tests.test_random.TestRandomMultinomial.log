@@ -1,0 +1,12 @@
+Parallel: 3. Serial: 0
+test_multinomial_2 (numba.tests.test_random.TestRandomMultinomial.test_multinomial_2)
+Test multinomial(n, pvals) ... ok
+test_multinomial_3_int (numba.tests.test_random.TestRandomMultinomial.test_multinomial_3_int)
+Test multinomial(n, pvals, size: int) ... ok
+test_multinomial_3_tuple (numba.tests.test_random.TestRandomMultinomial.test_multinomial_3_tuple)
+Test multinomial(n, pvals, size: tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.807s
+
+OK

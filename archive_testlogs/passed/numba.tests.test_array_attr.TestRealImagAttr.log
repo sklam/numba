@@ -1,0 +1,13 @@
+Parallel: 5. Serial: 0
+test_complex_imag (numba.tests.test_array_attr.TestRealImagAttr.test_complex_imag) ... ok
+test_complex_real (numba.tests.test_array_attr.TestRealImagAttr.test_complex_real) ... ok
+test_number_imag (numba.tests.test_array_attr.TestRealImagAttr.test_number_imag)
+Testing .imag of non-complex dtypes ... ok
+test_number_real (numba.tests.test_array_attr.TestRealImagAttr.test_number_real)
+Testing .real of non-complex dtypes ... ok
+test_record_real (numba.tests.test_array_attr.TestRealImagAttr.test_record_real) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.171s
+
+OK

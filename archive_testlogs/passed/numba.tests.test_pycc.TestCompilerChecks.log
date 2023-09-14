@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_windows_compiler_validity (numba.tests.test_pycc.TestCompilerChecks.test_windows_compiler_validity) ... skipped 'windows only'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.113s
+
+OK (skipped=1)

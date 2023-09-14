@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_global_explicit_sig (numba.tests.test_recursion.TestSelfRecursion.test_global_explicit_sig) ... ok
+test_global_implicit_sig (numba.tests.test_recursion.TestSelfRecursion.test_global_implicit_sig) ... ok
+test_growing_return_tuple (numba.tests.test_recursion.TestSelfRecursion.test_growing_return_tuple) ... ok
+test_inner_explicit_sig (numba.tests.test_recursion.TestSelfRecursion.test_inner_explicit_sig) ... ok
+test_optional_return (numba.tests.test_recursion.TestSelfRecursion.test_optional_return) ... ok
+test_raise (numba.tests.test_recursion.TestSelfRecursion.test_raise) ... ok
+test_runaway (numba.tests.test_recursion.TestSelfRecursion.test_runaway) ... ok
+test_type_change (numba.tests.test_recursion.TestSelfRecursion.test_type_change) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.618s
+
+OK

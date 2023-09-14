@@ -1,0 +1,9 @@
+test_config (numba.tests.test_config.TestConfig.test_config) ... skipped 'pyyaml needed for configuration file tests'
+test_empty_config (numba.tests.test_config.TestConfig.test_empty_config) ... skipped 'pyyaml needed for configuration file tests'
+test_illegal_error_style_handling (numba.tests.test_config.TestConfig.test_illegal_error_style_handling) ... skipped 'pyyaml needed for configuration file tests'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK (skipped=3)
+Parallel: 0. Serial: 3

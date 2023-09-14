@@ -1,0 +1,19 @@
+Parallel: 12. Serial: 0
+test_arrays (numba.tests.test_typeinfer.TestUnify.test_arrays) ... ok
+test_bool (numba.tests.test_typeinfer.TestUnify.test_bool) ... ok
+test_integer (numba.tests.test_typeinfer.TestUnify.test_integer) ... ok
+test_list (numba.tests.test_typeinfer.TestUnify.test_list) ... ok
+test_none (numba.tests.test_typeinfer.TestUnify.test_none) ... ok
+test_none_to_optional (numba.tests.test_typeinfer.TestUnify.test_none_to_optional)
+Test unification of `none` and multiple number types to optional type ... ok
+test_optional (numba.tests.test_typeinfer.TestUnify.test_optional) ... ok
+test_optional_tuple (numba.tests.test_typeinfer.TestUnify.test_optional_tuple) ... ok
+test_range (numba.tests.test_typeinfer.TestUnify.test_range) ... ok
+test_set (numba.tests.test_typeinfer.TestUnify.test_set) ... ok
+test_tuple (numba.tests.test_typeinfer.TestUnify.test_tuple) ... ok
+test_unify_number_pair (numba.tests.test_typeinfer.TestUnify.test_unify_number_pair) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.302s
+
+OK

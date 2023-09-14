@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_unsupported_combination_raises (numba.tests.test_parfors.TestParforsUnsupported.test_unsupported_combination_raises)
+This test is in place until issues with the 'parallel' ... skipped 'Only impacts 32 bit hardware'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.221s
+
+OK (skipped=1)

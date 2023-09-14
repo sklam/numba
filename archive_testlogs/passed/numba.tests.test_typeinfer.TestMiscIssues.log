@@ -1,0 +1,17 @@
+Parallel: 7. Serial: 0
+test_issue_1080 (numba.tests.test_typeinfer.TestMiscIssues.test_issue_1080)
+https://github.com/numba/numba/issues/1080 ... ok
+test_issue_1394 (numba.tests.test_typeinfer.TestMiscIssues.test_issue_1394) ... ok
+test_issue_6293 (numba.tests.test_typeinfer.TestMiscIssues.test_issue_6293)
+https://github.com/numba/numba/issues/6293 ... ok
+test_issue_797 (numba.tests.test_typeinfer.TestMiscIssues.test_issue_797)
+https://github.com/numba/numba/issues/797#issuecomment-58592401 ... ok
+test_list_unify1 (numba.tests.test_typeinfer.TestMiscIssues.test_list_unify1)
+Exercise back-propagation of refined list type. ... ok
+test_list_unify2 (numba.tests.test_typeinfer.TestMiscIssues.test_list_unify2) ... ok
+test_range_unify (numba.tests.test_typeinfer.TestMiscIssues.test_range_unify) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.727s
+
+OK

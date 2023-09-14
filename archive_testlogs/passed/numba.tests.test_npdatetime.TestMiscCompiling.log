@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_constant_datetime (numba.tests.test_npdatetime.TestMiscCompiling.test_constant_datetime) ... ok
+test_constant_timedelta (numba.tests.test_npdatetime.TestMiscCompiling.test_constant_timedelta) ... ok
+test_jit_explicit_signature (numba.tests.test_npdatetime.TestMiscCompiling.test_jit_explicit_signature) ... ok
+test_vectorize_explicit_signature (numba.tests.test_npdatetime.TestMiscCompiling.test_vectorize_explicit_signature) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.021s
+
+OK

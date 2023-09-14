@@ -1,0 +1,19 @@
+Parallel: 7. Serial: 0
+test_check_threading_layer_is_gnu (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_check_threading_layer_is_gnu) ... ok
+test_par_parent_explicit_mp_fork_par_child (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_par_parent_explicit_mp_fork_par_child)
+Explicit use of multiprocessing fork context. ... ok
+test_par_parent_implicit_mp_fork_par_child (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_par_parent_implicit_mp_fork_par_child)
+Implicit use of multiprocessing fork context. ... ok
+test_par_parent_mp_spawn_par_child_par_parent (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_par_parent_mp_spawn_par_child_par_parent)
+Explicit use of multiprocessing spawn, this is safe. ... ok
+test_par_parent_os_fork_par_child (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_par_parent_os_fork_par_child)
+Whilst normally valid, this actually isn't for Numba invariant of OpenMP ... ok
+test_serial_parent_explicit_mp_fork_par_child_then_par_parent (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_serial_parent_explicit_mp_fork_par_child_then_par_parent)
+Explicit use of multiprocessing 'fork'. ... ok
+test_serial_parent_implicit_mp_fork_par_child_then_par_parent (numba.tests.test_parallel_backend.TestForkSafetyIssues.test_serial_parent_implicit_mp_fork_par_child_then_par_parent)
+Implicit use of multiprocessing (will be fork, but cannot declare that ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 43.538s
+
+OK

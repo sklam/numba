@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_indexing_with_uint8 (numba.tests.test_typedlist.TestGetItemIndexType.test_indexing_with_uint8)
+Test for reproducer at https://github.com/numba/numba/issues/7250 ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.015s
+
+OK

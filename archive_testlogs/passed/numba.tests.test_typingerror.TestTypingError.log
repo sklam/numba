@@ -1,0 +1,19 @@
+Parallel: 10. Serial: 0
+test_array_setitem_invalid_cast (numba.tests.test_typingerror.TestTypingError.test_array_setitem_invalid_cast) ... ok
+test_bad_hypot_usage (numba.tests.test_typingerror.TestTypingError.test_bad_hypot_usage) ... ok
+test_imprecise_list (numba.tests.test_typingerror.TestTypingError.test_imprecise_list)
+Type inference should catch that a list type's remain imprecise, ... ok
+test_issue_868 (numba.tests.test_typingerror.TestTypingError.test_issue_868)
+Summary: multiplying a scalar by a non-scalar would cause a crash in ... ok
+test_return_type_unification (numba.tests.test_typingerror.TestTypingError.test_return_type_unification) ... ok
+test_template_rejection_error_message_cascade (numba.tests.test_typingerror.TestTypingError.test_template_rejection_error_message_cascade) ... ok
+test_unknown_attrs (numba.tests.test_typingerror.TestTypingError.test_unknown_attrs) ... ok
+test_unknown_function (numba.tests.test_typingerror.TestTypingError.test_unknown_function) ... ok
+test_unknown_module (numba.tests.test_typingerror.TestTypingError.test_unknown_module) ... ok
+test_using_imprecise_list (numba.tests.test_typingerror.TestTypingError.test_using_imprecise_list)
+Type inference should report informative error about untyped list. ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.374s
+
+OK

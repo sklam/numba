@@ -1,0 +1,9 @@
+Parallel: 2. Serial: 0
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_reduce_max_basic (numba.tests.test_parfors_passes.TestConvertReducePass.test_reduce_max_basic) ... ok
+test_reduce_max_masked (numba.tests.test_parfors_passes.TestConvertReducePass.test_reduce_max_masked) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.707s
+
+OK

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_intrinsic (numba.tests.test_extending.TestIntrinsicPreferLiteral.test_intrinsic) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.513s
+
+OK

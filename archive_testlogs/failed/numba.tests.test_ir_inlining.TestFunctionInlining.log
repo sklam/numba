@@ -1,0 +1,31 @@
+Parallel: 17. Serial: 0
+test_basic_inline_always (numba.tests.test_ir_inlining.TestFunctionInlining.test_basic_inline_always) ... ok
+test_basic_inline_combos (numba.tests.test_ir_inlining.TestFunctionInlining.test_basic_inline_combos) ... ok
+test_basic_inline_never (numba.tests.test_ir_inlining.TestFunctionInlining.test_basic_inline_never) ... ok
+test_freevar_bindings (numba.tests.test_ir_inlining.TestFunctionInlining.test_freevar_bindings) ... ok
+test_global_binding (numba.tests.test_ir_inlining.TestFunctionInlining.test_global_binding) ... ok
+test_inline_closure_inside_inlinable_inside_closure (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_closure_inside_inlinable_inside_closure) ... ok
+test_inline_from_another_module (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_from_another_module) ... ok
+test_inline_from_another_module_as_freevar (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_from_another_module_as_freevar) ... ok
+test_inline_from_another_module_w_2_getattr (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_from_another_module_w_2_getattr) ... ok
+test_inline_from_another_module_w_getattr (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_from_another_module_w_getattr) ... ok
+test_inline_inside_closure_inside_loop (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_inside_closure_inside_loop) ... ok
+test_inline_inside_loop (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_inside_loop) ... ok
+test_inline_involved (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_involved) ... ERROR
+test_inline_renaming_scheme (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_renaming_scheme) ... ok
+test_inline_w_freevar_from_another_module (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_w_freevar_from_another_module) ... ok
+test_inlining_models (numba.tests.test_ir_inlining.TestFunctionInlining.test_inlining_models) ... ok
+test_recursive_inline (numba.tests.test_ir_inlining.TestFunctionInlining.test_recursive_inline) ... skipped 'Need to work out how to prevent this'
+
+======================================================================
+ERROR: test_inline_involved (numba.tests.test_ir_inlining.TestFunctionInlining.test_inline_involved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ir_inlining.py", line 452, in test_inline_involved
+    raise ValueError(f"Unsupported Python version: {utils.PYVERSION}")
+ValueError: Unsupported Python version: (3, 12)
+
+----------------------------------------------------------------------
+Ran 17 tests in 8.357s
+
+FAILED (errors=1, skipped=1)

@@ -1,0 +1,27 @@
+test_closure_and_nonlocal_can_prune (numba.tests.test_analysis.TestBranchPrune.test_closure_and_nonlocal_can_prune) ... ok
+test_closure_and_nonlocal_cannot_prune (numba.tests.test_analysis.TestBranchPrune.test_closure_and_nonlocal_cannot_prune) ... ok
+test_comparison_operators (numba.tests.test_analysis.TestBranchPrune.test_comparison_operators) ... ok
+test_cond_is_kwarg_none (numba.tests.test_analysis.TestBranchPrune.test_cond_is_kwarg_none) ... ok
+test_cond_is_kwarg_value (numba.tests.test_analysis.TestBranchPrune.test_cond_is_kwarg_value) ... ok
+test_cond_rewrite_is_correct (numba.tests.test_analysis.TestBranchPrune.test_cond_rewrite_is_correct) ... ok
+test_double_if_else_non_literal_const (numba.tests.test_analysis.TestBranchPrune.test_double_if_else_non_literal_const) ... ok
+test_double_if_else_rt_const (numba.tests.test_analysis.TestBranchPrune.test_double_if_else_rt_const) ... ok
+test_freevar_bake_in (numba.tests.test_analysis.TestBranchPrune.test_freevar_bake_in) ... ok
+test_global_bake_in (numba.tests.test_analysis.TestBranchPrune.test_global_bake_in) ... ok
+test_obj_mode_fallback (numba.tests.test_analysis.TestBranchPrune.test_obj_mode_fallback) ... ok
+test_redefined_variables_are_not_considered_in_prune (numba.tests.test_analysis.TestBranchPrune.test_redefined_variables_are_not_considered_in_prune) ... ok
+test_redefinition_analysis_different_block_can_exec (numba.tests.test_analysis.TestBranchPrune.test_redefinition_analysis_different_block_can_exec) ... ok
+test_redefinition_analysis_different_block_cannot_exec (numba.tests.test_analysis.TestBranchPrune.test_redefinition_analysis_different_block_cannot_exec) ... ok
+test_redefinition_analysis_same_block (numba.tests.test_analysis.TestBranchPrune.test_redefinition_analysis_same_block) ... ok
+test_single_if (numba.tests.test_analysis.TestBranchPrune.test_single_if) ... ok
+test_single_if_const_val (numba.tests.test_analysis.TestBranchPrune.test_single_if_const_val) ... ok
+test_single_if_else (numba.tests.test_analysis.TestBranchPrune.test_single_if_else) ... ok
+test_single_if_else_two_const_val (numba.tests.test_analysis.TestBranchPrune.test_single_if_else_two_const_val) ... ok
+test_single_if_else_w_following_undetermined (numba.tests.test_analysis.TestBranchPrune.test_single_if_else_w_following_undetermined) ... ok
+test_single_two_branches_same_cond (numba.tests.test_analysis.TestBranchPrune.test_single_two_branches_same_cond) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 12.210s
+
+OK
+Parallel: 0. Serial: 21

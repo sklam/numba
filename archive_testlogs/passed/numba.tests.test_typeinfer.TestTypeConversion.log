@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_arrays (numba.tests.test_typeinfer.TestTypeConversion.test_arrays) ... ok
+test_convert_number_types (numba.tests.test_typeinfer.TestTypeConversion.test_convert_number_types) ... ok
+test_optional (numba.tests.test_typeinfer.TestTypeConversion.test_optional) ... ok
+test_tuple (numba.tests.test_typeinfer.TestTypeConversion.test_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.125s
+
+OK

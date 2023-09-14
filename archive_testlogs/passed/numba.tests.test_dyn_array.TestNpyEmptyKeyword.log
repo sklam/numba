@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_empty_no_args (numba.tests.test_dyn_array.TestNpyEmptyKeyword.test_empty_no_args) ... ok
+test_with_dtype_kws (numba.tests.test_dyn_array.TestNpyEmptyKeyword.test_with_dtype_kws) ... ok
+test_with_shape_and_dtype_kws (numba.tests.test_dyn_array.TestNpyEmptyKeyword.test_with_shape_and_dtype_kws) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.038s
+
+OK

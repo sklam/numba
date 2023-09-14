@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_list_bool (numba.tests.test_listobject.TestBool.test_list_bool) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.968s
+
+OK

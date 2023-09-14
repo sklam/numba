@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_arg_ret_casting (numba.tests.test_typeinfer.TestArgRetCasting.test_arg_ret_casting) ... ok
+test_arg_ret_mismatch (numba.tests.test_typeinfer.TestArgRetCasting.test_arg_ret_mismatch) ... ok
+test_invalid_arg_type_forcing (numba.tests.test_typeinfer.TestArgRetCasting.test_invalid_arg_type_forcing) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.840s
+
+OK

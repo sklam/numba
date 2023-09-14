@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_inlining_optional_constant (numba.tests.test_ir_inlining.TestGeneralInlining.test_inlining_optional_constant) ... ok
+test_with_inlined_and_noninlined_variants (numba.tests.test_ir_inlining.TestGeneralInlining.test_with_inlined_and_noninlined_variants) ... ok
+test_with_kwargs (numba.tests.test_ir_inlining.TestGeneralInlining.test_with_kwargs) ... ok
+test_with_kwargs2 (numba.tests.test_ir_inlining.TestGeneralInlining.test_with_kwargs2) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.455s
+
+OK

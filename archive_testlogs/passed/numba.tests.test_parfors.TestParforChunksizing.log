@@ -1,0 +1,17 @@
+test_all_iterations_reset_chunksize (numba.tests.test_parfors.TestParforChunksizing.test_all_iterations_reset_chunksize)
+Test that all the iterations get run if you set the ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_njit_parallel_chunksize_basic (numba.tests.test_parfors.TestParforChunksizing.test_njit_parallel_chunksize_basic) ... ok
+test_njit_parallel_chunksize_invalid_type (numba.tests.test_parfors.TestParforChunksizing.test_njit_parallel_chunksize_invalid_type) ... ok
+test_njit_parallel_chunksize_negative (numba.tests.test_parfors.TestParforChunksizing.test_njit_parallel_chunksize_negative) ... ok
+test_njit_with_chunksize (numba.tests.test_parfors.TestParforChunksizing.test_njit_with_chunksize) ... ok
+test_python_parallel_chunksize_basic (numba.tests.test_parfors.TestParforChunksizing.test_python_parallel_chunksize_basic) ... ok
+test_python_parallel_chunksize_invalid_type (numba.tests.test_parfors.TestParforChunksizing.test_python_parallel_chunksize_invalid_type) ... ok
+test_python_parallel_chunksize_negative (numba.tests.test_parfors.TestParforChunksizing.test_python_parallel_chunksize_negative) ... ok
+test_python_with_chunksize (numba.tests.test_parfors.TestParforChunksizing.test_python_with_chunksize) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.425s
+
+OK
+Parallel: 0. Serial: 9

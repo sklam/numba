@@ -1,0 +1,20 @@
+Parallel: 11. Serial: 0
+test_array_const_0d (numba.tests.test_array_constants.TestConstantArray.test_array_const_0d) ... ok
+test_array_const_1d_contig (numba.tests.test_array_constants.TestConstantArray.test_array_const_1d_contig) ... ok
+test_array_const_1d_noncontig (numba.tests.test_array_constants.TestConstantArray.test_array_const_1d_noncontig) ... ok
+test_array_const_2d (numba.tests.test_array_constants.TestConstantArray.test_array_const_2d) ... ok
+test_array_const_alignment (numba.tests.test_array_constants.TestConstantArray.test_array_const_alignment)
+Issue #1933: the array declaration in the LLVM IR must have ... ok
+test_arrayscalar_const (numba.tests.test_array_constants.TestConstantArray.test_arrayscalar_const) ... ok
+test_issue_1850 (numba.tests.test_array_constants.TestConstantArray.test_issue_1850)
+This issue is caused by an unresolved bug in numpy since version 1.6. ... ok
+test_record_array_const_contig (numba.tests.test_array_constants.TestConstantArray.test_record_array_const_contig) ... ok
+test_record_array_const_noncontig (numba.tests.test_array_constants.TestConstantArray.test_record_array_const_noncontig) ... ok
+test_too_big_to_freeze (numba.tests.test_array_constants.TestConstantArray.test_too_big_to_freeze)
+Test issue https://github.com/numba/numba/issues/2188 where freezing ... ok
+test_write_to_global_array (numba.tests.test_array_constants.TestConstantArray.test_write_to_global_array) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.816s
+
+OK

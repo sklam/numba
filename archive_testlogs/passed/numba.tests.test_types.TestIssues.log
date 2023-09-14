@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_issue_list_type_key (numba.tests.test_types.TestIssues.test_issue_list_type_key) ... ok
+test_issue_typeref_key (numba.tests.test_types.TestIssues.test_issue_typeref_key) ... ok
+test_omitted_type (numba.tests.test_types.TestIssues.test_omitted_type) ... ok
+test_type_of_literal (numba.tests.test_types.TestIssues.test_type_of_literal) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.148s
+
+OK

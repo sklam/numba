@@ -1,0 +1,17 @@
+Parallel: 7. Serial: 0
+test_annotations (numba.tests.test_array_exprs.TestRewriteIssues.test_annotations)
+Type annotation of array expressions with disambiguated ... ok
+test_bitwise_arrayexpr (numba.tests.test_array_exprs.TestRewriteIssues.test_bitwise_arrayexpr)
+Typing of bitwise boolean array expression can be incorrect ... ok
+test_issue_1184 (numba.tests.test_array_exprs.TestRewriteIssues.test_issue_1184) ... ok
+test_issue_1264 (numba.tests.test_array_exprs.TestRewriteIssues.test_issue_1264) ... ok
+test_issue_1372 (numba.tests.test_array_exprs.TestRewriteIssues.test_issue_1372)
+Test array expression with duplicated term ... ok
+test_issue_5599_name_collision (numba.tests.test_array_exprs.TestRewriteIssues.test_issue_5599_name_collision) ... ok
+test_unary_arrayexpr (numba.tests.test_array_exprs.TestRewriteIssues.test_unary_arrayexpr)
+Typing of unary array expression (np.negate) can be incorrect. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.891s
+
+OK

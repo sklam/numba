@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_list_create (numba.tests.test_listobject.TestCreateAppendLength.test_list_create) ... ok
+test_list_create_no_jit (numba.tests.test_listobject.TestCreateAppendLength.test_list_create_no_jit) ... ok
+test_nonempty_list_create_no_jit (numba.tests.test_listobject.TestCreateAppendLength.test_nonempty_list_create_no_jit) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.342s
+
+OK

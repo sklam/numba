@@ -1,0 +1,8 @@
+test_np_implicit_initialization (numba.tests.test_random.TestProcesses.test_np_implicit_initialization) ... ok
+test_py_implicit_initialization (numba.tests.test_random.TestProcesses.test_py_implicit_initialization) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.966s
+
+OK
+Parallel: 0. Serial: 2

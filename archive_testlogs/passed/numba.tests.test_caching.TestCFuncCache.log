@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_caching (numba.tests.test_caching.TestCFuncCache.test_caching) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.845s
+
+OK

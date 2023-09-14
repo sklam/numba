@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_PyBytes_AsString (numba.tests.test_pythonapi.TestPythonAPI.test_PyBytes_AsString) ... ok
+test_PyBytes_AsStringAndSize (numba.tests.test_pythonapi.TestPythonAPI.test_PyBytes_AsStringAndSize) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.609s
+
+OK

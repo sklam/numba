@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_basic_array_boundscheck (numba.tests.test_boundscheck.TestBoundsCheckNoError.test_basic_array_boundscheck) ... ok
+test_fancy_indexing_boundscheck (numba.tests.test_boundscheck.TestBoundsCheckNoError.test_fancy_indexing_boundscheck) ... ok
+test_slice_array_boundscheck (numba.tests.test_boundscheck.TestBoundsCheckNoError.test_slice_array_boundscheck) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.640s
+
+OK

@@ -1,0 +1,26 @@
+Parallel: 2. Serial: 0
+test_lazy_lock_init (numba.tests.test_parallel_backend.TestInitSafetyIssues.test_lazy_lock_init) ... ok
+test_orphaned_semaphore (numba.tests.test_parallel_backend.TestInitSafetyIssues.test_orphaned_semaphore) ... FAIL
+
+======================================================================
+FAIL: test_orphaned_semaphore (numba.tests.test_parallel_backend.TestInitSafetyIssues.test_orphaned_semaphore)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parallel_backend.py", line 1195, in test_orphaned_semaphore
+    out, err = self.run_cmd(cmdline)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_parallel_backend.py", line 1180, in run_cmd
+    raise AssertionError(
+AssertionError: process failed with code 1: stderr follows
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/orphaned_semaphore_usecase.py", line 8, in <module>
+    import numba # noqa, deliberately unused, here to test import is safe
+    ^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numba'
+
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.210s
+
+FAILED (failures=1)

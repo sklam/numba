@@ -1,0 +1,13 @@
+Parallel: 5. Serial: 0
+test_add_sub_timedelta (numba.tests.test_npdatetime.TestDatetimeArithmetic.test_add_sub_timedelta)
+Test `datetime64 + timedelta64` and `datetime64 - timedelta64`. ... ok
+test_comparisons (numba.tests.test_npdatetime.TestDatetimeArithmetic.test_comparisons) ... ok
+test_datetime_difference (numba.tests.test_npdatetime.TestDatetimeArithmetic.test_datetime_difference)
+Test `datetime64 - datetime64`. ... ok
+test_max (numba.tests.test_npdatetime.TestDatetimeArithmetic.test_max) ... ok
+test_min (numba.tests.test_npdatetime.TestDatetimeArithmetic.test_min) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 57.300s
+
+OK

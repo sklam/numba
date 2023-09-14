@@ -1,0 +1,16 @@
+Parallel: 6. Serial: 0
+test_datetime_types (numba.tests.test_numpy_support.TestFromDtype.test_datetime_types)
+Test from_dtype() and as_dtype() with the datetime types. ... ok
+test_enum_type (numba.tests.test_numpy_support.TestFromDtype.test_enum_type) ... ok
+test_number_types (numba.tests.test_numpy_support.TestFromDtype.test_number_types)
+Test from_dtype() and as_dtype() with the various scalar number types. ... ok
+test_string_types (numba.tests.test_numpy_support.TestFromDtype.test_string_types)
+Test from_dtype() and as_dtype() with the character string types. ... ok
+test_struct_types (numba.tests.test_numpy_support.TestFromDtype.test_struct_types) ... ok
+test_timedelta_types (numba.tests.test_numpy_support.TestFromDtype.test_timedelta_types)
+Test from_dtype() and as_dtype() with the timedelta types. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.120s
+
+OK

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_against_cpython_gold (numba.tests.test_hashing.TestHashAlgs.test_against_cpython_gold) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.205s
+
+OK

@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_decorated_odd_comment_indent (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_decorated_odd_comment_indent) ... ok
+test_docstring (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_docstring) ... ok
+test_docstring_2 (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_docstring_2) ... ok
+test_nested_function (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_nested_function) ... ok
+test_pass_statement (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_pass_statement) ... ok
+test_single_line_function (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_single_line_function) ... ok
+test_string_eval (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_string_eval) ... ok
+test_undecorated_odd_comment_indent (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_undecorated_odd_comment_indent) ... ok
+test_unnamed_lambda (numba.tests.test_firstlinefinder.TestFirstLineFinder.test_unnamed_lambda) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.271s
+
+OK

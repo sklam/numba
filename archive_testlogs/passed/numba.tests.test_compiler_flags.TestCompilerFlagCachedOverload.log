@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_fastmath_in_overload (numba.tests.test_compiler_flags.TestCompilerFlagCachedOverload.test_fastmath_in_overload) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.769s
+
+OK

@@ -1,0 +1,30 @@
+Parallel: 6. Serial: 0
+test_custom_type (numba.tests.test_itanium_mangler.TestItaniumManager.test_custom_type) ... ok
+test_function (numba.tests.test_itanium_mangler.TestItaniumManager.test_function) ... ok
+test_ident (numba.tests.test_itanium_mangler.TestItaniumManager.test_ident) ... ok
+test_mangle_literal (numba.tests.test_itanium_mangler.TestItaniumManager.test_mangle_literal) ... ERROR
+test_mangle_unicode (numba.tests.test_itanium_mangler.TestItaniumManager.test_mangle_unicode) ... ERROR
+test_types (numba.tests.test_itanium_mangler.TestItaniumManager.test_types) ... ok
+
+======================================================================
+ERROR: test_mangle_literal (numba.tests.test_itanium_mangler.TestItaniumManager.test_mangle_literal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_itanium_mangler.py", line 71, in test_mangle_literal
+    self.assertRegexpMatches(got, r'^\d+_12_[0-9a-z][0-9a-z]3$')
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestItaniumManager' object has no attribute 'assertRegexpMatches'
+
+======================================================================
+ERROR: test_mangle_unicode (numba.tests.test_itanium_mangler.TestItaniumManager.test_mangle_unicode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_itanium_mangler.py", line 76, in test_mangle_unicode
+    self.assertRegexpMatches(got, r'^\d+f(_[a-z0-9][a-z0-9])+z$')
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestItaniumManager' object has no attribute 'assertRegexpMatches'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.197s
+
+FAILED (errors=2)

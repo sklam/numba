@@ -1,0 +1,11 @@
+Parallel: 3. Serial: 0
+test_as_arg (numba.tests.test_datamodel.TestInt64.test_as_arg)
+- Is as_arg() and from_arg() implemented? ... ok
+test_as_data (numba.tests.test_datamodel.TestInt64.test_as_data) ... ok
+test_as_return (numba.tests.test_datamodel.TestInt64.test_as_return)
+- Is as_return() and from_return() implemented? ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.388s
+
+OK

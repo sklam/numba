@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_array_ndim_attr (numba.tests.test_analysis.TestBranchPrunePostSemanticConstRewrites.test_array_ndim_attr) ... ok
+test_attr_not_len (numba.tests.test_analysis.TestBranchPrunePostSemanticConstRewrites.test_attr_not_len) ... ok
+test_ndim_not_on_array (numba.tests.test_analysis.TestBranchPrunePostSemanticConstRewrites.test_ndim_not_on_array) ... ok
+test_semantic_const_propagates_before_static_rewrites (numba.tests.test_analysis.TestBranchPrunePostSemanticConstRewrites.test_semantic_const_propagates_before_static_rewrites) ... ok
+test_tuple_const_propagation (numba.tests.test_analysis.TestBranchPrunePostSemanticConstRewrites.test_tuple_const_propagation) ... ok
+test_tuple_len (numba.tests.test_analysis.TestBranchPrunePostSemanticConstRewrites.test_tuple_len) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.397s
+
+OK

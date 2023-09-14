@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_polyadd_basic (numba.tests.test_polynomial.TestPolynomial.test_polyadd_basic) ... ok
+test_polyadd_exception (numba.tests.test_polynomial.TestPolynomial.test_polyadd_exception) ... ok
+test_polymul_basic (numba.tests.test_polynomial.TestPolynomial.test_polymul_basic) ... ok
+test_polymul_exception (numba.tests.test_polynomial.TestPolynomial.test_polymul_exception) ... ok
+test_polysub_basic (numba.tests.test_polynomial.TestPolynomial.test_polysub_basic) ... ok
+test_polysub_exception (numba.tests.test_polynomial.TestPolynomial.test_polysub_exception) ... ok
+test_trimseq_basic (numba.tests.test_polynomial.TestPolynomial.test_trimseq_basic) ... ok
+test_trimseq_exception (numba.tests.test_polynomial.TestPolynomial.test_trimseq_exception) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 66.120s
+
+OK

@@ -1,0 +1,12 @@
+Parallel: 4. Serial: 0
+test_import_star (numba.tests.test_import.TestNumbaImport.test_import_star) ... ok
+test_laziness (numba.tests.test_import.TestNumbaImport.test_laziness)
+Importing top-level numba features should not import too many modules. ... ok
+test_no_accidental_warnings (numba.tests.test_import.TestNumbaImport.test_no_accidental_warnings) ... ok
+test_no_impl_import (numba.tests.test_import.TestNumbaImport.test_no_impl_import)
+Tests that importing jit does not trigger import of modules containing ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.498s
+
+OK

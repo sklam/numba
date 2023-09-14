@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_try_in_prange_map (numba.tests.test_try_except.TestTryExceptParfors.test_try_in_prange_map) ... ok
+test_try_in_prange_reduction (numba.tests.test_try_except.TestTryExceptParfors.test_try_in_prange_reduction) ... ok
+test_try_outside_prange_map (numba.tests.test_try_except.TestTryExceptParfors.test_try_outside_prange_map) ... ok
+test_try_outside_prange_reduction (numba.tests.test_try_except.TestTryExceptParfors.test_try_outside_prange_reduction) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.593s
+
+OK

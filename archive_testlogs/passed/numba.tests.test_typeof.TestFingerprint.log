@@ -1,0 +1,22 @@
+Parallel: 16. Serial: 0
+test_arrays (numba.tests.test_typeof.TestFingerprint.test_arrays) ... ok
+test_bool (numba.tests.test_typeof.TestFingerprint.test_bool) ... ok
+test_buffers (numba.tests.test_typeof.TestFingerprint.test_buffers) ... ok
+test_complex (numba.tests.test_typeof.TestFingerprint.test_complex) ... ok
+test_complicated_type (numba.tests.test_typeof.TestFingerprint.test_complicated_type) ... ok
+test_datetime (numba.tests.test_typeof.TestFingerprint.test_datetime) ... ok
+test_dtype (numba.tests.test_typeof.TestFingerprint.test_dtype) ... ok
+test_enums (numba.tests.test_typeof.TestFingerprint.test_enums) ... ok
+test_floats (numba.tests.test_typeof.TestFingerprint.test_floats) ... ok
+test_ints (numba.tests.test_typeof.TestFingerprint.test_ints) ... ok
+test_lists (numba.tests.test_typeof.TestFingerprint.test_lists) ... ok
+test_none (numba.tests.test_typeof.TestFingerprint.test_none) ... ok
+test_omitted_args (numba.tests.test_typeof.TestFingerprint.test_omitted_args) ... ok
+test_records (numba.tests.test_typeof.TestFingerprint.test_records) ... ok
+test_sets (numba.tests.test_typeof.TestFingerprint.test_sets) ... ok
+test_tuples (numba.tests.test_typeof.TestFingerprint.test_tuples) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.212s
+
+OK

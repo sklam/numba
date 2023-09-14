@@ -1,0 +1,13 @@
+Parallel: 6. Serial: 0
+test_append_fails (numba.tests.test_listobject.TestImmutable.test_append_fails) ... ok
+test_getitem_still_works_when_immutable (numba.tests.test_listobject.TestImmutable.test_getitem_still_works_when_immutable) ... ok
+test_is_immutable (numba.tests.test_listobject.TestImmutable.test_is_immutable) ... ok
+test_length_still_works_when_immutable (numba.tests.test_listobject.TestImmutable.test_length_still_works_when_immutable) ... ok
+test_make_immutable_is_immutable (numba.tests.test_listobject.TestImmutable.test_make_immutable_is_immutable) ... ok
+test_mutation_fails (numba.tests.test_listobject.TestImmutable.test_mutation_fails)
+Test that any attempt to mutate an immutable typed list fails. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 11.348s
+
+OK

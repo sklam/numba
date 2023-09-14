@@ -1,0 +1,602 @@
+Parallel: 14. Serial: 0
+test_closure2 (numba.tests.test_try_except.TestTryBareExcept.test_closure2) ... ok
+test_closure3 (numba.tests.test_try_except.TestTryBareExcept.test_closure3) ... ERROR
+test_closure4 (numba.tests.test_try_except.TestTryBareExcept.test_closure4) ... ERROR
+test_for_loop (numba.tests.test_try_except.TestTryBareExcept.test_for_loop) ... ok
+test_loop_in_try (numba.tests.test_try_except.TestTryBareExcept.test_loop_in_try) ... ok
+test_nested_try (numba.tests.test_try_except.TestTryBareExcept.test_nested_try) ... ok
+test_raise_in_try (numba.tests.test_try_except.TestTryBareExcept.test_raise_in_try) ... ok
+test_real_problem (numba.tests.test_try_except.TestTryBareExcept.test_real_problem) ... skipped 'SciPy needed for test'
+test_recursion (numba.tests.test_try_except.TestTryBareExcept.test_recursion) ... ok
+test_try_except_reraise (numba.tests.test_try_except.TestTryBareExcept.test_try_except_reraise) ... ok
+test_try_inner_raise (numba.tests.test_try_except.TestTryBareExcept.test_try_inner_raise) ... ok
+test_try_pass (numba.tests.test_try_except.TestTryBareExcept.test_try_pass) ... ok
+test_try_state_reset (numba.tests.test_try_except.TestTryBareExcept.test_try_state_reset) ... ok
+test_yield (numba.tests.test_try_except.TestTryBareExcept.test_yield) ... ok
+
+======================================================================
+ERROR: test_closure3 (numba.tests.test_try_except.TestTryBareExcept.test_closure3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 331, in get_call_type
+    failures.raise_error()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 227, in raise_error
+    raise errors.TypingError(self.format())
+numba.core.errors.TypingError: No implementation of function Function(<class 'map'>) found for signature:
+ 
+ >>> map(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efbba0>)), list(int64)<iv=[1, 2, 3]>)
+ 
+There are 2 candidate implementations:
+  - Of which 2 did not match due to:
+  Overload in function 'ol_map': File: numba/cpython/builtins.py: Line 725.
+    With argument(s): '(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efbba0>)), list(int64)<iv=None>)':
+   Rejected as the implementation raised a specific error:
+     UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+   Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+   
+   File "numba/cpython/builtins.py", line 728:
+       def impl(func, iterable, *args):
+           for x in zip(iterable, *args):
+           ^
+   
+       Traceback (most recent call last):
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+           sig = temp.apply(nolitargs, nolitkws)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+           sig = generic(args, kws)
+                 ^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+           disp, new_args = self._get_impl(args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+           impl, args = self._build_impl(cache_key, args, kws)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+           disp_type.get_call_type(self.context, args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+           self.dispatcher.get_call_template(args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+           self.compile(tuple(args))
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+           cres = self._compiler.compile(args, return_type)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+           status, retval = self._compile_cached(args, return_type)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+           retval = self._compile_core(args, return_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+           cres = compiler.compile_extra(self.targetdescr.typing_context,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+           return pipeline.compile_extra(func)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+           return self._compile_bytecode()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+           return self._compile_core()
+                  ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+           raise e
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+           pm.run(self.state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+           raise patched_exception
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+           self._runPass(idx, pass_inst, state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+           return func(*args, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+           mutated |= check(pss.run_pass, internal_state)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+           mangled = func(compiler_state)
+                     ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+           typemap, return_type, calltypes, errs = type_inference_stage(
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+           infer.build_constraint()
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+           self.constrain_statement(inst)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1386, in constrain_statement
+           self.typeof_assign(inst)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1465, in typeof_assign
+           self.typeof_expr(inst, inst.target, value)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1734, in typeof_expr
+           raise UnsupportedError(msg, loc=inst.loc)
+       numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+       Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+       File "numba/cpython/builtins.py", line 728:
+           def impl(func, iterable, *args):
+               for x in zip(iterable, *args):
+               ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py:1734
+
+During: resolving callee type: Function(<class 'map'>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py (273)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py", line 276, in test_closure3
+    res = foo(10)
+          ^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+No implementation of function Function(<class 'map'>) found for signature:
+ 
+ >>> map(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efbba0>)), list(int64)<iv=[1, 2, 3]>)
+ 
+There are 2 candidate implementations:
+  - Of which 2 did not match due to:
+  Overload in function 'ol_map': File: numba/cpython/builtins.py: Line 725.
+    With argument(s): '(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efbba0>)), list(int64)<iv=None>)':
+   Rejected as the implementation raised a specific error:
+     UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+   Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+   
+   File "numba/cpython/builtins.py", line 728:
+       def impl(func, iterable, *args):
+           for x in zip(iterable, *args):
+           ^
+   
+       Traceback (most recent call last):
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+           sig = temp.apply(nolitargs, nolitkws)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+           sig = generic(args, kws)
+                 ^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+           disp, new_args = self._get_impl(args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+           impl, args = self._build_impl(cache_key, args, kws)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+           disp_type.get_call_type(self.context, args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+           self.dispatcher.get_call_template(args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+           self.compile(tuple(args))
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+           cres = self._compiler.compile(args, return_type)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+           status, retval = self._compile_cached(args, return_type)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+           retval = self._compile_core(args, return_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+           cres = compiler.compile_extra(self.targetdescr.typing_context,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+           return pipeline.compile_extra(func)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+           return self._compile_bytecode()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+           return self._compile_core()
+                  ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+           raise e
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+           pm.run(self.state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+           raise patched_exception
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+           self._runPass(idx, pass_inst, state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+           return func(*args, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+           mutated |= check(pss.run_pass, internal_state)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+           mangled = func(compiler_state)
+                     ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+           typemap, return_type, calltypes, errs = type_inference_stage(
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+           infer.build_constraint()
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+           self.constrain_statement(inst)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1386, in constrain_statement
+           self.typeof_assign(inst)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1465, in typeof_assign
+           self.typeof_expr(inst, inst.target, value)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1734, in typeof_expr
+           raise UnsupportedError(msg, loc=inst.loc)
+       numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+       Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+       File "numba/cpython/builtins.py", line 728:
+           def impl(func, iterable, *args):
+               for x in zip(iterable, *args):
+               ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py:1734
+
+During: resolving callee type: Function(<class 'map'>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py (273)
+
+
+File "numba/tests/test_try_except.py", line 273:
+            def bar(z):
+                <source elided>
+                    return z
+            return [x for x in map(bar, [1, 2, 3])]
+            ^
+
+
+======================================================================
+ERROR: test_closure4 (numba.tests.test_try_except.TestTryBareExcept.test_closure4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 331, in get_call_type
+    failures.raise_error()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 227, in raise_error
+    raise errors.TypingError(self.format())
+numba.core.errors.TypingError: No implementation of function Function(<class 'map'>) found for signature:
+ 
+ >>> map(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efa700>)), list(int64)<iv=None>)
+ 
+There are 2 candidate implementations:
+    - Of which 2 did not match due to:
+    Overload in function 'ol_map': File: numba/cpython/builtins.py: Line 725.
+      With argument(s): '(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efa700>)), list(int64)<iv=None>)':
+     Rejected as the implementation raised a specific error:
+       UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+     Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+     
+     File "numba/cpython/builtins.py", line 728:
+         def impl(func, iterable, *args):
+             for x in zip(iterable, *args):
+             ^
+     
+         Traceback (most recent call last):
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+             sig = temp.apply(nolitargs, nolitkws)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+             sig = generic(args, kws)
+                   ^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+             disp, new_args = self._get_impl(args, kws)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+             impl, args = self._build_impl(cache_key, args, kws)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+             disp_type.get_call_type(self.context, args, kws)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+             self.dispatcher.get_call_template(args, kws)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+             self.compile(tuple(args))
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+             cres = self._compiler.compile(args, return_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+             status, retval = self._compile_cached(args, return_type)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+             retval = self._compile_core(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+             cres = compiler.compile_extra(self.targetdescr.typing_context,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+             return pipeline.compile_extra(func)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+             return self._compile_bytecode()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+             return self._compile_core()
+                    ^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+             raise e
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+             pm.run(self.state)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+             raise patched_exception
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+             self._runPass(idx, pass_inst, state)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+             return func(*args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+             mutated |= check(pss.run_pass, internal_state)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+             mangled = func(compiler_state)
+                       ^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+             typemap, return_type, calltypes, errs = type_inference_stage(
+                                                     ^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+             infer.build_constraint()
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+             self.constrain_statement(inst)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1386, in constrain_statement
+             self.typeof_assign(inst)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1465, in typeof_assign
+             self.typeof_expr(inst, inst.target, value)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1734, in typeof_expr
+             raise UnsupportedError(msg, loc=inst.loc)
+         numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+         Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+         File "numba/cpython/builtins.py", line 728:
+             def impl(func, iterable, *args):
+                 for x in zip(iterable, *args):
+                 ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py:1734
+
+During: resolving callee type: Function(<class 'map'>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py (290)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py", line 295, in test_closure4
+    res = foo(-1)
+          ^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+No implementation of function Function(<class 'map'>) found for signature:
+ 
+ >>> map(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efa700>)), list(int64)<iv=None>)
+ 
+There are 2 candidate implementations:
+    - Of which 2 did not match due to:
+    Overload in function 'ol_map': File: numba/cpython/builtins.py: Line 725.
+      With argument(s): '(type(CPUDispatcher(<function closure.<locals>.bar at 0x7f5cc0efa700>)), list(int64)<iv=None>)':
+     Rejected as the implementation raised a specific error:
+       UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+     Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+     
+     File "numba/cpython/builtins.py", line 728:
+         def impl(func, iterable, *args):
+             for x in zip(iterable, *args):
+             ^
+     
+         Traceback (most recent call last):
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+             sig = temp.apply(nolitargs, nolitkws)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+             sig = generic(args, kws)
+                   ^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+             disp, new_args = self._get_impl(args, kws)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+             impl, args = self._build_impl(cache_key, args, kws)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+             disp_type.get_call_type(self.context, args, kws)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+             self.dispatcher.get_call_template(args, kws)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+             self.compile(tuple(args))
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+             cres = self._compiler.compile(args, return_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+             status, retval = self._compile_cached(args, return_type)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+             retval = self._compile_core(args, return_type)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+             cres = compiler.compile_extra(self.targetdescr.typing_context,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+             return pipeline.compile_extra(func)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+             return self._compile_bytecode()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+             return self._compile_core()
+                    ^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+             raise e
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+             pm.run(self.state)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+             raise patched_exception
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+             self._runPass(idx, pass_inst, state)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+             return func(*args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+             mutated |= check(pss.run_pass, internal_state)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+             mangled = func(compiler_state)
+                       ^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+             typemap, return_type, calltypes, errs = type_inference_stage(
+                                                     ^^^^^^^^^^^^^^^^^^^^^
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 89, in type_inference_stage
+             infer.build_constraint()
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1039, in build_constraint
+             self.constrain_statement(inst)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1386, in constrain_statement
+             self.typeof_assign(inst)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1465, in typeof_assign
+             self.typeof_expr(inst, inst.target, value)
+           File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1734, in typeof_expr
+             raise UnsupportedError(msg, loc=inst.loc)
+         numba.core.errors.UnsupportedError: Failed in nopython mode pipeline (step: nopython frontend)
+         Unsupported op-code encountered: list_to_tuple(info=('$phi26.2',))
+         File "numba/cpython/builtins.py", line 728:
+             def impl(func, iterable, *args):
+                 for x in zip(iterable, *args):
+                 ^
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py:1734
+
+During: resolving callee type: Function(<class 'map'>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py (290)
+
+
+File "numba/tests/test_try_except.py", line 290:
+            def bar(z):
+                <source elided>
+            try:
+                return [x for x in map(bar, [1, 2, 3, x])]
+                ^
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 3.473s
+
+FAILED (errors=2, skipped=1)

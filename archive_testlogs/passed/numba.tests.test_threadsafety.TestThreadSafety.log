@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_concurrent_guvectorize (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_guvectorize) ... ok
+test_concurrent_guvectorize_cache (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_guvectorize_cache) ... ok
+test_concurrent_jit (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_jit) ... ok
+test_concurrent_jit_cache (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_jit_cache) ... ok
+test_concurrent_mix_use (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_mix_use) ... ok
+test_concurrent_vectorize (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_vectorize) ... ok
+test_concurrent_vectorize_cache (numba.tests.test_threadsafety.TestThreadSafety.test_concurrent_vectorize_cache) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 21.671s
+
+OK

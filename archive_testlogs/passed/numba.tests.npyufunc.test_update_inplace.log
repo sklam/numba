@@ -1,0 +1,12 @@
+Parallel: 5. Serial: 0
+test_exceptions (numba.tests.npyufunc.test_update_inplace.TestUpdateInplace.test_exceptions) ... ok
+test_update_inplace (numba.tests.npyufunc.test_update_inplace.TestUpdateInplace.test_update_inplace) ... ok
+test_update_inplace_3 (numba.tests.npyufunc.test_update_inplace.TestUpdateInplace.test_update_inplace_3) ... ok
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_update_inplace_parallel (numba.tests.npyufunc.test_update_inplace.TestUpdateInplace.test_update_inplace_parallel) ... ok
+test_update_inplace_with_cache (numba.tests.npyufunc.test_update_inplace.TestUpdateInplace.test_update_inplace_with_cache) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.522s
+
+OK

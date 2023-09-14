@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_array_notation (numba.tests.test_types.TestTypes.test_array_notation) ... ok
+test_array_notation_for_dtype (numba.tests.test_types.TestTypes.test_array_notation_for_dtype) ... ok
+test_cache_trimming (numba.tests.test_types.TestTypes.test_cache_trimming) ... ok
+test_call_notation (numba.tests.test_types.TestTypes.test_call_notation) ... ok
+test_equality (numba.tests.test_types.TestTypes.test_equality) ... ok
+test_function_incompatible_templates (numba.tests.test_types.TestTypes.test_function_incompatible_templates) ... ok
+test_interning (numba.tests.test_types.TestTypes.test_interning) ... ok
+test_list_type_getitem (numba.tests.test_types.TestTypes.test_list_type_getitem) ... ok
+test_weaktype (numba.tests.test_types.TestTypes.test_weaktype) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.412s
+
+OK

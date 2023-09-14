@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_cannot_find_gdb_from_name (numba.tests.test_cli.TestGDBCLIInfoBrokenGdbs.test_cannot_find_gdb_from_name) ... ok
+test_cannot_find_gdb_from_path (numba.tests.test_cli.TestGDBCLIInfoBrokenGdbs.test_cannot_find_gdb_from_path) ... ok
+test_nonsense_gdb_binary (numba.tests.test_cli.TestGDBCLIInfoBrokenGdbs.test_nonsense_gdb_binary) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.378s
+
+OK

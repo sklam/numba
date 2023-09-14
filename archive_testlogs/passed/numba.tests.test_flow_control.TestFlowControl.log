@@ -1,0 +1,49 @@
+Parallel: 42. Serial: 0
+test_double_infinite_loop (numba.tests.test_flow_control.TestFlowControl.test_double_infinite_loop) ... ok
+test_double_infinite_loop_npm (numba.tests.test_flow_control.TestFlowControl.test_double_infinite_loop_npm) ... ok
+test_for_loop1 (numba.tests.test_flow_control.TestFlowControl.test_for_loop1) ... ok
+test_for_loop10 (numba.tests.test_flow_control.TestFlowControl.test_for_loop10) ... ok
+test_for_loop10_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop10_npm) ... ok
+test_for_loop1_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop1_npm) ... ok
+test_for_loop2 (numba.tests.test_flow_control.TestFlowControl.test_for_loop2) ... ok
+test_for_loop2_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop2_npm) ... ok
+test_for_loop3 (numba.tests.test_flow_control.TestFlowControl.test_for_loop3)
+List requires pyobject ... ok
+test_for_loop3_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop3_npm) ... ok
+test_for_loop4 (numba.tests.test_flow_control.TestFlowControl.test_for_loop4) ... ok
+test_for_loop4_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop4_npm) ... ok
+test_for_loop5 (numba.tests.test_flow_control.TestFlowControl.test_for_loop5) ... ok
+test_for_loop5_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop5_npm) ... ok
+test_for_loop6 (numba.tests.test_flow_control.TestFlowControl.test_for_loop6) ... ok
+test_for_loop6_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop6_npm) ... ok
+test_for_loop7 (numba.tests.test_flow_control.TestFlowControl.test_for_loop7) ... ok
+test_for_loop7_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop7_npm) ... ok
+test_for_loop8 (numba.tests.test_flow_control.TestFlowControl.test_for_loop8) ... ok
+test_for_loop8_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop8_npm) ... ok
+test_for_loop9 (numba.tests.test_flow_control.TestFlowControl.test_for_loop9) ... ok
+test_for_loop9_npm (numba.tests.test_flow_control.TestFlowControl.test_for_loop9_npm) ... ok
+test_ifelse1 (numba.tests.test_flow_control.TestFlowControl.test_ifelse1) ... ok
+test_ifelse1_npm (numba.tests.test_flow_control.TestFlowControl.test_ifelse1_npm) ... ok
+test_ifelse2 (numba.tests.test_flow_control.TestFlowControl.test_ifelse2) ... ok
+test_ifelse2_npm (numba.tests.test_flow_control.TestFlowControl.test_ifelse2_npm) ... ok
+test_ifelse3 (numba.tests.test_flow_control.TestFlowControl.test_ifelse3) ... ok
+test_ifelse3_npm (numba.tests.test_flow_control.TestFlowControl.test_ifelse3_npm) ... ok
+test_ifelse4 (numba.tests.test_flow_control.TestFlowControl.test_ifelse4) ... ok
+test_ifelse4_npm (numba.tests.test_flow_control.TestFlowControl.test_ifelse4_npm) ... ok
+test_ternary_ifelse1 (numba.tests.test_flow_control.TestFlowControl.test_ternary_ifelse1) ... ok
+test_ternary_ifelse1_npm (numba.tests.test_flow_control.TestFlowControl.test_ternary_ifelse1_npm) ... ok
+test_while_loop1 (numba.tests.test_flow_control.TestFlowControl.test_while_loop1) ... ok
+test_while_loop1_npm (numba.tests.test_flow_control.TestFlowControl.test_while_loop1_npm) ... ok
+test_while_loop2 (numba.tests.test_flow_control.TestFlowControl.test_while_loop2) ... ok
+test_while_loop2_npm (numba.tests.test_flow_control.TestFlowControl.test_while_loop2_npm) ... ok
+test_while_loop3 (numba.tests.test_flow_control.TestFlowControl.test_while_loop3) ... ok
+test_while_loop3_npm (numba.tests.test_flow_control.TestFlowControl.test_while_loop3_npm) ... ok
+test_while_loop4 (numba.tests.test_flow_control.TestFlowControl.test_while_loop4) ... ok
+test_while_loop4_npm (numba.tests.test_flow_control.TestFlowControl.test_while_loop4_npm) ... ok
+test_while_loop5 (numba.tests.test_flow_control.TestFlowControl.test_while_loop5) ... ok
+test_while_loop5_npm (numba.tests.test_flow_control.TestFlowControl.test_while_loop5_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 42 tests in 7.509s
+
+OK

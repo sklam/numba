@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_linspace_2 (numba.tests.test_dyn_array.TestLinspace.test_linspace_2) ... ok
+test_linspace_3 (numba.tests.test_dyn_array.TestLinspace.test_linspace_3) ... ok
+test_linspace_accuracy (numba.tests.test_dyn_array.TestLinspace.test_linspace_accuracy) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.595s
+
+OK

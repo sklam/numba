@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_invalid_binary (numba.tests.test_cli.TestGDBCLIInfo.test_invalid_binary) ... ok
+test_no_numpy (numba.tests.test_cli.TestGDBCLIInfo.test_no_numpy) ... ok
+test_no_numpy_version (numba.tests.test_cli.TestGDBCLIInfo.test_no_numpy_version) ... ok
+test_no_python (numba.tests.test_cli.TestGDBCLIInfo.test_no_python) ... ok
+test_traceback_in_numpy_version (numba.tests.test_cli.TestGDBCLIInfo.test_traceback_in_numpy_version) ... ok
+test_unparsable_python_version (numba.tests.test_cli.TestGDBCLIInfo.test_unparsable_python_version) ... ok
+test_valid (numba.tests.test_cli.TestGDBCLIInfo.test_valid) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.040s
+
+OK

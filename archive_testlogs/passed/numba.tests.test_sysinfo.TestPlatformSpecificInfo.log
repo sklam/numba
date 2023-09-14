@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_content_type (numba.tests.test_sysinfo.TestPlatformSpecificInfo.test_content_type) ... ok
+test_has_all_data (numba.tests.test_sysinfo.TestPlatformSpecificInfo.test_has_all_data) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.016s
+
+OK

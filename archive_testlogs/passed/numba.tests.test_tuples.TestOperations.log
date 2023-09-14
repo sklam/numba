@@ -1,0 +1,20 @@
+Parallel: 14. Serial: 0
+test_add (numba.tests.test_tuples.TestOperations.test_add) ... ok
+test_bool (numba.tests.test_tuples.TestOperations.test_bool) ... ok
+test_eq (numba.tests.test_tuples.TestOperations.test_eq) ... ok
+test_ge (numba.tests.test_tuples.TestOperations.test_ge) ... ok
+test_gt (numba.tests.test_tuples.TestOperations.test_gt) ... ok
+test_in (numba.tests.test_tuples.TestOperations.test_in) ... ok
+test_index (numba.tests.test_tuples.TestOperations.test_index) ... ok
+test_index_literal (numba.tests.test_tuples.TestOperations.test_index_literal) ... ok
+test_le (numba.tests.test_tuples.TestOperations.test_le) ... ok
+test_len (numba.tests.test_tuples.TestOperations.test_len) ... ok
+test_lt (numba.tests.test_tuples.TestOperations.test_lt) ... ok
+test_ne (numba.tests.test_tuples.TestOperations.test_ne) ... ok
+test_slice2 (numba.tests.test_tuples.TestOperations.test_slice2) ... ok
+test_slice3 (numba.tests.test_tuples.TestOperations.test_slice3) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 12.157s
+
+OK

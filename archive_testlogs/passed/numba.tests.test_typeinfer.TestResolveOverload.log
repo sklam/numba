@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_ambiguous_error (numba.tests.test_typeinfer.TestResolveOverload.test_ambiguous_error) ... ok
+test_ambiguous_match (numba.tests.test_typeinfer.TestResolveOverload.test_ambiguous_match) ... ok
+test_non_ambiguous_match (numba.tests.test_typeinfer.TestResolveOverload.test_non_ambiguous_match) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.114s
+
+OK

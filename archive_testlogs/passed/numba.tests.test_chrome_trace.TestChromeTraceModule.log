@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_trace_output (numba.tests.test_chrome_trace.TestChromeTraceModule.test_trace_output) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.609s
+
+OK

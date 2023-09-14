@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_div (numba.tests.test_npdatetime.TestDatetimeDeltaOps.test_div)
+Test the division of a timedelta by numeric types ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.077s
+
+OK

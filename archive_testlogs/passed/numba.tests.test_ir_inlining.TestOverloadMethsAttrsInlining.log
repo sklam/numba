@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_overload_attribute_always (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_attribute_always) ... ok
+test_overload_attribute_costmodel_must_inline (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_attribute_costmodel_must_inline) ... ok
+test_overload_attribute_costmodel_no_inline (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_attribute_costmodel_no_inline) ... ok
+test_overload_attribute_never (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_attribute_never) ... ok
+test_overload_method_cost_driven_always (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_method_cost_driven_always) ... ok
+test_overload_method_cost_driven_must_inline (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_method_cost_driven_must_inline) ... ok
+test_overload_method_cost_driven_never (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_method_cost_driven_never) ... ok
+test_overload_method_cost_driven_no_inline (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_method_cost_driven_no_inline) ... ok
+test_overload_method_default_args_always (numba.tests.test_ir_inlining.TestOverloadMethsAttrsInlining.test_overload_method_default_args_always) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.717s
+
+OK

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_base (numba.tests.test_function_type.TestMultiFunctionType.test_base) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.062s
+
+OK

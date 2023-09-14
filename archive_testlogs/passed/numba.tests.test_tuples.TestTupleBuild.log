@@ -1,0 +1,16 @@
+Parallel: 10. Serial: 0
+test_build_unpack (numba.tests.test_tuples.TestTupleBuild.test_build_unpack) ... ok
+test_build_unpack_assign_like (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_assign_like) ... ok
+test_build_unpack_call (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_call) ... ok
+test_build_unpack_call_more (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_call_more) ... ok
+test_build_unpack_complicated (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_complicated) ... ok
+test_build_unpack_fail_on_list_assign_like (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_fail_on_list_assign_like) ... ok
+test_build_unpack_more (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_more) ... ok
+test_build_unpack_with_calls_in_unpack (numba.tests.test_tuples.TestTupleBuild.test_build_unpack_with_calls_in_unpack) ... ok
+test_tuple_constructor (numba.tests.test_tuples.TestTupleBuild.test_tuple_constructor) ... ok
+test_unpack_with_predicate_fails (numba.tests.test_tuples.TestTupleBuild.test_unpack_with_predicate_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.338s
+
+OK

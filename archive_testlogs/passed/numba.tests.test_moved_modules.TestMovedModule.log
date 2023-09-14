@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+tests_numba_types (numba.tests.test_moved_modules.TestMovedModule.tests_numba_types) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.119s
+
+OK

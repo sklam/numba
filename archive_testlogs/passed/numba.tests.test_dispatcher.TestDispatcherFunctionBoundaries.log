@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_dispatcher_as_arg_usecase (numba.tests.test_dispatcher.TestDispatcherFunctionBoundaries.test_dispatcher_as_arg_usecase) ... ok
+test_dispatcher_can_return_to_python (numba.tests.test_dispatcher.TestDispatcherFunctionBoundaries.test_dispatcher_can_return_to_python) ... ok
+test_dispatcher_in_sequence_arg (numba.tests.test_dispatcher.TestDispatcherFunctionBoundaries.test_dispatcher_in_sequence_arg) ... ok
+test_pass_dispatcher_as_arg (numba.tests.test_dispatcher.TestDispatcherFunctionBoundaries.test_pass_dispatcher_as_arg) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.642s
+
+OK

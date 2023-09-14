@@ -1,0 +1,16 @@
+Parallel: 10. Serial: 0
+test_list_multiple_delitem (numba.tests.test_listobject.TestListObjectDelitem.test_list_multiple_delitem) ... ok
+test_list_multiple_delitem_off_by_one (numba.tests.test_listobject.TestListObjectDelitem.test_list_multiple_delitem_off_by_one) ... ok
+test_list_multiple_delitem_slice (numba.tests.test_listobject.TestListObjectDelitem.test_list_multiple_delitem_slice) ... ok
+test_list_singleton_delitem_index (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_index) ... ok
+test_list_singleton_delitem_slice_defaults (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_slice_defaults) ... ok
+test_list_singleton_delitem_slice_start (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_slice_start) ... ok
+test_list_singleton_delitem_slice_start_step (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_slice_start_step) ... ok
+test_list_singleton_delitem_slice_start_stop (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_slice_start_stop) ... ok
+test_list_singleton_delitem_slice_start_stop_step (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_slice_start_stop_step) ... ok
+test_list_singleton_delitem_slice_stop (numba.tests.test_listobject.TestListObjectDelitem.test_list_singleton_delitem_slice_stop) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.953s
+
+OK

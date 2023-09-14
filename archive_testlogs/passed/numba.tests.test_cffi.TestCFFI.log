@@ -1,0 +1,24 @@
+test_bool_function_ool (numba.tests.test_cffi.TestCFFI.test_bool_function_ool) ... skipped 'requires cffi'
+test_from_buffer_error (numba.tests.test_cffi.TestCFFI.test_from_buffer_error) ... skipped 'requires cffi'
+test_from_buffer_float32 (numba.tests.test_cffi.TestCFFI.test_from_buffer_float32) ... skipped 'requires cffi'
+test_from_buffer_float64 (numba.tests.test_cffi.TestCFFI.test_from_buffer_float64) ... skipped 'requires cffi'
+test_from_buffer_numpy_multi_array (numba.tests.test_cffi.TestCFFI.test_from_buffer_numpy_multi_array) ... skipped 'requires cffi'
+test_from_buffer_pyarray (numba.tests.test_cffi.TestCFFI.test_from_buffer_pyarray) ... skipped 'requires cffi'
+test_from_buffer_struct (numba.tests.test_cffi.TestCFFI.test_from_buffer_struct) ... skipped 'requires cffi'
+test_function_pointer (numba.tests.test_cffi.TestCFFI.test_function_pointer) ... skipped 'requires cffi'
+test_indirect_multiple_use (numba.tests.test_cffi.TestCFFI.test_indirect_multiple_use)
+Issue #2263 ... skipped 'requires cffi'
+test_sin_function (numba.tests.test_cffi.TestCFFI.test_sin_function) ... skipped 'requires cffi'
+test_sin_function_npm (numba.tests.test_cffi.TestCFFI.test_sin_function_npm) ... skipped 'requires cffi'
+test_sin_function_npm_ool (numba.tests.test_cffi.TestCFFI.test_sin_function_npm_ool) ... skipped 'requires cffi'
+test_sin_function_ool (numba.tests.test_cffi.TestCFFI.test_sin_function_ool) ... skipped 'requires cffi'
+test_two_funcs (numba.tests.test_cffi.TestCFFI.test_two_funcs) ... skipped 'requires cffi'
+test_two_funcs_ool (numba.tests.test_cffi.TestCFFI.test_two_funcs_ool) ... skipped 'requires cffi'
+test_type_map (numba.tests.test_cffi.TestCFFI.test_type_map) ... skipped 'requires cffi'
+test_user_defined_symbols (numba.tests.test_cffi.TestCFFI.test_user_defined_symbols) ... skipped 'requires cffi'
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.001s
+
+OK (skipped=17)
+Parallel: 0. Serial: 17

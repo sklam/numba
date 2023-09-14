@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_properties (numba.tests.test_types.TestNdIter.test_properties) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.113s
+
+OK

@@ -1,0 +1,11 @@
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_interproc.py:14: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+Parallel: 3. Serial: 0
+test_bar_call_foo (numba.tests.test_interproc.TestInterProc.test_bar_call_foo) ... ok
+test_bar_call_foo_compiled_twice (numba.tests.test_interproc.TestInterProc.test_bar_call_foo_compiled_twice) ... ok
+test_callsite_compilation (numba.tests.test_interproc.TestInterProc.test_callsite_compilation) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.977s
+
+OK

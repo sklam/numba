@@ -1,0 +1,362 @@
+Parallel: 68. Serial: 0
+test_arange_1_arg (numba.tests.test_array_methods.TestArrayMethods.test_arange_1_arg) ... ok
+test_arange_2_arg (numba.tests.test_array_methods.TestArrayMethods.test_arange_2_arg) ... ok
+test_arange_3_arg (numba.tests.test_array_methods.TestArrayMethods.test_arange_3_arg) ... ok
+test_arange_4_arg (numba.tests.test_array_methods.TestArrayMethods.test_arange_4_arg) ... ok
+test_arange_accuracy (numba.tests.test_array_methods.TestArrayMethods.test_arange_accuracy) ... ok
+test_arange_throws (numba.tests.test_array_methods.TestArrayMethods.test_arange_throws) ... ok
+test_around_array (numba.tests.test_array_methods.TestArrayMethods.test_around_array) ... ok
+test_around_bad_array (numba.tests.test_array_methods.TestArrayMethods.test_around_bad_array) ... ok
+test_around_bad_out (numba.tests.test_array_methods.TestArrayMethods.test_around_bad_out) ... ok
+test_around_scalar (numba.tests.test_array_methods.TestArrayMethods.test_around_scalar) ... ok
+test_array_T (numba.tests.test_array_methods.TestArrayMethods.test_array_T) ... ok
+test_array_astype (numba.tests.test_array_methods.TestArrayMethods.test_array_astype) ... ok
+test_array_copy (numba.tests.test_array_methods.TestArrayMethods.test_array_copy) ... ok
+test_array_ctor_with_dtype_arg (numba.tests.test_array_methods.TestArrayMethods.test_array_ctor_with_dtype_arg) ... ok
+test_array_dot (numba.tests.test_array_methods.TestArrayMethods.test_array_dot) ... skipped 'BLAS needs SciPy 1.0+'
+test_array_nonzero (numba.tests.test_array_methods.TestArrayMethods.test_array_nonzero) ... ok
+test_array_sliced_view (numba.tests.test_array_methods.TestArrayMethods.test_array_sliced_view)
+Test .view() on A layout array but has contiguous innermost dimension. ... ok
+test_array_transpose (numba.tests.test_array_methods.TestArrayMethods.test_array_transpose) ... ok
+test_array_view (numba.tests.test_array_methods.TestArrayMethods.test_array_view) ... ok
+test_clip (numba.tests.test_array_methods.TestArrayMethods.test_clip) ... ok
+test_clip_array_min_max (numba.tests.test_array_methods.TestArrayMethods.test_clip_array_min_max) ... ok
+test_clip_bad_array (numba.tests.test_array_methods.TestArrayMethods.test_clip_bad_array) ... ok
+test_clip_bad_max (numba.tests.test_array_methods.TestArrayMethods.test_clip_bad_max) ... ok
+test_clip_bad_min (numba.tests.test_array_methods.TestArrayMethods.test_clip_bad_min) ... ok
+test_clip_bad_out (numba.tests.test_array_methods.TestArrayMethods.test_clip_bad_out) ... ok
+test_clip_no_broadcast (numba.tests.test_array_methods.TestArrayMethods.test_clip_no_broadcast) ... ok
+test_conj (numba.tests.test_array_methods.TestArrayMethods.test_conj) ... ok
+test_cumsum (numba.tests.test_array_methods.TestArrayMethods.test_cumsum) ... ok
+test_fill (numba.tests.test_array_methods.TestArrayMethods.test_fill) ... ok
+test_imag (numba.tests.test_array_methods.TestArrayMethods.test_imag) ... ok
+test_item (numba.tests.test_array_methods.TestArrayMethods.test_item) ... ok
+test_itemset (numba.tests.test_array_methods.TestArrayMethods.test_itemset) ... ok
+test_np_ascontiguousarray (numba.tests.test_array_methods.TestArrayMethods.test_np_ascontiguousarray) ... ok
+test_np_asfortranarray (numba.tests.test_array_methods.TestArrayMethods.test_np_asfortranarray) ... ok
+test_np_copy (numba.tests.test_array_methods.TestArrayMethods.test_np_copy) ... ok
+test_np_frombuffer (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer) ... ok
+test_np_frombuffer_allocated (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer_allocated) ... ok
+test_np_frombuffer_allocated2 (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer_allocated2) ... ok
+test_np_frombuffer_bad_buffer (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer_bad_buffer) ... ok
+test_np_frombuffer_dtype (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer_dtype) ... ok
+test_np_frombuffer_dtype_non_const_str (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer_dtype_non_const_str) ... ok
+test_np_frombuffer_dtype_str (numba.tests.test_array_methods.TestArrayMethods.test_np_frombuffer_dtype_str) ... ok
+test_np_nonzero (numba.tests.test_array_methods.TestArrayMethods.test_np_nonzero) ... ok
+test_np_where_1 (numba.tests.test_array_methods.TestArrayMethods.test_np_where_1) ... ok
+test_np_where_3 (numba.tests.test_array_methods.TestArrayMethods.test_np_where_3) ... ok
+test_np_where_3_broadcast_x_or_y_scalar (numba.tests.test_array_methods.TestArrayMethods.test_np_where_3_broadcast_x_or_y_scalar) ... ok
+test_np_where_3_broadcast_x_y_scalar (numba.tests.test_array_methods.TestArrayMethods.test_np_where_3_broadcast_x_y_scalar) ... ok
+test_np_where_invalid_inputs (numba.tests.test_array_methods.TestArrayMethods.test_np_where_invalid_inputs) ... ok
+test_np_where_numpy_basic (numba.tests.test_array_methods.TestArrayMethods.test_np_where_numpy_basic) ... ok
+test_np_where_numpy_dtype_mix (numba.tests.test_array_methods.TestArrayMethods.test_np_where_numpy_dtype_mix) ... ok
+test_np_where_numpy_ndim (numba.tests.test_array_methods.TestArrayMethods.test_np_where_numpy_ndim) ... ok
+test_np_where_numpy_test_error (numba.tests.test_array_methods.TestArrayMethods.test_np_where_numpy_test_error) ... ok
+test_real (numba.tests.test_array_methods.TestArrayMethods.test_real) ... ok
+test_round__array (numba.tests.test_array_methods.TestArrayMethods.test_round__array) ... ok
+test_round_array (numba.tests.test_array_methods.TestArrayMethods.test_round_array) ... ok
+test_round_scalar (numba.tests.test_array_methods.TestArrayMethods.test_round_scalar) ... ok
+test_sum (numba.tests.test_array_methods.TestArrayMethods.test_sum)
+test sum over a whole range of dtypes, no axis or dtype parameter ... ok
+test_sum_1d_kws (numba.tests.test_array_methods.TestArrayMethods.test_sum_1d_kws) ... ok
+test_sum_axis_dtype_kws (numba.tests.test_array_methods.TestArrayMethods.test_sum_axis_dtype_kws)
+test sum with axis and dtype parameters over a whole range of dtypes ... ok
+test_sum_axis_dtype_pos_arg (numba.tests.test_array_methods.TestArrayMethods.test_sum_axis_dtype_pos_arg)
+testing that axis and dtype inputs work when passed as positional ... ok
+test_sum_axis_kws1 (numba.tests.test_array_methods.TestArrayMethods.test_sum_axis_kws1)
+test sum with axis parameter over a whole range of dtypes ... ok
+test_sum_axis_kws2 (numba.tests.test_array_methods.TestArrayMethods.test_sum_axis_kws2)
+testing uint32 and int32 separately ... ok
+test_sum_const (numba.tests.test_array_methods.TestArrayMethods.test_sum_const) ... ok
+test_sum_const_negative (numba.tests.test_array_methods.TestArrayMethods.test_sum_const_negative) ... ok
+test_sum_dtype_kws (numba.tests.test_array_methods.TestArrayMethods.test_sum_dtype_kws)
+test sum with dtype parameter over a whole range of dtypes ... ok
+test_sum_exceptions (numba.tests.test_array_methods.TestArrayMethods.test_sum_exceptions) ... ok
+test_take (numba.tests.test_array_methods.TestArrayMethods.test_take) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_array_methods.py:264: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py", line 469, in __setitem__
+    raise AssertionError("key already in dictionary: %r" % (key,))
+
+  return np.unique(a)
+test_unique (numba.tests.test_array_methods.TestArrayMethods.test_unique) ... ERROR
+
+======================================================================
+ERROR: test_unique (numba.tests.test_array_methods.TestArrayMethods.test_unique)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 601, in resolve
+    sig = typeinfer.resolve_call(fnty, pos_args, kw_args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1557, in resolve_call
+    return self.context.resolve_function_type(fnty, pos_args, kw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 213, in resolve_function_type
+    raise last_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 196, in resolve_function_type
+    res = self._resolve_user_function_type(func, args, kws)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/context.py", line 248, in _resolve_user_function_type
+    return func.get_call_type(self, args, kws)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 331, in get_call_type
+    failures.raise_error()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 227, in raise_error
+    raise errors.TypingError(self.format())
+numba.core.errors.TypingError: No implementation of function Function(<function unique at 0x7f3cbe967240>) found for signature:
+ 
+ >>> unique(array(int64, 2d, C))
+ 
+There are 2 candidate implementations:
+  - Of which 2 did not match due to:
+  Overload in function 'np_unique': File: numba/np/arrayobj.py: Line 2560.
+    With argument(s): '(array(int64, 2d, C))':
+   Rejected as the implementation raised a specific error:
+     AssertionError: Failed in nopython mode pipeline (step: analyzing bytecode)
+   key already in dictionary: 232
+       Traceback (most recent call last):
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+           sig = temp.apply(nolitargs, nolitkws)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+           sig = generic(args, kws)
+                 ^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+           disp, new_args = self._get_impl(args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+           impl, args = self._build_impl(cache_key, args, kws)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+           disp_type.get_call_type(self.context, args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+           self.dispatcher.get_call_template(args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+           self.compile(tuple(args))
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+           cres = self._compiler.compile(args, return_type)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+           status, retval = self._compile_cached(args, return_type)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+           retval = self._compile_core(args, return_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+           cres = compiler.compile_extra(self.targetdescr.typing_context,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+           return pipeline.compile_extra(func)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+           return self._compile_bytecode()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+           return self._compile_core()
+                  ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+           raise e
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+           pm.run(self.state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+           raise patched_exception
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+           self._runPass(idx, pass_inst, state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+           return func(*args, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+           mutated |= check(pss.run_pass, internal_state)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+           mangled = func(compiler_state)
+                     ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+           func_ir = interp.interpret(bc)
+                     ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+           flow.run()
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 111, in run
+           first_encounter[state.pc_initial] = state
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py", line 469, in __setitem__
+           raise AssertionError("key already in dictionary: %r" % (key,))
+       AssertionError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       key already in dictionary: 232
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:469
+
+During: resolving callee type: Function(<function unique at 0x7f3cbe967240>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_array_methods.py (264)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_array_methods.py", line 1736, in test_unique
+    check(np.array([[1, 1, 3], [3, 4, 5]]))
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_array_methods.py", line 1734, in check
+    np.testing.assert_equal(pyfunc(a), cfunc(a))
+                                       ^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+No implementation of function Function(<function unique at 0x7f3cbe967240>) found for signature:
+ 
+ >>> unique(array(int64, 2d, C))
+ 
+There are 2 candidate implementations:
+  - Of which 2 did not match due to:
+  Overload in function 'np_unique': File: numba/np/arrayobj.py: Line 2560.
+    With argument(s): '(array(int64, 2d, C))':
+   Rejected as the implementation raised a specific error:
+     AssertionError: Failed in nopython mode pipeline (step: analyzing bytecode)
+   key already in dictionary: 232
+       Traceback (most recent call last):
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 308, in get_call_type
+           sig = temp.apply(nolitargs, nolitkws)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 351, in apply
+           sig = generic(args, kws)
+                 ^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 614, in generic
+           disp, new_args = self._get_impl(args, kws)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 713, in _get_impl
+           impl, args = self._build_impl(cache_key, args, kws)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typing/templates.py", line 817, in _build_impl
+           disp_type.get_call_type(self.context, args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/types/functions.py", line 541, in get_call_type
+           self.dispatcher.get_call_template(args, kws)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 363, in get_call_template
+           self.compile(tuple(args))
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+           cres = self._compiler.compile(args, return_type)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+           status, retval = self._compile_cached(args, return_type)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+           retval = self._compile_core(args, return_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+           cres = compiler.compile_extra(self.targetdescr.typing_context,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+           return pipeline.compile_extra(func)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+           return self._compile_bytecode()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+           return self._compile_core()
+                  ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+           raise e
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+           pm.run(self.state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+           raise patched_exception
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+           self._runPass(idx, pass_inst, state)
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+           return func(*args, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+           mutated |= check(pss.run_pass, internal_state)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+           mangled = func(compiler_state)
+                     ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+           func_ir = interp.interpret(bc)
+                     ^^^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+           flow.run()
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 111, in run
+           first_encounter[state.pc_initial] = state
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+         File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py", line 469, in __setitem__
+           raise AssertionError("key already in dictionary: %r" % (key,))
+       AssertionError: Failed in nopython mode pipeline (step: analyzing bytecode)
+       key already in dictionary: 232
+  raised from /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:469
+
+During: resolving callee type: Function(<function unique at 0x7f3cbe967240>)
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_array_methods.py (264)
+
+
+File "numba/tests/test_array_methods.py", line 264:
+def np_unique(a):
+    return np.unique(a)
+    ^
+
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_array_methods.py:264: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py", line 469, in __setitem__
+    raise AssertionError("key already in dictionary: %r" % (key,))
+
+  return np.unique(a)
+
+----------------------------------------------------------------------
+Ran 68 tests in 1072.400s
+
+FAILED (errors=1, skipped=1)

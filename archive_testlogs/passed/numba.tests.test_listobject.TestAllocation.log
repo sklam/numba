@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_list_allocation (numba.tests.test_listobject.TestAllocation.test_list_allocation) ... ok
+test_list_allocation_negative (numba.tests.test_listobject.TestAllocation.test_list_allocation_negative) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.133s
+
+OK

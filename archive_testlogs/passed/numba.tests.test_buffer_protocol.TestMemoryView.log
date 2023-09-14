@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_contiguous (numba.tests.test_buffer_protocol.TestMemoryView.test_contiguous) ... ok
+test_itemsize (numba.tests.test_buffer_protocol.TestMemoryView.test_itemsize) ... ok
+test_nbytes (numba.tests.test_buffer_protocol.TestMemoryView.test_nbytes) ... ok
+test_ndim (numba.tests.test_buffer_protocol.TestMemoryView.test_ndim) ... ok
+test_readonly (numba.tests.test_buffer_protocol.TestMemoryView.test_readonly) ... ok
+test_shape (numba.tests.test_buffer_protocol.TestMemoryView.test_shape) ... ok
+test_strides (numba.tests.test_buffer_protocol.TestMemoryView.test_strides) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 5.484s
+
+OK

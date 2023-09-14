@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_loading_pickle_with_no_module (numba.tests.test_unpickle_without_module.TestUnpickleDeletedModule.test_loading_pickle_with_no_module)
+Create a module that uses Numba, import a function from it. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.671s
+
+OK

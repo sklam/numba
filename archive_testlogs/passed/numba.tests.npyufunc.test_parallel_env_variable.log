@@ -1,0 +1,8 @@
+test_num_threads_variable (numba.tests.npyufunc.test_parallel_env_variable.TestParallelEnvVariable.test_num_threads_variable)
+Tests the NUMBA_NUM_THREADS env variable behaves as expected. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+Parallel: 0. Serial: 1

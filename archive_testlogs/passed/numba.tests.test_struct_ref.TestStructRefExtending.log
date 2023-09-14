@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_overload_attribute (numba.tests.test_struct_ref.TestStructRefExtending.test_overload_attribute) ... ok
+test_overload_method (numba.tests.test_struct_ref.TestStructRefExtending.test_overload_method) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.097s
+
+OK

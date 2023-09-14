@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_record_alignment (numba.tests.test_alignment.TestAlignment.test_record_alignment) ... ok
+test_record_misaligned (numba.tests.test_alignment.TestAlignment.test_record_misaligned) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.759s
+
+OK

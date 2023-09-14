@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_pass_timings (numba.tests.doc_examples.test_llvm_pass_timings.DocsLLVMPassTimings.test_pass_timings) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.579s
+
+OK

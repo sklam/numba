@@ -1,0 +1,11 @@
+Parallel: 3. Serial: 0
+test_dirichlet (numba.tests.test_random.TestRandomDirichlet.test_dirichlet)
+Test dirichlet(alpha, size=None) ... ok
+test_dirichlet_default (numba.tests.test_random.TestRandomDirichlet.test_dirichlet_default)
+Test dirichlet(alpha, size=None) ... ok
+test_dirichlet_exceptions (numba.tests.test_random.TestRandomDirichlet.test_dirichlet_exceptions) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 8.477s
+
+OK

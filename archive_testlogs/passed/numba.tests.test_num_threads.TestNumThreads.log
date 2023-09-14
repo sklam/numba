@@ -1,0 +1,8 @@
+test_set_num_threads_type (numba.tests.test_num_threads.TestNumThreads.test_set_num_threads_type) ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.248s
+
+OK
+Parallel: 0. Serial: 1

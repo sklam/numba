@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_array_expr (numba.tests.test_blackscholes.TestBlackScholes.test_array_expr) ... ok
+test_scalar (numba.tests.test_blackscholes.TestBlackScholes.test_scalar) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 5.888s
+
+OK

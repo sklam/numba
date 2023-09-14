@@ -1,0 +1,16 @@
+Parallel: 10. Serial: 0
+test_issue_2766 (numba.tests.test_dummyarray.TestSlicing.test_issue_2766) ... ok
+test_slice0_1d (numba.tests.test_dummyarray.TestSlicing.test_slice0_1d) ... ok
+test_slice0_2d (numba.tests.test_dummyarray.TestSlicing.test_slice0_2d) ... ok
+test_slice1_1d (numba.tests.test_dummyarray.TestSlicing.test_slice1_1d) ... ok
+test_slice1_2d (numba.tests.test_dummyarray.TestSlicing.test_slice1_2d) ... ok
+test_slice2_1d (numba.tests.test_dummyarray.TestSlicing.test_slice2_1d) ... ok
+test_slice2_2d (numba.tests.test_dummyarray.TestSlicing.test_slice2_2d) ... ok
+test_strided_1d (numba.tests.test_dummyarray.TestSlicing.test_strided_1d) ... ok
+test_strided_2d (numba.tests.test_dummyarray.TestSlicing.test_strided_2d) ... ok
+test_strided_3d (numba.tests.test_dummyarray.TestSlicing.test_strided_3d) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.201s
+
+OK

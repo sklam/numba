@@ -1,0 +1,18 @@
+Parallel: 6. Serial: 0
+test_influence_of_typed_transform (numba.tests.test_mixed_tuple_unroller.TestLoopCanonicalisation.test_influence_of_typed_transform)
+This heavily checks a typed transformation only impacts tuple ... skipped 'Waiting for pass to be enabled for all tuples'
+test_influence_of_typed_transform_literal_unroll (numba.tests.test_mixed_tuple_unroller.TestLoopCanonicalisation.test_influence_of_typed_transform_literal_unroll)
+This heavily checks a typed transformation only impacts loops with ... ok
+test_inlined_loops (numba.tests.test_mixed_tuple_unroller.TestLoopCanonicalisation.test_inlined_loops)
+Checks a loop appearing from a closure ... ok
+test_lots_of_loops (numba.tests.test_mixed_tuple_unroller.TestLoopCanonicalisation.test_lots_of_loops)
+This heavily checks a simple loop transform ... skipped 'Waiting for pass to be enabled for all tuples'
+test_simple_loop_in_depth (numba.tests.test_mixed_tuple_unroller.TestLoopCanonicalisation.test_simple_loop_in_depth)
+This heavily checks a simple loop transform ... ok
+test_transform_scope (numba.tests.test_mixed_tuple_unroller.TestLoopCanonicalisation.test_transform_scope)
+This checks the transform, when there's no typemap, will happily ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.156s
+
+OK (skipped=2)

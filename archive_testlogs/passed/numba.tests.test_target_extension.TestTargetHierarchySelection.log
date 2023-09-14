@@ -1,0 +1,16 @@
+Parallel: 8. Serial: 0
+test_0_dpu_registry (numba.tests.test_target_extension.TestTargetHierarchySelection.test_0_dpu_registry)
+Checks that the DPU registry only contains the things added ... ok
+test_intrinsic_selection (numba.tests.test_target_extension.TestTargetHierarchySelection.test_intrinsic_selection)
+Test to make sure that targets can share generic implementations and ... ok
+test_invalid_target_jit (numba.tests.test_target_extension.TestTargetHierarchySelection.test_invalid_target_jit) ... ok
+test_invalid_target_overload (numba.tests.test_target_extension.TestTargetHierarchySelection.test_invalid_target_overload) ... ok
+test_no_specialisation_found (numba.tests.test_target_extension.TestTargetHierarchySelection.test_no_specialisation_found) ... ok
+test_overload_allocation (numba.tests.test_target_extension.TestTargetHierarchySelection.test_overload_allocation) ... ok
+test_specialise_dpu (numba.tests.test_target_extension.TestTargetHierarchySelection.test_specialise_dpu) ... ok
+test_specialise_gpu (numba.tests.test_target_extension.TestTargetHierarchySelection.test_specialise_gpu) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.508s
+
+OK

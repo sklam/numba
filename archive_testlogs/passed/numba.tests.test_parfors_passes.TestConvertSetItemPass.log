@@ -1,0 +1,12 @@
+Parallel: 5. Serial: 0
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_setitem_full_slice (numba.tests.test_parfors_passes.TestConvertSetItemPass.test_setitem_full_slice) ... ok
+test_setitem_gather_if_array (numba.tests.test_parfors_passes.TestConvertSetItemPass.test_setitem_gather_if_array) ... ok
+test_setitem_gather_if_scalar (numba.tests.test_parfors_passes.TestConvertSetItemPass.test_setitem_gather_if_scalar) ... ok
+test_setitem_slice_start_bound (numba.tests.test_parfors_passes.TestConvertSetItemPass.test_setitem_slice_start_bound) ... ok
+test_setitem_slice_stop_bound (numba.tests.test_parfors_passes.TestConvertSetItemPass.test_setitem_slice_stop_bound) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 10.106s
+
+OK

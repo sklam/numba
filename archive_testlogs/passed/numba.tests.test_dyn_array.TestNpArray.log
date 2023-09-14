@@ -1,0 +1,17 @@
+Parallel: 11. Serial: 0
+test_0d (numba.tests.test_dyn_array.TestNpArray.test_0d) ... ok
+test_0d_with_dtype (numba.tests.test_dyn_array.TestNpArray.test_0d_with_dtype) ... ok
+test_1d (numba.tests.test_dyn_array.TestNpArray.test_1d) ... ok
+test_1d_with_dtype (numba.tests.test_dyn_array.TestNpArray.test_1d_with_dtype) ... ok
+test_1d_with_non_const_str_dtype (numba.tests.test_dyn_array.TestNpArray.test_1d_with_non_const_str_dtype) ... ok
+test_1d_with_str_dtype (numba.tests.test_dyn_array.TestNpArray.test_1d_with_str_dtype) ... ok
+test_2d (numba.tests.test_dyn_array.TestNpArray.test_2d) ... ok
+test_2d_with_dtype (numba.tests.test_dyn_array.TestNpArray.test_2d_with_dtype) ... ok
+test_bad_array (numba.tests.test_dyn_array.TestNpArray.test_bad_array) ... ok
+test_bad_dtype (numba.tests.test_dyn_array.TestNpArray.test_bad_dtype) ... ok
+test_raises (numba.tests.test_dyn_array.TestNpArray.test_raises) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 7.188s
+
+OK

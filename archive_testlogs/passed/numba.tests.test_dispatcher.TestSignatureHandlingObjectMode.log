@@ -1,0 +1,12 @@
+Parallel: 3. Serial: 0
+test_default_args (numba.tests.test_dispatcher.TestSignatureHandlingObjectMode.test_default_args)
+Test omitting arguments with a default value. ... ok
+test_named_args (numba.tests.test_dispatcher.TestSignatureHandlingObjectMode.test_named_args)
+Test passing named arguments to a dispatcher. ... ok
+test_star_args (numba.tests.test_dispatcher.TestSignatureHandlingObjectMode.test_star_args)
+Test a compiled function with starargs in the signature. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.334s
+
+OK

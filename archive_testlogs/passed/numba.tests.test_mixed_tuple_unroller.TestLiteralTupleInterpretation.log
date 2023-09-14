@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_heterogeneous_literal (numba.tests.test_mixed_tuple_unroller.TestLiteralTupleInterpretation.test_heterogeneous_literal) ... ok
+test_homogeneous_literal (numba.tests.test_mixed_tuple_unroller.TestLiteralTupleInterpretation.test_homogeneous_literal) ... ok
+test_non_literal (numba.tests.test_mixed_tuple_unroller.TestLiteralTupleInterpretation.test_non_literal) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.040s
+
+OK

@@ -1,0 +1,14 @@
+Parallel: 4. Serial: 0
+test_del_at_beginning_of_loop (numba.tests.test_nrt_refct.TestNrtRefCt.test_del_at_beginning_of_loop)
+Test issue #1734 ... ok
+test_escaping_var_init_in_loop (numba.tests.test_nrt_refct.TestNrtRefCt.test_escaping_var_init_in_loop)
+Test issue #1297 ... ok
+test_invalid_computation_of_lifetime (numba.tests.test_nrt_refct.TestNrtRefCt.test_invalid_computation_of_lifetime)
+Test issue #1573 ... ok
+test_no_return (numba.tests.test_nrt_refct.TestNrtRefCt.test_no_return)
+Test issue #1291 ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.711s
+
+OK

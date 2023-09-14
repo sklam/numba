@@ -1,0 +1,20 @@
+Parallel: 7. Serial: 0
+test_gil_held (numba.tests.test_gil.TestGILRelease.test_gil_held)
+Test the GIL is held by default, by checking serialized runs ... ok
+test_gil_ignored_by_callee (numba.tests.test_gil.TestGILRelease.test_gil_ignored_by_callee)
+When only the callee asks to release the GIL, it gets ignored. ... ok
+test_gil_released (numba.tests.test_gil.TestGILRelease.test_gil_released)
+Test releasing the GIL, by checking parallel runs produce ... ok
+test_gil_released_by_caller (numba.tests.test_gil.TestGILRelease.test_gil_released_by_caller)
+Releasing the GIL in the caller is sufficient to have it ... ok
+test_gil_released_by_caller_and_callee (numba.tests.test_gil.TestGILRelease.test_gil_released_by_caller_and_callee)
+Same, but with both caller and callee asking to release the GIL. ... ok
+test_gil_released_inside_lifted_loop (numba.tests.test_gil.TestGILRelease.test_gil_released_inside_lifted_loop)
+Test the GIL can by released by a lifted loop even though the ... ok
+test_object_mode (numba.tests.test_gil.TestGILRelease.test_object_mode)
+When the function is compiled in object mode, a warning is ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 8.976s
+
+OK

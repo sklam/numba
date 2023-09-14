@@ -1,0 +1,24 @@
+Parallel: 18. Serial: 0
+test_power_BB_B (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_BB_B) ... ok
+test_power_DD_D (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_DD_D) ... ok
+test_power_FF_F (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_FF_F) ... ok
+test_power_GG_G (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_GG_G) ... ok
+test_power_HH_H (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_HH_H) ... ok
+test_power_II_I (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_II_I) ... ok
+test_power_LL_L (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_LL_L) ... ok
+test_power_OO_O (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_OO_O) ... ok
+test_power_QQ_Q (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_QQ_Q) ... ok
+test_power_bb_b (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_bb_b) ... ok
+test_power_dd_d (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_dd_d) ... ok
+test_power_ee_e (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_ee_e) ... ok
+test_power_ff_f (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_ff_f) ... ok
+test_power_gg_g (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_gg_g) ... ok
+test_power_hh_h (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_hh_h) ... ok
+test_power_ii_i (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_ii_i) ... ok
+test_power_ll_l (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_ll_l) ... ok
+test_power_qq_q (numba.tests.test_ufuncs.TestLoopTypesPower.test_power_qq_q) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 8.484s
+
+OK

@@ -1,0 +1,22 @@
+test_first_load_cached_gufunc (numba.tests.npyufunc.test_caching.TestCacheSpecificIssue.test_first_load_cached_gufunc) ... ok
+test_first_load_cached_ufunc (numba.tests.npyufunc.test_caching.TestCacheSpecificIssue.test_first_load_cached_ufunc) ... ok
+test_direct_dufunc_cache (numba.tests.npyufunc.test_caching.TestDUfuncCacheTest.test_direct_dufunc_cache) ... ok
+test_indirect_dufunc_cache (numba.tests.npyufunc.test_caching.TestDUfuncCacheTest.test_indirect_dufunc_cache) ... ok
+test_direct_gufunc_cache (numba.tests.npyufunc.test_caching.TestGUfuncCacheTest.test_direct_gufunc_cache) ... ok
+test_direct_gufunc_cache_objmode (numba.tests.npyufunc.test_caching.TestGUfuncCacheTest.test_direct_gufunc_cache_objmode) ... ok
+test_direct_gufunc_cache_parallel (numba.tests.npyufunc.test_caching.TestGUfuncCacheTest.test_direct_gufunc_cache_parallel) ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_filename_prefix (numba.tests.npyufunc.test_caching.TestGUfuncCacheTest.test_filename_prefix) ... ok
+test_indirect_gufunc_cache (numba.tests.npyufunc.test_caching.TestGUfuncCacheTest.test_indirect_gufunc_cache) ... ok
+test_indirect_gufunc_cache_parallel (numba.tests.npyufunc.test_caching.TestGUfuncCacheTest.test_indirect_gufunc_cache_parallel) ... ok
+test_direct_ufunc_cache (numba.tests.npyufunc.test_caching.TestUfuncCacheTest.test_direct_ufunc_cache) ... ok
+test_direct_ufunc_cache_objmode (numba.tests.npyufunc.test_caching.TestUfuncCacheTest.test_direct_ufunc_cache_objmode) ... ok
+test_direct_ufunc_cache_parallel (numba.tests.npyufunc.test_caching.TestUfuncCacheTest.test_direct_ufunc_cache_parallel) ... ok
+test_indirect_ufunc_cache (numba.tests.npyufunc.test_caching.TestUfuncCacheTest.test_indirect_ufunc_cache) ... ok
+test_indirect_ufunc_cache_parallel (numba.tests.npyufunc.test_caching.TestUfuncCacheTest.test_indirect_ufunc_cache_parallel) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 12.033s
+
+OK
+Parallel: 0. Serial: 15

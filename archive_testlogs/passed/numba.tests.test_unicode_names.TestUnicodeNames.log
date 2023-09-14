@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_cfunc (numba.tests.test_unicode_names.TestUnicodeNames.test_cfunc) ... ok
+test_unicode_name1 (numba.tests.test_unicode_names.TestUnicodeNames.test_unicode_name1) ... ok
+test_unicode_name2 (numba.tests.test_unicode_names.TestUnicodeNames.test_unicode_name2) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.554s
+
+OK

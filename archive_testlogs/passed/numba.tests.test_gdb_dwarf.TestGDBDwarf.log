@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_array_arg (numba.tests.test_gdb_dwarf.TestGDBDwarf.test_array_arg) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_basic (numba.tests.test_gdb_dwarf.TestGDBDwarf.test_basic) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_break_on_symbol (numba.tests.test_gdb_dwarf.TestGDBDwarf.test_break_on_symbol) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_break_on_symbol_version (numba.tests.test_gdb_dwarf.TestGDBDwarf.test_break_on_symbol_version) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_conditional_breakpoint (numba.tests.test_gdb_dwarf.TestGDBDwarf.test_conditional_breakpoint) ... skipped 'functioning gdb with correct ptrace permissions is required'
+test_pretty_print (numba.tests.test_gdb_dwarf.TestGDBDwarf.test_pretty_print) ... skipped 'functioning gdb with correct ptrace permissions is required'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.068s
+
+OK (skipped=6)

@@ -1,0 +1,19 @@
+Parallel: 13. Serial: 0
+test_0d (numba.tests.test_dyn_array.TestNdFull.test_0d) ... ok
+test_1d (numba.tests.test_dyn_array.TestNdFull.test_1d) ... ok
+test_1d_dtype (numba.tests.test_dyn_array.TestNdFull.test_1d_dtype) ... ok
+test_1d_dtype_instance (numba.tests.test_dyn_array.TestNdFull.test_1d_dtype_instance) ... ok
+test_1d_dtype_invalid_str (numba.tests.test_dyn_array.TestNdFull.test_1d_dtype_invalid_str) ... ok
+test_1d_dtype_non_const_str (numba.tests.test_dyn_array.TestNdFull.test_1d_dtype_non_const_str) ... ok
+test_1d_dtype_str (numba.tests.test_dyn_array.TestNdFull.test_1d_dtype_str) ... ok
+test_1d_dtype_str_alternative_spelling (numba.tests.test_dyn_array.TestNdFull.test_1d_dtype_str_alternative_spelling) ... ok
+test_2d (numba.tests.test_dyn_array.TestNdFull.test_2d) ... ok
+test_2d_dtype_from_type (numba.tests.test_dyn_array.TestNdFull.test_2d_dtype_from_type) ... ok
+test_2d_dtype_kwarg (numba.tests.test_dyn_array.TestNdFull.test_2d_dtype_kwarg) ... ok
+test_2d_shape_dtypes (numba.tests.test_dyn_array.TestNdFull.test_2d_shape_dtypes) ... ok
+test_alloc_size (numba.tests.test_dyn_array.TestNdFull.test_alloc_size) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 8.239s
+
+OK

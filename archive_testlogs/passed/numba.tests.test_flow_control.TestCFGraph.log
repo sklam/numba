@@ -1,0 +1,25 @@
+Parallel: 19. Serial: 0
+test_backbone_loopless (numba.tests.test_flow_control.TestCFGraph.test_backbone_loopless) ... ok
+test_backbone_loops (numba.tests.test_flow_control.TestCFGraph.test_backbone_loops) ... ok
+test_dead_nodes (numba.tests.test_flow_control.TestCFGraph.test_dead_nodes) ... ok
+test_descendents (numba.tests.test_flow_control.TestCFGraph.test_descendents) ... ok
+test_dominance_frontier (numba.tests.test_flow_control.TestCFGraph.test_dominance_frontier) ... ok
+test_dominator_tree (numba.tests.test_flow_control.TestCFGraph.test_dominator_tree) ... ok
+test_dominators_loopless (numba.tests.test_flow_control.TestCFGraph.test_dominators_loopless) ... ok
+test_dominators_loops (numba.tests.test_flow_control.TestCFGraph.test_dominators_loops) ... ok
+test_equals (numba.tests.test_flow_control.TestCFGraph.test_equals) ... ok
+test_exit_points (numba.tests.test_flow_control.TestCFGraph.test_exit_points) ... ok
+test_immediate_dominators (numba.tests.test_flow_control.TestCFGraph.test_immediate_dominators) ... ok
+test_loop_dfs_pathological (numba.tests.test_flow_control.TestCFGraph.test_loop_dfs_pathological) ... ok
+test_loops (numba.tests.test_flow_control.TestCFGraph.test_loops) ... ok
+test_post_dominators_infinite_loops (numba.tests.test_flow_control.TestCFGraph.test_post_dominators_infinite_loops) ... ok
+test_post_dominators_loopless (numba.tests.test_flow_control.TestCFGraph.test_post_dominators_loopless) ... ok
+test_post_dominators_loops (numba.tests.test_flow_control.TestCFGraph.test_post_dominators_loops) ... ok
+test_simple_properties (numba.tests.test_flow_control.TestCFGraph.test_simple_properties) ... ok
+test_topo_order (numba.tests.test_flow_control.TestCFGraph.test_topo_order) ... ok
+test_topo_sort (numba.tests.test_flow_control.TestCFGraph.test_topo_sort) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.157s
+
+OK

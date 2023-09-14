@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_issue_3586_variant1 (numba.tests.test_unsafe_intrinsics.TestNdarrayIntrinsic.test_issue_3586_variant1) ... ok
+test_issue_3586_variant2 (numba.tests.test_unsafe_intrinsics.TestNdarrayIntrinsic.test_issue_3586_variant2) ... ok
+test_to_fixed_tuple (numba.tests.test_unsafe_intrinsics.TestNdarrayIntrinsic.test_to_fixed_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.263s
+
+OK

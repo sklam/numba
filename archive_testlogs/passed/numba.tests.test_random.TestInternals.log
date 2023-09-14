@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_get_set_state (numba.tests.test_random.TestInternals.test_get_set_state) ... ok
+test_init (numba.tests.test_random.TestInternals.test_init) ... ok
+test_perturb (numba.tests.test_random.TestInternals.test_perturb) ... ok
+test_shuffle (numba.tests.test_random.TestInternals.test_shuffle) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.121s
+
+OK

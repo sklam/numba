@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_linalg_eig (numba.tests.test_linalg.TestLinalgEigenSystems.test_linalg_eig) ... skipped 'LAPACK needs SciPy 1.0+'
+test_linalg_eigh (numba.tests.test_linalg.TestLinalgEigenSystems.test_linalg_eigh) ... skipped 'LAPACK needs SciPy 1.0+'
+test_linalg_eigvals (numba.tests.test_linalg.TestLinalgEigenSystems.test_linalg_eigvals) ... skipped 'LAPACK needs SciPy 1.0+'
+test_linalg_eigvalsh (numba.tests.test_linalg.TestLinalgEigenSystems.test_linalg_eigvalsh) ... skipped 'LAPACK needs SciPy 1.0+'
+test_no_input_mutation (numba.tests.test_linalg.TestLinalgEigenSystems.test_no_input_mutation) ... skipped 'LAPACK needs SciPy 1.0+'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.118s
+
+OK (skipped=5)

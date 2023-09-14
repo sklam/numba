@@ -1,0 +1,21 @@
+Parallel: 14. Serial: 0
+test_append (numba.tests.test_lists.TestListManagedElements.test_append) ... ok
+test_append_noret (numba.tests.test_lists.TestListManagedElements.test_append_noret) ... ok
+test_del_range (numba.tests.test_lists.TestListManagedElements.test_del_range) ... ok
+test_get_slice (numba.tests.test_lists.TestListManagedElements.test_get_slice) ... ok
+test_list_of_list (numba.tests.test_lists.TestListManagedElements.test_list_of_list) ... ok
+test_pop (numba.tests.test_lists.TestListManagedElements.test_pop) ... ok
+test_pop_loc (numba.tests.test_lists.TestListManagedElements.test_pop_loc) ... ok
+test_reassign_refct (numba.tests.test_lists.TestListManagedElements.test_reassign_refct) ... ok
+test_reflect_appended (numba.tests.test_lists.TestListManagedElements.test_reflect_appended) ... ok
+test_reflect_insert (numba.tests.test_lists.TestListManagedElements.test_reflect_insert)
+make sure list.insert() doesn't crash for refcounted objects (see #7553) ... ok
+test_reflect_passthru (numba.tests.test_lists.TestListManagedElements.test_reflect_passthru) ... ok
+test_reflect_popped (numba.tests.test_lists.TestListManagedElements.test_reflect_popped) ... ok
+test_reflect_setitem (numba.tests.test_lists.TestListManagedElements.test_reflect_setitem) ... ok
+test_set_slice (numba.tests.test_lists.TestListManagedElements.test_set_slice) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 7.584s
+
+OK

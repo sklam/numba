@@ -1,0 +1,18 @@
+Parallel: 12. Serial: 0
+test_reshape_2d1d (numba.tests.test_dummyarray.TestReshape.test_reshape_2d1d) ... ok
+test_reshape_2d2d (numba.tests.test_dummyarray.TestReshape.test_reshape_2d2d) ... ok
+test_reshape_3d1d (numba.tests.test_dummyarray.TestReshape.test_reshape_3d1d) ... ok
+test_reshape_3d2d (numba.tests.test_dummyarray.TestReshape.test_reshape_3d2d) ... ok
+test_reshape_3d3d (numba.tests.test_dummyarray.TestReshape.test_reshape_3d3d) ... ok
+test_reshape_infer2d1d (numba.tests.test_dummyarray.TestReshape.test_reshape_infer2d1d) ... ok
+test_reshape_infer2d2d (numba.tests.test_dummyarray.TestReshape.test_reshape_infer2d2d) ... ok
+test_reshape_infer3d1d (numba.tests.test_dummyarray.TestReshape.test_reshape_infer3d1d) ... ok
+test_reshape_infer3d2d (numba.tests.test_dummyarray.TestReshape.test_reshape_infer3d2d) ... ok
+test_reshape_infer3d3d (numba.tests.test_dummyarray.TestReshape.test_reshape_infer3d3d) ... ok
+test_reshape_infer_invalid_shape (numba.tests.test_dummyarray.TestReshape.test_reshape_infer_invalid_shape) ... ok
+test_reshape_infer_two_unknowns (numba.tests.test_dummyarray.TestReshape.test_reshape_infer_two_unknowns) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.179s
+
+OK

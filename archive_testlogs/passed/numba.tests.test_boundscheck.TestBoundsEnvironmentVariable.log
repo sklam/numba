@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_boundscheck_disabled (numba.tests.test_boundscheck.TestBoundsEnvironmentVariable.test_boundscheck_disabled) ... ok
+test_boundscheck_enabled (numba.tests.test_boundscheck.TestBoundsEnvironmentVariable.test_boundscheck_enabled) ... ok
+test_boundscheck_unset (numba.tests.test_boundscheck.TestBoundsEnvironmentVariable.test_boundscheck_unset) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.883s
+
+OK

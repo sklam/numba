@@ -1,0 +1,17 @@
+Parallel: 11. Serial: 0
+test_dtype (numba.tests.test_array_attr.TestArrayAttr.test_dtype) ... ok
+test_flags_c_contiguous (numba.tests.test_array_attr.TestArrayAttr.test_flags_c_contiguous) ... ok
+test_flags_contiguous (numba.tests.test_array_attr.TestArrayAttr.test_flags_contiguous) ... ok
+test_flags_f_contiguous (numba.tests.test_array_attr.TestArrayAttr.test_flags_f_contiguous) ... ok
+test_itemsize (numba.tests.test_array_attr.TestArrayAttr.test_itemsize) ... ok
+test_nbytes (numba.tests.test_array_attr.TestArrayAttr.test_nbytes) ... ok
+test_ndim (numba.tests.test_array_attr.TestArrayAttr.test_ndim) ... ok
+test_shape (numba.tests.test_array_attr.TestArrayAttr.test_shape) ... ok
+test_size (numba.tests.test_array_attr.TestArrayAttr.test_size) ... ok
+test_strides (numba.tests.test_array_attr.TestArrayAttr.test_strides) ... ok
+test_use_dtype (numba.tests.test_array_attr.TestArrayAttr.test_use_dtype) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 9.999s
+
+OK

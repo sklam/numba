@@ -1,0 +1,14 @@
+Parallel: 8. Serial: 0
+test_jit_closure_variable (numba.tests.test_closure.TestClosure.test_jit_closure_variable) ... ok
+test_jit_closure_variable_npm (numba.tests.test_closure.TestClosure.test_jit_closure_variable_npm) ... ok
+test_jit_inner_function (numba.tests.test_closure.TestClosure.test_jit_inner_function) ... ok
+test_jit_inner_function_npm (numba.tests.test_closure.TestClosure.test_jit_inner_function_npm) ... ok
+test_jit_multiple_closure_variables (numba.tests.test_closure.TestClosure.test_jit_multiple_closure_variables) ... ok
+test_jit_multiple_closure_variables_npm (numba.tests.test_closure.TestClosure.test_jit_multiple_closure_variables_npm) ... ok
+test_rejitting_closure (numba.tests.test_closure.TestClosure.test_rejitting_closure) ... ok
+test_rejitting_closure_npm (numba.tests.test_closure.TestClosure.test_rejitting_closure_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.394s
+
+OK

@@ -1,0 +1,22 @@
+Parallel: 12. Serial: 0
+test_DILocation (numba.tests.test_debuginfo.TestDebugInfoEmission.test_DILocation)
+Tests that DILocation information is reasonable. ... ok
+test_DILocation_decref (numba.tests.test_debuginfo.TestDebugInfoEmission.test_DILocation_decref) ... ok
+test_DILocation_entry_blk (numba.tests.test_debuginfo.TestDebugInfoEmission.test_DILocation_entry_blk) ... ok
+test_DILocation_undefined (numba.tests.test_debuginfo.TestDebugInfoEmission.test_DILocation_undefined)
+Tests that DILocation information for undefined vars is associated ... ok
+test_DILocation_versioned_variables (numba.tests.test_debuginfo.TestDebugInfoEmission.test_DILocation_versioned_variables)
+Tests that DILocation information for versions of variables matches ... ok
+test_DW_LANG (numba.tests.test_debuginfo.TestDebugInfoEmission.test_DW_LANG) ... ok
+test_arrays (numba.tests.test_debuginfo.TestDebugInfoEmission.test_arrays) ... ok
+test_debug_optnone (numba.tests.test_debuginfo.TestDebugInfoEmission.test_debug_optnone) ... ok
+test_irregularly_indented_source (numba.tests.test_debuginfo.TestDebugInfoEmission.test_irregularly_indented_source) ... ok
+test_missing_source (numba.tests.test_debuginfo.TestDebugInfoEmission.test_missing_source) ... ok
+test_numeric_scalars (numba.tests.test_debuginfo.TestDebugInfoEmission.test_numeric_scalars)
+Tests that dwarf info is correctly emitted for numeric scalars. ... ok
+test_omitted_arg (numba.tests.test_debuginfo.TestDebugInfoEmission.test_omitted_arg) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 7.038s
+
+OK

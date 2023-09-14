@@ -1,0 +1,12 @@
+Parallel: 4. Serial: 0
+test_compare (numba.tests.test_enums.TestEnum.test_compare) ... ok
+test_constant (numba.tests.test_enums.TestEnum.test_constant) ... ok
+test_identity (numba.tests.test_enums.TestEnum.test_identity)
+Enum with equal values should not compare identical ... ok
+test_return (numba.tests.test_enums.TestEnum.test_return)
+Passing and returning enum members. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.214s
+
+OK

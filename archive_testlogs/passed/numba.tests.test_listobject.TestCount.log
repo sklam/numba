@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_list_count_empty (numba.tests.test_listobject.TestCount.test_list_count_empty) ... ok
+test_list_count_mutiple (numba.tests.test_listobject.TestCount.test_list_count_mutiple) ... ok
+test_list_count_singleton (numba.tests.test_listobject.TestCount.test_list_count_singleton) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.644s
+
+OK

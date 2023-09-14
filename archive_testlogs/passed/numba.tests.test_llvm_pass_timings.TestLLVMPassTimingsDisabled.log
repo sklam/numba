@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_disabled_behavior (numba.tests.test_llvm_pass_timings.TestLLVMPassTimingsDisabled.test_disabled_behavior) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.758s
+
+OK

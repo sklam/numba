@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_build_map (numba.tests.test_dicts.DictTestCase.test_build_map) ... ok
+test_build_map_from_local_vars (numba.tests.test_dicts.DictTestCase.test_build_map_from_local_vars) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.559s
+
+OK

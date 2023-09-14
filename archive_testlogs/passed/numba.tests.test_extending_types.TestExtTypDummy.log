@@ -1,0 +1,13 @@
+Parallel: 5. Serial: 0
+test_boxing (numba.tests.test_extending_types.TestExtTypDummy.test_boxing)
+A test for the boxing logic on unknown type ... ok
+test_issue5565_literal_getitem (numba.tests.test_extending_types.TestExtTypDummy.test_issue5565_literal_getitem) ... ok
+test_overload_float (numba.tests.test_extending_types.TestExtTypDummy.test_overload_float) ... ok
+test_overload_float_error_msg (numba.tests.test_extending_types.TestExtTypDummy.test_overload_float_error_msg) ... ok
+test_unboxing (numba.tests.test_extending_types.TestExtTypDummy.test_unboxing)
+A test for the unboxing logic on unknown type ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.957s
+
+OK

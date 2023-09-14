@@ -1,0 +1,13 @@
+Parallel: 6. Serial: 0
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_numpy_allocators (numba.tests.test_parfors_passes.TestConvertNumpyPass.test_numpy_allocators) ... ok
+test_numpy_arrayexpr (numba.tests.test_parfors_passes.TestConvertNumpyPass.test_numpy_arrayexpr) ... ok
+test_numpy_arrayexpr_boardcast (numba.tests.test_parfors_passes.TestConvertNumpyPass.test_numpy_arrayexpr_boardcast) ... ok
+test_numpy_arrayexpr_reshaped (numba.tests.test_parfors_passes.TestConvertNumpyPass.test_numpy_arrayexpr_reshaped) ... ok
+test_numpy_arrayexpr_ufunc (numba.tests.test_parfors_passes.TestConvertNumpyPass.test_numpy_arrayexpr_ufunc) ... ok
+test_numpy_random (numba.tests.test_parfors_passes.TestConvertNumpyPass.test_numpy_random) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.948s
+
+OK

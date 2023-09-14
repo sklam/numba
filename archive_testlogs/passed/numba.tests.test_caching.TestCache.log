@@ -1,0 +1,26 @@
+Parallel: 19. Serial: 0
+test_big_array (numba.tests.test_caching.TestCache.test_big_array) ... ok
+test_cache_invalidate (numba.tests.test_caching.TestCache.test_cache_invalidate) ... ok
+test_cache_reuse (numba.tests.test_caching.TestCache.test_cache_reuse) ... ok
+test_caching (numba.tests.test_caching.TestCache.test_caching) ... ok
+test_caching_nrt_pruned (numba.tests.test_caching.TestCache.test_caching_nrt_pruned) ... ok
+test_closure (numba.tests.test_caching.TestCache.test_closure) ... ok
+test_ctypes (numba.tests.test_caching.TestCache.test_ctypes) ... ok
+test_first_class_function (numba.tests.test_caching.TestCache.test_first_class_function) ... ok
+test_frozen (numba.tests.test_caching.TestCache.test_frozen) ... ok
+test_inner_then_outer (numba.tests.test_caching.TestCache.test_inner_then_outer) ... ok
+test_ipykernel (numba.tests.test_caching.TestCache.test_ipykernel) ... skipped 'requires ipykernel >= 6'
+/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/bin/python: No module named IPython
+test_ipython (numba.tests.test_caching.TestCache.test_ipython) ... skipped 'ipython not available: return code 1'
+test_looplifted (numba.tests.test_caching.TestCache.test_looplifted) ... ok
+test_no_caching (numba.tests.test_caching.TestCache.test_no_caching) ... ok
+test_non_creatable_pycache (numba.tests.test_caching.TestCache.test_non_creatable_pycache) ... ok
+test_non_writable_pycache (numba.tests.test_caching.TestCache.test_non_writable_pycache) ... ok
+test_outer_then_inner (numba.tests.test_caching.TestCache.test_outer_then_inner) ... ok
+test_recompile (numba.tests.test_caching.TestCache.test_recompile) ... ok
+test_same_names (numba.tests.test_caching.TestCache.test_same_names) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 8.178s
+
+OK (skipped=2)

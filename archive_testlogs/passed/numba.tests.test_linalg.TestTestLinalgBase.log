@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_specific_sample_matrix (numba.tests.test_linalg.TestTestLinalgBase.test_specific_sample_matrix) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.213s
+
+OK

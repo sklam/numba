@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_list_extend_empty (numba.tests.test_listobject.TestExtend.test_list_extend_empty) ... ok
+test_list_extend_typing_error_non_iterable (numba.tests.test_listobject.TestExtend.test_list_extend_typing_error_non_iterable) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.384s
+
+OK

@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_opt_0 (numba.tests.test_config.TestNumbaOptLevel.test_opt_0) ... ok
+test_opt_3 (numba.tests.test_config.TestNumbaOptLevel.test_opt_3) ... ok
+test_opt_default (numba.tests.test_config.TestNumbaOptLevel.test_opt_default) ... ok
+test_opt_invalid (numba.tests.test_config.TestNumbaOptLevel.test_opt_invalid) ... ok
+test_opt_max (numba.tests.test_config.TestNumbaOptLevel.test_opt_max) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.550s
+
+OK

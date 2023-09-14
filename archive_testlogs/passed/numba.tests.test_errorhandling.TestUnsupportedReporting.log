@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_unsupported_numpy_function (numba.tests.test_errorhandling.TestUnsupportedReporting.test_unsupported_numpy_function) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.100s
+
+OK

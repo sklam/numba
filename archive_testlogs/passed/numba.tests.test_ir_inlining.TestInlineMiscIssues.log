@@ -1,0 +1,14 @@
+Parallel: 6. Serial: 0
+test_issue4691 (numba.tests.test_ir_inlining.TestInlineMiscIssues.test_issue4691) ... ok
+test_issue4693 (numba.tests.test_ir_inlining.TestInlineMiscIssues.test_issue4693) ... ok
+test_issue5476 (numba.tests.test_ir_inlining.TestInlineMiscIssues.test_issue5476) ... ok
+test_issue5792 (numba.tests.test_ir_inlining.TestInlineMiscIssues.test_issue5792) ... ok
+test_issue5824 (numba.tests.test_ir_inlining.TestInlineMiscIssues.test_issue5824)
+Similar to the above test_issue5792, checks mutation of the inlinee ... ok
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+test_issue7380 (numba.tests.test_ir_inlining.TestInlineMiscIssues.test_issue7380) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.048s
+
+OK

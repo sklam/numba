@@ -1,0 +1,15 @@
+Parallel: 7. Serial: 0
+test_myarray_allocator_override (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_allocator_override)
+Checks that our custom allocator is used ... ok
+test_myarray_asarray (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_asarray) ... expected failure
+test_myarray_asarray_non_jit (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_asarray_non_jit) ... ok
+test_myarray_convert (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_convert) ... ok
+test_myarray_passthru (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_passthru) ... ok
+test_myarray_return (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_return)
+This tests the path to `MyArrayType.box_type` ... ok
+test_myarray_ufunc_unsupported (numba.tests.test_ndarray_subclasses.TestNdarraySubclasses.test_myarray_ufunc_unsupported) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.258s
+
+OK (expected failures=1)

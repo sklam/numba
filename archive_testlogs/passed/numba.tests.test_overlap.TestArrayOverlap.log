@@ -1,0 +1,18 @@
+Parallel: 12. Serial: 0
+test_overlap1 (numba.tests.test_overlap.TestArrayOverlap.test_overlap1) ... ok
+test_overlap11 (numba.tests.test_overlap.TestArrayOverlap.test_overlap11) ... ok
+test_overlap12 (numba.tests.test_overlap.TestArrayOverlap.test_overlap12) ... ok
+test_overlap13 (numba.tests.test_overlap.TestArrayOverlap.test_overlap13) ... ok
+test_overlap14 (numba.tests.test_overlap.TestArrayOverlap.test_overlap14) ... ok
+test_overlap15 (numba.tests.test_overlap.TestArrayOverlap.test_overlap15) ... ok
+test_overlap16 (numba.tests.test_overlap.TestArrayOverlap.test_overlap16) ... ok
+test_overlap2 (numba.tests.test_overlap.TestArrayOverlap.test_overlap2) ... ok
+test_overlap3 (numba.tests.test_overlap.TestArrayOverlap.test_overlap3) ... ok
+test_overlap4 (numba.tests.test_overlap.TestArrayOverlap.test_overlap4) ... ok
+test_overlap5 (numba.tests.test_overlap.TestArrayOverlap.test_overlap5) ... ok
+test_overlap6 (numba.tests.test_overlap.TestArrayOverlap.test_overlap6) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 30.490s
+
+OK

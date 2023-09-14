@@ -1,0 +1,42 @@
+Parallel: 19. Serial: 10
+test_axis (numba.tests.npyufunc.test_gufunc.TestDynamicGUFunc.test_axis) ... ok
+test_axis (numba.tests.npyufunc.test_gufunc.TestGUFunc.test_axis) ... ok
+test_docstring (numba.tests.npyufunc.test_gufunc.TestGUFunc.test_docstring) ... ok
+test_dynamic_matmul (numba.tests.npyufunc.test_gufunc.TestDynamicGUFunc.test_dynamic_matmul) ... ok
+test_dynamic_scalar_output (numba.tests.npyufunc.test_gufunc.TestDynamicGUFunc.test_dynamic_scalar_output)
+Note that scalar output is a 0-dimension array that acts as ... ok
+test_dynamic_ufunc_like (numba.tests.npyufunc.test_gufunc.TestDynamicGUFunc.test_dynamic_ufunc_like) ... ok
+test_gufunc (numba.tests.npyufunc.test_gufunc.TestGUFunc.test_gufunc) ... ok
+test_gufunc_attributes (numba.tests.npyufunc.test_gufunc.TestDynamicGUFunc.test_gufunc_attributes) ... ok
+test_gufunc_attributes2 (numba.tests.npyufunc.test_gufunc.TestDynamicGUFunc.test_gufunc_attributes2) ... ok
+test_guvectorize_decor (numba.tests.npyufunc.test_gufunc.TestGUFunc.test_guvectorize_decor) ... ok
+test_ndim_mismatch (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalar.test_ndim_mismatch) ... ok
+test_pickle_gufunc_dyanmic_null_init (numba.tests.npyufunc.test_gufunc.TestGUVectorizePickling.test_pickle_gufunc_dyanmic_null_init)
+Dynamic gufunc w/o prepopulating before pickling. ... ok
+test_pickle_gufunc_dynamic_initialized (numba.tests.npyufunc.test_gufunc.TestGUVectorizePickling.test_pickle_gufunc_dynamic_initialized)
+Dynamic gufunc prepopulated before pickling. ... ok
+test_pickle_gufunc_non_dyanmic (numba.tests.npyufunc.test_gufunc.TestGUVectorizePickling.test_pickle_gufunc_non_dyanmic)
+Non-dynamic gufunc. ... ok
+test_scalar_input (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalar.test_scalar_input) ... ok
+test_scalar_input_core_type (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalar.test_scalar_input_core_type) ... ok
+test_scalar_input_core_type_error (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalar.test_scalar_input_core_type_error) ... ok
+test_scalar_output (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalar.test_scalar_output)
+Note that scalar output is a 0-dimension array that acts as ... ok
+test_ufunc_like (numba.tests.npyufunc.test_gufunc.TestGUFunc.test_ufunc_like) ... ok
+test_axis (numba.tests.npyufunc.test_gufunc.TestGUFuncParallel.test_axis) ... ok
+test_docstring (numba.tests.npyufunc.test_gufunc.TestGUFuncParallel.test_docstring) ... ok
+test_gufunc (numba.tests.npyufunc.test_gufunc.TestGUFuncParallel.test_gufunc) ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_guvectorize_decor (numba.tests.npyufunc.test_gufunc.TestGUFuncParallel.test_guvectorize_decor) ... ok
+test_ufunc_like (numba.tests.npyufunc.test_gufunc.TestGUFuncParallel.test_ufunc_like) ... ok
+test_ndim_mismatch (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalarParallel.test_ndim_mismatch) ... ok
+test_scalar_input (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalarParallel.test_scalar_input) ... ok
+test_scalar_input_core_type (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalarParallel.test_scalar_input_core_type) ... ok
+test_scalar_input_core_type_error (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalarParallel.test_scalar_input_core_type_error) ... ok
+test_scalar_output (numba.tests.npyufunc.test_gufunc.TestGUVectorizeScalarParallel.test_scalar_output)
+Note that scalar output is a 0-dimension array that acts as ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 8.215s
+
+OK

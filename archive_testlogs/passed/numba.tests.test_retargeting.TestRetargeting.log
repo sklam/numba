@@ -1,0 +1,16 @@
+Parallel: 6. Serial: 0
+test_case0 (numba.tests.test_retargeting.TestRetargeting.test_case0) ... ok
+test_case1 (numba.tests.test_retargeting.TestRetargeting.test_case1) ... ok
+test_case2 (numba.tests.test_retargeting.TestRetargeting.test_case2)
+The non-nested call into fixed_target should raise error. ... ok
+test_case3 (numba.tests.test_retargeting.TestRetargeting.test_case3)
+The nested call into fixed_target should raise error ... ok
+test_case4 (numba.tests.test_retargeting.TestRetargeting.test_case4)
+Same as case2 but flex_call_fixed() is invoked outside of CUSTOM_TARGET ... ok
+test_case5 (numba.tests.test_retargeting.TestRetargeting.test_case5)
+Tests overload resolution with target switching ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.281s
+
+OK

@@ -1,0 +1,11 @@
+Parallel: 3. Serial: 0
+test_inline_asm (numba.tests.test_nrt.TestRefCtPruning.test_inline_asm)
+The InlineAsm class from llvmlite.ir has no 'name' attr the refcount ... ok
+test_refct_pruning_op_recognize (numba.tests.test_nrt.TestRefCtPruning.test_refct_pruning_op_recognize) ... ok
+test_refct_pruning_with_branches (numba.tests.test_nrt.TestRefCtPruning.test_refct_pruning_with_branches)
+testcase from #2350 ... skipped 'Pass removed as it was buggy. Re-enable when fixed.'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.455s
+
+OK (skipped=1)

@@ -1,0 +1,22 @@
+Parallel: 16. Serial: 0
+test_bool (numba.tests.test_tuples.TestNamedTuple.test_bool) ... ok
+test_construct (numba.tests.test_tuples.TestNamedTuple.test_construct) ... ok
+test_dispatcher_mistreat (numba.tests.test_tuples.TestNamedTuple.test_dispatcher_mistreat) ... ok
+test_eq (numba.tests.test_tuples.TestNamedTuple.test_eq) ... ok
+test_ge (numba.tests.test_tuples.TestNamedTuple.test_ge) ... ok
+test_getattr (numba.tests.test_tuples.TestNamedTuple.test_getattr) ... ok
+test_gt (numba.tests.test_tuples.TestNamedTuple.test_gt) ... ok
+test_index (numba.tests.test_tuples.TestNamedTuple.test_index) ... ok
+test_le (numba.tests.test_tuples.TestNamedTuple.test_le) ... ok
+test_len (numba.tests.test_tuples.TestNamedTuple.test_len) ... ok
+test_literal_unification (numba.tests.test_tuples.TestNamedTuple.test_literal_unification) ... ok
+test_lt (numba.tests.test_tuples.TestNamedTuple.test_lt) ... ok
+test_ne (numba.tests.test_tuples.TestNamedTuple.test_ne) ... ok
+test_string_literal_in_ctor (numba.tests.test_tuples.TestNamedTuple.test_string_literal_in_ctor) ... ok
+test_type (numba.tests.test_tuples.TestNamedTuple.test_type) ... ok
+test_unpack (numba.tests.test_tuples.TestNamedTuple.test_unpack) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 3.829s
+
+OK

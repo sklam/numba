@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_overload_method (numba.tests.test_literal_dispatch.TestLiteralDispatchWithCustomType.test_overload_method) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.981s
+
+OK

@@ -1,0 +1,14 @@
+test_array_T_issue_3700 (numba.tests.test_array_analysis.TestArrayAnalysisParallelRequired.test_array_T_issue_3700) ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_global_namedtuple (numba.tests.test_array_analysis.TestArrayAnalysisParallelRequired.test_global_namedtuple) ... ok
+test_global_tuple (numba.tests.test_array_analysis.TestArrayAnalysisParallelRequired.test_global_tuple)
+make sure a global tuple with non-integer values does not cause errors ... ok
+test_misc (numba.tests.test_array_analysis.TestArrayAnalysisParallelRequired.test_misc) ... ok
+test_slice_dtype_issue_5056 (numba.tests.test_array_analysis.TestArrayAnalysisParallelRequired.test_slice_dtype_issue_5056) ... ok
+test_slice_shape_issue_3380 (numba.tests.test_array_analysis.TestArrayAnalysisParallelRequired.test_slice_shape_issue_3380) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.479s
+
+OK
+Parallel: 0. Serial: 6

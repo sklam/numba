@@ -1,0 +1,35 @@
+Parallel: 20. Serial: 0
+test_1d_slicing_add (numba.tests.test_indexing.TestSetItem.test_1d_slicing_add) ... ok
+test_1d_slicing_add_npm (numba.tests.test_indexing.TestSetItem.test_1d_slicing_add_npm) ... ok
+test_1d_slicing_broadcast (numba.tests.test_indexing.TestSetItem.test_1d_slicing_broadcast)
+scalar to 1d slice assignment ... ok
+test_1d_slicing_broadcast_npm (numba.tests.test_indexing.TestSetItem.test_1d_slicing_broadcast_npm) ... ok
+test_1d_slicing_set (numba.tests.test_indexing.TestSetItem.test_1d_slicing_set)
+1d to 1d slice assignment ... ok
+test_1d_slicing_set_list (numba.tests.test_indexing.TestSetItem.test_1d_slicing_set_list)
+List to 1d slice assignment ... ok
+test_1d_slicing_set_list_npm (numba.tests.test_indexing.TestSetItem.test_1d_slicing_set_list_npm) ... ok
+test_1d_slicing_set_npm (numba.tests.test_indexing.TestSetItem.test_1d_slicing_set_npm) ... ok
+test_1d_slicing_set_tuple (numba.tests.test_indexing.TestSetItem.test_1d_slicing_set_tuple)
+Tuple to 1d slice assignment ... ok
+test_1d_slicing_set_tuple_npm (numba.tests.test_indexing.TestSetItem.test_1d_slicing_set_tuple_npm) ... ok
+test_2d_slicing_broadcast (numba.tests.test_indexing.TestSetItem.test_2d_slicing_broadcast)
+scalar to 2d slice assignment ... ok
+test_2d_slicing_broadcast_npm (numba.tests.test_indexing.TestSetItem.test_2d_slicing_broadcast_npm) ... ok
+test_2d_slicing_set (numba.tests.test_indexing.TestSetItem.test_2d_slicing_set)
+2d to 2d slice assignment ... ok
+test_2d_slicing_set_npm (numba.tests.test_indexing.TestSetItem.test_2d_slicing_set_npm) ... ok
+test_conversion_setitem (numba.tests.test_indexing.TestSetItem.test_conversion_setitem)
+this used to work, and was used in one of the tutorials ... ok
+test_setitem (numba.tests.test_indexing.TestSetItem.test_setitem)
+scalar indexed assignment ... ok
+test_setitem_broadcast (numba.tests.test_indexing.TestSetItem.test_setitem_broadcast)
+broadcasted array assignment ... ok
+test_setitem_broadcast_error (numba.tests.test_indexing.TestSetItem.test_setitem_broadcast_error) ... ok
+test_setitem_readonly (numba.tests.test_indexing.TestSetItem.test_setitem_readonly) ... ok
+test_slicing_1d_broadcast (numba.tests.test_indexing.TestSetItem.test_slicing_1d_broadcast) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 7.186s
+
+OK

@@ -1,0 +1,8 @@
+test_dbg_extend_lifetimes (numba.tests.test_obj_lifetime.TestExtendingVariableLifetimes.test_dbg_extend_lifetimes) ... ok
+test_lifetime_basic (numba.tests.test_obj_lifetime.TestExtendingVariableLifetimes.test_lifetime_basic) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.630s
+
+OK
+Parallel: 0. Serial: 2

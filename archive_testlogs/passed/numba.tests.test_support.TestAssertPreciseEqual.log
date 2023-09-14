@@ -1,0 +1,22 @@
+Parallel: 16. Serial: 0
+test_abs_tol_parse (numba.tests.test_support.TestAssertPreciseEqual.test_abs_tol_parse) ... ok
+test_arrays (numba.tests.test_support.TestAssertPreciseEqual.test_arrays) ... ok
+test_bool_values (numba.tests.test_support.TestAssertPreciseEqual.test_bool_values) ... ok
+test_complex128_values_inexact (numba.tests.test_support.TestAssertPreciseEqual.test_complex128_values_inexact) ... ok
+test_complex64_values_inexact (numba.tests.test_support.TestAssertPreciseEqual.test_complex64_values_inexact) ... ok
+test_complex_values (numba.tests.test_support.TestAssertPreciseEqual.test_complex_values) ... ok
+test_enums (numba.tests.test_support.TestAssertPreciseEqual.test_enums) ... ok
+test_float32_values (numba.tests.test_support.TestAssertPreciseEqual.test_float32_values) ... ok
+test_float32_values_inexact (numba.tests.test_support.TestAssertPreciseEqual.test_float32_values_inexact) ... ok
+test_float64_values (numba.tests.test_support.TestAssertPreciseEqual.test_float64_values) ... ok
+test_float64_values_inexact (numba.tests.test_support.TestAssertPreciseEqual.test_float64_values_inexact) ... ok
+test_float_values (numba.tests.test_support.TestAssertPreciseEqual.test_float_values) ... ok
+test_int_values (numba.tests.test_support.TestAssertPreciseEqual.test_int_values) ... ok
+test_npdatetime (numba.tests.test_support.TestAssertPreciseEqual.test_npdatetime) ... ok
+test_nptimedelta (numba.tests.test_support.TestAssertPreciseEqual.test_nptimedelta) ... ok
+test_types (numba.tests.test_support.TestAssertPreciseEqual.test_types) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.356s
+
+OK

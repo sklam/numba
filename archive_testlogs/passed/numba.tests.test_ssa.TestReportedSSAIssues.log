@@ -1,0 +1,19 @@
+Parallel: 13. Serial: 0
+test_issue2194 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue2194) ... ok
+test_issue3094 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue3094) ... ok
+test_issue3931 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue3931) ... ok
+test_issue3976 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue3976) ... ok
+test_issue3979 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue3979) ... ok
+test_issue5219 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5219) ... ok
+test_issue5223 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5223) ... ok
+test_issue5243 (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5243) ... ok
+test_issue5482_missing_variable_init (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5482_missing_variable_init) ... ok
+test_issue5482_objmode_expr_null_lowering (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5482_objmode_expr_null_lowering) ... ok
+test_issue5493_unneeded_phi (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5493_unneeded_phi) ... ok
+test_issue5623_equal_statements_in_same_bb (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5623_equal_statements_in_same_bb) ... ok
+test_issue5678_non_minimal_phi (numba.tests.test_ssa.TestReportedSSAIssues.test_issue5678_non_minimal_phi) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 4.504s
+
+OK

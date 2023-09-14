@@ -1,0 +1,15 @@
+Parallel: 7. Serial: 0
+test_bool (numba.tests.test_numberctor.TestScalarNumberCtor.test_bool) ... ok
+test_complex (numba.tests.test_numberctor.TestScalarNumberCtor.test_complex) ... ok
+test_complex2 (numba.tests.test_numberctor.TestScalarNumberCtor.test_complex2) ... ok
+test_float (numba.tests.test_numberctor.TestScalarNumberCtor.test_float) ... ok
+test_int (numba.tests.test_numberctor.TestScalarNumberCtor.test_int) ... ok
+test_numba_types (numba.tests.test_numberctor.TestScalarNumberCtor.test_numba_types)
+Test explicit casting to Numba number types. ... ok
+test_numpy_types (numba.tests.test_numberctor.TestScalarNumberCtor.test_numpy_types)
+Test explicit casting to Numpy number types. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 8.947s
+
+OK

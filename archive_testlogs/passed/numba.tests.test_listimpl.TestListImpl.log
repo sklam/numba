@@ -1,0 +1,21 @@
+Parallel: 15. Serial: 0
+test_allocation (numba.tests.test_listimpl.TestListImpl.test_allocation) ... ok
+test_append_get_int (numba.tests.test_listimpl.TestListImpl.test_append_get_int) ... ok
+test_append_get_string (numba.tests.test_listimpl.TestListImpl.test_append_get_string) ... ok
+test_append_get_string_realloc (numba.tests.test_listimpl.TestListImpl.test_append_get_string_realloc) ... ok
+test_delete_slice (numba.tests.test_listimpl.TestListImpl.test_delete_slice) ... ok
+test_delitem (numba.tests.test_listimpl.TestListImpl.test_delitem) ... ok
+test_iter (numba.tests.test_listimpl.TestListImpl.test_iter) ... ok
+test_length (numba.tests.test_listimpl.TestListImpl.test_length) ... ok
+test_mutability (numba.tests.test_listimpl.TestListImpl.test_mutability) ... ok
+test_pop (numba.tests.test_listimpl.TestListImpl.test_pop) ... ok
+test_pop_byte (numba.tests.test_listimpl.TestListImpl.test_pop_byte) ... ok
+test_pop_index_error (numba.tests.test_listimpl.TestListImpl.test_pop_index_error) ... ok
+test_set_item_getitem_index_error (numba.tests.test_listimpl.TestListImpl.test_set_item_getitem_index_error) ... ok
+test_simple_c_test (numba.tests.test_listimpl.TestListImpl.test_simple_c_test) ... ok
+test_sizing (numba.tests.test_listimpl.TestListImpl.test_sizing) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 1.208s
+
+OK

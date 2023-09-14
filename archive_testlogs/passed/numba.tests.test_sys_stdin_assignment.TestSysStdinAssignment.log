@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_no_reassignment_of_stdout (numba.tests.test_sys_stdin_assignment.TestSysStdinAssignment.test_no_reassignment_of_stdout)
+https://github.com/numba/numba/issues/3027 ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.810s
+
+OK

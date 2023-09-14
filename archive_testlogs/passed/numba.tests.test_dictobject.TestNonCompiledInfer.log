@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_check_untyped_dict_ops (numba.tests.test_dictobject.TestNonCompiledInfer.test_check_untyped_dict_ops) ... ok
+test_getitem (numba.tests.test_dictobject.TestNonCompiledInfer.test_getitem) ... ok
+test_setdefault (numba.tests.test_dictobject.TestNonCompiledInfer.test_setdefault) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.891s
+
+OK

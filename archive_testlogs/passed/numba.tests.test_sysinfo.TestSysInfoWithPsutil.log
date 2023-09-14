@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_cpus_list (numba.tests.test_sysinfo.TestSysInfoWithPsutil.test_cpus_list) ... ok
+test_has_all_data (numba.tests.test_sysinfo.TestSysInfoWithPsutil.test_has_all_data) ... ok
+test_has_correct_values (numba.tests.test_sysinfo.TestSysInfoWithPsutil.test_has_correct_values) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.043s
+
+OK

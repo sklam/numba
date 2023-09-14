@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_allocation (numba.tests.test_typedlist.TestAllocation.test_allocation) ... ok
+test_allocation_njit (numba.tests.test_typedlist.TestAllocation.test_allocation_njit) ... ok
+test_growth_and_shrinkage (numba.tests.test_typedlist.TestAllocation.test_growth_and_shrinkage) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.784s
+
+OK

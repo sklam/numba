@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_size_after_slicing (numba.tests.test_array_attr.TestSlicedArrayAttr.test_size_after_slicing) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.685s
+
+OK

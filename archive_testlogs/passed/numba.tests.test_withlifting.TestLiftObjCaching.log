@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_objmode_caching_basic (numba.tests.test_withlifting.TestLiftObjCaching.test_objmode_caching_basic) ... ok
+test_objmode_caching_call_closure_bad (numba.tests.test_withlifting.TestLiftObjCaching.test_objmode_caching_call_closure_bad) ... ok
+test_objmode_caching_call_closure_good (numba.tests.test_withlifting.TestLiftObjCaching.test_objmode_caching_call_closure_good) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.979s
+
+OK

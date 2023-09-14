@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_numba_module (numba.tests.test_api.TestNumbaModule.test_numba_module) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.151s
+
+OK

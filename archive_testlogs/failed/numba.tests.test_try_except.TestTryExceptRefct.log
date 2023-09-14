@@ -1,0 +1,18 @@
+Parallel: 3. Serial: 0
+test_incompatible_refinement (numba.tests.test_try_except.TestTryExceptRefct.test_incompatible_refinement) ... ERROR
+test_list_direct_raise (numba.tests.test_try_except.TestTryExceptRefct.test_list_direct_raise) ... ok
+test_list_indirect_raise (numba.tests.test_try_except.TestTryExceptRefct.test_list_indirect_raise) ... ok
+
+======================================================================
+ERROR: test_incompatible_refinement (numba.tests.test_try_except.TestTryExceptRefct.test_incompatible_refinement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_try_except.py", line 671, in test_incompatible_refinement
+    self.assertRegexpMatches(
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestTryExceptRefct' object has no attribute 'assertRegexpMatches'
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.891s
+
+FAILED (errors=1)

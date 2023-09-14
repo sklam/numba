@@ -1,0 +1,15 @@
+Parallel: 8. Serial: 0
+test_compare (numba.tests.test_enums.TestIntEnum.test_compare) ... ok
+test_constant (numba.tests.test_enums.TestIntEnum.test_constant) ... ok
+test_hash (numba.tests.test_enums.TestIntEnum.test_hash) ... ok
+test_int_cast (numba.tests.test_enums.TestIntEnum.test_int_cast) ... ok
+test_int_coerce (numba.tests.test_enums.TestIntEnum.test_int_coerce) ... ok
+test_int_shape_cast (numba.tests.test_enums.TestIntEnum.test_int_shape_cast) ... ok
+test_return (numba.tests.test_enums.TestIntEnum.test_return)
+Passing and returning enum members. ... ok
+test_vectorize (numba.tests.test_enums.TestIntEnum.test_vectorize) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.156s
+
+OK

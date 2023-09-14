@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_copy_to_fortran_order (numba.tests.test_linalg.TestHelpers.test_copy_to_fortran_order) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.698s
+
+OK

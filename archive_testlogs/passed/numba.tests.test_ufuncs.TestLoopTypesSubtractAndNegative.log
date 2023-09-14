@@ -1,0 +1,46 @@
+Parallel: 40. Serial: 0
+test_negative_B_B (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_B_B) ... ok
+test_negative_D_D (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_D_D) ... ok
+test_negative_F_F (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_F_F) ... ok
+test_negative_G_G (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_G_G) ... ok
+test_negative_H_H (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_H_H) ... ok
+test_negative_I_I (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_I_I) ... ok
+test_negative_L_L (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_L_L) ... ok
+test_negative_O_O (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_O_O) ... ok
+test_negative_Q_Q (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_Q_Q) ... ok
+test_negative_b_b (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_b_b) ... ok
+test_negative_d_d (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_d_d) ... ok
+test_negative_e_e (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_e_e) ... ok
+test_negative_f_f (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_f_f) ... ok
+test_negative_g_g (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_g_g) ... ok
+test_negative_h_h (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_h_h) ... ok
+test_negative_i_i (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_i_i) ... ok
+test_negative_l_l (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_l_l) ... ok
+test_negative_m_m (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_m_m) ... ok
+test_negative_q_q (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_negative_q_q) ... ok
+test_subtract_BB_B (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_BB_B) ... ok
+test_subtract_DD_D (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_DD_D) ... ok
+test_subtract_FF_F (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_FF_F) ... ok
+test_subtract_GG_G (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_GG_G) ... ok
+test_subtract_HH_H (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_HH_H) ... ok
+test_subtract_II_I (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_II_I) ... ok
+test_subtract_LL_L (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_LL_L) ... ok
+test_subtract_MM_m (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_MM_m) ... ok
+test_subtract_Mm_M (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_Mm_M) ... ok
+test_subtract_OO_O (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_OO_O) ... ok
+test_subtract_QQ_Q (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_QQ_Q) ... ok
+test_subtract_bb_b (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_bb_b) ... ok
+test_subtract_dd_d (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_dd_d) ... ok
+test_subtract_ee_e (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_ee_e) ... ok
+test_subtract_ff_f (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_ff_f) ... ok
+test_subtract_gg_g (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_gg_g) ... ok
+test_subtract_hh_h (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_hh_h) ... ok
+test_subtract_ii_i (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_ii_i) ... ok
+test_subtract_ll_l (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_ll_l) ... ok
+test_subtract_mm_m (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_mm_m) ... ok
+test_subtract_qq_q (numba.tests.test_ufuncs.TestLoopTypesSubtractAndNegative.test_subtract_qq_q) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 5.990s
+
+OK

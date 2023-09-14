@@ -1,0 +1,15 @@
+Parallel: 8. Serial: 0
+test_deprecated (numba.tests.test_warnings.TestBuiltins.test_deprecated) ... ok
+test_disable_performance_warnings (numba.tests.test_warnings.TestBuiltins.test_disable_performance_warnings) ... ok
+test_loop_lift_warn (numba.tests.test_warnings.TestBuiltins.test_loop_lift_warn) ... ok
+test_no_warning_with_forceobj (numba.tests.test_warnings.TestBuiltins.test_no_warning_with_forceobj) ... ok
+test_return_type_warning (numba.tests.test_warnings.TestBuiltins.test_return_type_warning) ... ok
+test_return_type_warning_with_nrt (numba.tests.test_warnings.TestBuiltins.test_return_type_warning_with_nrt)
+Rerun test_return_type_warning with nrt ... ok
+test_type_infer_warning (numba.tests.test_warnings.TestBuiltins.test_type_infer_warning) ... ok
+test_warnings_fixer (numba.tests.test_warnings.TestBuiltins.test_warnings_fixer) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.403s
+
+OK

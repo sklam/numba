@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_array_slice_setitem (numba.tests.test_storeslice.TestStoreSlice.test_array_slice_setitem) ... ok
+test_usecase (numba.tests.test_storeslice.TestStoreSlice.test_usecase) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.405s
+
+OK

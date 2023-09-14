@@ -1,0 +1,31 @@
+Parallel: 25. Serial: 0
+test_arg (numba.tests.test_ir.TestIRNodes.test_arg) ... ok
+test_assign (numba.tests.test_ir.TestIRNodes.test_assign) ... ok
+test_branch (numba.tests.test_ir.TestIRNodes.test_branch) ... ok
+test_const (numba.tests.test_ir.TestIRNodes.test_const) ... ok
+test_del (numba.tests.test_ir.TestIRNodes.test_del) ... ok
+test_delattr (numba.tests.test_ir.TestIRNodes.test_delattr) ... ok
+test_delitem (numba.tests.test_ir.TestIRNodes.test_delitem) ... ok
+test_enterwith (numba.tests.test_ir.TestIRNodes.test_enterwith) ... ok
+test_expr (numba.tests.test_ir.TestIRNodes.test_expr) ... ok
+test_global (numba.tests.test_ir.TestIRNodes.test_global) ... ok
+test_jump (numba.tests.test_ir.TestIRNodes.test_jump) ... ok
+test_loop (numba.tests.test_ir.TestIRNodes.test_loop) ... ok
+test_print (numba.tests.test_ir.TestIRNodes.test_print) ... ok
+test_raise (numba.tests.test_ir.TestIRNodes.test_raise) ... ok
+test_return (numba.tests.test_ir.TestIRNodes.test_return) ... ok
+test_setattr (numba.tests.test_ir.TestIRNodes.test_setattr) ... ok
+test_setitem (numba.tests.test_ir.TestIRNodes.test_setitem) ... ok
+test_staticraise (numba.tests.test_ir.TestIRNodes.test_staticraise) ... ok
+test_staticsetitem (numba.tests.test_ir.TestIRNodes.test_staticsetitem) ... ok
+test_storemap (numba.tests.test_ir.TestIRNodes.test_storemap) ... ok
+test_terminator (numba.tests.test_ir.TestIRNodes.test_terminator) ... ok
+test_undefinedtype (numba.tests.test_ir.TestIRNodes.test_undefinedtype) ... ok
+test_var (numba.tests.test_ir.TestIRNodes.test_var) ... ok
+test_with (numba.tests.test_ir.TestIRNodes.test_with) ... ok
+test_yield (numba.tests.test_ir.TestIRNodes.test_yield) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.195s
+
+OK

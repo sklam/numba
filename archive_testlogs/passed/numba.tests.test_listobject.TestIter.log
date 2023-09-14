@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_list_iter (numba.tests.test_listobject.TestIter.test_list_iter) ... ok
+test_list_iter_self_mutation (numba.tests.test_listobject.TestIter.test_list_iter_self_mutation) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.804s
+
+OK

@@ -1,0 +1,55 @@
+Parallel: 49. Serial: 0
+test_divmod_BB_BB (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_BB_BB) ... ok
+test_divmod_HH_HH (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_HH_HH) ... ok
+test_divmod_II_II (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_II_II) ... ok
+test_divmod_LL_LL (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_LL_LL) ... ok
+test_divmod_QQ_QQ (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_QQ_QQ) ... ok
+test_divmod_bb_bb (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_bb_bb) ... ok
+test_divmod_dd_dd (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_dd_dd) ... ok
+test_divmod_ee_ee (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_ee_ee) ... ok
+test_divmod_ff_ff (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_ff_ff) ... ok
+test_divmod_gg_gg (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_gg_gg) ... ok
+test_divmod_hh_hh (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_hh_hh) ... ok
+test_divmod_ii_ii (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_ii_ii) ... ok
+test_divmod_ll_ll (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_ll_ll) ... ok
+test_divmod_mm_qm (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_mm_qm) ... ok
+test_divmod_qq_qq (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_divmod_qq_qq) ... ok
+test_floor_divide_BB_B (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_BB_B) ... ok
+test_floor_divide_HH_H (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_HH_H) ... ok
+test_floor_divide_II_I (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_II_I) ... ok
+test_floor_divide_LL_L (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_LL_L) ... ok
+test_floor_divide_OO_O (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_OO_O) ... ok
+test_floor_divide_QQ_Q (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_QQ_Q) ... ok
+test_floor_divide_bb_b (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_bb_b) ... ok
+test_floor_divide_dd_d (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_dd_d) ... ok
+test_floor_divide_ee_e (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_ee_e) ... ok
+test_floor_divide_ff_f (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_ff_f) ... ok
+test_floor_divide_gg_g (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_gg_g) ... ok
+test_floor_divide_hh_h (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_hh_h) ... ok
+test_floor_divide_ii_i (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_ii_i) ... ok
+test_floor_divide_ll_l (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_ll_l) ... ok
+test_floor_divide_md_m (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_md_m) ... ok
+test_floor_divide_mm_q (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_mm_q) ... ok
+test_floor_divide_mq_m (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_mq_m) ... ok
+test_floor_divide_qq_q (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_floor_divide_qq_q) ... ok
+test_remainder_BB_B (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_BB_B) ... ok
+test_remainder_HH_H (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_HH_H) ... ok
+test_remainder_II_I (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_II_I) ... ok
+test_remainder_LL_L (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_LL_L) ... ok
+test_remainder_OO_O (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_OO_O) ... ok
+test_remainder_QQ_Q (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_QQ_Q) ... ok
+test_remainder_bb_b (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_bb_b) ... ok
+test_remainder_dd_d (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_dd_d) ... ok
+test_remainder_ee_e (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_ee_e) ... ok
+test_remainder_ff_f (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_ff_f) ... ok
+test_remainder_gg_g (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_gg_g) ... ok
+test_remainder_hh_h (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_hh_h) ... ok
+test_remainder_ii_i (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_ii_i) ... ok
+test_remainder_ll_l (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_ll_l) ... ok
+test_remainder_mm_m (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_mm_m) ... ok
+test_remainder_qq_q (numba.tests.test_ufuncs.TestLoopTypesFloorDivide.test_remainder_qq_q) ... ok
+
+----------------------------------------------------------------------
+Ran 49 tests in 9.787s
+
+OK

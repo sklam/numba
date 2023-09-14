@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_has_all_data (numba.tests.test_sysinfo.TestSysInfoWithoutPsutil.test_has_all_data) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.034s
+
+OK

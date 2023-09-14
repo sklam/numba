@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_llvmlite_version (numba.tests.test_llvm_version_check.TestLlvmVersion.test_llvmlite_version) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.527s
+
+OK

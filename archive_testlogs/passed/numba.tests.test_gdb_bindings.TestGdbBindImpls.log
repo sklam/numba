@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_gdb_cmd_lang_cpython_quick_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_cmd_lang_cpython_quick_impl) ... skipped 'needs gdb harness'
+test_gdb_cmd_lang_nopython_quick_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_cmd_lang_nopython_quick_impl) ... skipped 'needs gdb harness'
+test_gdb_cmd_lang_objmode_quick_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_cmd_lang_objmode_quick_impl) ... skipped 'needs gdb harness'
+test_gdb_split_init_and_break_cpython_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_split_init_and_break_cpython_impl) ... skipped 'needs gdb harness'
+test_gdb_split_init_and_break_nopython_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_split_init_and_break_nopython_impl) ... skipped 'needs gdb harness'
+test_gdb_split_init_and_break_objmode_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_split_init_and_break_objmode_impl) ... skipped 'needs gdb harness'
+test_gdb_split_init_and_break_w_parallel_cpython_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_split_init_and_break_w_parallel_cpython_impl) ... skipped 'needs gdb harness'
+test_gdb_split_init_and_break_w_parallel_nopython_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_split_init_and_break_w_parallel_nopython_impl) ... skipped 'needs gdb harness'
+test_gdb_split_init_and_break_w_parallel_objmode_impl (numba.tests.test_gdb_bindings.TestGdbBindImpls.test_gdb_split_init_and_break_w_parallel_objmode_impl) ... skipped 'needs gdb harness'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.114s
+
+OK (skipped=9)

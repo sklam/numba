@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_numpy_integers (numba.tests.test_typenames.TestTypeNames.test_numpy_integers) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.246s
+
+OK

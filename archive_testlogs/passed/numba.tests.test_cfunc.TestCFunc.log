@@ -1,0 +1,14 @@
+Parallel: 6. Serial: 0
+test_basic (numba.tests.test_cfunc.TestCFunc.test_basic)
+Basic usage and properties of a cfunc. ... ok
+test_cffi (numba.tests.test_cfunc.TestCFunc.test_cffi) ... skipped 'requires cffi'
+test_errors (numba.tests.test_cfunc.TestCFunc.test_errors) ... ok
+test_llvm_ir (numba.tests.test_cfunc.TestCFunc.test_llvm_ir) ... ok
+test_locals (numba.tests.test_cfunc.TestCFunc.test_locals) ... ok
+test_object_mode (numba.tests.test_cfunc.TestCFunc.test_object_mode)
+Object mode is currently unsupported. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.827s
+
+OK (skipped=1)

@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_normalize_ir_text (numba.tests.test_unicode_names.TestUnicodeUtils.test_normalize_ir_text) ... ok
+test_normalize_ir_text_unicode (numba.tests.test_unicode_names.TestUnicodeUtils.test_normalize_ir_text_unicode) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.127s
+
+OK

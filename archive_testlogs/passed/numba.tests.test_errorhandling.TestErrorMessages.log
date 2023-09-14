@@ -1,0 +1,20 @@
+Parallel: 13. Serial: 0
+test_abstract_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_abstract_template_source) ... ok
+test_callable_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_callable_template_source) ... ok
+test_cffi_function_pointer_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_cffi_function_pointer_template_source) ... skipped 'requires cffi'
+test_concrete_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_concrete_template_source) ... ok
+test_error_function_source_is_correct (numba.tests.test_errorhandling.TestErrorMessages.test_error_function_source_is_correct)
+Checks that the reported source location for an overload is the ... skipped 'SciPy needed for test'
+test_external_function_pointer_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_external_function_pointer_template_source) ... ok
+test_intrinsic_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_intrinsic_template_source) ... ok
+test_missing_source (numba.tests.test_errorhandling.TestErrorMessages.test_missing_source) ... ok
+test_no_match_error (numba.tests.test_errorhandling.TestErrorMessages.test_no_match_error) ... ok
+test_overloadattribute_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_overloadattribute_template_source) ... ok
+test_overloadfunction_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_overloadfunction_template_source) ... ok
+test_overloadmethod_template_source (numba.tests.test_errorhandling.TestErrorMessages.test_overloadmethod_template_source) ... ok
+test_specific_error (numba.tests.test_errorhandling.TestErrorMessages.test_specific_error) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.557s
+
+OK (skipped=2)

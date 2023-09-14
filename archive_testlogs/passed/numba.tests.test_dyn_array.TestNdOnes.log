@@ -1,0 +1,21 @@
+Parallel: 15. Serial: 0
+test_0d (numba.tests.test_dyn_array.TestNdOnes.test_0d) ... ok
+test_1d (numba.tests.test_dyn_array.TestNdOnes.test_1d) ... ok
+test_1d_dtype (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype) ... ok
+test_1d_dtype_instance (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype_instance) ... ok
+test_1d_dtype_invalid_str (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype_invalid_str) ... ok
+test_1d_dtype_non_const_str (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype_non_const_str) ... ok
+test_1d_dtype_str (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype_str) ... ok
+test_1d_dtype_str_alternative_spelling (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype_str_alternative_spelling) ... ok
+test_1d_dtype_str_structured_dtype (numba.tests.test_dyn_array.TestNdOnes.test_1d_dtype_str_structured_dtype) ... expected failure
+test_2d (numba.tests.test_dyn_array.TestNdOnes.test_2d) ... ok
+test_2d_dtype_kwarg (numba.tests.test_dyn_array.TestNdOnes.test_2d_dtype_kwarg) ... ok
+test_2d_dtype_str_kwarg (numba.tests.test_dyn_array.TestNdOnes.test_2d_dtype_str_kwarg) ... ok
+test_2d_dtype_str_kwarg_alternative_spelling (numba.tests.test_dyn_array.TestNdOnes.test_2d_dtype_str_kwarg_alternative_spelling) ... ok
+test_2d_shape_dtypes (numba.tests.test_dyn_array.TestNdOnes.test_2d_shape_dtypes) ... ok
+test_alloc_size (numba.tests.test_dyn_array.TestNdOnes.test_alloc_size) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 8.350s
+
+OK (expected failures=1)

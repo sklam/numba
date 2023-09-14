@@ -1,0 +1,13 @@
+test_gil_reacquire_deadlock (numba.tests.npyufunc.test_parallel_ufunc_issues.TestParGUfuncIssues.test_gil_reacquire_deadlock)
+Testing similar issue to #1998 due to GIL reacquiring for Gufunc ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_gil_reacquire_deadlock (numba.tests.npyufunc.test_parallel_ufunc_issues.TestParUfuncIssues.test_gil_reacquire_deadlock)
+Testing issue #1998 due to GIL reacquiring ... ok
+test_thread_response (numba.tests.npyufunc.test_parallel_ufunc_issues.TestParUfuncIssues.test_thread_response)
+Related to #89. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.492s
+
+OK
+Parallel: 0. Serial: 3

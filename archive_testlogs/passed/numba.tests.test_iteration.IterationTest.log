@@ -1,0 +1,28 @@
+Parallel: 22. Serial: 0
+test_array_0d_raises (numba.tests.test_iteration.IterationTest.test_array_0d_raises) ... ok
+test_array_1d_complex (numba.tests.test_iteration.IterationTest.test_array_1d_complex) ... ok
+test_array_1d_complex_npm (numba.tests.test_iteration.IterationTest.test_array_1d_complex_npm) ... ok
+test_array_1d_float (numba.tests.test_iteration.IterationTest.test_array_1d_float) ... ok
+test_array_1d_float_npm (numba.tests.test_iteration.IterationTest.test_array_1d_float_npm) ... ok
+test_array_1d_record (numba.tests.test_iteration.IterationTest.test_array_1d_record) ... ok
+test_array_1d_record_mutate (numba.tests.test_iteration.IterationTest.test_array_1d_record_mutate) ... ok
+test_array_1d_record_mutate_npm (numba.tests.test_iteration.IterationTest.test_array_1d_record_mutate_npm) ... ok
+test_array_1d_record_npm (numba.tests.test_iteration.IterationTest.test_array_1d_record_npm) ... ok
+test_enumerate_nested_tuple (numba.tests.test_iteration.IterationTest.test_enumerate_nested_tuple) ... ok
+test_enumerate_nested_tuple_npm (numba.tests.test_iteration.IterationTest.test_enumerate_nested_tuple_npm) ... ok
+test_enumerate_refct (numba.tests.test_iteration.IterationTest.test_enumerate_refct) ... ok
+test_float_tuple_iter (numba.tests.test_iteration.IterationTest.test_float_tuple_iter) ... ok
+test_float_tuple_iter_npm (numba.tests.test_iteration.IterationTest.test_float_tuple_iter_npm) ... ok
+test_int_tuple_iter (numba.tests.test_iteration.IterationTest.test_int_tuple_iter) ... ok
+test_int_tuple_iter_npm (numba.tests.test_iteration.IterationTest.test_int_tuple_iter_npm) ... ok
+test_nested_enumerate (numba.tests.test_iteration.IterationTest.test_nested_enumerate) ... ok
+test_nested_enumerate_npm (numba.tests.test_iteration.IterationTest.test_nested_enumerate_npm) ... ok
+test_tuple_iter_issue1504 (numba.tests.test_iteration.IterationTest.test_tuple_iter_issue1504) ... ok
+test_tuple_of_arrays_iter (numba.tests.test_iteration.IterationTest.test_tuple_of_arrays_iter) ... ok
+test_tuple_tuple_iter (numba.tests.test_iteration.IterationTest.test_tuple_tuple_iter) ... ok
+test_tuple_tuple_iter_npm (numba.tests.test_iteration.IterationTest.test_tuple_tuple_iter_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 7.168s
+
+OK

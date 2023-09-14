@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_dtype_with_string (numba.tests.test_types.TestDType.test_dtype_with_string) ... ok
+test_dtype_with_type (numba.tests.test_types.TestDType.test_dtype_with_type) ... ok
+test_kind (numba.tests.test_types.TestDType.test_kind) ... ok
+test_type_attr (numba.tests.test_types.TestDType.test_type_attr) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.222s
+
+OK

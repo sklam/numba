@@ -1,0 +1,32 @@
+Parallel: 26. Serial: 0
+test_chained_unpack_assign (numba.tests.test_unpack_sequence.TestUnpack.test_chained_unpack_assign) ... ok
+test_chained_unpack_assign_npm (numba.tests.test_unpack_sequence.TestUnpack.test_chained_unpack_assign_npm) ... ok
+test_conditional_swap (numba.tests.test_unpack_sequence.TestUnpack.test_conditional_swap) ... ok
+test_conditional_swap_npm (numba.tests.test_unpack_sequence.TestUnpack.test_conditional_swap_npm) ... ok
+test_invalid_unpack (numba.tests.test_unpack_sequence.TestUnpack.test_invalid_unpack) ... ok
+test_unpack_heterogeneous_tuple (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_heterogeneous_tuple) ... ok
+test_unpack_heterogeneous_tuple_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_heterogeneous_tuple_npm) ... ok
+test_unpack_list (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_list) ... ok
+test_unpack_nested_heterogeneous_tuple (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_nested_heterogeneous_tuple) ... ok
+test_unpack_nested_heterogeneous_tuple_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_nested_heterogeneous_tuple_npm) ... ok
+test_unpack_nrt (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_nrt) ... ok
+test_unpack_range (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_range) ... ok
+test_unpack_range_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_range_npm) ... ok
+test_unpack_range_too_large (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_range_too_large) ... ok
+test_unpack_range_too_large_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_range_too_large_npm) ... ok
+test_unpack_range_too_small (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_range_too_small) ... ok
+test_unpack_range_too_small_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_range_too_small_npm) ... ok
+test_unpack_shape (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_shape) ... ok
+test_unpack_shape_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_shape_npm) ... ok
+test_unpack_tuple (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple) ... ok
+test_unpack_tuple_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple_npm) ... ok
+test_unpack_tuple_of_arrays (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple_of_arrays) ... ok
+test_unpack_tuple_too_large (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple_too_large) ... ok
+test_unpack_tuple_too_large_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple_too_large_npm) ... ok
+test_unpack_tuple_too_small (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple_too_small) ... ok
+test_unpack_tuple_too_small_npm (numba.tests.test_unpack_sequence.TestUnpack.test_unpack_tuple_too_small_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 7.971s
+
+OK

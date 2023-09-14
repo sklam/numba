@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_itemsize (numba.tests.test_array_attr.TestNestedArrayAttr.test_itemsize) ... ok
+test_nbytes (numba.tests.test_array_attr.TestNestedArrayAttr.test_nbytes) ... ok
+test_ndim (numba.tests.test_array_attr.TestNestedArrayAttr.test_ndim) ... ok
+test_shape (numba.tests.test_array_attr.TestNestedArrayAttr.test_shape) ... ok
+test_size (numba.tests.test_array_attr.TestNestedArrayAttr.test_size) ... ok
+test_strides (numba.tests.test_array_attr.TestNestedArrayAttr.test_strides) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.611s
+
+OK

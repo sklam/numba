@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_structref_caching (numba.tests.test_struct_ref.TestStructRefCaching.test_structref_caching) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.436s
+
+OK

@@ -1,0 +1,7 @@
+test_init_fail (numba.tests.test_nrt.TestNrtMemInfoNotInitialized.test_init_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+Parallel: 0. Serial: 1

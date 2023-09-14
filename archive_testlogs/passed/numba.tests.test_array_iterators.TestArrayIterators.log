@@ -1,0 +1,22 @@
+Parallel: 16. Serial: 0
+test_array_flat_3d (numba.tests.test_array_iterators.TestArrayIterators.test_array_flat_3d) ... ok
+test_array_flat_empty (numba.tests.test_array_iterators.TestArrayIterators.test_array_flat_empty) ... ok
+test_array_flat_getitem (numba.tests.test_array_iterators.TestArrayIterators.test_array_flat_getitem) ... ok
+test_array_flat_len (numba.tests.test_array_iterators.TestArrayIterators.test_array_flat_len) ... ok
+test_array_flat_premature_free (numba.tests.test_array_iterators.TestArrayIterators.test_array_flat_premature_free) ... ok
+test_array_flat_setitem (numba.tests.test_array_iterators.TestArrayIterators.test_array_flat_setitem) ... ok
+test_array_iter (numba.tests.test_array_iterators.TestArrayIterators.test_array_iter) ... ok
+test_array_iter_yielded_order (numba.tests.test_array_iterators.TestArrayIterators.test_array_iter_yielded_order) ... ok
+test_array_ndenumerate_2d (numba.tests.test_array_iterators.TestArrayIterators.test_array_ndenumerate_2d) ... ok
+test_array_ndenumerate_empty (numba.tests.test_array_iterators.TestArrayIterators.test_array_ndenumerate_empty) ... ok
+test_array_ndenumerate_premature_free (numba.tests.test_array_iterators.TestArrayIterators.test_array_ndenumerate_premature_free) ... ok
+test_array_view_iter (numba.tests.test_array_iterators.TestArrayIterators.test_array_view_iter) ... ok
+test_iter_next (numba.tests.test_array_iterators.TestArrayIterators.test_iter_next) ... ok
+test_np_ndindex (numba.tests.test_array_iterators.TestArrayIterators.test_np_ndindex) ... ok
+test_np_ndindex_array (numba.tests.test_array_iterators.TestArrayIterators.test_np_ndindex_array) ... ok
+test_np_ndindex_empty (numba.tests.test_array_iterators.TestArrayIterators.test_np_ndindex_empty) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 17.333s
+
+OK

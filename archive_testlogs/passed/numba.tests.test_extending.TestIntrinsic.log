@@ -1,0 +1,15 @@
+Parallel: 5. Serial: 0
+test_deserialization (numba.tests.test_extending.TestIntrinsic.test_deserialization)
+Test deserialization of intrinsic ... ok
+test_docstring (numba.tests.test_extending.TestIntrinsic.test_docstring) ... ok
+test_ll_pointer_cast (numba.tests.test_extending.TestIntrinsic.test_ll_pointer_cast)
+Usecase test: custom reinterpret cast to turn int values to pointers ... ok
+test_serialization (numba.tests.test_extending.TestIntrinsic.test_serialization)
+Test serialization of intrinsic objects ... ok
+test_void_return (numba.tests.test_extending.TestIntrinsic.test_void_return)
+Verify that returning a None from codegen function is handled ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.633s
+
+OK

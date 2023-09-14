@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_3d (numba.tests.test_dyn_array.TestNpConcatenate.test_3d) ... ok
+test_3d_no_axis (numba.tests.test_dyn_array.TestNpConcatenate.test_3d_no_axis) ... ok
+test_typing_errors (numba.tests.test_dyn_array.TestNpConcatenate.test_typing_errors) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.383s
+
+OK

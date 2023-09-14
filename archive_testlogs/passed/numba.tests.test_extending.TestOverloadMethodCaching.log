@@ -1,0 +1,7 @@
+test_caching_overload_method (numba.tests.test_extending.TestOverloadMethodCaching.test_caching_overload_method) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.549s
+
+OK
+Parallel: 0. Serial: 1

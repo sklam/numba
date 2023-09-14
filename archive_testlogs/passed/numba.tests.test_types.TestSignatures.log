@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_normalize_signature (numba.tests.test_types.TestSignatures.test_normalize_signature) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.141s
+
+OK

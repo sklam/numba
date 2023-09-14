@@ -1,0 +1,8 @@
+test_file_location (numba.tests.test_caching.TestCacheFileCollision.test_file_location) ... ok
+test_no_collision (numba.tests.test_caching.TestCacheFileCollision.test_no_collision) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.585s
+
+OK
+Parallel: 0. Serial: 2

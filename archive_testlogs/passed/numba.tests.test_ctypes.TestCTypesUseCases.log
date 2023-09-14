@@ -1,0 +1,22 @@
+Parallel: 13. Serial: 0
+test_c_sin (numba.tests.test_ctypes.TestCTypesUseCases.test_c_sin) ... ok
+test_ctype_voidptr (numba.tests.test_ctypes.TestCTypesUseCases.test_ctype_voidptr) ... ok
+test_ctype_wrapping (numba.tests.test_ctypes.TestCTypesUseCases.test_ctype_wrapping) ... ok
+test_function_pointer (numba.tests.test_ctypes.TestCTypesUseCases.test_function_pointer) ... ok
+test_passing_array_ctypes_data (numba.tests.test_ctypes.TestCTypesUseCases.test_passing_array_ctypes_data)
+Test the ".ctypes.data" attribute of an array can be passed ... ok
+test_passing_array_ctypes_voidptr (numba.tests.test_ctypes.TestCTypesUseCases.test_passing_array_ctypes_voidptr)
+Test the ".ctypes" attribute of an array can be passed ... ok
+test_passing_array_ctypes_voidptr_pass_ptr (numba.tests.test_ctypes.TestCTypesUseCases.test_passing_array_ctypes_voidptr_pass_ptr)
+Test the ".ctypes" attribute of an array can be passed ... ok
+test_python_call_back (numba.tests.test_ctypes.TestCTypesUseCases.test_python_call_back) ... ok
+test_python_call_back_threaded (numba.tests.test_ctypes.TestCTypesUseCases.test_python_call_back_threaded) ... ok
+test_stdcall (numba.tests.test_ctypes.TestCTypesUseCases.test_stdcall) ... skipped 'Windows-specific test'
+test_storing_voidptr_to_int_array (numba.tests.test_ctypes.TestCTypesUseCases.test_storing_voidptr_to_int_array) ... ok
+test_two_funcs (numba.tests.test_ctypes.TestCTypesUseCases.test_two_funcs) ... ok
+test_untyped_function (numba.tests.test_ctypes.TestCTypesUseCases.test_untyped_function) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.659s
+
+OK (skipped=1)

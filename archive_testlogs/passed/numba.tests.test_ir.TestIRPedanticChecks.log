@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_var_in_scope_assumption (numba.tests.test_ir.TestIRPedanticChecks.test_var_in_scope_assumption) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.452s
+
+OK

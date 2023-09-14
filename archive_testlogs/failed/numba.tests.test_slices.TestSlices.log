@@ -1,0 +1,42 @@
+Parallel: 10. Serial: 0
+test_literal_slice_boxing (numba.tests.test_slices.TestSlices.test_literal_slice_boxing) ... ok
+test_literal_slice_distinct (numba.tests.test_slices.TestSlices.test_literal_slice_distinct) ... ok
+test_literal_slice_freevar (numba.tests.test_slices.TestSlices.test_literal_slice_freevar) ... ok
+test_literal_slice_maxint (numba.tests.test_slices.TestSlices.test_literal_slice_maxint) ... ok
+test_slice_constructor (numba.tests.test_slices.TestSlices.test_slice_constructor)
+Test the 'happy path' for slice() constructor in nopython mode. ... ok
+test_slice_constructor_cases (numba.tests.test_slices.TestSlices.test_slice_constructor_cases)
+Test that slice constructor behaves same in python and compiled code. ... ERROR
+test_slice_from_constant (numba.tests.test_slices.TestSlices.test_slice_from_constant) ... ok
+test_slice_indices (numba.tests.test_slices.TestSlices.test_slice_indices)
+Test that a numba slice returns same result for .indices as a python one. ... ok
+test_slice_indices_examples (numba.tests.test_slices.TestSlices.test_slice_indices_examples)
+Tests for specific error cases. ... ok
+test_slice_passing (numba.tests.test_slices.TestSlices.test_slice_passing)
+Check passing a slice object to a Numba function. ... ok
+
+======================================================================
+ERROR: test_slice_constructor_cases (numba.tests.test_slices.TestSlices.test_slice_constructor_cases)
+Test that slice constructor behaves same in python and compiled code.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_slices.py", line 113, in test_slice_constructor_cases
+    expected = slice_construct_and_use(args, array)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_slices.py", line 23, in slice_construct_and_use
+    sl = slice(*args)
+         ^^^^^^^^^^^^
+TypeError: slice expected at least 1 argument, got 0
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_slices.py", line 118, in test_slice_constructor_cases
+    self.assertRegexpMatches(
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestSlices' object has no attribute 'assertRegexpMatches'
+
+----------------------------------------------------------------------
+Ran 10 tests in 12.297s
+
+FAILED (errors=1)

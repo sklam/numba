@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_optional_array_type (numba.tests.test_array_exprs.TestOptionals.test_optional_array_type) ... ok
+test_optional_scalar_type (numba.tests.test_array_exprs.TestOptionals.test_optional_scalar_type) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.187s
+
+OK

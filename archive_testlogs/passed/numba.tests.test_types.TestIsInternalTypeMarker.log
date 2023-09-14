@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_create_temp_module (numba.tests.test_types.TestIsInternalTypeMarker.test_create_temp_module) ... ok
+test_create_temp_module_with_exception (numba.tests.test_types.TestIsInternalTypeMarker.test_create_temp_module_with_exception) ... ok
+test_externally_defined_type_is_external (numba.tests.test_types.TestIsInternalTypeMarker.test_externally_defined_type_is_external) ... ok
+test_mixin_against_real_example (numba.tests.test_types.TestIsInternalTypeMarker.test_mixin_against_real_example) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.229s
+
+OK

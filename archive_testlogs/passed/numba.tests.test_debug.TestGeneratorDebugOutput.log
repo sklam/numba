@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_dump_ir_generator (numba.tests.test_debug.TestGeneratorDebugOutput.test_dump_ir_generator) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.566s
+
+OK

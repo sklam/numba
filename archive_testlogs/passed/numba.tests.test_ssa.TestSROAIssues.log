@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_issue7258_multiple_assignment_post_SSA (numba.tests.test_ssa.TestSROAIssues.test_issue7258_multiple_assignment_post_SSA) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.937s
+
+OK

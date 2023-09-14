@@ -1,0 +1,13 @@
+test_create_temp_jitted_module (numba.tests.test_jit_module.TestJitModule.test_create_temp_jitted_module) ... ok
+test_create_temp_jitted_module_with_exception (numba.tests.test_jit_module.TestJitModule.test_create_temp_jitted_module_with_exception) ... ok
+test_jit_module (numba.tests.test_jit_module.TestJitModule.test_jit_module) ... ok
+test_jit_module_jit_options (numba.tests.test_jit_module.TestJitModule.test_jit_module_jit_options) ... ok
+test_jit_module_jit_options_override (numba.tests.test_jit_module.TestJitModule.test_jit_module_jit_options_override) ... ok
+test_jit_module_logging_level (numba.tests.test_jit_module.TestJitModule.test_jit_module_logging_level) ... ok
+test_jit_module_logging_output (numba.tests.test_jit_module.TestJitModule.test_jit_module_logging_output) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.613s
+
+OK
+Parallel: 0. Serial: 7

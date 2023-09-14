@@ -1,0 +1,126 @@
+Parallel: 20. Serial: 0
+test_add_binop (numba.tests.test_extending.TestHighLevelExtending.test_add_binop)
+Test re-implementing '+' for a custom type via @overload(operator.add). ... ok
+test_add_operator (numba.tests.test_extending.TestHighLevelExtending.test_add_operator)
+Test re-implementing operator.add() for a custom type with @overload. ... ok
+test_delitem (numba.tests.test_extending.TestHighLevelExtending.test_delitem) ... ok
+test_getitem (numba.tests.test_extending.TestHighLevelExtending.test_getitem) ... ok
+test_iadd_binop (numba.tests.test_extending.TestHighLevelExtending.test_iadd_binop)
+Test re-implementing '+' for a custom type via @overload(operator.add). ... ok
+test_iadd_operator (numba.tests.test_extending.TestHighLevelExtending.test_iadd_operator)
+Test re-implementing operator.add() for a custom type with @overload. ... ok
+test_len (numba.tests.test_extending.TestHighLevelExtending.test_len)
+Test re-implementing len() for a custom type with @overload. ... ok
+test_no_cpython_wrapper (numba.tests.test_extending.TestHighLevelExtending.test_no_cpython_wrapper)
+Test overloading whose return value cannot be represented in CPython. ... ok
+test_overload_callable_typeref (numba.tests.test_extending.TestHighLevelExtending.test_overload_callable_typeref) ... ERROR
+test_overload_classmethod (numba.tests.test_extending.TestHighLevelExtending.test_overload_classmethod) ... ok
+test_overload_method_kwargs (numba.tests.test_extending.TestHighLevelExtending.test_overload_method_kwargs) ... ok
+test_overload_method_literal_unpack (numba.tests.test_extending.TestHighLevelExtending.test_overload_method_literal_unpack) ... ok
+test_overload_method_stararg (numba.tests.test_extending.TestHighLevelExtending.test_overload_method_stararg) ... ok
+test_overload_ufunc (numba.tests.test_extending.TestHighLevelExtending.test_overload_ufunc) ... ok
+test_print (numba.tests.test_extending.TestHighLevelExtending.test_print)
+Test re-implementing print() for a custom type with @overload. ... ok
+test_setitem (numba.tests.test_extending.TestHighLevelExtending.test_setitem) ... ok
+test_typing_vs_impl_signature_mismatch_handling (numba.tests.test_extending.TestHighLevelExtending.test_typing_vs_impl_signature_mismatch_handling)
+Tests that an overload which has a differing typing and implementing ... ok
+test_typing_vs_impl_signature_mismatch_handling_var_keyword (numba.tests.test_extending.TestHighLevelExtending.test_typing_vs_impl_signature_mismatch_handling_var_keyword)
+Tests that an overload which uses **kwargs (VAR_KEYWORD) ... ok
+test_typing_vs_impl_signature_mismatch_handling_var_positional (numba.tests.test_extending.TestHighLevelExtending.test_typing_vs_impl_signature_mismatch_handling_var_positional)
+Tests that an overload which has a differing typing and implementing ... ok
+test_where (numba.tests.test_extending.TestHighLevelExtending.test_where)
+Test implementing a function with @overload. ... ok
+
+======================================================================
+ERROR: test_overload_callable_typeref (numba.tests.test_extending.TestHighLevelExtending.test_overload_callable_typeref)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 155, in propagate
+    constraint(typeinfer)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 578, in __call__
+    self.resolve(typeinfer, typevars, fnty)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 630, in resolve
+    raise TypingError(msg)
+numba.core.errors.TypingError: Invalid use of callable_type_ref[<class 'numba.tests.test_extending.MyClass'>] with parameters (unicode_type)
+Known signatures:
+ * (int64,) -> float64
+During: resolving callee type: callable_type_ref[<class 'numba.tests.test_extending.MyClass'>]
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_extending.py (1231)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_extending.py", line 1235, in test_overload_callable_typeref
+    self.assertPreciseEqual(foo(*args), expected)
+                            ^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 407, in error_rewrite
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 129, in compile
+    raise retval
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 110, in run_pass
+    typemap, return_type, calltypes, errs = type_inference_stage(
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typed_passes.py", line 91, in type_inference_stage
+    errs = infer.propagate(raise_errors=raise_errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/typeinfer.py", line 1086, in propagate
+    raise errors[0]
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+Invalid use of callable_type_ref[<class 'numba.tests.test_extending.MyClass'>] with parameters (unicode_type)
+Known signatures:
+ * (int64,) -> float64
+During: resolving callee type: callable_type_ref[<class 'numba.tests.test_extending.MyClass'>]
+During: typing of call at /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_extending.py (1231)
+
+
+File "numba/tests/test_extending.py", line 1231:
+        def foo(a, b):
+            return MyClass(a), MyClass(b)
+            ^
+
+
+----------------------------------------------------------------------
+Ran 20 tests in 6.744s
+
+FAILED (errors=1)

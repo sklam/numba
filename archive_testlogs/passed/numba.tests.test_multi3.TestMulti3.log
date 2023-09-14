@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_multi3 (numba.tests.test_multi3.TestMulti3.test_multi3) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.761s
+
+OK

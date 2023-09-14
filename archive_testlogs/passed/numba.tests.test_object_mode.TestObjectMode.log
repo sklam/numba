@@ -1,0 +1,15 @@
+Parallel: 7. Serial: 0
+test_array_of_object (numba.tests.test_object_mode.TestObjectMode.test_array_of_object) ... ok
+test_complex_constant (numba.tests.test_object_mode.TestObjectMode.test_complex_constant) ... ok
+test_delitem (numba.tests.test_object_mode.TestObjectMode.test_delitem) ... ok
+test_long_constant (numba.tests.test_object_mode.TestObjectMode.test_long_constant) ... ok
+test_loop_nest (numba.tests.test_object_mode.TestObjectMode.test_loop_nest)
+Test bug that decref the iterator early. ... ok
+test_sequence_contains (numba.tests.test_object_mode.TestObjectMode.test_sequence_contains)
+Test handling of the `in` comparison ... ok
+test_starargs_non_tuple (numba.tests.test_object_mode.TestObjectMode.test_starargs_non_tuple) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.731s
+
+OK

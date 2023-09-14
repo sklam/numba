@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_zero_size_array_array_argmax (numba.tests.test_array_reductions.TestArrayReductionsExceptions.test_zero_size_array_array_argmax) ... ok
+test_zero_size_array_array_argmax_global (numba.tests.test_array_reductions.TestArrayReductionsExceptions.test_zero_size_array_array_argmax_global) ... ok
+test_zero_size_array_array_argmin (numba.tests.test_array_reductions.TestArrayReductionsExceptions.test_zero_size_array_array_argmin) ... ok
+test_zero_size_array_array_argmin_global (numba.tests.test_array_reductions.TestArrayReductionsExceptions.test_zero_size_array_array_argmin_global) ... ok
+test_zero_size_array_array_max (numba.tests.test_array_reductions.TestArrayReductionsExceptions.test_zero_size_array_array_max) ... ok
+test_zero_size_array_array_min (numba.tests.test_array_reductions.TestArrayReductionsExceptions.test_zero_size_array_array_min) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.452s
+
+OK

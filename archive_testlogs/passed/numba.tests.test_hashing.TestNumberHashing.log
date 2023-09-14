@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_bool (numba.tests.test_hashing.TestNumberHashing.test_bool) ... ok
+test_complex (numba.tests.test_hashing.TestNumberHashing.test_complex) ... ok
+test_floats (numba.tests.test_hashing.TestNumberHashing.test_floats) ... ok
+test_ints (numba.tests.test_hashing.TestNumberHashing.test_ints) ... ok
+test_py310_nan_hash (numba.tests.test_hashing.TestNumberHashing.test_py310_nan_hash) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 7.605s
+
+OK

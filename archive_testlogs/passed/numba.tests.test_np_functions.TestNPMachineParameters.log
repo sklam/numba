@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_MachAr (numba.tests.test_np_functions.TestNPMachineParameters.test_MachAr) ... skipped 'NumPy < 1.24 required'
+test_finfo (numba.tests.test_np_functions.TestNPMachineParameters.test_finfo) ... ok
+test_iinfo (numba.tests.test_np_functions.TestNPMachineParameters.test_iinfo) ... ok
+test_np_MachAr_deprecation_np122 (numba.tests.test_np_functions.TestNPMachineParameters.test_np_MachAr_deprecation_np122) ... skipped 'Needs NumPy < 1.24'
+
+----------------------------------------------------------------------
+Ran 4 tests in 4.723s
+
+OK (skipped=2)

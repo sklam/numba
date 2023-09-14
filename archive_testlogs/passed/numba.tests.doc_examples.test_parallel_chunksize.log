@@ -1,0 +1,10 @@
+test_chunksize_manual (numba.tests.doc_examples.test_parallel_chunksize.ChunksizeExamplesTest.test_chunksize_manual) ... OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+ok
+test_chunksize_with (numba.tests.doc_examples.test_parallel_chunksize.ChunksizeExamplesTest.test_chunksize_with) ... ok
+test_unbalanced_example (numba.tests.doc_examples.test_parallel_chunksize.ChunksizeExamplesTest.test_unbalanced_example) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.444s
+
+OK
+Parallel: 0. Serial: 3

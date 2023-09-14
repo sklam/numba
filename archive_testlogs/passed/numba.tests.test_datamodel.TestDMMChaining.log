@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_basic (numba.tests.test_datamodel.TestDMMChaining.test_basic) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.228s
+
+OK

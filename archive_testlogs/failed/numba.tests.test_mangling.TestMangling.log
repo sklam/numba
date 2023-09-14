@@ -1,0 +1,18 @@
+Parallel: 3. Serial: 0
+test_one_args (numba.tests.test_mangling.TestMangling.test_one_args) ... ok
+test_two_args (numba.tests.test_mangling.TestMangling.test_two_args) ... ok
+test_unicode_fname (numba.tests.test_mangling.TestMangling.test_unicode_fname) ... ERROR
+
+======================================================================
+ERROR: test_unicode_fname (numba.tests.test_mangling.TestMangling.test_unicode_fname)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_mangling.py", line 37, in test_unicode_fname
+    self.assertRegexpMatches(name, r'^_Z[a-zA-Z0-9_\$]+$')
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestMangling' object has no attribute 'assertRegexpMatches'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.122s
+
+FAILED (errors=1)

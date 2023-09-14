@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_insertion_sort (numba.tests.test_sort.TestQuicksortArrays.test_insertion_sort) ... ok
+test_partition (numba.tests.test_sort.TestQuicksortArrays.test_partition) ... ok
+test_partition3 (numba.tests.test_sort.TestQuicksortArrays.test_partition3) ... ok
+test_run_quicksort (numba.tests.test_sort.TestQuicksortArrays.test_run_quicksort) ... ok
+test_run_quicksort_lt (numba.tests.test_sort.TestQuicksortArrays.test_run_quicksort_lt) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.455s
+
+OK

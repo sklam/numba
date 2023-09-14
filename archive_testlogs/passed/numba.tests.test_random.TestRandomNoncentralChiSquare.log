@@ -1,0 +1,11 @@
+Parallel: 3. Serial: 0
+test_noncentral_chisquare (numba.tests.test_random.TestRandomNoncentralChiSquare.test_noncentral_chisquare)
+Test noncentral_chisquare(df, nonc, size) ... ok
+test_noncentral_chisquare_default (numba.tests.test_random.TestRandomNoncentralChiSquare.test_noncentral_chisquare_default)
+Test noncentral_chisquare(df, nonc, size=None) ... ok
+test_noncentral_chisquare_exceptions (numba.tests.test_random.TestRandomNoncentralChiSquare.test_noncentral_chisquare_exceptions) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.519s
+
+OK

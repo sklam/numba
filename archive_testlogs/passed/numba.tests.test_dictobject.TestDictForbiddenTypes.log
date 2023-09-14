@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_disallow_list (numba.tests.test_dictobject.TestDictForbiddenTypes.test_disallow_list) ... ok
+test_disallow_set (numba.tests.test_dictobject.TestDictForbiddenTypes.test_disallow_set) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.241s
+
+OK

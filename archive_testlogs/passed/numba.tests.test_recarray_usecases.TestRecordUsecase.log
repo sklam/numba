@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_usecase1 (numba.tests.test_recarray_usecases.TestRecordUsecase.test_usecase1) ... ok
+test_usecase2 (numba.tests.test_recarray_usecases.TestRecordUsecase.test_usecase2) ... ok
+test_usecase3 (numba.tests.test_recarray_usecases.TestRecordUsecase.test_usecase3) ... ok
+test_usecase4 (numba.tests.test_recarray_usecases.TestRecordUsecase.test_usecase4) ... ok
+test_usecase5 (numba.tests.test_recarray_usecases.TestRecordUsecase.test_usecase5) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.431s
+
+OK

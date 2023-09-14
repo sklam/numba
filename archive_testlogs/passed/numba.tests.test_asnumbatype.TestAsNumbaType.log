@@ -1,0 +1,16 @@
+Parallel: 10. Serial: 0
+test_any_throws (numba.tests.test_asnumbatype.TestAsNumbaType.test_any_throws) ... ok
+test_bad_union_throws (numba.tests.test_asnumbatype.TestAsNumbaType.test_bad_union_throws) ... ok
+test_jitclass_registers (numba.tests.test_asnumbatype.TestAsNumbaType.test_jitclass_registers) ... ok
+test_nested_containers (numba.tests.test_asnumbatype.TestAsNumbaType.test_nested_containers) ... ok
+test_numba_types (numba.tests.test_asnumbatype.TestAsNumbaType.test_numba_types) ... ok
+test_optional (numba.tests.test_asnumbatype.TestAsNumbaType.test_optional) ... ok
+test_overwrite_type (numba.tests.test_asnumbatype.TestAsNumbaType.test_overwrite_type) ... ok
+test_simple_types (numba.tests.test_asnumbatype.TestAsNumbaType.test_simple_types) ... ok
+test_single_containers (numba.tests.test_asnumbatype.TestAsNumbaType.test_single_containers) ... ok
+test_type_alias (numba.tests.test_asnumbatype.TestAsNumbaType.test_type_alias) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.158s
+
+OK

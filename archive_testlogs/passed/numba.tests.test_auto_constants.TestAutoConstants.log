@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_module_string_constant (numba.tests.test_auto_constants.TestAutoConstants.test_module_string_constant) ... ok
+test_numpy_nan (numba.tests.test_auto_constants.TestAutoConstants.test_numpy_nan) ... ok
+test_sys_constant (numba.tests.test_auto_constants.TestAutoConstants.test_sys_constant) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.744s
+
+OK

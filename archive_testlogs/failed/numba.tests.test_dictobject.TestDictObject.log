@@ -1,0 +1,92 @@
+Parallel: 50. Serial: 0
+test_001_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_001_cannot_downcast_key) ... ok
+test_002_cannot_downcast_default (numba.tests.test_dictobject.TestDictObject.test_002_cannot_downcast_default) ... ok
+test_003_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_003_cannot_downcast_key) ... ok
+test_004_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_004_cannot_downcast_key) ... ok
+test_005_cannot_downcast_value (numba.tests.test_dictobject.TestDictObject.test_005_cannot_downcast_value) ... ok
+test_006_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_006_cannot_downcast_key) ... ok
+test_007_collision_checks (numba.tests.test_dictobject.TestDictObject.test_007_collision_checks) ... ok
+test_008_lifo_popitem (numba.tests.test_dictobject.TestDictObject.test_008_lifo_popitem) ... ok
+test_010_cannot_downcast_default (numba.tests.test_dictobject.TestDictObject.test_010_cannot_downcast_default) ... ok
+test_011_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_011_cannot_downcast_key) ... ok
+test_012_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_012_cannot_downcast_key) ... ok
+test_013_contains_empty_dict (numba.tests.test_dictobject.TestDictObject.test_013_contains_empty_dict) ... ok
+test_014_not_contains_empty_dict (numba.tests.test_dictobject.TestDictObject.test_014_not_contains_empty_dict) ... ok
+test_015_dict_clear (numba.tests.test_dictobject.TestDictObject.test_015_dict_clear) ... ok
+test_016_cannot_downcast_key (numba.tests.test_dictobject.TestDictObject.test_016_cannot_downcast_key) ... ok
+test_017_cannot_downcast_default (numba.tests.test_dictobject.TestDictObject.test_017_cannot_downcast_default) ... ok
+test_018_keys_iter_are_views (numba.tests.test_dictobject.TestDictObject.test_018_keys_iter_are_views) ... ERROR
+test_019 (numba.tests.test_dictobject.TestDictObject.test_019) ... expected failure
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/runtests.py", line 22, in <module>
+    runpy.run_module('numba.runtests', run_name='__main__')
+  File "<frozen runpy>", line 229, in run_module
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/runtests.py", line 9, in <module>
+    sys.exit(0 if _main(sys.argv) else 1)
+                  ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/_runtests.py", line 25, in _main
+    return run_tests(argv, defaultTest='numba.tests',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/__init__.py", line 54, in run_tests
+    prog = NumbaTestProgram(argv=argv,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 204, in __init__
+    super(NumbaTestProgram, self).__init__(*args, **kwargs)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/main.py", line 105, in __init__
+    self.runTests()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 376, in runTests
+    run_tests_real()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 361, in run_tests_real
+    super(NumbaTestProgram, self).runTests()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/main.py", line 281, in runTests
+    self.result = testRunner.run(self.test)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 830, in run
+    return super(ParallelTestRunner, self).run(self._run_inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/unittest/runner.py", line 240, in run
+    test(result)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 779, in _run_inner
+    self._run_parallel_tests(result, pool, child_runner, tests)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 815, in _run_parallel_tests
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/testing/main.py", line 806, in _run_parallel_tests
+    child_result = it.__next__(self.timeout)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba.py312.conda/lib/python3.12/multiprocessing/pool.py", line 868, in next
+    raise TimeoutError from None
+multiprocessing.context.TimeoutError: Tests didn't finish before timeout (or crashed):
+- 'numba.tests.test_dictobject.TestDictObject.test_020_string_key'
+- 'numba.tests.test_dictobject.TestDictObject.test_021_long_str_key'
+- 'numba.tests.test_dictobject.TestDictObject.test_022_references_juggle'
+- 'numba.tests.test_dictobject.TestDictObject.test_023_closure'
+- 'numba.tests.test_dictobject.TestDictObject.test_024_unicode_getitem_keys'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_bool'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_clear'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_contains'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_copy'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_create'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_delitem'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_equality'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_equality_diff_type'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_equality_more'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_get'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_get_with_default'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_getitem'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_items'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_items_len'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_iter'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_keys'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_keys_len'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_pop'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_pop_many'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_popitem'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_popitem_many'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_setdefault'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_to_from_meminfo'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_update'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_values'
+- 'numba.tests.test_dictobject.TestDictObject.test_dict_values_len'
+- 'numba.tests.test_dictobject.TestDictObject.test_issue6570_alignment_padding'
+

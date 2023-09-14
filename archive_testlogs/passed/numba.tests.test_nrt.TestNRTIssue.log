@@ -1,0 +1,12 @@
+Parallel: 5. Serial: 0
+test_incref_after_cast (numba.tests.test_nrt.TestNRTIssue.test_incref_after_cast) ... ok
+test_issue_with_refct_op_pruning (numba.tests.test_nrt.TestNRTIssue.test_issue_with_refct_op_pruning)
+GitHub Issue #1244 https://github.com/numba/numba/issues/1244 ... ok
+test_no_nrt_on_njit_decoration (numba.tests.test_nrt.TestNRTIssue.test_no_nrt_on_njit_decoration) ... ok
+test_refct_pruning_issue_1511 (numba.tests.test_nrt.TestNRTIssue.test_refct_pruning_issue_1511) ... ok
+test_refct_pruning_issue_1526 (numba.tests.test_nrt.TestNRTIssue.test_refct_pruning_issue_1526) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 4.136s
+
+OK

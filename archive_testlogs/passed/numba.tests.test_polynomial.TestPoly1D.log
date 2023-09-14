@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_roots (numba.tests.test_polynomial.TestPoly1D.test_roots) ... skipped 'LAPACK needs SciPy 1.0+'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.312s
+
+OK (skipped=1)

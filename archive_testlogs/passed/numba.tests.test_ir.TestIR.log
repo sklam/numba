@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_IRScope (numba.tests.test_ir.TestIR.test_IRScope) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.179s
+
+OK

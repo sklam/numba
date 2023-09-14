@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test (numba.tests.gdb.test_pretty_print.Test.test) ... skipped 'gdb with python 3 support needed'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.110s
+
+OK (skipped=1)

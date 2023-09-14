@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_missing_args (numba.tests.test_ufuncs.TestUFuncBadArgs.test_missing_args) ... ok
+test_no_scalar_result_by_reference (numba.tests.test_ufuncs.TestUFuncBadArgs.test_no_scalar_result_by_reference) ... ok
+test_too_many_args (numba.tests.test_ufuncs.TestUFuncBadArgs.test_too_many_args) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.773s
+
+OK

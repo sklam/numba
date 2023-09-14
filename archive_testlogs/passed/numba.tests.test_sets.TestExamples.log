@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_type_coercion_from_update (numba.tests.test_sets.TestExamples.test_type_coercion_from_update) ... ok
+test_unique (numba.tests.test_sets.TestExamples.test_unique) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.971s
+
+OK

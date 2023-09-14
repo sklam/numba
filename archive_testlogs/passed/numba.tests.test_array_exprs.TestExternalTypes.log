@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_external_type (numba.tests.test_array_exprs.TestExternalTypes.test_external_type) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.429s
+
+OK

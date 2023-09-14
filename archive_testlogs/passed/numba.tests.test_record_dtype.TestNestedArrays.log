@@ -1,0 +1,32 @@
+Parallel: 26. Serial: 0
+test_assign_array_to_nested (numba.tests.test_record_dtype.TestNestedArrays.test_assign_array_to_nested) ... ok
+test_assign_array_to_nested_2d (numba.tests.test_record_dtype.TestNestedArrays.test_assign_array_to_nested_2d) ... ok
+test_broadcast_slice (numba.tests.test_record_dtype.TestNestedArrays.test_broadcast_slice) ... ok
+test_corner_slice (numba.tests.test_record_dtype.TestNestedArrays.test_corner_slice) ... ok
+test_getitem_idx (numba.tests.test_record_dtype.TestNestedArrays.test_getitem_idx) ... ok
+test_getitem_idx_2darray (numba.tests.test_record_dtype.TestNestedArrays.test_getitem_idx_2darray) ... ok
+test_issue_1469_1 (numba.tests.test_record_dtype.TestNestedArrays.test_issue_1469_1) ... ok
+test_issue_1469_2 (numba.tests.test_record_dtype.TestNestedArrays.test_issue_1469_2) ... ok
+test_issue_1469_3 (numba.tests.test_record_dtype.TestNestedArrays.test_issue_1469_3) ... ok
+test_issue_3158_1 (numba.tests.test_record_dtype.TestNestedArrays.test_issue_3158_1) ... ok
+test_issue_3158_2 (numba.tests.test_record_dtype.TestNestedArrays.test_issue_3158_2) ... ok
+test_issue_7693 (numba.tests.test_record_dtype.TestNestedArrays.test_issue_7693) ... ok
+test_record_read_2d_array (numba.tests.test_record_dtype.TestNestedArrays.test_record_read_2d_array) ... ok
+test_record_read_array (numba.tests.test_record_dtype.TestNestedArrays.test_record_read_array) ... ok
+test_record_read_arrays (numba.tests.test_record_dtype.TestNestedArrays.test_record_read_arrays) ... ok
+test_record_write_2d_array (numba.tests.test_record_dtype.TestNestedArrays.test_record_write_2d_array) ... ok
+test_record_write_array (numba.tests.test_record_dtype.TestNestedArrays.test_record_write_array) ... ok
+test_return_array (numba.tests.test_record_dtype.TestNestedArrays.test_return_array) ... ok
+test_return_getattr_getitem_fieldname (numba.tests.test_record_dtype.TestNestedArrays.test_return_getattr_getitem_fieldname) ... ok
+test_set_array (numba.tests.test_record_dtype.TestNestedArrays.test_set_array) ... ok
+test_set_arrays (numba.tests.test_record_dtype.TestNestedArrays.test_set_arrays) ... ok
+test_set_record (numba.tests.test_record_dtype.TestNestedArrays.test_set_record) ... ok
+test_setitem (numba.tests.test_record_dtype.TestNestedArrays.test_setitem) ... ok
+test_setitem_whole_array_error (numba.tests.test_record_dtype.TestNestedArrays.test_setitem_whole_array_error) ... ok
+test_shape (numba.tests.test_record_dtype.TestNestedArrays.test_shape) ... ok
+test_slice_2d_array (numba.tests.test_record_dtype.TestNestedArrays.test_slice_2d_array) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 12.168s
+
+OK

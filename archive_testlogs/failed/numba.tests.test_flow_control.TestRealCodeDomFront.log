@@ -1,0 +1,101 @@
+Parallel: 5. Serial: 0
+test_if_else (numba.tests.test_flow_control.TestRealCodeDomFront.test_if_else) ... FAIL
+test_if_else_nested (numba.tests.test_flow_control.TestRealCodeDomFront.test_if_else_nested) ... FAIL
+test_infinite_loop (numba.tests.test_flow_control.TestRealCodeDomFront.test_infinite_loop) ... FAIL
+test_loop (numba.tests.test_flow_control.TestRealCodeDomFront.test_loop) ... FAIL
+test_loop_nested_and_break (numba.tests.test_flow_control.TestRealCodeDomFront.test_loop_nested_and_break) ... FAIL
+
+======================================================================
+FAIL: test_if_else (numba.tests.test_flow_control.TestRealCodeDomFront.test_if_else)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1221, in test_if_else
+    cfa, blkpts = self.get_cfa_and_namedblocks(foo)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1092, in get_cfa_and_namedblocks
+    namedblocks = self._scan_namedblocks(bc, cfa)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1119, in _scan_namedblocks
+    gv = bc.co_names[_fix_LOAD_GLOBAL_arg(inst.arg)]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_if_else_nested (numba.tests.test_flow_control.TestRealCodeDomFront.test_if_else_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1261, in test_if_else_nested
+    cfa, blkpts = self.get_cfa_and_namedblocks(foo)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1092, in get_cfa_and_namedblocks
+    namedblocks = self._scan_namedblocks(bc, cfa)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1119, in _scan_namedblocks
+    gv = bc.co_names[_fix_LOAD_GLOBAL_arg(inst.arg)]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_infinite_loop (numba.tests.test_flow_control.TestRealCodeDomFront.test_infinite_loop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1289, in test_infinite_loop
+    cfa, blkpts = self.get_cfa_and_namedblocks(foo)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1092, in get_cfa_and_namedblocks
+    namedblocks = self._scan_namedblocks(bc, cfa)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1119, in _scan_namedblocks
+    gv = bc.co_names[_fix_LOAD_GLOBAL_arg(inst.arg)]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_loop (numba.tests.test_flow_control.TestRealCodeDomFront.test_loop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1144, in test_loop
+    cfa, blkpts = self.get_cfa_and_namedblocks(foo)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1092, in get_cfa_and_namedblocks
+    namedblocks = self._scan_namedblocks(bc, cfa)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1119, in _scan_namedblocks
+    gv = bc.co_names[_fix_LOAD_GLOBAL_arg(inst.arg)]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_loop_nested_and_break (numba.tests.test_flow_control.TestRealCodeDomFront.test_loop_nested_and_break)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1175, in test_loop_nested_and_break
+    cfa, blkpts = self.get_cfa_and_namedblocks(foo)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1092, in get_cfa_and_namedblocks
+    namedblocks = self._scan_namedblocks(bc, cfa)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_flow_control.py", line 1119, in _scan_namedblocks
+    gv = bc.co_names[_fix_LOAD_GLOBAL_arg(inst.arg)]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/bytecode.py", line 345, in _fix_LOAD_GLOBAL_arg
+    assert PYVERSION == (3, 11) # reminder to check newer versions
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.153s
+
+FAILED (failures=5)

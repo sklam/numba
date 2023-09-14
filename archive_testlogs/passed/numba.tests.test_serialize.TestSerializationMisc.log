@@ -1,0 +1,13 @@
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/serialize_usecases.py:12: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit((types.int32, types.int32))
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/serialize_usecases.py:16: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/decorators.py:262: NumbaDeprecationWarning: numba.generated_jit is deprecated. Please see the documentation at: https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-generated-jit for more information and advice on a suitable replacement.
+  warnings.warn(msg, NumbaDeprecationWarning)
+Parallel: 1. Serial: 0
+test_numba_unpickle (numba.tests.test_serialize.TestSerializationMisc.test_numba_unpickle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.084s
+
+OK

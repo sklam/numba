@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_complex_struct (numba.tests.test_record_dtype.TestRecordDtypeMakeCStruct.test_complex_struct) ... ok
+test_nestedarray_issue_8132 (numba.tests.test_record_dtype.TestRecordDtypeMakeCStruct.test_nestedarray_issue_8132) ... ok
+test_three_scalars (numba.tests.test_record_dtype.TestRecordDtypeMakeCStruct.test_three_scalars) ... ok
+test_two_scalars (numba.tests.test_record_dtype.TestRecordDtypeMakeCStruct.test_two_scalars) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.177s
+
+OK

@@ -1,0 +1,59 @@
+Parallel: 45. Serial: 0
+test_all (numba.tests.npyufunc.test_ufuncbuilding.TestNEP13WithoutSignature.test_all) ... ok
+test_basic_gufunc (numba.tests.npyufunc.test_ufuncbuilding.TestGUfuncBuilding.test_basic_gufunc) ... ok
+test_basic_gufunc (numba.tests.npyufunc.test_ufuncbuilding.TestGUfuncBuildingJitDisabled.test_basic_gufunc) ... ok
+test_basic_ufunc (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuilding.test_basic_ufunc) ... ok
+test_basic_ufunc (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuildingJitDisabled.test_basic_ufunc) ... ok
+test_gufunc_struct (numba.tests.npyufunc.test_ufuncbuilding.TestGUfuncBuilding.test_gufunc_struct) ... ok
+test_gufunc_struct (numba.tests.npyufunc.test_ufuncbuilding.TestGUfuncBuildingJitDisabled.test_gufunc_struct) ... ok
+test_gufunc_struct_forceobj (numba.tests.npyufunc.test_ufuncbuilding.TestGUfuncBuilding.test_gufunc_struct_forceobj) ... ok
+test_gufunc_struct_forceobj (numba.tests.npyufunc.test_ufuncbuilding.TestGUfuncBuildingJitDisabled.test_gufunc_struct_forceobj) ... ok
+test_guvectorize (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize) ... ok
+test_guvectorize (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize) ... ok
+test_guvectorize_error_in_objectmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize_error_in_objectmode) ... ok
+test_guvectorize_error_in_objectmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize_error_in_objectmode) ... ok
+test_guvectorize_identity (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize_identity) ... ok
+test_guvectorize_identity (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize_identity) ... ok
+test_guvectorize_invalid_layout (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize_invalid_layout) ... ok
+test_guvectorize_invalid_layout (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize_invalid_layout) ... ok
+test_guvectorize_no_output (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize_no_output) ... ok
+test_guvectorize_no_output (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize_no_output) ... ok
+test_guvectorize_objectmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize_objectmode) ... ok
+test_guvectorize_objectmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize_objectmode) ... ok
+test_guvectorize_scalar_objectmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_guvectorize_scalar_objectmode)
+Test passing of scalars to object mode gufuncs. ... ok
+test_guvectorize_scalar_objectmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_guvectorize_scalar_objectmode)
+Test passing of scalars to object mode gufuncs. ... ok
+test_nested_call (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuilding.test_nested_call)
+Check nested call to an implicitly-typed ufunc. ... ok
+test_nested_call (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuildingJitDisabled.test_nested_call)
+Check nested call to an implicitly-typed ufunc. ... ok
+test_nested_call_explicit (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuilding.test_nested_call_explicit)
+Check nested call to an explicitly-typed ufunc. ... ok
+test_nested_call_explicit (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuildingJitDisabled.test_nested_call_explicit)
+Check nested call to an explicitly-typed ufunc. ... ok
+test_ufunc_forceobj (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuilding.test_ufunc_forceobj) ... ok
+test_ufunc_forceobj (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuildingJitDisabled.test_ufunc_forceobj) ... ok
+test_ufunc_struct (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuilding.test_ufunc_struct) ... ok
+test_ufunc_struct (numba.tests.npyufunc.test_ufuncbuilding.TestUfuncBuildingJitDisabled.test_ufunc_struct) ... ok
+test_vectorize (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize) ... ok
+test_vectorize (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize) ... ok
+test_vectorize_bool_return (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize_bool_return) ... ok
+test_vectorize_bool_return (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize_bool_return) ... ok
+test_vectorize_identity (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize_identity) ... ok
+test_vectorize_identity (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize_identity) ... ok
+test_vectorize_no_args (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize_no_args) ... ok
+test_vectorize_no_args (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize_no_args) ... ok
+test_vectorize_objmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize_objmode) ... ok
+test_vectorize_objmode (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize_objmode) ... ok
+test_vectorize_only_kws (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize_only_kws) ... ok
+test_vectorize_only_kws (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize_only_kws) ... ok
+test_vectorize_output_kwarg (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecor.test_vectorize_output_kwarg)
+Passing the output array as a keyword argument (issue #1867). ... ok
+test_vectorize_output_kwarg (numba.tests.npyufunc.test_ufuncbuilding.TestVectorizeDecorJitDisabled.test_vectorize_output_kwarg)
+Passing the output array as a keyword argument (issue #1867). ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 13.200s
+
+OK

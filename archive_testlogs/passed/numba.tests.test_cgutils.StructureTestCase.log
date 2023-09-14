@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_compile_function (numba.tests.test_cgutils.StructureTestCase.test_compile_function) ... ok
+test_float_fields (numba.tests.test_cgutils.StructureTestCase.test_float_fields) ... ok
+test_int_fields (numba.tests.test_cgutils.StructureTestCase.test_int_fields) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.198s
+
+OK

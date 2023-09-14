@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_bad_shape (numba.tests.test_dyn_array.TestNdDiag.test_bad_shape) ... ok
+test_diag_extract (numba.tests.test_dyn_array.TestNdDiag.test_diag_extract) ... ok
+test_diag_extract_kwarg (numba.tests.test_dyn_array.TestNdDiag.test_diag_extract_kwarg) ... ok
+test_diag_vect_create (numba.tests.test_dyn_array.TestNdDiag.test_diag_vect_create) ... ok
+test_diag_vect_create_kwarg (numba.tests.test_dyn_array.TestNdDiag.test_diag_vect_create_kwarg) ... ok
+test_error_handling (numba.tests.test_dyn_array.TestNdDiag.test_error_handling) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.530s
+
+OK

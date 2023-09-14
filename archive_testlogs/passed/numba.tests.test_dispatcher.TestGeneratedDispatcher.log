@@ -1,0 +1,10 @@
+Parallel: 3. Serial: 0
+test_generated (numba.tests.test_dispatcher.TestGeneratedDispatcher.test_generated) ... ok
+test_generated_dtype (numba.tests.test_dispatcher.TestGeneratedDispatcher.test_generated_dtype) ... ok
+test_signature_errors (numba.tests.test_dispatcher.TestGeneratedDispatcher.test_signature_errors)
+Check error reporting when implementation signature doesn't match ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.059s
+
+OK

@@ -1,0 +1,9 @@
+Parallel: 2. Serial: 0
+test_assertRefCount (numba.tests.test_support.TestMisc.test_assertRefCount) ... ok
+test_forbid_codegen (numba.tests.test_support.TestMisc.test_forbid_codegen)
+Test that forbid_codegen() prevents code generation using the @jit ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.215s
+
+OK

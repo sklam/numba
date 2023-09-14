@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_return (numba.tests.test_tuples.TestNamedTupleNRT.test_return) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.046s
+
+OK

@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_hash_unhashable (numba.tests.test_hashing.TestUnhashable.test_hash_unhashable) ... ok
+test_no_generic_hash (numba.tests.test_hashing.TestUnhashable.test_no_generic_hash) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.233s
+
+OK

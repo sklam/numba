@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_issue_455 (numba.tests.test_dyn_func.TestDynFunc.test_issue_455) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.512s
+
+OK

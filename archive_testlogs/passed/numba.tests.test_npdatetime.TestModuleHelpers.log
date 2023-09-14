@@ -1,0 +1,11 @@
+Parallel: 5. Serial: 0
+test_can_cast_timedelta (numba.tests.test_npdatetime.TestModuleHelpers.test_can_cast_timedelta) ... ok
+test_combine_datetime_timedelta_units (numba.tests.test_npdatetime.TestModuleHelpers.test_combine_datetime_timedelta_units) ... ok
+test_datetime_timedelta_scaling (numba.tests.test_npdatetime.TestModuleHelpers.test_datetime_timedelta_scaling) ... ok
+test_same_kind (numba.tests.test_npdatetime.TestModuleHelpers.test_same_kind) ... ok
+test_timedelta_conversion (numba.tests.test_npdatetime.TestModuleHelpers.test_timedelta_conversion) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.114s
+
+OK

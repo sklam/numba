@@ -1,0 +1,9 @@
+Parallel: 3. Serial: 0
+test_overload_attribute_no_nrt (numba.tests.test_extending.TestJitOptionsNoNRT.test_overload_attribute_no_nrt) ... ok
+test_overload_method_no_nrt (numba.tests.test_extending.TestJitOptionsNoNRT.test_overload_method_no_nrt) ... ok
+test_overload_no_nrt (numba.tests.test_extending.TestJitOptionsNoNRT.test_overload_no_nrt) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 7.699s
+
+OK

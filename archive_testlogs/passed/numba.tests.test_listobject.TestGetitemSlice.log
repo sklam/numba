@@ -1,0 +1,25 @@
+Parallel: 19. Serial: 0
+test_list_getitem_empty_slice_defaults (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_empty_slice_defaults) ... ok
+test_list_getitem_multiple_slice_defaults (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_defaults) ... ok
+test_list_getitem_multiple_slice_neg_start (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_neg_start) ... ok
+test_list_getitem_multiple_slice_neg_start_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_neg_start_neg_step) ... ok
+test_list_getitem_multiple_slice_neg_start_neg_stop_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_neg_start_neg_stop_neg_step) ... ok
+test_list_getitem_multiple_slice_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_neg_step) ... ok
+test_list_getitem_multiple_slice_neg_stop (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_neg_stop) ... ok
+test_list_getitem_multiple_slice_neg_stop_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_neg_stop_neg_step) ... ok
+test_list_getitem_multiple_slice_pos_start (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_start) ... ok
+test_list_getitem_multiple_slice_pos_start_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_start_neg_step) ... ok
+test_list_getitem_multiple_slice_pos_start_pos_stop (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_start_pos_stop) ... ok
+test_list_getitem_multiple_slice_pos_start_pos_stop_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_start_pos_stop_neg_step) ... ok
+test_list_getitem_multiple_slice_pos_start_pos_stop_pos_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_start_pos_stop_pos_step) ... ok
+test_list_getitem_multiple_slice_pos_stop (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_stop) ... ok
+test_list_getitem_multiple_slice_pos_stop_neg_step (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_pos_stop_neg_step) ... ok
+test_list_getitem_multiple_slice_start_out_of_range (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_start_out_of_range) ... ok
+test_list_getitem_multiple_slice_stop_zero (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_stop_zero) ... ok
+test_list_getitem_multiple_slice_zero_step_index_error (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_multiple_slice_zero_step_index_error) ... ok
+test_list_getitem_singleton_slice_defaults (numba.tests.test_listobject.TestGetitemSlice.test_list_getitem_singleton_slice_defaults) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 8.302s
+
+OK

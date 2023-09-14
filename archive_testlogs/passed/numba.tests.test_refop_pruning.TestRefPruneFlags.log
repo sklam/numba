@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_some_flags (numba.tests.test_refop_pruning.TestRefPruneFlags.test_some_flags) ... ok
+test_the_all_flag (numba.tests.test_refop_pruning.TestRefPruneFlags.test_the_all_flag) ... ok
+test_valid_flag (numba.tests.test_refop_pruning.TestRefPruneFlags.test_valid_flag) ... ok
+test_warn_invalid_flags (numba.tests.test_refop_pruning.TestRefPruneFlags.test_warn_invalid_flags) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.115s
+
+OK

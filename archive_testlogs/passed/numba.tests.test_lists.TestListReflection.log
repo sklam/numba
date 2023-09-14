@@ -1,0 +1,14 @@
+Parallel: 5. Serial: 0
+test_reflect_clean (numba.tests.test_lists.TestListReflection.test_reflect_clean)
+When the list wasn't mutated, no reflection should take place. ... ok
+test_reflect_conditional (numba.tests.test_lists.TestListReflection.test_reflect_conditional) ... ok
+test_reflect_exception (numba.tests.test_lists.TestListReflection.test_reflect_exception)
+When the function exits with an exception, lists should still be ... ok
+test_reflect_same_list (numba.tests.test_lists.TestListReflection.test_reflect_same_list)
+When the same list object is reflected twice, behaviour should ... ok
+test_reflect_simple (numba.tests.test_lists.TestListReflection.test_reflect_simple) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.154s
+
+OK

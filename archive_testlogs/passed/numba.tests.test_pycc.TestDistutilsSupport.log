@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_setup_py_distutils (numba.tests.test_pycc.TestDistutilsSupport.test_setup_py_distutils) ... ok
+test_setup_py_distutils_nested (numba.tests.test_pycc.TestDistutilsSupport.test_setup_py_distutils_nested) ... ok
+test_setup_py_setuptools (numba.tests.test_pycc.TestDistutilsSupport.test_setup_py_setuptools) ... ok
+test_setup_py_setuptools_nested (numba.tests.test_pycc.TestDistutilsSupport.test_setup_py_setuptools_nested) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 26.502s
+
+OK

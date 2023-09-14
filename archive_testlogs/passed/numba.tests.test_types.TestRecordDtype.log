@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_record_type_equiv (numba.tests.test_types.TestRecordDtype.test_record_type_equiv) ... ok
+test_user_specified (numba.tests.test_types.TestRecordDtype.test_user_specified) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.906s
+
+OK

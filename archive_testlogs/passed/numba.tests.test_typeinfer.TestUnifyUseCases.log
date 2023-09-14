@@ -1,0 +1,11 @@
+Parallel: 3. Serial: 0
+test_complex_unify_issue599 (numba.tests.test_typeinfer.TestUnifyUseCases.test_complex_unify_issue599) ... ok
+test_complex_unify_issue599_multihash (numba.tests.test_typeinfer.TestUnifyUseCases.test_complex_unify_issue599_multihash)
+Test issue #599 for multiple values of PYTHONHASHSEED. ... ok
+test_int_tuple_unify (numba.tests.test_typeinfer.TestUnifyUseCases.test_int_tuple_unify)
+Test issue #493 ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.974s
+
+OK

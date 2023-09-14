@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_basic_offload (numba.tests.test_target_extension.TestTargetOffload.test_basic_offload) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.704s
+
+OK

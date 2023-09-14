@@ -1,0 +1,10 @@
+Parallel: 4. Serial: 0
+test_entrypoint_extension_sequence (numba.tests.test_entrypoints.TestEntrypoints.test_entrypoint_extension_sequence) ... ok
+test_entrypoint_handles_type_extensions (numba.tests.test_entrypoints.TestEntrypoints.test_entrypoint_handles_type_extensions) ... skipped 'needs token'
+test_entrypoint_tolerance (numba.tests.test_entrypoints.TestEntrypoints.test_entrypoint_tolerance) ... ok
+test_init_entrypoint (numba.tests.test_entrypoints.TestEntrypoints.test_init_entrypoint) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.350s
+
+OK (skipped=1)

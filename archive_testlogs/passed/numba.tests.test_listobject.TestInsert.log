@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_list_insert_empty (numba.tests.test_listobject.TestInsert.test_list_insert_empty) ... ok
+test_list_insert_multiple (numba.tests.test_listobject.TestInsert.test_list_insert_multiple) ... ok
+test_list_insert_multiple_after (numba.tests.test_listobject.TestInsert.test_list_insert_multiple_after) ... ok
+test_list_insert_multiple_before (numba.tests.test_listobject.TestInsert.test_list_insert_multiple_before) ... ok
+test_list_insert_singleton (numba.tests.test_listobject.TestInsert.test_list_insert_singleton) ... ok
+test_list_insert_typing_error (numba.tests.test_listobject.TestInsert.test_list_insert_typing_error) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.393s
+
+OK

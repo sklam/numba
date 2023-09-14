@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_unsupported_make_function_return_inner_func (numba.tests.test_errorhandling.TestErrorHandlingBeforeLowering.test_unsupported_make_function_return_inner_func) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.104s
+
+OK

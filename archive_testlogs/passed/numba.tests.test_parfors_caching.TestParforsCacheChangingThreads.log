@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_caching (numba.tests.test_parfors_caching.TestParforsCacheChangingThreads.test_caching) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.357s
+
+OK

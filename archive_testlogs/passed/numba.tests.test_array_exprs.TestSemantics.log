@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_division_by_zero (numba.tests.test_array_exprs.TestSemantics.test_division_by_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.961s
+
+OK

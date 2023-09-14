@@ -1,0 +1,110 @@
+Parallel: 22. Serial: 0
+test_basic_inline_always (numba.tests.test_ir_inlining.TestOverloadInlining.test_basic_inline_always) ... ok
+test_basic_inline_combos (numba.tests.test_ir_inlining.TestOverloadInlining.test_basic_inline_combos) ... ok
+test_basic_inline_never (numba.tests.test_ir_inlining.TestOverloadInlining.test_basic_inline_never) ... ok
+test_freevar_bindings (numba.tests.test_ir_inlining.TestOverloadInlining.test_freevar_bindings) ... ok
+test_global_overload_binding (numba.tests.test_ir_inlining.TestOverloadInlining.test_global_overload_binding) ... ok
+test_inline_always_kw_no_default (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_always_kw_no_default) ... ok
+test_inline_always_operators_getitem (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_always_operators_getitem) ... ok
+test_inline_always_ssa (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_always_ssa) ... ok
+test_inline_always_ssa_scope_validity (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_always_ssa_scope_validity) ... ok
+test_inline_from_another_module (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_from_another_module) ... ok
+test_inline_from_another_module_as_freevar (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_from_another_module_as_freevar) ... ok
+test_inline_from_another_module_w_2_getattr (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_from_another_module_w_2_getattr) ... ok
+test_inline_from_another_module_w_getattr (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_from_another_module_w_getattr) ... ok
+test_inline_never_operators_getitem (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_never_operators_getitem) ... ok
+test_inline_operators_binop (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_operators_binop) ... ok
+test_inline_operators_inplace_binop (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_operators_inplace_binop) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+test_inline_operators_unary (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_operators_unary) ... ERROR
+test_inline_stararg_error (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_stararg_error) ... ok
+test_inline_w_freevar_from_another_module (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_w_freevar_from_another_module) ... ok
+test_inlining_models (numba.tests.test_ir_inlining.TestOverloadInlining.test_inlining_models) ... ok
+test_multiple_overloads_with_different_inline_characteristics (numba.tests.test_ir_inlining.TestOverloadInlining.test_multiple_overloads_with_different_inline_characteristics) ... ok
+test_overload_inline_always_with_literally_in_inlinee (numba.tests.test_ir_inlining.TestOverloadInlining.test_overload_inline_always_with_literally_in_inlinee) ... ok
+
+======================================================================
+ERROR: test_inline_operators_unary (numba.tests.test_ir_inlining.TestOverloadInlining.test_inline_operators_unary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ir_inlining.py", line 580, in test_inline_operators_unary
+    self.check(impl_noinline, Dummy(), inline_expect={'pos': False})
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ir_inlining.py", line 87, in check
+    self.assertEqual(test_impl(*args), j_func(*args))
+                                       ^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 487, in _compile_for_args
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 341, in dispatch
+    fn(state, inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+NotImplementedError: Failed in ir_preserving_custom_pipe mode pipeline (step: analyzing bytecode)
+op_CALL_INTRINSIC_1(5)
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+
+----------------------------------------------------------------------
+Ran 22 tests in 10.792s
+
+FAILED (errors=1)

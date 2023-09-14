@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_dump_refcount (numba.tests.test_unsafe_intrinsics.TestRefCount.test_dump_refcount) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.786s
+
+OK

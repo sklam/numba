@@ -1,0 +1,11 @@
+Parallel: 3. Serial: 0
+test_cache (numba.tests.test_compile_cache.TestCompileCache.test_cache) ... ok
+test_closures (numba.tests.test_compile_cache.TestCompileCache.test_closures)
+Caching must not mix up closures reusing the same code object. ... ok
+test_error_model (numba.tests.test_compile_cache.TestCompileCache.test_error_model)
+Caching must not mix up different error models. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.858s
+
+OK

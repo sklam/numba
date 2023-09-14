@@ -1,0 +1,8 @@
+Parallel: 1. Serial: 0
+test_lock (numba.tests.test_ufuncs.TestUFuncCompilationThreadSafety.test_lock)
+Test that (lazy) compiling from several threads at once doesn't ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.592s
+
+OK

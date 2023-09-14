@@ -1,0 +1,101 @@
+Parallel: 2. Serial: 0
+test_annotate_1 (numba.tests.test_looplifting.TestLoopLiftingAnnotate.test_annotate_1)
+Verify that annotation works as expected with one lifted loop ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:306: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  cfoo = jit(foo)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:296: NumbaWarning: 
+Compilation is falling back to object mode WITH looplifting enabled because Function "foo" failed type inference due to: Untyped global name 'bar': Cannot determine Numba type of <class 'function'>
+
+File "numba/tests/test_looplifting.py", line 297:
+        def foo(x):
+            bar()  # force obj
+            ^
+
+  def foo(x):
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:296: NumbaWarning: 
+Compilation is falling back to object mode WITHOUT looplifting enabled because Function "foo" failed type inference due to: Untyped global name 'bar': Cannot determine Numba type of <class 'function'>
+
+File "numba/tests/test_looplifting.py", line 297:
+        def foo(x):
+            bar()  # force obj
+            ^
+
+  def foo(x):
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py:151: NumbaWarning: Function "foo" was compiled in object mode without forceobj=True, but has lifted loops.
+
+File "numba/tests/test_looplifting.py", line 296:
+
+        def foo(x):
+        ^
+
+  warnings.warn(errors.NumbaWarning(warn_msg,
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py:161: NumbaDeprecationWarning: 
+Fall-back from the nopython compilation path to the object mode compilation path has been detected. This is deprecated behaviour that will be removed in Numba 0.59.0.
+
+For more information visit https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit
+
+File "numba/tests/test_looplifting.py", line 296:
+
+        def foo(x):
+        ^
+
+  warnings.warn(errors.NumbaDeprecationWarning(msg,
+test_annotate_2 (numba.tests.test_looplifting.TestLoopLiftingAnnotate.test_annotate_2)
+Verify that annotation works as expected with two lifted loops ... FAIL
+
+======================================================================
+FAIL: test_annotate_2 (numba.tests.test_looplifting.TestLoopLiftingAnnotate.test_annotate_2)
+Verify that annotation works as expected with two lifted loops
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py", line 322, in test_annotate_2
+    self.assertIn("Loop at line {line}".format(line=line2), annotation)
+AssertionError: 'Loop at line 302' not found in "foo (Array(int64, 1, 'C', False, aligned=True),)\n--------------------------------------------------------------------------------\n# File: /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py\n# --- LINE 296 --- \n# label 0\n#   x = arg(0, name=x)  :: <missing>\n\ndef foo(x):\n\n    # --- LINE 297 --- \n    #   $8load_deref.1 = freevar(bar: <function TestLoopLiftingAnnotate.test_annotate_2.<locals>.bar at 0x7f783b5bfe20>)  :: <missing>\n    #   $10call.2 = call $8load_deref.1(func=$8load_deref.1, args=[], kws=(), vararg=None, varkwarg=None, target=None)  :: pyobject\n    #   del $8load_deref.1\n    #   del $10call.2\n\n    bar()  # force obj\n\n    # --- LINE 298 --- \n\n    # first lifted loop\n\n    # --- LINE 299 --- \n    #   jump 62\n    # label 62\n    #   $41 = const(LiftedLoop, LiftedLoop(<function TestLoopLiftingAnnotate.test_annotate_2.<locals>.foo at 0x7f783c0065c0>))  :: XXX Lifted Loop XXX\n    #   $42 = call $41(x, func=$41, args=[Var(x, test_looplifting.py:296)], kws=(), vararg=None, varkwarg=None, target=None)  :: XXX Lifted Loop XXX\n    #   del $42\n    #   del $41\n    #   jump 140\n    # label 140\n    #   $38 = const(LiftedLoop, LiftedLoop(<function TestLoopLiftingAnnotate.test_annotate_2.<locals>.foo at 0x7f783c0065c0>))  :: XXX Lifted Loop XXX\n    #   $39 = call $38(x, func=$38, args=[Var(x, test_looplifting.py:296)], kws=(), vararg=None, varkwarg=None, target=None)  :: XXX Lifted Loop XXX\n    #   del $39\n    #   del $38\n    #   jump 175\n\n    for i in range(x.size):\n\n        # --- LINE 300 --- \n\n        x[i] += 1\n\n    # --- LINE 301 --- \n\n    # second lifted loop\n\n    # --- LINE 302 --- \n    # label 175\n    #   jump 176\n    # label 176\n\n    for j in range(x.size):\n\n        # --- LINE 303 --- \n\n        x[j] *= 2\n\n    # --- LINE 304 --- \n    #   $178return_value.3 = cast(value=x)  :: <missing>\n    #   del x\n    #   return $178return_value.3\n\n    return x\n\n# The function contains lifted loops\n# Loop at line 299\n# Has 1 overloads\n# File: /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py\n# --- LINE 296 --- \n\ndef foo(x):\n\n    # --- LINE 297 --- \n\n    bar()  # force obj\n\n    # --- LINE 298 --- \n\n    # first lifted loop\n\n    # --- LINE 299 --- \n    # label 139\n    #   x = arg(0, name=x)  :: array(int64, 1d, C)\n    #   jump 140\n    # label 140\n    # label 175\n    #   del x\n    #   del $phi144.1\n    #   del $phi140.0\n    #   del $140for_iter.3\n    #   $37 = build_tuple(items=[])  :: Tuple()\n    #   return $37\n\n    for i in range(x.size):\n\n        # --- LINE 300 --- \n\n        x[i] += 1\n\n    # --- LINE 301 --- \n\n    # second lifted loop\n\n    # --- LINE 302 --- \n    #   $98load_global.2 = global(range: <class 'range'>)  :: Function(<class 'range'>)\n    #   $110load_attr.5 = getattr(value=x, attr=size)  :: int64\n    #   $130call.6 = call $98load_global.2($110load_attr.5, func=$98load_global.2, args=[Var($110load_attr.5, test_looplifting.py:302)], kws=(), vararg=None, varkwarg=None, target=None)  :: (int64,) -> range_state_int64\n    #   del $98load_global.2\n    #   del $110load_attr.5\n    #   $138get_iter.7 = getiter(value=$130call.6)  :: range_iter_int64\n    #   del $130call.6\n    #   $phi140.0 = $138get_iter.7  :: range_iter_int64\n    #   del $138get_iter.7\n    #   jump 144\n    # label 144\n    #   $140for_iter.1 = iternext(value=$phi140.0)  :: pair<int64, bool>\n    #   $140for_iter.2 = pair_first(value=$140for_iter.1)  :: int64\n    #   $140for_iter.3 = pair_second(value=$140for_iter.1)  :: bool\n    #   del $140for_iter.1\n    #   $phi144.1 = $140for_iter.2  :: int64\n    #   del $140for_iter.2\n    #   branch $140for_iter.3, 174, 175\n    # label 174\n    #   del $140for_iter.3\n    #   j = $phi144.1  :: int64\n    #   del $phi144.1\n\n    for j in range(x.size):\n\n        # --- LINE 303 --- \n        #   $154binary_subscr.4 = getitem(value=x, index=j, fn=<built-in function getitem>)  :: int64\n        #   $const158.5 = const(int, 2)  :: Literal[int](2)\n        #   $binop_imul160.6 = inplace_binop(fn=<built-in function imul>, immutable_fn=<built-in function mul>, lhs=$154binary_subscr.4, rhs=$const158.5, static_lhs=Undefined, static_rhs=Undefined)  :: int64\n        #   del $const158.5\n        #   del $154binary_subscr.4\n        #   x[j] = $binop_imul160.6  :: (Array(int64, 1, 'C', False, aligned=True), int64, int64) -> none\n        #   del j\n        #   del $binop_imul160.6\n        #   jump 144\n\n        x[j] *= 2\n\n    # --- LINE 304 --- \n\n    return x\n\n\n# Loop at line 299\n# Has 1 overloads\n# File: /mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py\n# --- LINE 296 --- \n\ndef foo(x):\n\n    # --- LINE 297 --- \n\n    bar()  # force obj\n\n    # --- LINE 298 --- \n\n    # first lifted loop\n\n    # --- LINE 299 --- \n    # label 61\n    #   x = arg(0, name=x)  :: array(int64, 1d, C)\n    #   jump 62\n    # label 62\n    #   $20load_global.3 = global(range: <class 'range'>)  :: Function(<class 'range'>)\n    #   $32load_attr.6 = getattr(value=x, attr=size)  :: int64\n    #   $52call.7 = call $20load_global.3($32load_attr.6, func=$20load_global.3, args=[Var($32load_attr.6, test_looplifting.py:299)], kws=(), vararg=None, varkwarg=None, target=None)  :: (int64,) -> range_state_int64\n    #   del $32load_attr.6\n    #   del $20load_global.3\n    #   $60get_iter.8 = getiter(value=$52call.7)  :: range_iter_int64\n    #   del $52call.7\n    #   $phi62.0 = $60get_iter.8  :: range_iter_int64\n    #   del $60get_iter.8\n    #   jump 66\n    # label 66\n    #   $62for_iter.1 = iternext(value=$phi62.0)  :: pair<int64, bool>\n    #   $62for_iter.2 = pair_first(value=$62for_iter.1)  :: int64\n    #   $62for_iter.3 = pair_second(value=$62for_iter.1)  :: bool\n    #   del $62for_iter.1\n    #   $phi66.1 = $62for_iter.2  :: int64\n    #   del $62for_iter.2\n    #   branch $62for_iter.3, 96, 140\n    # label 96\n    #   del $62for_iter.3\n    #   i = $phi66.1  :: int64\n    #   del $phi66.1\n    # label 140\n    #   del x\n    #   del $phi66.1\n    #   del $phi62.0\n    #   del $62for_iter.3\n    #   $40 = build_tuple(items=[])  :: Tuple()\n    #   return $40\n\n    for i in range(x.size):\n\n        # --- LINE 300 --- \n        #   $76binary_subscr.4 = getitem(value=x, index=i, fn=<built-in function getitem>)  :: int64\n        #   $const80.5 = const(int, 1)  :: Literal[int](1)\n        #   $binop_iadd82.6 = inplace_binop(fn=<built-in function iadd>, immutable_fn=<built-in function add>, lhs=$76binary_subscr.4, rhs=$const80.5, static_lhs=Undefined, static_rhs=Undefined)  :: int64\n        #   del $const80.5\n        #   del $76binary_subscr.4\n        #   x[i] = $binop_iadd82.6  :: (Array(int64, 1, 'C', False, aligned=True), int64, int64) -> none\n        #   del i\n        #   del $binop_iadd82.6\n        #   jump 66\n\n        x[i] += 1\n\n    # --- LINE 301 --- \n\n    # second lifted loop\n\n    # --- LINE 302 --- \n\n    for j in range(x.size):\n\n        # --- LINE 303 --- \n\n        x[j] *= 2\n\n    # --- LINE 304 --- \n\n    return x\n\n\n\n================================================================================\n"
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:306: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  cfoo = jit(foo)
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:296: NumbaWarning: 
+Compilation is falling back to object mode WITH looplifting enabled because Function "foo" failed type inference due to: Untyped global name 'bar': Cannot determine Numba type of <class 'function'>
+
+File "numba/tests/test_looplifting.py", line 297:
+        def foo(x):
+            bar()  # force obj
+            ^
+
+  def foo(x):
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_looplifting.py:296: NumbaWarning: 
+Compilation is falling back to object mode WITHOUT looplifting enabled because Function "foo" failed type inference due to: Untyped global name 'bar': Cannot determine Numba type of <class 'function'>
+
+File "numba/tests/test_looplifting.py", line 297:
+        def foo(x):
+            bar()  # force obj
+            ^
+
+  def foo(x):
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py:151: NumbaWarning: Function "foo" was compiled in object mode without forceobj=True, but has lifted loops.
+
+File "numba/tests/test_looplifting.py", line 296:
+
+        def foo(x):
+        ^
+
+  warnings.warn(errors.NumbaWarning(warn_msg,
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/object_mode_passes.py:161: NumbaDeprecationWarning: 
+Fall-back from the nopython compilation path to the object mode compilation path has been detected. This is deprecated behaviour that will be removed in Numba 0.59.0.
+
+For more information visit https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit
+
+File "numba/tests/test_looplifting.py", line 296:
+
+        def foo(x):
+        ^
+
+  warnings.warn(errors.NumbaDeprecationWarning(msg,
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.715s
+
+FAILED (failures=1)

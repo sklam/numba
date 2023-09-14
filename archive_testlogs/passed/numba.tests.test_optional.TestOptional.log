@@ -1,0 +1,26 @@
+test_a_is_b_intp (numba.tests.test_optional.TestOptional.test_a_is_b_intp) ... ok
+test_a_is_not_b_intp (numba.tests.test_optional.TestOptional.test_a_is_not_b_intp) ... ok
+test_assign_to_optional (numba.tests.test_optional.TestOptional.test_assign_to_optional)
+Check that we can assign to a variable of optional type ... ok
+test_is_this_a_none (numba.tests.test_optional.TestOptional.test_is_this_a_none) ... ok
+test_is_this_a_none_objmode (numba.tests.test_optional.TestOptional.test_is_this_a_none_objmode) ... ok
+test_many_optional_none_returns (numba.tests.test_optional.TestOptional.test_many_optional_none_returns)
+Issue #4058 ... ok
+test_optional_array (numba.tests.test_optional.TestOptional.test_optional_array) ... ok
+test_optional_array_attribute (numba.tests.test_optional.TestOptional.test_optional_array_attribute)
+Check that we can access attribute of an optional ... ok
+test_optional_array_error (numba.tests.test_optional.TestOptional.test_optional_array_error) ... ok
+test_optional_float (numba.tests.test_optional.TestOptional.test_optional_float) ... ok
+test_optional_thru_omitted_arg (numba.tests.test_optional.TestOptional.test_optional_thru_omitted_arg)
+Issue 1868 ... ok
+test_optional_unpack (numba.tests.test_optional.TestOptional.test_optional_unpack)
+Issue 2171 ... ok
+test_return_bool_optional_or_none (numba.tests.test_optional.TestOptional.test_return_bool_optional_or_none) ... ok
+test_return_different_statement (numba.tests.test_optional.TestOptional.test_return_different_statement) ... ok
+test_return_double_or_none (numba.tests.test_optional.TestOptional.test_return_double_or_none) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.309s
+
+OK
+Parallel: 0. Serial: 15

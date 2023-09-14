@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_readonly_array (numba.tests.test_typingerror.TestCallError.test_readonly_array) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.605s
+
+OK

@@ -1,0 +1,7 @@
+Parallel: 1. Serial: 0
+test_printf (numba.tests.test_cgutils.TestCGContext.test_printf) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.675s
+
+OK

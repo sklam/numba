@@ -1,0 +1,38 @@
+Parallel: 3. Serial: 0
+test_block (numba.tests.test_ir.TestIRCompounds.test_block) ... ok
+test_functionir (numba.tests.test_ir.TestIRCompounds.test_functionir) ... ERROR
+test_varmap (numba.tests.test_ir.TestIRCompounds.test_varmap) ... ok
+
+======================================================================
+ERROR: test_functionir (numba.tests.test_ir.TestIRCompounds.test_functionir)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ir.py", line 398, in test_functionir
+    x_ir = run_frontend(x)
+           ^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_ir.py", line 351, in run_frontend
+    return compiler.run_frontend(x, emit_dels=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 334, in run_frontend
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 344, in dispatch
+    raise UnsupportedError(msg, loc=self.get_debug_loc(inst.lineno))
+numba.core.errors.UnsupportedError: Use of unsupported opcode (EXTENDED_ARG) found
+
+File "numba/tests/test_ir.py", line 367:
+            def foo(a, b, c=12, d=1j, e=None):
+                <source elided>
+                i = 1j / d
+                if np.abs(i) > 0:
+                ^
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.191s
+
+FAILED (errors=1)

@@ -1,0 +1,10 @@
+Parallel: 2. Serial: 0
+test_from_ctypes (numba.tests.test_ctypes.TestCTypesTypes.test_from_ctypes)
+Test converting a ctypes type to a Numba type. ... ok
+test_to_ctypes (numba.tests.test_ctypes.TestCTypesTypes.test_to_ctypes)
+Test converting a Numba type to a ctypes type. ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.204s
+
+OK

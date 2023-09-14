@@ -1,0 +1,20 @@
+Parallel: 14. Serial: 0
+test_assignments (numba.tests.test_dataflow.TestDataFlow.test_assignments) ... ok
+test_assignments2 (numba.tests.test_dataflow.TestDataFlow.test_assignments2) ... ok
+test_chained_compare (numba.tests.test_dataflow.TestDataFlow.test_chained_compare) ... ok
+test_chained_compare_npm (numba.tests.test_dataflow.TestDataFlow.test_chained_compare_npm) ... ok
+test_for_break (numba.tests.test_dataflow.TestDataFlow.test_for_break) ... ok
+test_for_break_npm (numba.tests.test_dataflow.TestDataFlow.test_for_break_npm) ... ok
+test_stack_effect_error (numba.tests.test_dataflow.TestDataFlow.test_stack_effect_error) ... ok
+test_stack_effect_error_npm (numba.tests.test_dataflow.TestDataFlow.test_stack_effect_error_npm) ... ok
+test_var_propagate1 (numba.tests.test_dataflow.TestDataFlow.test_var_propagate1) ... ok
+test_var_propagate2 (numba.tests.test_dataflow.TestDataFlow.test_var_propagate2) ... ok
+test_var_propagate3 (numba.tests.test_dataflow.TestDataFlow.test_var_propagate3) ... ok
+test_var_propagate4 (numba.tests.test_dataflow.TestDataFlow.test_var_propagate4) ... ok
+test_var_swapping (numba.tests.test_dataflow.TestDataFlow.test_var_swapping) ... ok
+test_var_swapping_npm (numba.tests.test_dataflow.TestDataFlow.test_var_swapping_npm) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 3.201s
+
+OK

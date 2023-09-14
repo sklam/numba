@@ -1,0 +1,15 @@
+Parallel: 9. Serial: 0
+test_like (numba.tests.test_dyn_array.TestNdFullLike.test_like) ... ok
+test_like_dtype (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype) ... ok
+test_like_dtype_instance (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype_instance) ... ok
+test_like_dtype_invalid_str (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype_invalid_str) ... ok
+test_like_dtype_kwarg (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype_kwarg) ... ok
+test_like_dtype_non_const_str_kwarg (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype_non_const_str_kwarg) ... ok
+test_like_dtype_str_kwarg (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype_str_kwarg) ... ok
+test_like_dtype_str_kwarg_alternative_spelling (numba.tests.test_dyn_array.TestNdFullLike.test_like_dtype_str_kwarg_alternative_spelling) ... ok
+test_like_structured (numba.tests.test_dyn_array.TestNdFullLike.test_like_structured) ... expected failure
+
+----------------------------------------------------------------------
+Ran 9 tests in 27.068s
+
+OK (expected failures=1)

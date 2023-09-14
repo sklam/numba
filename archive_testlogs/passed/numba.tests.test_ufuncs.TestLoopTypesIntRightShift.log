@@ -1,0 +1,17 @@
+Parallel: 11. Serial: 0
+test_right_shift_BB_B (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_BB_B) ... ok
+test_right_shift_HH_H (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_HH_H) ... ok
+test_right_shift_II_I (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_II_I) ... ok
+test_right_shift_LL_L (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_LL_L) ... ok
+test_right_shift_OO_O (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_OO_O) ... ok
+test_right_shift_QQ_Q (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_QQ_Q) ... ok
+test_right_shift_bb_b (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_bb_b) ... ok
+test_right_shift_hh_h (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_hh_h) ... ok
+test_right_shift_ii_i (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_ii_i) ... ok
+test_right_shift_ll_l (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_ll_l) ... ok
+test_right_shift_qq_q (numba.tests.test_ufuncs.TestLoopTypesIntRightShift.test_right_shift_qq_q) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 3.061s
+
+OK

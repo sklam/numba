@@ -1,0 +1,8 @@
+Parallel: 2. Serial: 0
+test_jit_nopython_forceobj (numba.tests.test_api.TestJitDecorator.test_jit_nopython_forceobj) ... ok
+test_njit_nopython_forceobj (numba.tests.test_api.TestJitDecorator.test_njit_nopython_forceobj) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.721s
+
+OK

@@ -1,0 +1,266 @@
+Parallel: 143. Serial: 0
+test_add_complex (numba.tests.test_operators.TestOperators.test_add_complex) ... ok
+test_add_complex_npm (numba.tests.test_operators.TestOperators.test_add_complex_npm) ... ok
+test_add_floats (numba.tests.test_operators.TestOperators.test_add_floats) ... ok
+test_add_floats_npm (numba.tests.test_operators.TestOperators.test_add_floats_npm) ... ok
+test_add_ints (numba.tests.test_operators.TestOperators.test_add_ints) ... ok
+test_add_ints_npm (numba.tests.test_operators.TestOperators.test_add_ints_npm) ... ok
+test_bitshift_ileft_ints (numba.tests.test_operators.TestOperators.test_bitshift_ileft_ints) ... ok
+test_bitshift_ileft_ints_npm (numba.tests.test_operators.TestOperators.test_bitshift_ileft_ints_npm) ... ok
+test_bitshift_iright_ints (numba.tests.test_operators.TestOperators.test_bitshift_iright_ints) ... ok
+test_bitshift_iright_ints_npm (numba.tests.test_operators.TestOperators.test_bitshift_iright_ints_npm) ... ok
+test_bitshift_left_ints (numba.tests.test_operators.TestOperators.test_bitshift_left_ints) ... ok
+test_bitshift_left_ints_npm (numba.tests.test_operators.TestOperators.test_bitshift_left_ints_npm) ... ok
+test_bitshift_right_ints (numba.tests.test_operators.TestOperators.test_bitshift_right_ints) ... ok
+test_bitshift_right_ints_npm (numba.tests.test_operators.TestOperators.test_bitshift_right_ints_npm) ... ok
+test_bitwise_and_bools (numba.tests.test_operators.TestOperators.test_bitwise_and_bools) ... ok
+test_bitwise_and_bools_npm (numba.tests.test_operators.TestOperators.test_bitwise_and_bools_npm) ... ok
+test_bitwise_and_ints (numba.tests.test_operators.TestOperators.test_bitwise_and_ints) ... ok
+test_bitwise_and_ints_npm (numba.tests.test_operators.TestOperators.test_bitwise_and_ints_npm) ... ok
+test_bitwise_float (numba.tests.test_operators.TestOperators.test_bitwise_float)
+Make sure that bitwise float operations are not allowed ... ok
+test_bitwise_iand_bools (numba.tests.test_operators.TestOperators.test_bitwise_iand_bools) ... ok
+test_bitwise_iand_bools_npm (numba.tests.test_operators.TestOperators.test_bitwise_iand_bools_npm) ... ok
+test_bitwise_iand_ints (numba.tests.test_operators.TestOperators.test_bitwise_iand_ints) ... ok
+test_bitwise_iand_ints_npm (numba.tests.test_operators.TestOperators.test_bitwise_iand_ints_npm) ... ok
+test_bitwise_ior_bools (numba.tests.test_operators.TestOperators.test_bitwise_ior_bools) ... ok
+test_bitwise_ior_bools_npm (numba.tests.test_operators.TestOperators.test_bitwise_ior_bools_npm) ... ok
+test_bitwise_ior_ints (numba.tests.test_operators.TestOperators.test_bitwise_ior_ints) ... ok
+test_bitwise_ior_ints_npm (numba.tests.test_operators.TestOperators.test_bitwise_ior_ints_npm) ... ok
+test_bitwise_ixor_bools (numba.tests.test_operators.TestOperators.test_bitwise_ixor_bools) ... ok
+test_bitwise_ixor_bools_npm (numba.tests.test_operators.TestOperators.test_bitwise_ixor_bools_npm) ... ok
+test_bitwise_ixor_ints (numba.tests.test_operators.TestOperators.test_bitwise_ixor_ints) ... ok
+test_bitwise_ixor_ints_npm (numba.tests.test_operators.TestOperators.test_bitwise_ixor_ints_npm) ... ok
+test_bitwise_not (numba.tests.test_operators.TestOperators.test_bitwise_not) ... ok
+test_bitwise_not_npm (numba.tests.test_operators.TestOperators.test_bitwise_not_npm) ... ok
+test_bitwise_or_bools (numba.tests.test_operators.TestOperators.test_bitwise_or_bools) ... ok
+test_bitwise_or_bools_npm (numba.tests.test_operators.TestOperators.test_bitwise_or_bools_npm) ... ok
+test_bitwise_or_ints (numba.tests.test_operators.TestOperators.test_bitwise_or_ints) ... ok
+test_bitwise_or_ints_npm (numba.tests.test_operators.TestOperators.test_bitwise_or_ints_npm) ... ok
+test_bitwise_xor_bools (numba.tests.test_operators.TestOperators.test_bitwise_xor_bools) ... ok
+test_bitwise_xor_bools_npm (numba.tests.test_operators.TestOperators.test_bitwise_xor_bools_npm) ... ok
+test_bitwise_xor_ints (numba.tests.test_operators.TestOperators.test_bitwise_xor_ints) ... ok
+test_bitwise_xor_ints_npm (numba.tests.test_operators.TestOperators.test_bitwise_xor_ints_npm) ... ok
+test_eq_scalar (numba.tests.test_operators.TestOperators.test_eq_scalar) ... ok
+test_eq_scalar_npm (numba.tests.test_operators.TestOperators.test_eq_scalar_npm) ... ok
+test_floordiv_errors (numba.tests.test_operators.TestOperators.test_floordiv_errors) ... ok
+test_floordiv_errors_npm (numba.tests.test_operators.TestOperators.test_floordiv_errors_npm) ... ok
+test_floordiv_floats (numba.tests.test_operators.TestOperators.test_floordiv_floats) ... ok
+test_floordiv_floats_npm (numba.tests.test_operators.TestOperators.test_floordiv_floats_npm) ... ok
+test_floordiv_ints (numba.tests.test_operators.TestOperators.test_floordiv_ints) ... ok
+test_floordiv_ints_npm (numba.tests.test_operators.TestOperators.test_floordiv_ints_npm) ... ok
+test_ge_scalar (numba.tests.test_operators.TestOperators.test_ge_scalar) ... ok
+test_ge_scalar_npm (numba.tests.test_operators.TestOperators.test_ge_scalar_npm) ... ok
+test_gt_scalar (numba.tests.test_operators.TestOperators.test_gt_scalar) ... ok
+test_gt_scalar_npm (numba.tests.test_operators.TestOperators.test_gt_scalar_npm) ... ok
+test_iadd_complex (numba.tests.test_operators.TestOperators.test_iadd_complex) ... ok
+test_iadd_complex_npm (numba.tests.test_operators.TestOperators.test_iadd_complex_npm) ... ok
+test_iadd_floats (numba.tests.test_operators.TestOperators.test_iadd_floats) ... ok
+test_iadd_floats_npm (numba.tests.test_operators.TestOperators.test_iadd_floats_npm) ... ok
+test_iadd_ints (numba.tests.test_operators.TestOperators.test_iadd_ints) ... ok
+test_iadd_ints_npm (numba.tests.test_operators.TestOperators.test_iadd_ints_npm) ... ok
+test_ifloordiv_floats (numba.tests.test_operators.TestOperators.test_ifloordiv_floats) ... ok
+test_ifloordiv_floats_npm (numba.tests.test_operators.TestOperators.test_ifloordiv_floats_npm) ... ok
+test_ifloordiv_ints (numba.tests.test_operators.TestOperators.test_ifloordiv_ints) ... ok
+test_ifloordiv_ints_npm (numba.tests.test_operators.TestOperators.test_ifloordiv_ints_npm) ... ok
+test_imatmul (numba.tests.test_operators.TestOperators.test_imatmul) ... ok
+test_imatmul_npm (numba.tests.test_operators.TestOperators.test_imatmul_npm) ... skipped 'BLAS needs SciPy 1.0+'
+test_imod_floats (numba.tests.test_operators.TestOperators.test_imod_floats) ... ok
+test_imod_floats_npm (numba.tests.test_operators.TestOperators.test_imod_floats_npm) ... ok
+test_imod_ints (numba.tests.test_operators.TestOperators.test_imod_ints) ... ok
+test_imod_ints_npm (numba.tests.test_operators.TestOperators.test_imod_ints_npm) ... ok
+test_imul_complex (numba.tests.test_operators.TestOperators.test_imul_complex) ... ok
+test_imul_complex_npm (numba.tests.test_operators.TestOperators.test_imul_complex_npm) ... ok
+test_imul_floats (numba.tests.test_operators.TestOperators.test_imul_floats) ... ok
+test_imul_floats_npm (numba.tests.test_operators.TestOperators.test_imul_floats_npm) ... ok
+test_imul_ints (numba.tests.test_operators.TestOperators.test_imul_ints) ... ok
+test_imul_ints_npm (numba.tests.test_operators.TestOperators.test_imul_ints_npm) ... ok
+test_in (numba.tests.test_operators.TestOperators.test_in) ... ok
+test_in_npm (numba.tests.test_operators.TestOperators.test_in_npm) ... ok
+test_ipow_floats (numba.tests.test_operators.TestOperators.test_ipow_floats) ... ok
+test_ipow_floats_npm (numba.tests.test_operators.TestOperators.test_ipow_floats_npm) ... ok
+test_ipow_ints (numba.tests.test_operators.TestOperators.test_ipow_ints) ... ok
+test_ipow_ints_npm (numba.tests.test_operators.TestOperators.test_ipow_ints_npm) ... ok
+test_is_ellipsis (numba.tests.test_operators.TestOperators.test_is_ellipsis) ... ok
+test_is_void_ptr (numba.tests.test_operators.TestOperators.test_is_void_ptr) ... ok
+test_isub_complex (numba.tests.test_operators.TestOperators.test_isub_complex) ... ok
+test_isub_complex_npm (numba.tests.test_operators.TestOperators.test_isub_complex_npm) ... ok
+test_isub_floats (numba.tests.test_operators.TestOperators.test_isub_floats) ... ok
+test_isub_floats_npm (numba.tests.test_operators.TestOperators.test_isub_floats_npm) ... ok
+test_isub_ints (numba.tests.test_operators.TestOperators.test_isub_ints) ... ok
+test_isub_ints_npm (numba.tests.test_operators.TestOperators.test_isub_ints_npm) ... ok
+test_itruediv_complex (numba.tests.test_operators.TestOperators.test_itruediv_complex) ... ok
+test_itruediv_complex_npm (numba.tests.test_operators.TestOperators.test_itruediv_complex_npm) ... ok
+test_itruediv_floats (numba.tests.test_operators.TestOperators.test_itruediv_floats) ... ok
+test_itruediv_floats_npm (numba.tests.test_operators.TestOperators.test_itruediv_floats_npm) ... ok
+test_itruediv_ints (numba.tests.test_operators.TestOperators.test_itruediv_ints) ... ok
+test_itruediv_ints_npm (numba.tests.test_operators.TestOperators.test_itruediv_ints_npm) ... ok
+test_le_scalar (numba.tests.test_operators.TestOperators.test_le_scalar) ... ok
+test_le_scalar_npm (numba.tests.test_operators.TestOperators.test_le_scalar_npm) ... ok
+test_lt_scalar (numba.tests.test_operators.TestOperators.test_lt_scalar) ... ok
+test_lt_scalar_npm (numba.tests.test_operators.TestOperators.test_lt_scalar_npm) ... ok
+test_matmul (numba.tests.test_operators.TestOperators.test_matmul) ... ok
+test_matmul_npm (numba.tests.test_operators.TestOperators.test_matmul_npm) ... skipped 'BLAS needs SciPy 1.0+'
+test_mod_complex (numba.tests.test_operators.TestOperators.test_mod_complex) ... ok
+test_mod_complex_npm (numba.tests.test_operators.TestOperators.test_mod_complex_npm) ... ok
+test_mod_errors (numba.tests.test_operators.TestOperators.test_mod_errors) ... ok
+test_mod_errors_npm (numba.tests.test_operators.TestOperators.test_mod_errors_npm) ... ok
+test_mod_floats (numba.tests.test_operators.TestOperators.test_mod_floats) ... ok
+test_mod_floats_npm (numba.tests.test_operators.TestOperators.test_mod_floats_npm) ... ok
+test_mod_ints (numba.tests.test_operators.TestOperators.test_mod_ints) ... ok
+test_mod_ints_npm (numba.tests.test_operators.TestOperators.test_mod_ints_npm) ... ok
+test_mul_complex (numba.tests.test_operators.TestOperators.test_mul_complex) ... ok
+test_mul_complex_npm (numba.tests.test_operators.TestOperators.test_mul_complex_npm) ... ok
+test_mul_floats (numba.tests.test_operators.TestOperators.test_mul_floats) ... ok
+test_mul_floats_npm (numba.tests.test_operators.TestOperators.test_mul_floats_npm) ... ok
+test_mul_ints (numba.tests.test_operators.TestOperators.test_mul_ints) ... ok
+test_mul_ints_npm (numba.tests.test_operators.TestOperators.test_mul_ints_npm) ... ok
+test_ne_scalar (numba.tests.test_operators.TestOperators.test_ne_scalar) ... ok
+test_ne_scalar_npm (numba.tests.test_operators.TestOperators.test_ne_scalar_npm) ... ok
+test_negate (numba.tests.test_operators.TestOperators.test_negate) ... ok
+test_negate_npm (numba.tests.test_operators.TestOperators.test_negate_npm) ... ok
+test_not (numba.tests.test_operators.TestOperators.test_not) ... ok
+test_not_in (numba.tests.test_operators.TestOperators.test_not_in) ... ok
+test_not_in_npm (numba.tests.test_operators.TestOperators.test_not_in_npm) ... ok
+test_not_npm (numba.tests.test_operators.TestOperators.test_not_npm) ... ok
+test_pow_floats (numba.tests.test_operators.TestOperators.test_pow_floats) ... ok
+test_pow_floats_npm (numba.tests.test_operators.TestOperators.test_pow_floats_npm) ... ok
+test_pow_ints (numba.tests.test_operators.TestOperators.test_pow_ints) ... ok
+test_pow_ints_npm (numba.tests.test_operators.TestOperators.test_pow_ints_npm) ... ok
+test_sub_complex (numba.tests.test_operators.TestOperators.test_sub_complex) ... ok
+test_sub_complex_npm (numba.tests.test_operators.TestOperators.test_sub_complex_npm) ... ok
+test_sub_floats (numba.tests.test_operators.TestOperators.test_sub_floats) ... ok
+test_sub_floats_npm (numba.tests.test_operators.TestOperators.test_sub_floats_npm) ... ok
+test_sub_ints (numba.tests.test_operators.TestOperators.test_sub_ints) ... ok
+test_sub_ints_npm (numba.tests.test_operators.TestOperators.test_sub_ints_npm) ... ok
+test_truediv_complex (numba.tests.test_operators.TestOperators.test_truediv_complex) ... ok
+test_truediv_complex_npm (numba.tests.test_operators.TestOperators.test_truediv_complex_npm) ... ok
+test_truediv_errors (numba.tests.test_operators.TestOperators.test_truediv_errors) ... ok
+test_truediv_errors_npm (numba.tests.test_operators.TestOperators.test_truediv_errors_npm) ... ok
+test_truediv_floats (numba.tests.test_operators.TestOperators.test_truediv_floats) ... ok
+test_truediv_floats_npm (numba.tests.test_operators.TestOperators.test_truediv_floats_npm) ... ok
+test_truediv_ints (numba.tests.test_operators.TestOperators.test_truediv_ints) ... ok
+test_truediv_ints_npm (numba.tests.test_operators.TestOperators.test_truediv_ints_npm) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+test_unary_positive (numba.tests.test_operators.TestOperators.test_unary_positive) ... ERROR
+test_unary_positive_npm (numba.tests.test_operators.TestOperators.test_unary_positive_npm) ... ERROR
+
+======================================================================
+ERROR: test_unary_positive (numba.tests.test_operators.TestOperators.test_unary_positive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_operators.py", line 1159, in test_unary_positive
+    cres = compile_isolated(pyfunc, (), flags=force_pyobj_flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 341, in dispatch
+    fn(state, inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+NotImplementedError: Failed in object mode pipeline (step: analyzing bytecode)
+op_CALL_INTRINSIC_1(5)
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/utils.py:213: NumbaPendingDeprecationWarning: Code using Numba extension API maybe depending on 'old_style' error-capturing, which is deprecated and will be replaced by 'new_style' in a future release. See details at https://numba.readthedocs.io/en/latest/reference/deprecation.html#deprecation-of-old-style-numba-captured-errors
+Exception origin:
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+
+  warnings.warn(msg,
+
+======================================================================
+ERROR: test_unary_positive_npm (numba.tests.test_operators.TestOperators.test_unary_positive_npm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_operators.py", line 1144, in test_unary_positive_npm
+    cres = compile_isolated(pyfunc, [ty])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 318, in compile_isolated
+    return compile_extra(typingctx, targetctx, func, args, return_type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 770, in compile_extra
+    return pipeline.compile_extra(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 461, in compile_extra
+    return self._compile_bytecode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 529, in _compile_bytecode
+    return self._compile_core()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 508, in _compile_core
+    raise e
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler.py", line 495, in _compile_core
+    pm.run(self.state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 368, in run
+    raise patched_exception
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 356, in run
+    self._runPass(idx, pass_inst, state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 311, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/compiler_machinery.py", line 273, in check
+    mangled = func(compiler_state)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/untyped_passes.py", line 86, in run_pass
+    func_ir = interp.interpret(bc)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/interpreter.py", line 1363, in interpret
+    flow.run()
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 114, in run
+    runner.dispatch(state)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 341, in dispatch
+    fn(state, inst)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/core/byteflow.py", line 1545, in op_CALL_INTRINSIC_1
+    raise NotImplementedError(f"op_CALL_INTRINSIC_1({inst.arg})")
+NotImplementedError: Failed in nopython mode pipeline (step: analyzing bytecode)
+op_CALL_INTRINSIC_1(5)
+
+----------------------------------------------------------------------
+Ran 143 tests in 111.896s
+
+FAILED (errors=2, skipped=2)

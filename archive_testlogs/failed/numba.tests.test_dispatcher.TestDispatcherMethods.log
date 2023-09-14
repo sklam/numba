@@ -1,0 +1,56 @@
+Parallel: 11. Serial: 0
+test_get_annotation_info (numba.tests.test_dispatcher.TestDispatcherMethods.test_get_annotation_info) ... ok
+test_inspect_asm (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_asm) ... ok
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:797: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+test_inspect_cfg (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_cfg) ... ERROR
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:832: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+test_inspect_cfg_with_python_wrapper (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_cfg_with_python_wrapper) ... ERROR
+test_inspect_llvm (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_llvm) ... ok
+test_inspect_types (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_types) ... ok
+test_inspect_types_pretty (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_types_pretty) ... skipped "please install the 'jinja2' package"
+test_inspect_types_with_signature (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_types_with_signature) ... ok
+test_issue_with_array_layout_conflict (numba.tests.test_dispatcher.TestDispatcherMethods.test_issue_with_array_layout_conflict)
+This test an issue with the dispatcher when an array that is both ... ok
+test_recompile (numba.tests.test_dispatcher.TestDispatcherMethods.test_recompile) ... ok
+test_recompile_signatures (numba.tests.test_dispatcher.TestDispatcherMethods.test_recompile_signatures) ... ok
+
+======================================================================
+ERROR: test_inspect_cfg (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_cfg)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py", line 821, in test_inspect_cfg
+    self._check_cfg_display(cfg)
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py", line 789, in _check_cfg_display
+    self.assertRegexpMatches(str(cfg), prefix)
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestDispatcherMethods' object has no attribute 'assertRegexpMatches'
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:797: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+
+======================================================================
+ERROR: test_inspect_cfg_with_python_wrapper (numba.tests.test_dispatcher.TestDispatcherMethods.test_inspect_cfg_with_python_wrapper)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py", line 847, in test_inspect_cfg_with_python_wrapper
+    self._check_cfg_display(cfg, wrapper='cpython')
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py", line 789, in _check_cfg_display
+    self.assertRegexpMatches(str(cfg), prefix)
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TestDispatcherMethods' object has no attribute 'assertRegexpMatches'
+
+Stderr:
+/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/test_dispatcher.py:832: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.572s
+
+FAILED (errors=2, skipped=1)

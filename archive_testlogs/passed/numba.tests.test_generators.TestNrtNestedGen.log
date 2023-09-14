@@ -1,0 +1,10 @@
+Parallel: 3. Serial: 0
+test_nrt_nested_gen (numba.tests.test_generators.TestNrtNestedGen.test_nrt_nested_gen) ... ok
+test_nrt_nested_gen_refct (numba.tests.test_generators.TestNrtNestedGen.test_nrt_nested_gen_refct) ... expected failure
+test_nrt_nested_nopython_gen (numba.tests.test_generators.TestNrtNestedGen.test_nrt_nested_nopython_gen)
+Test nesting three generators ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.263s
+
+OK (expected failures=1)

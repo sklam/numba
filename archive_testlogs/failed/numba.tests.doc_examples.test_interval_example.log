@@ -1,0 +1,18 @@
+Parallel: 1. Serial: 0
+test_interval_class_usage (numba.tests.doc_examples.test_interval_example.IntervalExampleTest.test_interval_class_usage) ... ERROR
+
+======================================================================
+ERROR: test_interval_class_usage (numba.tests.doc_examples.test_interval_example.IntervalExampleTest.test_interval_class_usage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/doc_examples/test_interval_example.py", line 210, in test_interval_class_usage
+    check_equal_intervals(a, return_func(a))
+  File "/mnt/home/sklam/dev/numba-py312-workspace/numba/numba/tests/doc_examples/test_interval_example.py", line 201, in check_equal_intervals
+    self.assertEquals(x.lo, y.lo)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: 'IntervalExampleTest' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+----------------------------------------------------------------------
+Ran 1 test in 0.547s
+
+FAILED (errors=1)

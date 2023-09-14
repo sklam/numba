@@ -1,0 +1,12 @@
+Parallel: 6. Serial: 0
+test_arrays (numba.tests.test_conditions_as_predicates.TestConditionsAsPredicates.test_arrays) ... ok
+test_reflected_list (numba.tests.test_conditions_as_predicates.TestConditionsAsPredicates.test_reflected_list) ... ok
+test_reflected_set (numba.tests.test_conditions_as_predicates.TestConditionsAsPredicates.test_reflected_set) ... ok
+test_scalars (numba.tests.test_conditions_as_predicates.TestConditionsAsPredicates.test_scalars) ... ok
+test_typed_dict (numba.tests.test_conditions_as_predicates.TestConditionsAsPredicates.test_typed_dict) ... ok
+test_typed_list (numba.tests.test_conditions_as_predicates.TestConditionsAsPredicates.test_typed_list) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.165s
+
+OK

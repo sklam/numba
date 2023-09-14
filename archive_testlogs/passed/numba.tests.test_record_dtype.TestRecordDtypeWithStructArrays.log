@@ -1,0 +1,32 @@
+Parallel: 23. Serial: 0
+test_from_dtype (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_from_dtype) ... ok
+test_get_a (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_get_a) ... ok
+test_get_b (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_get_b) ... ok
+test_get_c (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_get_c) ... ok
+test_get_two_a (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_get_two_a) ... ok
+test_get_two_b (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_get_two_b) ... ok
+test_get_two_c (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_get_two_c) ... ok
+test_getitem_static_int_index (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_getitem_static_int_index) ... ok
+test_record_arg_transform (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_record_arg_transform) ... ok
+test_record_args (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_record_args) ... ok
+test_record_args_reverse (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_record_args_reverse) ... ok
+test_record_dtype_with_titles_roundtrip (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_record_dtype_with_titles_roundtrip) ... ok
+test_record_return (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_record_return) ... ok
+test_record_two_arrays (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_record_two_arrays) ... ok
+test_set_a (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_set_a) ... ok
+test_set_b (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_set_b) ... ok
+test_set_c (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_set_c) ... ok
+test_set_record (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_set_record) ... ok
+test_setitem_static_int_index (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_setitem_static_int_index) ... ok
+test_structure_dtype_with_titles (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_structure_dtype_with_titles) ... ok
+test_two_distinct_arrays (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_two_distinct_arrays)
+Test with two arrays of distinct record types ... ok
+test_two_distinct_records (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_two_distinct_records)
+Testing the use of two scalar records of differing type ... ok
+test_two_records (numba.tests.test_record_dtype.TestRecordDtypeWithStructArrays.test_two_records)
+Testing the use of two scalar records of the same type ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 12.281s
+
+OK

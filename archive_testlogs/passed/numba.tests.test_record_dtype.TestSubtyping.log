@@ -1,0 +1,13 @@
+Parallel: 7. Serial: 0
+test_array_field (numba.tests.test_record_dtype.TestSubtyping.test_array_field) ... ok
+test_branch_pruning (numba.tests.test_record_dtype.TestSubtyping.test_branch_pruning) ... ok
+test_common_field (numba.tests.test_record_dtype.TestSubtyping.test_common_field) ... ok
+test_no_subtyping1 (numba.tests.test_record_dtype.TestSubtyping.test_no_subtyping1) ... ok
+test_no_subtyping2 (numba.tests.test_record_dtype.TestSubtyping.test_no_subtyping2) ... ok
+test_no_subtyping3 (numba.tests.test_record_dtype.TestSubtyping.test_no_subtyping3) ... ok
+test_tuple_of_records (numba.tests.test_record_dtype.TestSubtyping.test_tuple_of_records) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.083s
+
+OK
