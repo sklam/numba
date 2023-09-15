@@ -2,9 +2,9 @@ import dis
 from contextlib import contextmanager
 import builtins
 import operator
-from typing import Iterator, Sequence, no_type_check
+from typing import Iterator, Sequence, Mapping, no_type_check
 from functools import reduce
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as _dataclass_replace
 import inspect
 
 from numba.core import (
@@ -25,11 +25,13 @@ from numba_rvsdg.core.datastructures.basic_block import (
     RegionBlock,
     SyntheticBranch,
     SyntheticAssignment,
+    SyntheticFill,
 )
 from numba_rvsdg.rendering.rendering import ByteFlowRenderer
 from .rvsdg.rvsdgutils import RegionVisitor
-from .rvsdgir import rvsdgir
-rvsdgPort = rvsdgir.rvsdgir.Port
+from . import rvsdgir
+
+rvsdgPort = rvsdgir.Port
 
 
 def run_frontend(func):
@@ -48,14 +50,15 @@ def _debug_scfg(name, byteflow):
 
 
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
+    from .rvsdg.bc2rvsdg import canonicalize_scfg
     byteflow = ByteFlow.from_bytecode(code)
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
     byteflow = byteflow.restructure()
-    _debug_scfg("Raw SCFG", byteflow)
+    canonicalize_scfg(byteflow.scfg)
+    _debug_scfg("canonicalized SCFG", byteflow)
 
-    transformer = ToRvsdgIR(bcmap, argnames)
-    transformer.visit_graph(byteflow.scfg, data=None)
 
+    transformer = ToRvsdgIR.run(byteflow.scfg, bcmap, argnames)
     raise AssertionError
 
 
@@ -64,7 +67,7 @@ class PyAttrs:
     bcinst: dis.Instruction
 
     def __str__(self):
-        return f"py({self.bcinst.opname})"
+        return f"[{self.bcinst.opname}]"
 
 
 @dataclass(frozen=True)
@@ -73,74 +76,144 @@ class PyStoreAttrs:
     varname: str
 
     def __str__(self):
-        return f"py.store({self.bcinst.opname} {self.varname!r})"
+        return f"[{self.bcinst.opname} {self.varname!r}]"
 
 
+@dataclass(frozen=True)
+class _ToRvsdgIR_Data:
+    stack: tuple[str, ...]
+    varmap: dict[str, rvsdgPort]
+    region: rvsdgir.Region
+
+    def replace(self, **kwargs) -> "_ToRvsdgIR_Data":
+        return _dataclass_replace(self, **kwargs)
 
 
-class ToRvsdgIR(RegionVisitor[None]):
+class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
     bcmap: dict[int, dis.Instruction]
+
+
+    @classmethod
+    def run(cls, scfg, bcmap, argnames):
+        inst = cls(bcmap, argnames)
+        varmap = {"env": inst.ir.args["env"]}
+        for k in argnames:
+            varmap[_decorate_varname(k)] = inst.ir.args[f"arg_{k}"]
+        data = _ToRvsdgIR_Data(stack=(), varmap=varmap, region=inst.ir)
+        inst.visit_graph(scfg, data=data)
+        return inst
+
     def __init__(self, bcmap, argnames):
         super().__init__()
         self.bcmap = bcmap
         self.ir = rvsdgir.Region.make(
             opname="function",
-            ins=("env", *[f"arg_[{k}]" for k in argnames]),
+            ins=("env", *[f"arg_{k}" for k in argnames]),
             outs=("env", "return_value"),
         )
 
-    def visit_block(self, block: BasicBlock, data: None) -> None:
+    def visit_block(self, block: BasicBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
         if isinstance(block, PythonBytecodeBlock):
             instlist = block.get_instructions(self.bcmap)
 
-            bctorvsdg = BcToRvsdgIR.run(tuple(self.ir.args) , instlist)
+            bctorvsdg, stack, varmap = BcToRvsdgIR.run(data.region, data.stack, data.varmap, instlist)
+            return _ToRvsdgIR_Data(stack=stack, varmap=varmap, region=data.region)
 
-            print(bctorvsdg.region.prettyformat())
-        else:
-            raise NotImplementedError(type(block))
+        elif isinstance(block, SyntheticFill):
+            # no-op
+            return data
 
-    def visit_loop(self, region: RegionBlock, data: None) -> None:
+        # otherwise
         raise NotImplementedError(type(block))
 
-    def visit_switch(self, region: RegionBlock, data: None) -> None:
-        raise NotImplementedError(type(block))
+    def visit_loop(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+        assert isinstance(region, RegionBlock) and region.kind == "loop"
+        ir = data.region.add_subregion(
+            opname="loop",
+            ins=data.varmap.keys(),
+            outs=(),
+        )
+        ir.ins(**data.varmap)
+        data.region.prettyprint()
+        inner_data = data.replace(region=ir.subregion, varmap=dict(**ir.subregion.args))
+        self.visit_linear(region, inner_data)
 
+    def visit_switch(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+        assert isinstance(region, RegionBlock) and region.kind == "switch"
+        # Emit header
+        header = region.header
+        header_block = region.subregion[header]
+        data = self.visit_linear(header_block, data)
+
+
+        # Emit branches
+        # data_for_branches = []
+        # branch_blocks = []
+        for blk in region.subregion.graph.values():
+            if blk.kind == "branch":
+                data = self.visit_linear(blk, data)
+
+        exiting = region.exiting
+        exiting_block = region.subregion[exiting]
+        data = self.visit_linear(exiting_block, data)
+        return data
+
+def _decorate_varname(varname: str) -> str:
+    return f"var_{varname}"
 
 
 class BcToRvsdgIR:
     stack: list[rvsdgPort]
-    effect: rvsdgPort
-    in_effect: rvsdgPort
     varmap: dict[str, rvsdgPort]
-    incoming_vars: dict[str, rvsdgPort]
-    incoming_stackvars: list[rvsdgPort]
     _kw_names: rvsdgPort | None
     region: rvsdgir.Region
 
     @classmethod
     def run(
         cls,
-        argnames: tuple[str, ...],
+        parent: rvsdgir.Region,
+        stack: Sequence[str],
+        varmap: dict[str, rvsdgPort],
         instlist: Sequence[dis.Instruction],
     ):
-        cvtr = cls(argnames)
-        for inst in instlist:
-            cvtr.convert(inst)
-        return cvtr
+        inst = cls(parent, stack, varmap)
+        for bc in instlist:
+            inst.convert(bc)
+        # add output ports from live vars
+        exported_varmap = {}
+        for k, v in inst.varmap.items():
+            if k not in inst.region.results:
+                inst.region.results.add_port(k)
+                inst.region.results.connect(k, v)
+            exported_varmap[k] = inst.region_op.outs[k]
+        # add outputs ports from stack vars
+        exported_stack = []
+        for i, v in enumerate(inst.stack):
+            k = f"export_{i}"
+            inst.region.results.add_port(k)
+            inst.region.results.connect(k, v)
+            exported_stack.append(k)
 
-    def __init__(self, argnames: tuple[str, ...]):
-        self.stack = []
+        return inst, exported_stack, dict(**inst.region_op.outs)
+
+    def __init__(self, parent: rvsdgir.Region,
+                 stack: Sequence[str],
+                 varmap: Mapping[str, rvsdgPort]):
         self.varmap = {}
-        self.incoming_vars = {}
-        # self.incoming_stackvars = []
         self._kw_names = None
-        self.region = rvsdgir.Region.make(
+        self.region_op = parent.add_subregion(
             opname="block",
-            ins=argnames,
-            outs=["env", "return_value"],
+            ins=varmap.keys(),
+            outs=(),
         )
-        self.effect = self.region.args["env"]
-        self.in_effect = self.effect
+        self.region = self.region_op.subregion
+        self.stack = [self.region.args[k] for k in stack]
+
+        # Map live-vars to inputs
+        for k in varmap:
+            self.varmap[k] = self.region.args[k]
+        self.region_op.ins(**varmap)
+
 
     def push(self, val: rvsdgPort):
         self.stack.append(val)
@@ -161,22 +234,23 @@ class BcToRvsdgIR:
         self.push(tos)
         return tos
 
-    def _decorate_varname(self, varname: str) -> str:
-        return f"var.{varname}"
-
     def store(self, varname: str, value: rvsdgPort):
         self.varmap[varname] = value
 
     def load(self, varname: str) -> rvsdgPort:
         if varname not in self.varmap:
-            vs = self.region.args.add_port(f"var_{varname}")
+            vs = self.region.args.add_port(varname)
             self.incoming_vars[varname] = vs
             self.varmap[varname] = vs
 
         return self.varmap[varname]
 
+    @property
+    def effect(self) -> rvsdgPort:
+        return self.varmap["env"]
+
     def replace_effect(self, env: rvsdgPort):
-        self.effect = env
+        self.varmap["env"] = env
 
     def convert(self, inst: dis.Instruction):
         fn = getattr(self, f"op_{inst.opname}")
@@ -247,7 +321,7 @@ class BcToRvsdgIR:
 
     def op_STORE_FAST(self, inst: dis.Instruction):
         tos = self.pop()
-        varname = self._decorate_varname(inst.argval)
+        varname = _decorate_varname(inst.argval)
         op = self.region.add_simple_op(
             opname=f"py.store",
             ins=["env", "val"],
@@ -262,7 +336,7 @@ class BcToRvsdgIR:
         self.store(varname, op.outs.out)
 
     def op_LOAD_FAST(self, inst: dis.Instruction):
-        varname = self._decorate_varname(inst.argval)
+        varname = _decorate_varname(inst.argval)
         self.push(self.load(varname))
 
     def op_LOAD_ATTR(self, inst: dis.Instruction):
