@@ -637,11 +637,11 @@ class DDGBlock(BasicBlock):
             topo_ops.insert(idx - 1, item)
             where = idx - 1
 
-        raise NotImplementedError(
-            """
-ADD LOGIC TO MOVE any independent ops to later
-            """
-        )
+#         raise NotImplementedError(
+#             """
+# ADD LOGIC TO MOVE any independent ops to later
+#             """
+#         )
 
         before_ops = topo_ops[: where + 1]
         after_ops = topo_ops[where + 1 :]
@@ -1035,11 +1035,12 @@ def _debug_scfg(name, byteflow):
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     byteflow = ByteFlow.from_bytecode(code)
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
+    _debug_scfg("bytecode", byteflow)
     _scfg_add_conditional_pop_stack(bcmap, byteflow.scfg)
+    _debug_scfg("bytecode-pop_stack", byteflow)
     byteflow = byteflow.restructure()
-    _debug_scfg("pre-canonicalization", byteflow)
     canonicalize_scfg(byteflow.scfg)
-    _debug_scfg("post-canonicalization", byteflow)
+    _debug_scfg("scfg", byteflow)
 
     rvsdg = convert_to_dataflow(byteflow, argnames)
     debug_rvsdg(rvsdg, f"early rvsdg {code.co_name}")
@@ -1052,7 +1053,8 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
         #### Draw a graph with the def-use chain highlighted
         usedefs = ComputeUseDefs().run(rvsdg)
         # df = usedefs.lookup("ValueState(_lazy_uid(55), exitfn, 2)")
-        df = usedefs.lookup("ValueState(_lazy_uid(67), exitfn, 2)")
+        # df = usedefs.lookup("ValueState(_lazy_uid(67), exitfn, 2)")
+        df = usedefs.lookup("ValueState(_lazy_uid(5), exitfn, 2)")
         fchain = usedefs.get_forwarded_vs_chain(df)
         print(fchain.pformat())
         from pprint import pprint
@@ -1077,6 +1079,17 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
         split_rvsdg(splitted, last_op.input_ports["callee"].parent, last.parent)
 
         debug_rvsdg(splitted, f"splitted rvsdg {code.co_name}")
+
+        ######
+        usedefs = ComputeUseDefs().run(splitted)
+        df = usedefs.lookup("ValueState(_lazy_uid(5), exitfn, 2)")
+        fchain = usedefs.get_forwarded_vs_chain(df)
+
+        edges = fchain.get_edges()
+        pprint(edges)
+        debug_rvsdg(splitted, f"with highlight splitted rvsdg {code.co_name}", edges=edges)
+
+
 
     return rvsdg
 

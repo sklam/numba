@@ -497,6 +497,12 @@ class BaseNativeLowering(abc.ABC, LoweringPass):
                 state['cr'] = _LowerResult(fndesc, call_helper,
                                            cfunc=cfunc, env=env)
 
+                if True:
+                    from numba.core.rvsdg_frontend.rvsdg.regionrenderer import graph_debugger
+                    with graph_debugger() as dbg:
+                        cfg = library.get_function_cfg(fndesc.llvm_func_name).dot
+                        dbg._add_renderable("llvm", cfg)
+
             # capture pruning stats
             post_stats = llvm.passmanagers.dump_refprune_stats()
             metadata['prune_stats'] = post_stats - pre_stats

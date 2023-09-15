@@ -47,6 +47,11 @@ def run_frontend(func):
     func_id = bytecode.FunctionIdentity.from_function(func)
     func_ir = rvsdg_to_ir(func_id, rvsdg)
 
+    if True:
+        from numba.core.rvsdg_frontend.rvsdg.regionrenderer import graph_debugger
+        with graph_debugger() as dbg:
+            dbg.add_graphviz("func_ir", func_ir.render_dot())
+
     return func_ir
 
 

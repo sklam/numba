@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <body>
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
-<script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@3.1.0/build/d3-graphviz.js"></script>
 
 <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
 <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
 <style>
+@font-face {
+    /* https://github.com/ipython/xkcd-font/blob/master/xkcd-script/font/xkcd-script.woff */
+	font-family: xkcd-script;
+	src: url('xkcd-script.woff') format('woff');
+}
+
+
 #pyscript {
     width: 40em; 
     position: absolute; 
@@ -16,7 +23,18 @@
     border: solid lightgrey 5px;
     background-color: rgba(255, 255, 255, 0.9);
 }
+#graph {
+    border: solid lightgrey 2px;
+    width: 100vw;
+    height: 100vw;
+}
+#graph svg {
+    width: 100%;
+    height: 100%;
+
+}
 </style>
+
 
 <h1>RVSDG DEBUG</h1>
 <div id="pyscript">
@@ -36,6 +54,7 @@
         import js
         graphs = js.payload.to_py()
         graphmap = dict(graphs)
+        _initialize = js.initialize.to_py()
         _render_dot = js.render_dot.to_py()
         _transition_dot = js.transition_dot.to_py()
 
@@ -52,10 +71,10 @@
             return g
 
         def render(idx):
-            _render_dot(select(idx))
+            _render_dot(gv, select(idx))
 
         def transition(idx, ms=4000):
-            _transition_dot(select(idx), ms)
+            _transition_dot(gv, select(idx), ms)
 
         def menu():
             for i, (k, _) in enumerate(graphs):
@@ -63,6 +82,8 @@
         
         # show menu
         menu()
+        # initialize
+        gv = _initialize()
         # render the first element
         render(0)
     </py-script>
@@ -70,7 +91,8 @@
         menu()
     </py-repl>
 </div>
-<div id="graph" style="text-align: center;"></div>
+<div id="graph" ></div>
+
 
 <script>
 var payload = "[[[PAYLOAD]]]";
@@ -86,12 +108,18 @@ function flip_color(obj) {
     }
 }
 
-function render_dot(dot){
+function render_dot(gv, dot){
+    // Delete all SVG elements from previous render to workaround misrendering 
+    // problems
+    d3.select("#graph svg").selectAll("*").remove(); 
+    // gv.renderDot(dot);
     gv.renderDot(dot,
         function() {
             var div = d3.select("#graph");
             console.log(div)
             var svg = d3.select(div.node().querySelector("svg"));
+
+            // Add clicky response
             svg.selectAll("g.node").on("click", function(d) {
                 console.log("touch");
                 console.log(d);
@@ -109,17 +137,36 @@ function render_dot(dot){
                 d3.select(this).selectAll('path').style("stroke", "red");
                 d3.select(this).selectAll('polygon').style("stroke", "red");
             });
+
+            // Insert XKCD filter
+            // Adapted from https://gist.github.com/zellyn/3987890
+
+            svg.append("filter").attr("id", "my-filter").html(`
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" result="noise" />
+                <feDisplacementMap scale="3" xChannelSelector="R" yChannelSelector="G"
+                    in="SourceGraphic" in2="noise" />
+            `);
+            svg.selectAll("#graph0").attr("filter", "url(#my-filter)")
+            // svg.selectAll("polygon").attr("filter", "url(#my-filter)")
+            // svg.selectAll("path").attr("filter", "url(#my-filter)")
+            svg.selectAll("text").attr("font-family", "xkcd-script");
         }
-    )
+    );
 }
 
-function transition_dot(dot, ms) {
+function transition_dot(gv, dot, ms) {
     var t = d3.transition().duration(ms).ease(d3.easeLinear);
 
     gv.transition(t).renderDot(dot);
 }
 
-var gv = d3.select("#graph").graphviz();
-// render_dot(payload[0][1]);
+function initialize() {
+    return d3.select("#graph").graphviz();
+}
 
 </script>
+
+
+
+</body>
+</html>
