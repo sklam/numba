@@ -50,14 +50,17 @@ def _debug_scfg(name, byteflow):
 
 
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
-    from .rvsdg.bc2rvsdg import canonicalize_scfg, _scfg_add_conditional_pop_stack
+    from .rvsdg.bc2rvsdg import (
+        canonicalize_scfg,
+        _scfg_add_conditional_pop_stack,
+    )
+
     byteflow = ByteFlow.from_bytecode(code)
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
     _scfg_add_conditional_pop_stack(bcmap, byteflow.scfg)
     byteflow = byteflow.restructure()
     canonicalize_scfg(byteflow.scfg)
     _debug_scfg("canonicalized SCFG", byteflow)
-
 
     transformer = ToRvsdgIR.run(byteflow.scfg, bcmap, argnames)
 
@@ -67,9 +70,13 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     raise AssertionError
 
 
-
 def render_rvsdgir(ir: rvsdgir.Region, name: str):
-    from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphvizRendererBackend, graph_debugger
+    from .rvsdg.regionrenderer import (
+        GraphBacking,
+        GraphNodeMaker,
+        GraphvizRendererBackend,
+        graph_debugger,
+    )
 
     g = GraphBacking()
     maker = GraphNodeMaker(parent_path=()).subgroup("regionouter")
@@ -79,8 +86,10 @@ def render_rvsdgir(ir: rvsdgir.Region, name: str):
     with graph_debugger() as dbg:
         dbg.add_graphviz(name, rgr.digraph)
 
+
 def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
     from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphEdge
+
     g: GraphBacking
 
     def ident(ref) -> str:
@@ -89,47 +98,64 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
     args_name = "outputs" + ident(ir._ref)
     results_name = "inputs" + ident(ir._ref)
 
-    g.add_node(ident(ir._ref),
-                       maker.make_node(kind="op",
-                                       data=dict(body=f"{ir.attrs.prettyformat()}")))
+    g.add_node(
+        ident(ir._ref),
+        maker.make_node(
+            kind="op", data=dict(body=f"{ir.attrs.prettyformat()}")
+        ),
+    )
 
-    prefix = {"rvsdg.loop": "loop_", "rvsdg.switch": "switch_"}.get(ir.opname, "region")
+    prefix = {"rvsdg.loop": "loop_", "rvsdg.switch": "switch_"}.get(
+        ir.opname, "region"
+    )
     maker: GraphNodeMaker = maker.subgroup(prefix + ident(ir._ref))
-    g.add_node(args_name,
-                       maker.make_node(
-                           kind="ports",
-                           ports=tuple(ir.args),
-                           data=dict(body=f"args")))
-    g.add_node(results_name,
-                       maker.make_node(
-                           kind="ports",
-                           ports=tuple(ir.results),
-                           data=dict(body=f"results")))
+    g.add_node(
+        args_name,
+        maker.make_node(
+            kind="ports", ports=tuple(ir.args), data=dict(body=f"args")
+        ),
+    )
+    g.add_node(
+        results_name,
+        maker.make_node(
+            kind="ports", ports=tuple(ir.results), data=dict(body=f"results")
+        ),
+    )
 
     for op in ir.body.toposorted_ops():
         if isinstance(op, rvsdgir.RegionOp):
             submaker = maker.subgroup("regionouter" + ident(op._ref))
-            g.add_node("inputs" + ident(op._ref),
-                       submaker.make_node(
-                           kind="ports",
-                           ports=tuple(op.ins),
-                           data=dict(body=f"inputs")))
+            g.add_node(
+                "inputs" + ident(op._ref),
+                submaker.make_node(
+                    kind="ports", ports=tuple(op.ins), data=dict(body=f"inputs")
+                ),
+            )
             render_rvsdgir_region(g, submaker, op.subregion)
-            g.add_node("outputs" + ident(op._ref),
-                       submaker.make_node(
-                           kind="ports",
-                           ports=tuple(op.outs),
-                           data=dict(body=f"outputs")))
+            g.add_node(
+                "outputs" + ident(op._ref),
+                submaker.make_node(
+                    kind="ports",
+                    ports=tuple(op.outs),
+                    data=dict(body=f"outputs"),
+                ),
+            )
             # connect args
             for k in op.ins:
-                g.add_edge(src="inputs" + ident(op._ref),
-                           dst="outputs" + ident(op.subregion._ref),
-                           src_port=k, dst_port=k)
+                g.add_edge(
+                    src="inputs" + ident(op._ref),
+                    dst="outputs" + ident(op.subregion._ref),
+                    src_port=k,
+                    dst_port=k,
+                )
             # connect results
             for k in op.outs:
-                g.add_edge(src="inputs" + ident(op.subregion._ref),
-                           dst="outputs" + ident(op._ref),
-                           src_port=k, dst_port=k)
+                g.add_edge(
+                    src="inputs" + ident(op.subregion._ref),
+                    dst="outputs" + ident(op._ref),
+                    src_port=k,
+                    dst_port=k,
+                )
 
         else:
             inputs_name = "inputs" + ident(op._ref)
@@ -137,32 +163,46 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
             outputs_name = "outputs" + ident(op._ref)
 
             opmaker = maker.subgroup("box_" + ident(op._ref))
-            g.add_node(inputs_name, opmaker.make_node(
-                kind="ports",
-                ports=tuple(op.ins),
-                data=dict(body="ins"),
-            ))
+            g.add_node(
+                inputs_name,
+                opmaker.make_node(
+                    kind="ports",
+                    ports=tuple(op.ins),
+                    data=dict(body="ins"),
+                ),
+            )
 
-            g.add_node(node_name, opmaker.make_node(
-                kind="op",
-                data=dict(body=f"{op.attrs.prettyformat()}"),
-            ))
+            g.add_node(
+                node_name,
+                opmaker.make_node(
+                    kind="op",
+                    data=dict(body=f"{op.attrs.prettyformat()}"),
+                ),
+            )
 
-            g.add_node(outputs_name, opmaker.make_node(
-                kind="ports",
-                ports=tuple(op.outs),
-                data=dict(body="outs"),
-            ))
+            g.add_node(
+                outputs_name,
+                opmaker.make_node(
+                    kind="ports",
+                    ports=tuple(op.outs),
+                    data=dict(body="outs"),
+                ),
+            )
             g.add_edge(src=inputs_name, dst=node_name, kind="meta")
             g.add_edge(src=node_name, dst=outputs_name, kind="meta")
 
     for edge in ir._storage.iter_edges():
         src = "outputs" + ident(edge.source.ref)
         dst = "inputs" + ident(edge.target.ref)
-        g.add_edge(src=src, dst=dst,
-                   src_port=edge.source.portname, dst_port=edge.target.portname)
+        g.add_edge(
+            src=src,
+            dst=dst,
+            src_port=edge.source.portname,
+            dst_port=edge.target.portname,
+        )
 
     return g
+
 
 def _pretty_bytecode(inst: dis.Instruction) -> str:
     return f"{inst.offset}:{inst.opname}({inst.argval})"
@@ -210,13 +250,15 @@ class _ToRvsdgIR_Data:
 
     def nest(self, region_opname, fn, **kwargs) -> "_ToRvsdg_Data":
         imported = self.imported()
-        region_op = self.region.add_subregion(opname=region_opname, ins=imported.varmap.keys(), outs=(),
-                                              **kwargs)
+        region_op = self.region.add_subregion(
+            opname=region_opname, ins=imported.varmap.keys(), outs=(), **kwargs
+        )
         region_op.ins(**imported.varmap)
 
         subregion = region_op.subregion
-        inner_data = self.replace(region=subregion,
-                                    varmap=dict(**subregion.args))
+        inner_data = self.replace(
+            region=subregion, varmap=dict(**subregion.args)
+        )
 
         inner_data = fn(inner_data)
 
@@ -226,7 +268,6 @@ class _ToRvsdgIR_Data:
 
         out_varmap = {k: region_op.outs[k] for k in inner_data.varmap}
         return self.replace(stack=inner_data.stack, varmap=dict(**out_varmap))
-
 
 
 class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
@@ -259,7 +300,9 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
         # XXX: THIS IS NEEDED BECAUSE numba-rvsdg is not providing a cpvar name
         self._switch_cp_stack = []
 
-    def visit_block(self, block: BasicBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+    def visit_block(
+        self, block: BasicBlock, data: _ToRvsdgIR_Data
+    ) -> _ToRvsdgIR_Data:
         from .rvsdg.bc2rvsdg import ExtraBasicBlock
 
         if isinstance(block, PythonBytecodeBlock):
@@ -267,10 +310,15 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
 
             imported = data.imported()
             bctorvsdg, stack, varmap = BcToRvsdgIR.run(
-                data.region, imported.stack, imported.varmap, instlist,
+                data.region,
+                imported.stack,
+                imported.varmap,
+                instlist,
                 switch_cp_stack=self._switch_cp_stack,
-                )
-            return _ToRvsdgIR_Data(stack=tuple(stack), varmap=varmap, region=data.region)
+            )
+            return _ToRvsdgIR_Data(
+                stack=tuple(stack), varmap=varmap, region=data.region
+            )
 
         elif isinstance(block, SyntheticFill):
             # no-op
@@ -282,8 +330,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
             for k, v in block.variable_assignment.items():
                 region = data.region
                 op = region.add_simple_op(
-                    "rvsdg.cpvar", ins=(), outs=["cp"],
-                    attrs={"cpval": int(v)}
+                    "rvsdg.cpvar", ins=(), outs=["cp"], attrs={"cpval": int(v)}
                 )
                 cur_varmap[k] = op.outs.cp
             return data.replace(varmap=cur_varmap)
@@ -300,8 +347,10 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
             cpvar = cur_varmap.pop(block.variable)
             op = region.add_simple_op(
                 "rvsdg.setcpvar",
-                ins=["env", "cp"], outs=["env"],
-                attrs={"cp": parent.attrs.extras["cp"]})
+                ins=["env", "cp"],
+                outs=["env"],
+                attrs={"cp": parent.attrs.extras["cp"]},
+            )
             op.ins(env=cur_varmap["env"], cp=cpvar)
             cur_varmap["env"] = op.outs.env
 
@@ -314,19 +363,26 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
         # otherwise
         raise NotImplementedError(type(block))
 
-    def visit_loop(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+    def visit_loop(
+        self, region: RegionBlock, data: _ToRvsdgIR_Data
+    ) -> _ToRvsdgIR_Data:
         assert isinstance(region, RegionBlock) and region.kind == "loop"
 
         def _emit_loop(data):
             return self.visit_linear(region, data)
-        return data.nest("rvsdg.loop", _emit_loop,
-                         attrs={"cp": self.get_backedge_label()})
 
-    def visit_switch(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+        return data.nest(
+            "rvsdg.loop", _emit_loop, attrs={"cp": self.get_backedge_label()}
+        )
+
+    def visit_switch(
+        self, region: RegionBlock, data: _ToRvsdgIR_Data
+    ) -> _ToRvsdgIR_Data:
         assert isinstance(region, RegionBlock) and region.kind == "switch"
 
-        def _emit_switch_body(inner_data: _ToRvsdgIR_Data, switch_label: str) -> _ToRvsdgIR_Data:
-
+        def _emit_switch_body(
+            inner_data: _ToRvsdgIR_Data, switch_label: str
+        ) -> _ToRvsdgIR_Data:
             # Emit header
             header = region.header
             header_block = region.subregion[header]
@@ -339,7 +395,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                     opname="rvsdg.switch",
                     ins=list(imported_inner_data.varmap.keys()),
                     outs=(),
-                    attrs={"cp": switch_label}
+                    attrs={"cp": switch_label},
                 )
                 cases_region_op.ins(**imported_inner_data.varmap)
                 case_data = imported_inner_data.replace(
@@ -348,25 +404,35 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                 )
 
                 data_foreach_case = []
-                branches = filter(lambda blk: blk.kind == "branch", region.subregion.graph.values())
+                branches = filter(
+                    lambda blk: blk.kind == "branch",
+                    region.subregion.graph.values(),
+                )
                 for i, blk in enumerate(branches):
+
                     def _add_case_block(data):
                         return self.visit_linear(blk, data)
 
                     data_foreach_case.append(
-                        case_data.nest("rvsdg.case", _add_case_block,
-                                        attrs={"case": i})
+                        case_data.nest(
+                            "rvsdg.case", _add_case_block, attrs={"case": i}
+                        )
                     )
 
                 # Merge stack
-                merged_nstack = min(len(each.stack) for each in data_foreach_case)
+                merged_nstack = min(
+                    len(each.stack) for each in data_foreach_case
+                )
                 merged_stack = [f"export_{i}" for i in range(merged_nstack)]
                 # Merge varmaps
                 merging_varmaps = []
                 merging_non_stack_vars: set[str] = set()
                 for each in data_foreach_case:
-                    cur_non_stack = {k: v for k, v in each.varmap.items()
-                                    if k not in each.stack}
+                    cur_non_stack = {
+                        k: v
+                        for k, v in each.varmap.items()
+                        if k not in each.stack
+                    }
                     merging_varmaps.append(cur_non_stack)
                     merging_non_stack_vars.update(cur_non_stack)
                 for k in merging_non_stack_vars:
@@ -380,7 +446,9 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                         port = each.varmap[stk]
                         cases_region_op.subregion.results.connect(k, port)
 
-                out_varmap = {k: cases_region_op.outs[k] for k in cases_region_op.outs}
+                out_varmap = {
+                    k: cases_region_op.outs[k] for k in cases_region_op.outs
+                }
                 return inner_data.replace(varmap=dict(**out_varmap))
 
             inner_data = _emit_branches(inner_data)
@@ -448,11 +516,13 @@ class BcToRvsdgIR:
 
         return inst, exported_stack, dict(**inst.region_op.outs)
 
-    def __init__(self, parent: rvsdgir.Region,
-                 stack: Sequence[str],
-                 varmap: Mapping[str, rvsdgPort],
-                 switch_cp_stack: Sequence[str],
-                 ):
+    def __init__(
+        self,
+        parent: rvsdgir.Region,
+        stack: Sequence[str],
+        varmap: Mapping[str, rvsdgPort],
+        switch_cp_stack: Sequence[str],
+    ):
         self.varmap = {}
         self._kw_names = None
         self._switch_cp_stack = switch_cp_stack
@@ -468,7 +538,6 @@ class BcToRvsdgIR:
         for k in varmap:
             self.varmap[k] = self.region.args[k]
         self.region_op.ins(**varmap)
-
 
     def push(self, val: rvsdgPort):
         self.stack.append(val)
@@ -584,10 +653,12 @@ class BcToRvsdgIR:
             opname=f"py.store",
             ins=["env", "val"],
             outs=["env", "out"],
-            attrs=dict(py=PyStoreAttrs(
-                varname=inst.argval,
-                bcinst=inst,
-            ))
+            attrs=dict(
+                py=PyStoreAttrs(
+                    varname=inst.argval,
+                    bcinst=inst,
+                )
+            ),
         )
         op.ins(env=self.effect, val=tos)
         self.replace_effect(op.outs.env)
@@ -766,7 +837,7 @@ class BcToRvsdgIR:
         env = self.varmap["env"]
         self.varmap.clear()
         self.stack.clear()
-        self.varmap['env'] = env
+        self.varmap["env"] = env
         self.varmap["return_value"] = op.outs.res
 
     def op_RAISE_VARARGS(self, inst: dis.Instruction):
