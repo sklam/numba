@@ -62,7 +62,107 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     transformer = ToRvsdgIR.run(byteflow.scfg, bcmap, argnames)
 
     transformer.ir.prettyprint()
+    render_rvsdgir(transformer.ir, "rvsdgir")
+
     raise AssertionError
+
+
+
+def render_rvsdgir(ir: rvsdgir.Region, name: str):
+    from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphvizRendererBackend, graph_debugger
+
+    g = GraphBacking()
+    maker = GraphNodeMaker(parent_path=())
+    render_rvsdgir_region(g, maker, ir)
+    rgr = GraphvizRendererBackend()
+    g.render(rgr)
+    with graph_debugger() as dbg:
+        dbg.add_graphviz(name, rgr.digraph)
+
+def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
+    from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphEdge
+
+    def ident(ref) -> str:
+        return str(ref)
+
+    args_name = "outputs" + ident(ir._ref)
+    results_name = "inputs" + ident(ir._ref)
+    g.add_node(args_name,
+                       maker.make_node(
+                           kind="ports",
+                           ports=tuple(ir.args),
+                           data=dict(body=f"args")))
+
+    g.add_node(ident(ir._ref),
+                       maker.make_node(kind="op",
+                                       data=dict(body=f"{ir.attrs.prettyformat()}")))
+    g.add_node(results_name,
+                       maker.make_node(
+                           kind="ports",
+                           ports=tuple(ir.results),
+                           data=dict(body=f"results")))
+
+    g: GraphBacking
+    prefix = {"rvsdg.loop": "loop_", "rvsdg.switch": "switch_"}.get(ir.opname, "region")
+    maker: GraphNodeMaker = maker.subgroup(prefix + ident(ir._ref))
+
+    for op in ir.body.toposorted_ops():
+        if isinstance(op, rvsdgir.RegionOp):
+            submaker = maker.subgroup("regionouter" + ident(op._ref))
+            g.add_node("inputs" + ident(op._ref),
+                       submaker.make_node(
+                           kind="ports",
+                           ports=tuple(op.ins),
+                           data=dict(body=f"inputs")))
+            render_rvsdgir_region(g, submaker, op.subregion)
+            g.add_node("outputs" + ident(op._ref),
+                       submaker.make_node(
+                           kind="ports",
+                           ports=tuple(op.outs),
+                           data=dict(body=f"outputs")))
+            # connect args
+            for k in op.ins:
+                g.add_edge(src="inputs" + ident(op._ref),
+                           dst="outputs" + ident(op.subregion._ref),
+                           src_port=k, dst_port=k)
+            # connect results
+            for k in op.outs:
+                g.add_edge(src="inputs" + ident(op.subregion._ref),
+                           dst="outputs" + ident(op._ref),
+                           src_port=k, dst_port=k)
+
+        else:
+            inputs_name = "inputs" + ident(op._ref)
+            node_name = ident(op._ref)
+            outputs_name = "outputs" + ident(op._ref)
+
+            opmaker = maker.subgroup("box_" + ident(op._ref))
+            g.add_node(inputs_name, opmaker.make_node(
+                kind="ports",
+                ports=tuple(op.ins),
+                data=dict(body="ins"),
+            ))
+
+            g.add_node(node_name, opmaker.make_node(
+                kind="op",
+                data=dict(body=f"{op.attrs.prettyformat()}"),
+            ))
+
+            g.add_node(outputs_name, opmaker.make_node(
+                kind="ports",
+                ports=tuple(op.outs),
+                data=dict(body="outs"),
+            ))
+            g.add_edge(src=inputs_name, dst=node_name, kind="meta")
+            g.add_edge(src=node_name, dst=outputs_name, kind="meta")
+
+    for edge in ir._storage.iter_edges():
+        src = "outputs" + ident(edge.source.ref)
+        dst = "inputs" + ident(edge.target.ref)
+        g.add_edge(src=src, dst=dst,
+                   src_port=edge.source.portname, dst_port=edge.target.portname)
+
+    return g
 
 
 @dataclass(frozen=True)
