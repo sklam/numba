@@ -39,6 +39,9 @@ def run_frontend(func):
     argnames = tuple(sig.parameters)
     rvsdg = build_rvsdg(func.__code__, argnames)
 
+    func_id = bytecode.FunctionIdentity.from_function(func)
+    func_ir = rvsdg_to_ir(func_id, rvsdg)
+
 
 def _debug_scfg(name, byteflow):
     from .rvsdg.regionrenderer import graph_debugger
@@ -49,7 +52,7 @@ def _debug_scfg(name, byteflow):
         dbg.add_graphviz(name, g)
 
 
-def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
+def build_rvsdg(code, argnames: tuple[str, ...]) -> rvsdgir.Region:
     from .rvsdg.bc2rvsdg import (
         canonicalize_scfg,
         _scfg_add_conditional_pop_stack,
@@ -67,7 +70,56 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
     transformer.ir.prettyprint()
     render_rvsdgir(transformer.ir, "rvsdgir")
 
-    raise AssertionError
+    return transformer.ir
+
+
+def rvsdg_to_ir(
+    func_id: bytecode.FunctionIdentity, rvsdg: rvsdgir.Region,
+) -> ir.FunctionIR:
+    rvsdg2ir = RvsdgIRInterp(func_id)
+    rvsdg2ir.run(rvsdg)
+
+    raise NotImplementedError
+    for blk in rvsdg2ir.blocks.values():
+        blk.verify()
+
+    # rvsdg2ir.blocks = ir_utils.simplify_CFG(rvsdg2ir.blocks)
+    cfg = ir_utils.compute_cfg_from_blocks(rvsdg2ir.blocks)
+    if len(cfg.dead_nodes()) > 0:
+        if DEBUG_GRAPH:
+            defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+            fir = ir.FunctionIR(
+                blocks=rvsdg2ir.blocks,
+                is_generator=False,
+                func_id=func_id,
+                loc=rvsdg2ir.first_loc,
+                definitions=defs,
+                arg_count=len(func_id.arg_names),  # type: ignore
+                arg_names=func_id.arg_names,  # type: ignore
+            )
+            fir.render_dot().view()
+        raise Exception("has dead blocks")
+
+    # for dead in cfg.dead_nodes():
+    #     del rvsdg2ir.blocks[dead]
+    ir_utils.merge_adjacent_blocks(rvsdg2ir.blocks)
+    rvsdg2ir.blocks = ir_utils.rename_labels(rvsdg2ir.blocks)
+    _simplify_assignments(rvsdg2ir.blocks)
+    defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+
+    fir = ir.FunctionIR(
+        blocks=rvsdg2ir.blocks,
+        is_generator=False,
+        func_id=func_id,
+        loc=rvsdg2ir.first_loc,
+        definitions=defs,
+        arg_count=len(func_id.arg_names),  # type: ignore
+        arg_names=func_id.arg_names,  # type: ignore
+    )
+    # fir.dump()
+    if DEBUG_GRAPH:
+        fir.render_dot().view()
+    return fir
 
 
 def render_rvsdgir(ir: rvsdgir.Region, name: str):
@@ -217,8 +269,7 @@ class PyAttrs:
 
 
 @dataclass(frozen=True)
-class PyStoreAttrs:
-    bcinst: dis.Instruction
+class PyStoreAttrs(PyAttrs):
     varname: str
 
     def __str__(self):
@@ -916,3 +967,226 @@ class BcToRvsdgIR:
 
         self.push(exitfn)
         self.push(yielded)
+
+
+class BaseInterp:
+    blocks: dict[int, ir.Block]
+    func_id: bytecode.FunctionIdentity
+    local_scope: ir.Scope
+    global_scope: ir.Scope
+    portdata: dict[rvsdgPort, ir.Var]
+    _current_block: ir.Block | None
+    last_block_label: int | None
+    branch_predicate: ir.Var | None
+    _label_map: dict[str, int]
+    _emit_debug_print = False
+    _region_stack: list[rvsdgir.Region]
+
+    # _ret_name = ".retval"
+
+    def __init__(self, func_id):
+        self.func_id = func_id
+        self.loc = self.first_loc = ir.Loc.from_function_id(func_id)
+        self.global_scope = ir.Scope(parent=None, loc=self.loc)
+        self.local_scope = ir.Scope(parent=self.global_scope, loc=self.loc)
+        self.blocks = {}
+        self.portdata = {}
+        self._current_block = None
+        self.last_block_label = None
+        self._label_map = {}
+        self._region_stack = []
+
+    def get_global_value(self, name):
+        """THIS IS COPIED from interpreter.py
+
+        Get a global value from the func_global (first) or
+        as a builtins (second).  If both failed, return a ir.UNDEFINED.
+        """
+        try:
+            return self.func_id.func.__globals__[name]
+        except KeyError:
+            return getattr(builtins, name, ir.UNDEFINED)
+
+    def store_port(self, val, port: rvsdgPort):
+        value = self.store(val, f"${port.portname}")
+        self.write_port(self._region, port, value)
+
+    def store(self, value, name, *, redefine=True, block=None) -> ir.Var:
+        target: ir.Var
+        # The following `if` is to reduce the number of assignments
+        if isinstance(value, ir.Var) and redefine and name.startswith("$"):
+            return value
+
+        if redefine:
+            target = self.local_scope.redefine(name, loc=self.loc)
+        else:
+            target = self.local_scope.get_or_define(name, loc=self.loc)
+        stmt = ir.Assign(value=value, target=target, loc=self.loc)
+        self.append(stmt, block=block)
+        return target
+
+    def write_port(self, region: rvsdgir.Region, port: rvsdgPort, value: ir.Var):
+        self.portdata[port] = value
+        # also store into aliases
+        aliases = region.get_port_alias(port)
+        for alias in aliases:
+            self.portdata[alias] = value
+
+    def read_port(self, port: rvsdgPort) -> ir.Var:
+        return self.portdata[port]
+
+    def append(self, stmt: ir.Stmt, block=None):
+        if block is None:
+            block = self.current_block
+        if block.is_terminated:
+            block.insert_before_terminator(stmt)
+        else:
+            block.append(stmt)
+
+    def _get_temp_label(self) -> int:
+        num = len(self._label_map)
+        assert num not in self._label_map
+        self._label_map[f"annoy.{num}"] = num
+        return num
+
+    @contextmanager
+    def set_block(self, label: int, block: ir.Block) -> Iterator[ir.Block]:
+        """A context manager that set the current block for other IR building
+        methods.
+
+        In addition,
+
+        - It closes any existing block in ``last_block_label`` by jumping to the
+          new block.
+        - If there is a existing block, it will be restored as the current block
+          after the context manager.
+        """
+        if self.last_block_label is not None:
+            last_block = self.blocks[self.last_block_label]
+            if not last_block.is_terminated:
+                last_block.append(ir.Jump(label, loc=self.loc))
+
+            if self._emit_debug_print:
+                print("begin dump last blk".center(80, "-"))
+                last_block.dump()
+                print("end dump last blk".center(80, "="))
+
+        self.blocks[label] = block
+        old = self._current_block
+        self._current_block = block
+        try:
+            yield block
+        finally:
+            self.last_block_label = label
+            self._current_block = old
+            # dump
+            if self._emit_debug_print:
+                print(f"begin dump blk: {label}".center(80, "-"))
+                block.dump()
+                print("end dump blk".center(80, "="))
+
+    @property
+    def current_block(self) -> ir.Block:
+        out = self._current_block
+        assert out is not None
+        return out
+
+    @property
+    def _region(self)-> rvsdgir.Region:
+        return self._region_stack[-1]
+
+    @contextmanager
+    def _push_region(self, region: rvsdgir.Region):
+        self._region_stack.append(region)
+        try:
+            yield
+        finally:
+            self._region_stack.pop()
+
+
+class PyOpHandler(BaseInterp):
+
+    def py_null(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
+        pass
+
+    def py_global_load(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
+        gvname = attrs.bcinst.argval
+        value = self.get_global_value(gvname)
+        # TODO: handle non scalar
+        const = ir.Global(gvname, value, loc=self.loc)
+        self.store_port(const, op.outs.out)
+
+    def py_call(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
+        [_env, callee_or_null, arg0_or_callee, *args] = op.ins.values()
+
+        producer = self._region.get_producer(callee_or_null)
+        if producer.opname == "py.null":
+            callee = arg0_or_callee
+        else:
+            callee = callee_or_null
+            args = (arg0_or_callee, *args)
+
+        calleevars = self.read_port(callee)
+        argvars = [self.read_port(p) for p in args]
+        kwargs = ()
+
+        expr = ir.Expr.call(calleevars, argvars, kwargs, loc=self.loc)
+        self.store_port(expr, op.outs.out)
+
+
+class RvsdgIRInterp(PyOpHandler):
+
+    def run(self, region: rvsdgir.Region):
+        assert region.opname == "function"
+
+        with self._push_region(region):
+            label = self._get_temp_label()
+            with self.set_block(
+                label, ir.Block(scope=self.local_scope, loc=self.loc)
+            ):
+                for i, k in enumerate(self.func_id.arg_names):  # type: ignore
+                    val = ir.Arg(index=i, name=k, loc=self.loc)
+                    port = region.args[f"arg_{k}"]
+                    self.store_port(val, port)
+
+            self.emit_linear_region(region)
+
+    def emit_region(self, region: rvsdgir.Region):
+        with self._push_region(region):
+            if region.opname in {"block"}:
+                self.emit_linear_region(region)
+
+    def emit_linear_region(self, region: rvsdgir.Region):
+        label = self._get_temp_label()
+        with self.set_block(
+            label, ir.Block(scope=self.local_scope, loc=self.loc)
+        ):
+            for op in region.body.toposorted_ops():
+                if isinstance(op, rvsdgir.RegionOp):
+                    # map ins to args
+                    for port, argport in zip(op.ins.values(), op.subregion.args.values(), strict=True):
+                        if port.portname != "env":
+                            value = self.portdata[port]
+                            self.write_port(op.subregion, argport, value)
+                    self.emit_region(op.subregion)
+                elif op.opname.startswith("py."):
+                    # python operations
+                    self.emit_py_op(op)
+                else:
+                    raise NotImplementedError(op)
+
+    def emit_py_op(self, op):
+        fname = op.opname.replace('.', '_')
+        fn = getattr(self, fname, None)
+        if fn is None:
+            raise NotImplementedError(f"{fname!r} not defined to emit {op.attrs.prettyformat()}")
+        else:
+            pyattrs: PyAttrs = op.attrs.extras["py"]
+            pos = pyattrs.bcinst.positions
+            if pos is not None:
+                self.loc = self.loc.with_lineno(pos.lineno, pos.col_offset)
+            try:
+                fn(op, op.attrs.extras["py"])
+            except Exception as e:
+                e.add_note(f"failed in {fn}; source: {self.loc}")
+                raise
