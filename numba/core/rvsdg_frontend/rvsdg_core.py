@@ -72,7 +72,7 @@ def render_rvsdgir(ir: rvsdgir.Region, name: str):
     from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphvizRendererBackend, graph_debugger
 
     g = GraphBacking()
-    maker = GraphNodeMaker(parent_path=())
+    maker = GraphNodeMaker(parent_path=()).subgroup("regionouter")
     render_rvsdgir_region(g, maker, ir)
     rgr = GraphvizRendererBackend()
     g.render(rgr)
@@ -81,30 +81,30 @@ def render_rvsdgir(ir: rvsdgir.Region, name: str):
 
 def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
     from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphEdge
+    g: GraphBacking
 
     def ident(ref) -> str:
         return str(ref)
 
     args_name = "outputs" + ident(ir._ref)
     results_name = "inputs" + ident(ir._ref)
+
+    g.add_node(ident(ir._ref),
+                       maker.make_node(kind="op",
+                                       data=dict(body=f"{ir.attrs.prettyformat()}")))
+
+    prefix = {"rvsdg.loop": "loop_", "rvsdg.switch": "switch_"}.get(ir.opname, "region")
+    maker: GraphNodeMaker = maker.subgroup(prefix + ident(ir._ref))
     g.add_node(args_name,
                        maker.make_node(
                            kind="ports",
                            ports=tuple(ir.args),
                            data=dict(body=f"args")))
-
-    g.add_node(ident(ir._ref),
-                       maker.make_node(kind="op",
-                                       data=dict(body=f"{ir.attrs.prettyformat()}")))
     g.add_node(results_name,
                        maker.make_node(
                            kind="ports",
                            ports=tuple(ir.results),
                            data=dict(body=f"results")))
-
-    g: GraphBacking
-    prefix = {"rvsdg.loop": "loop_", "rvsdg.switch": "switch_"}.get(ir.opname, "region")
-    maker: GraphNodeMaker = maker.subgroup(prefix + ident(ir._ref))
 
     for op in ir.body.toposorted_ops():
         if isinstance(op, rvsdgir.RegionOp):
@@ -164,13 +164,16 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
 
     return g
 
+def _pretty_bytecode(inst: dis.Instruction) -> str:
+    return f"{inst.offset}:{inst.opname}({inst.argval})"
+
 
 @dataclass(frozen=True)
 class PyAttrs:
     bcinst: dis.Instruction
 
     def __str__(self):
-        return f"[{self.bcinst.opname}]"
+        return f"[{_pretty_bytecode(self.bcinst)}]"
 
 
 @dataclass(frozen=True)
@@ -179,7 +182,7 @@ class PyStoreAttrs:
     varname: str
 
     def __str__(self):
-        return f"[{self.bcinst.opname} {self.varname!r}]"
+        return f"[{_pretty_bytecode(self.bcinst)} {self.varname!r}]"
 
 
 @dataclass(frozen=True)
