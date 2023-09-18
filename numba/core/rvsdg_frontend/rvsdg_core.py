@@ -50,15 +50,18 @@ def _debug_scfg(name, byteflow):
 
 
 def build_rvsdg(code, argnames: tuple[str, ...]) -> SCFG:
-    from .rvsdg.bc2rvsdg import canonicalize_scfg
+    from .rvsdg.bc2rvsdg import canonicalize_scfg, _scfg_add_conditional_pop_stack
     byteflow = ByteFlow.from_bytecode(code)
     bcmap = byteflow.scfg.bcmap_from_bytecode(byteflow.bc)
+    _scfg_add_conditional_pop_stack(bcmap, byteflow.scfg)
     byteflow = byteflow.restructure()
     canonicalize_scfg(byteflow.scfg)
     _debug_scfg("canonicalized SCFG", byteflow)
 
 
     transformer = ToRvsdgIR.run(byteflow.scfg, bcmap, argnames)
+
+    transformer.ir.prettyprint()
     raise AssertionError
 
 
@@ -85,13 +88,46 @@ class _ToRvsdgIR_Data:
     varmap: dict[str, rvsdgPort]
     region: rvsdgir.Region
 
+    def __post_init__(self):
+        assert isinstance(self.stack, tuple), "stack must be a tuple"
+
     def replace(self, **kwargs) -> "_ToRvsdgIR_Data":
         return _dataclass_replace(self, **kwargs)
+
+    def imported(self) -> "_ToRvsdgIR_Data":
+        def repl(k: str) -> str:
+            prefix = "export_"
+            if k.startswith(prefix):
+                return f"import_{k[len(prefix):]}"
+            return k
+
+        varmap = {repl(name): port for name, port in self.varmap.items()}
+        stack = tuple(repl(name) for name in self.stack)
+        return self.replace(varmap=varmap, stack=stack)
+
+    def nest(self, region_opname, fn, **kwargs) -> "_ToRvsdg_Data":
+        imported = self.imported()
+        region_op = self.region.add_subregion(opname=region_opname, ins=imported.varmap.keys(), outs=(),
+                                              **kwargs)
+        region_op.ins(**imported.varmap)
+
+        subregion = region_op.subregion
+        inner_data = self.replace(region=subregion,
+                                    varmap=dict(**subregion.args))
+
+        inner_data = fn(inner_data)
+
+        for k, v in inner_data.varmap.items():
+            subregion.results.add_port(k)
+            subregion.results.connect(k, v)
+
+        out_varmap = {k: region_op.outs[k] for k in inner_data.varmap}
+        return self.replace(stack=inner_data.stack, varmap=dict(**out_varmap))
+
 
 
 class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
     bcmap: dict[int, dis.Instruction]
-
 
     @classmethod
     def run(cls, scfg, bcmap, argnames):
@@ -100,7 +136,10 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
         for k in argnames:
             varmap[_decorate_varname(k)] = inst.ir.args[f"arg_{k}"]
         data = _ToRvsdgIR_Data(stack=(), varmap=varmap, region=inst.ir)
-        inst.visit_graph(scfg, data=data)
+        data = inst.visit_graph(scfg, data=data)
+
+        # Connect output
+        inst.ir.results(**data.varmap)
         return inst
 
     def __init__(self, bcmap, argnames):
@@ -111,16 +150,62 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
             ins=("env", *[f"arg_{k}" for k in argnames]),
             outs=("env", "return_value"),
         )
+        self._backedge_label = 0
+        self._switch_label = 0
+
+        # XXX: THIS IS NEEDED BECAUSE numba-rvsdg is not providing a cpvar name
+        self._switch_cp_stack = []
 
     def visit_block(self, block: BasicBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+        from .rvsdg.bc2rvsdg import ExtraBasicBlock
+
         if isinstance(block, PythonBytecodeBlock):
             instlist = block.get_instructions(self.bcmap)
 
-            bctorvsdg, stack, varmap = BcToRvsdgIR.run(data.region, data.stack, data.varmap, instlist)
-            return _ToRvsdgIR_Data(stack=stack, varmap=varmap, region=data.region)
+            imported = data.imported()
+            bctorvsdg, stack, varmap = BcToRvsdgIR.run(
+                data.region, imported.stack, imported.varmap, instlist,
+                switch_cp_stack=self._switch_cp_stack,
+                )
+            return _ToRvsdgIR_Data(stack=tuple(stack), varmap=varmap, region=data.region)
 
         elif isinstance(block, SyntheticFill):
             # no-op
+            return data
+
+        elif isinstance(block, SyntheticAssignment):
+            # Add and export control variables
+            cur_varmap = data.varmap.copy()
+            for k, v in block.variable_assignment.items():
+                region = data.region
+                op = region.add_simple_op(
+                    "rvsdg.cpvar", ins=(), outs=["cp"],
+                    attrs={"cpval": int(v)}
+                )
+                cur_varmap[k] = op.outs.cp
+            return data.replace(varmap=cur_varmap)
+        elif isinstance(block, SyntheticBranch):
+            cur_varmap = data.varmap.copy()
+            region = data.region
+            assert block.variable.startswith("backedge")
+            # Search backward for the parent loop
+            parent = region
+            while parent.opname != "rvsdg.loop":
+                parent = parent.get_parent()
+
+            # Remove lifetime of the CP variable
+            cpvar = cur_varmap.pop(block.variable)
+            op = region.add_simple_op(
+                "rvsdg.setcpvar",
+                ins=["env", "cp"], outs=["env"],
+                attrs={"cp": parent.attrs.extras["cp"]})
+            op.ins(env=cur_varmap["env"], cp=cpvar)
+            cur_varmap["env"] = op.outs.env
+
+            return data.replace(varmap=cur_varmap)
+
+        elif isinstance(block, ExtraBasicBlock):
+            # TODO
             return data
 
         # otherwise
@@ -128,35 +213,97 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
 
     def visit_loop(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
         assert isinstance(region, RegionBlock) and region.kind == "loop"
-        ir = data.region.add_subregion(
-            opname="loop",
-            ins=data.varmap.keys(),
-            outs=(),
-        )
-        ir.ins(**data.varmap)
-        data.region.prettyprint()
-        inner_data = data.replace(region=ir.subregion, varmap=dict(**ir.subregion.args))
-        self.visit_linear(region, inner_data)
+
+        def _emit_loop(data):
+            return self.visit_linear(region, data)
+        return data.nest("rvsdg.loop", _emit_loop,
+                         attrs={"cp": self.get_backedge_label()})
 
     def visit_switch(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
         assert isinstance(region, RegionBlock) and region.kind == "switch"
-        # Emit header
-        header = region.header
-        header_block = region.subregion[header]
-        data = self.visit_linear(header_block, data)
 
+        def _emit_switch_body(inner_data: _ToRvsdgIR_Data, switch_label: int) -> _ToRvsdgIR_Data:
 
-        # Emit branches
-        # data_for_branches = []
-        # branch_blocks = []
-        for blk in region.subregion.graph.values():
-            if blk.kind == "branch":
-                data = self.visit_linear(blk, data)
+            # Emit header
+            header = region.header
+            header_block = region.subregion[header]
+            inner_data = self.visit_linear(header_block, inner_data)
 
-        exiting = region.exiting
-        exiting_block = region.subregion[exiting]
-        data = self.visit_linear(exiting_block, data)
-        return data
+            # Emit branches
+            def _emit_branches(inner_data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
+                imported_inner_data = inner_data.imported()
+                cases_region_op = imported_inner_data.region.add_subregion(
+                    opname="rvsdg.switch",
+                    ins=list(imported_inner_data.varmap.keys()),
+                    outs=(),
+                    attrs={"cp": switch_label}
+                )
+                cases_region_op.ins(**imported_inner_data.varmap)
+                case_data = imported_inner_data.replace(
+                    region=cases_region_op.subregion,
+                    varmap=dict(**cases_region_op.subregion.args),
+                )
+
+                data_foreach_case = []
+                branches = filter(lambda blk: blk.kind == "branch", region.subregion.graph.values())
+                for i, blk in enumerate(branches):
+                    def _add_case_block(data):
+                        return self.visit_linear(blk, data)
+
+                    data_foreach_case.append(
+                        case_data.nest("rvsdg.case", _add_case_block,
+                                        attrs={"case": i})
+                    )
+
+                # Merge stack
+                merged_nstack = min(len(each.stack) for each in data_foreach_case)
+                merged_stack = [f"exported_{i}" for i in range(merged_nstack)]
+                # Merge varmaps
+                merging_varmaps = []
+                merging_non_stack_vars: set[str] = set()
+                for each in data_foreach_case:
+                    cur_non_stack = {k: v for k, v in each.varmap.items()
+                                    if k not in each.stack}
+                    merging_varmaps.append(cur_non_stack)
+                    merging_non_stack_vars.update(cur_non_stack)
+                for k in merging_non_stack_vars:
+                    cases_region_op.subregion.results.add_port(k)
+                for each_varmap in merging_varmaps:
+                    cases_region_op.subregion.results(**each_varmap)
+                for k in merged_stack:
+                    cases_region_op.subregion.results.add_port(k)
+                for each in data_foreach_case:
+                    for k, stk in zip(merged_stack, each.stack):
+                        port = each.varmap[stk]
+                        cases_region_op.subregion.results.connect(k, port)
+
+                out_varmap = {k: cases_region_op.outs[k] for k in cases_region_op.outs}
+                return inner_data.replace(varmap=dict(**out_varmap))
+
+            inner_data = _emit_branches(inner_data)
+
+            exiting = region.exiting
+            exiting_block = region.subregion[exiting]
+            inner_data = self.visit_linear(exiting_block, inner_data)
+            return inner_data
+
+        # setup
+        switch_label = self.get_switch_label()
+        self._switch_cp_stack.append(switch_label)
+        # emit
+        out = _emit_switch_body(data, switch_label)
+        # teardown
+        self._switch_cp_stack.pop()
+        return out
+
+    def get_backedge_label(self) -> str:
+        self._backedge_label += 1
+        return f"backedge_label_{self._backedge_label}"
+
+    def get_switch_label(self) -> str:
+        self._switch_label += 1
+        return f"switch_label_{self._switch_label}"
+
 
 def _decorate_varname(varname: str) -> str:
     return f"var_{varname}"
@@ -167,6 +314,7 @@ class BcToRvsdgIR:
     varmap: dict[str, rvsdgPort]
     _kw_names: rvsdgPort | None
     region: rvsdgir.Region
+    _switch_cp_stack: Sequence[str]
 
     @classmethod
     def run(
@@ -175,8 +323,9 @@ class BcToRvsdgIR:
         stack: Sequence[str],
         varmap: dict[str, rvsdgPort],
         instlist: Sequence[dis.Instruction],
+        switch_cp_stack: Sequence[str],
     ):
-        inst = cls(parent, stack, varmap)
+        inst = cls(parent, stack, varmap, switch_cp_stack)
         for bc in instlist:
             inst.convert(bc)
         # add output ports from live vars
@@ -198,9 +347,12 @@ class BcToRvsdgIR:
 
     def __init__(self, parent: rvsdgir.Region,
                  stack: Sequence[str],
-                 varmap: Mapping[str, rvsdgPort]):
+                 varmap: Mapping[str, rvsdgPort],
+                 switch_cp_stack: Sequence[str],
+                 ):
         self.varmap = {}
         self._kw_names = None
+        self._switch_cp_stack = switch_cp_stack
         self.region_op = parent.add_subregion(
             opname="block",
             ins=varmap.keys(),
@@ -264,6 +416,9 @@ class BcToRvsdgIR:
         res = self._kw_names
         self._kw_names = None
         return res
+
+    def _top_switch_cp(self) -> str:
+        return self._switch_cp_stack[-1]
 
     def op_NOP(self, inst: dis.Instruction):
         pass  # no-op
@@ -403,10 +558,15 @@ class BcToRvsdgIR:
 
     def op_FOR_ITER(self, inst: dis.Instruction):
         tos = self.top()
-        op = Op(opname="foriter", bc_inst=inst)
-        op.add_input("iter", tos)
-        # Store the indvar into an internal variable
-        self.store("indvar", op.add_output("indvar"))
+        op = self.region.add_simple_op(
+            opname="py.foriter",
+            ins=["env", "iter"],
+            outs=["env", "next"],
+            attrs=dict(py=PyAttrs(bcinst=inst), cp=self._top_switch_cp()),
+        )
+        op.ins(env=self.effect, iter=tos)
+        self.replace_effect(op.outs.env)
+        self.push(op.outs.next)
 
     def _binaryop(self, opname: str, inst: dis.Instruction):
         rhs = self.pop()
@@ -499,9 +659,12 @@ class BcToRvsdgIR:
             attrs=dict(py=PyAttrs(bcinst=inst)),
         )
         op.ins(env=self.effect, val=tos)
-        self.replace_effect(op.outs["env"])
-        self.region.results(env=op.outs["env"],
-                            return_value=op.outs.res)
+        self.replace_effect(op.outs.env)
+        env = self.varmap["env"]
+        self.varmap.clear()
+        self.stack.clear()
+        self.varmap['env'] = env
+        self.varmap["return_value"] = op.outs.res
 
     def op_RAISE_VARARGS(self, inst: dis.Instruction):
         if inst.arg == 0:
