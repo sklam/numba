@@ -222,7 +222,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
     def visit_switch(self, region: RegionBlock, data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
         assert isinstance(region, RegionBlock) and region.kind == "switch"
 
-        def _emit_switch_body(inner_data: _ToRvsdgIR_Data, switch_label: int) -> _ToRvsdgIR_Data:
+        def _emit_switch_body(inner_data: _ToRvsdgIR_Data, switch_label: str) -> _ToRvsdgIR_Data:
 
             # Emit header
             header = region.header
@@ -257,7 +257,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
 
                 # Merge stack
                 merged_nstack = min(len(each.stack) for each in data_foreach_case)
-                merged_stack = [f"exported_{i}" for i in range(merged_nstack)]
+                merged_stack = [f"export_{i}" for i in range(merged_nstack)]
                 # Merge varmaps
                 merging_varmaps = []
                 merging_non_stack_vars: set[str] = set()
