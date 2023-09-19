@@ -74,7 +74,8 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> rvsdgir.Region:
 
 
 def rvsdg_to_ir(
-    func_id: bytecode.FunctionIdentity, rvsdg: rvsdgir.Region,
+    func_id: bytecode.FunctionIdentity,
+    rvsdg: rvsdgir.Region,
 ) -> ir.FunctionIR:
     rvsdg2ir = RvsdgIRInterp(func_id)
     rvsdg2ir.run(rvsdg)
@@ -217,7 +218,8 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
                 ident(op._ref),
                 maker.make_node(
                     kind="ported_op",
-                    ports=[f"in_{p}" for p in op.ins] + [f"out_{p}" for p in op.outs],
+                    ports=[f"in_{p}" for p in op.ins]
+                    + [f"out_{p}" for p in op.outs],
                     data=dict(body=f"{op.attrs.prettyformat()}"),
                 ),
             )
@@ -1016,7 +1018,9 @@ class BaseInterp:
         self.append(stmt, block=block)
         return target
 
-    def write_port(self, region: rvsdgir.Region, port: rvsdgPort, value: ir.Var):
+    def write_port(
+        self, region: rvsdgir.Region, port: rvsdgPort, value: ir.Var
+    ):
         self.portdata[port] = value
         # also store into aliases
         aliases = region.get_port_alias(port)
@@ -1083,7 +1087,7 @@ class BaseInterp:
         return out
 
     @property
-    def _region(self)-> rvsdgir.Region:
+    def _region(self) -> rvsdgir.Region:
         return self._region_stack[-1]
 
     @contextmanager
@@ -1096,7 +1100,6 @@ class BaseInterp:
 
 
 class PyOpHandler(BaseInterp):
-
     def py_null(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         pass
 
@@ -1126,7 +1129,6 @@ class PyOpHandler(BaseInterp):
 
 
 class RvsdgIRInterp(PyOpHandler):
-
     def run(self, region: rvsdgir.Region):
         assert region.opname == "function"
 
@@ -1155,7 +1157,9 @@ class RvsdgIRInterp(PyOpHandler):
             for op in region.body.toposorted_ops():
                 if isinstance(op, rvsdgir.RegionOp):
                     # map ins to args
-                    for port, argport in zip(op.ins.values(), op.subregion.args.values(), strict=True):
+                    for port, argport in zip(
+                        op.ins.values(), op.subregion.args.values(), strict=True
+                    ):
                         if port.portname != "env":
                             value = self.portdata[port]
                             self.write_port(op.subregion, argport, value)
@@ -1167,10 +1171,12 @@ class RvsdgIRInterp(PyOpHandler):
                     raise NotImplementedError(op)
 
     def emit_py_op(self, op):
-        fname = op.opname.replace('.', '_')
+        fname = op.opname.replace(".", "_")
         fn = getattr(self, fname, None)
         if fn is None:
-            raise NotImplementedError(f"{fname!r} not defined to emit {op.attrs.prettyformat()}")
+            raise NotImplementedError(
+                f"{fname!r} not defined to emit {op.attrs.prettyformat()}"
+            )
         else:
             pyattrs: PyAttrs = op.attrs.extras["py"]
             pos = pyattrs.bcinst.positions
