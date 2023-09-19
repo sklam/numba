@@ -188,7 +188,7 @@ def unbox_enum(typ, obj, c):
 def box_record(typ, val, c):
     # Note we will create a copy of the record
     # This is the only safe way.
-    size = ir.Constant(ir.IntType(32), val.type.pointee.count)
+    size = ir.Constant(ir.IntType(32), c.context.get_abi_sizeof(val.type.pointee))
     ptr = c.builder.bitcast(val, ir.PointerType(ir.IntType(8)))
     return c.pyapi.recreate_record(ptr, size, typ.dtype, c.env_manager)
 

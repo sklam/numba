@@ -943,7 +943,11 @@ class RecordModel(CompositeModel):
     def __init__(self, dmm, fe_type):
         super(RecordModel, self).__init__(dmm, fe_type)
         self._models = [self._dmm.lookup(t) for _, t in fe_type.members]
-        self._be_type = ir.ArrayType(ir.IntType(8), fe_type.size)
+        self._meminfo = types.MemInfoPointer(types.byte)
+        self._be_type = ir.LiteralStructType([
+            ir.ArrayType(ir.IntType(8), fe_type.size),
+            dmm.lookup(self._meminfo).get_data_type(),
+        ])
         self._be_ptr_type = self._be_type.as_pointer()
 
     def get_value_type(self):

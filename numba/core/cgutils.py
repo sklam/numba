@@ -917,7 +917,7 @@ def is_pointer(ltyp):
 
 
 def get_record_member(builder, record, offset, typ):
-    pval = gep_inbounds(builder, record, 0, offset)
+    pval = gep_inbounds(builder, record, 0, 0, offset)
     assert not is_pointer(pval.type.pointee)
     return builder.bitcast(pval, typ.as_pointer())
 
