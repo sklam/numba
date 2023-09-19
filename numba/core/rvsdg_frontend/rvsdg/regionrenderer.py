@@ -247,6 +247,28 @@ class GraphvizRendererBackend(AbstractRendererBackend):
             ports = [f"<{x}> {x}" for x in node.ports]
             label = f"{node.data['body']} | {'|'.join(ports)}"
             self.digraph.node(k, label=label, shape="record")
+        elif node.kind == "ported_op":
+            # Draw something like:
+            # +---------+
+            # | inputs  |
+            # +---------+
+            # | op      |
+            # +---------+
+            # | outputs |
+            # +---------+
+            ins = []
+            outs = []
+            for p in node.ports:
+                if p.startswith("in_"):
+                    ins.append(p[3:])
+                elif p.startswith("out_"):
+                    outs.append(p[4:])
+                else:
+                    raise ValueError(p)
+            inports = [f"<in_{x}> {x}" for x in ins]
+            outports = [f"<out_{x}> {x}" for x in outs]
+            label = f"{{ {{ {'|'.join(inports)} }} | {node.data['body']} | {{ {'|'.join(outports)} }} }}"
+            self.digraph.node(k, label=label, shape="record")
         elif node.kind == "cfg":
             self.digraph.node(
                 k, label=node.data["body"], shape="plain", fontcolor="blue"

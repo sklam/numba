@@ -133,6 +133,7 @@ def render_rvsdgir(ir: rvsdgir.Region, name: str):
     g = GraphBacking()
     maker = GraphNodeMaker(parent_path=()).subgroup("regionouter")
     render_rvsdgir_region(g, maker, ir)
+    g.verify()
     rgr = GraphvizRendererBackend()
     g.render(rgr)
     with graph_debugger() as dbg:
@@ -142,7 +143,8 @@ def render_rvsdgir(ir: rvsdgir.Region, name: str):
 def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
     from .rvsdg.regionrenderer import GraphBacking, GraphNodeMaker, GraphEdge
 
-    g: GraphBacking
+    assert isinstance(g, GraphBacking)
+    assert isinstance(maker, GraphNodeMaker)
 
     def ident(ref) -> str:
         return str(ref)
@@ -160,7 +162,7 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
     prefix = {"rvsdg.loop": "loop_", "rvsdg.switch": "switch_"}.get(
         ir.opname, "region"
     )
-    maker: GraphNodeMaker = maker.subgroup(prefix + ident(ir._ref))
+    maker = maker.subgroup(prefix + ident(ir._ref))
     g.add_node(
         args_name,
         maker.make_node(
@@ -173,6 +175,7 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
             kind="ports", ports=tuple(ir.results), data=dict(body=f"results")
         ),
     )
+    is_node_ports = set()
 
     for op in ir.body.toposorted_ops():
         if isinstance(op, rvsdgir.RegionOp):
@@ -210,47 +213,35 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
                 )
 
         else:
-            inputs_name = "inputs" + ident(op._ref)
-            node_name = ident(op._ref)
-            outputs_name = "outputs" + ident(op._ref)
-
-            opmaker = maker.subgroup("box_" + ident(op._ref))
             g.add_node(
-                inputs_name,
-                opmaker.make_node(
-                    kind="ports",
-                    ports=tuple(op.ins),
-                    data=dict(body="ins"),
-                ),
-            )
-
-            g.add_node(
-                node_name,
-                opmaker.make_node(
-                    kind="op",
+                ident(op._ref),
+                maker.make_node(
+                    kind="ported_op",
+                    ports=[f"in_{p}" for p in op.ins] + [f"out_{p}" for p in op.outs],
                     data=dict(body=f"{op.attrs.prettyformat()}"),
                 ),
             )
-
-            g.add_node(
-                outputs_name,
-                opmaker.make_node(
-                    kind="ports",
-                    ports=tuple(op.outs),
-                    data=dict(body="outs"),
-                ),
-            )
-            g.add_edge(src=inputs_name, dst=node_name, kind="meta")
-            g.add_edge(src=node_name, dst=outputs_name, kind="meta")
+            is_node_ports.update(op.ins.list_ports())
+            is_node_ports.update(op.outs.list_ports())
 
     for edge in ir._storage.iter_edges():
-        src = "outputs" + ident(edge.source.ref)
-        dst = "inputs" + ident(edge.target.ref)
+        if edge.source in is_node_ports:
+            src = ident(edge.source.ref)
+            src_port = f"out_{edge.source.portname}"
+        else:
+            src = "outputs" + ident(edge.source.ref)
+            src_port = edge.source.portname
+        if edge.target in is_node_ports:
+            dst = ident(edge.target.ref)
+            dst_port = f"in_{edge.target.portname}"
+        else:
+            dst = "inputs" + ident(edge.target.ref)
+            dst_port = edge.target.portname
         g.add_edge(
             src=src,
             dst=dst,
-            src_port=edge.source.portname,
-            dst_port=edge.target.portname,
+            src_port=src_port,
+            dst_port=dst_port,
         )
 
     return g
