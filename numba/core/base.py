@@ -488,14 +488,18 @@ class BaseContext(object):
         dataval = self.data_model_manager[ty].as_data(builder, value)
         builder.store(dataval, ptr, align=align)
 
-    def unpack_value(self, builder, ty, ptr, align=None):
+    def unpack_value(self, builder, ty, ptr, align=None, meminfo=None):
         """
         Unpack value from the array storage at *ptr*.
         If *align* is given, it is the guaranteed alignment for *ptr*
         (by default, the standard ABI alignment).
         """
         dm = self.data_model_manager[ty]
-        return dm.load_from_data_pointer(builder, ptr, align)
+        if meminfo is not None:
+            return dm.load_from_data_pointer_owned(builder, ptr, align,
+                                                   meminfo=meminfo)
+        else:
+            return dm.load_from_data_pointer(builder, ptr, align)
 
     def get_constant_generic(self, builder, ty, val):
         """

@@ -950,6 +950,16 @@ class RecordModel(CompositeModel):
         ])
         self._be_ptr_type = self._be_type.as_pointer()
 
+    def contains_nrt_meminfo(self):
+        return True
+
+    def traverse(self, builder):
+        def get_meminfo(ptr):
+            ptr =  builder.bitcast(ptr, self.get_value_type())
+            mislot = cgutils.gep_inbounds(builder, ptr, 0, 1)
+            return builder.load(mislot)
+        return [(self._meminfo, get_meminfo)]
+
     def get_value_type(self):
         """Passed around as reference to underlying data
         """
@@ -983,7 +993,14 @@ class RecordModel(CompositeModel):
         return value
 
     def load_from_data_pointer(self, builder, ptr, align=None):
-        return builder.bitcast(ptr, self.get_value_type())
+        raise TypeError("Use .load_from_data_pointer_owned() instead")
+
+    def load_from_data_pointer_owned(self, builder, ptr, align=None, meminfo=None):
+        ptr =  builder.bitcast(ptr, self.get_value_type())
+        mislot = cgutils.gep_inbounds(builder, ptr, 0, 1)
+        builder.store(meminfo, mislot)
+        return ptr
+
 
 
 @register_default(types.UnicodeCharSeq)

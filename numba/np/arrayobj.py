@@ -127,13 +127,13 @@ def get_itemsize(context, array_type):
     return context.get_abi_sizeof(llty)
 
 
-def load_item(context, builder, arrayty, ptr):
+def load_item(context, builder, arrayty, ptr, *, meminfo=None):
     """
     Load the item at the given array pointer.
     """
     align = None if arrayty.aligned else 1
     return context.unpack_value(builder, arrayty.dtype, ptr,
-                                align=align)
+                                align=align, meminfo=meminfo)
 
 
 def store_item(context, builder, arrayty, val, ptr):
@@ -473,7 +473,8 @@ def _getitem_array_generic(context, builder, return_type, aryty, ary,
     else:
         # Load scalar from 0-d result
         assert not view_shapes
-        return load_item(context, builder, aryty, dataptr)
+        meminfo = ary.meminfo
+        return load_item(context, builder, aryty, dataptr, meminfo=meminfo)
 
 
 @lower_builtin(operator.getitem, types.Buffer, types.Integer)
