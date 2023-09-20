@@ -1,4 +1,5 @@
 import dis
+import operator
 from contextlib import contextmanager
 import builtins
 from typing import Iterator, Sequence, Mapping, Callable, no_type_check
@@ -40,6 +41,8 @@ def run_frontend(func):
 
     func_id = bytecode.FunctionIdentity.from_function(func)
     func_ir = rvsdg_to_ir(func_id, rvsdg)
+    # raise NotImplementedError
+    return func_ir
 
 
 def _debug_scfg(name, byteflow):
@@ -49,6 +52,14 @@ def _debug_scfg(name, byteflow):
 
     with graph_debugger() as dbg:
         dbg.add_graphviz(name, g)
+
+
+def _debug_dot(name, gvdot):
+    from .rvsdg.regionrenderer import graph_debugger
+
+    with graph_debugger() as dbg:
+        dbg.add_graphviz(name, gvdot)
+
 
 
 def build_rvsdg(code, argnames: tuple[str, ...]) -> rvsdgir.Region:
@@ -66,7 +77,7 @@ def build_rvsdg(code, argnames: tuple[str, ...]) -> rvsdgir.Region:
 
     transformer = ToRvsdgIR.run(byteflow.scfg, bcmap, argnames)
 
-    transformer.ir.prettyprint()
+    # transformer.ir.prettyprint()
     render_rvsdgir(transformer.ir, "rvsdgir")
 
     return transformer.ir
@@ -80,15 +91,11 @@ def rvsdg_to_ir(
     rvsdg2ir.run(rvsdg)
 
     for label, blk in rvsdg2ir.blocks.items():
-        print("label", label)
-        blk.dump()
+        # print("label", label)
+        # blk.dump()
         blk.verify()
 
     cfg = ir_utils.compute_cfg_from_blocks(rvsdg2ir.blocks)
-    # rvsdg2ir.blocks = ir_utils.simplify_CFG(rvsdg2ir.blocks)
-    cfg = ir_utils.compute_cfg_from_blocks(rvsdg2ir.blocks)
-    # if len(cfg.dead_nodes()) > 0:
-    #     if DEBUG_GRAPH:
     if True:
         defs = ir_utils.build_definitions(rvsdg2ir.blocks)
         fir = ir.FunctionIR(
@@ -100,17 +107,14 @@ def rvsdg_to_ir(
             arg_count=len(func_id.arg_names),  # type: ignore
             arg_names=func_id.arg_names,  # type: ignore
         )
-        fir.render_dot().view()
-        raise NotImplementedError
+        _debug_dot("initial function IR", fir.render_dot())
+    if len(cfg.dead_nodes()) > 0:
         raise Exception("has dead blocks")
 
-    # for dead in cfg.dead_nodes():
-    #     del rvsdg2ir.blocks[dead]
     ir_utils.merge_adjacent_blocks(rvsdg2ir.blocks)
     rvsdg2ir.blocks = ir_utils.rename_labels(rvsdg2ir.blocks)
-    _simplify_assignments(rvsdg2ir.blocks)
+    # _simplify_assignments(rvsdg2ir.blocks)
     defs = ir_utils.build_definitions(rvsdg2ir.blocks)
-
     fir = ir.FunctionIR(
         blocks=rvsdg2ir.blocks,
         is_generator=False,
@@ -121,8 +125,8 @@ def rvsdg_to_ir(
         arg_names=func_id.arg_names,  # type: ignore
     )
     # fir.dump()
-    if DEBUG_GRAPH:
-        fir.render_dot().view()
+    if True:
+        _debug_dot("simplified function IR", fir.render_dot())
     return fir
 
 
@@ -385,6 +389,17 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
             cur_varmap = data.varmap.copy()
             region = data.region
             assert block.variable.startswith("backedge")
+            # Assume CP in {0, 1}
+            bvt = set(block.branch_value_table)
+            assert bvt == {0, 1}, bvt
+            [backedge] = block.backedges
+            if block.branch_value_table[0] == backedge:
+                # active low
+                negate = False
+            else:
+                # active hi
+                negate = True
+
             # Search backward for the parent loop
             parent = region
             while parent.opname != "rvsdg.loop":
@@ -392,6 +407,16 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
 
             # Remove lifetime of the CP variable
             cpvar = cur_varmap.pop(block.variable)
+
+            if negate:
+                negop = region.add_simple_op(
+                    "rvsdg.negate",
+                    ins=["val"],
+                    outs=["out"],
+                )
+                negop.ins(val=cpvar)
+                cpvar = negop.outs.out
+
             op = region.add_simple_op(
                 "rvsdg.setcpvar",
                 ins=["env", "cp"],
@@ -434,6 +459,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
             header = region.header
             header_block = region.subregion[header]
             inner_data = self.visit_linear(header_block, inner_data)
+            header_targets = header_block._jump_targets
 
             # Emit branches
             def _emit_branches(inner_data: _ToRvsdgIR_Data) -> _ToRvsdgIR_Data:
@@ -451,11 +477,12 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                 )
 
                 data_foreach_case = []
-                branches = filter(
-                    lambda blk: blk.kind == "branch",
-                    region.subregion.graph.values(),
-                )
+
+                branches = [region.subregion.graph[k]
+                            for k in header_targets]
+
                 for i, blk in enumerate(branches):
+                    assert blk.kind == "branch"
 
                     def _add_case_block(data):
                         return self.visit_linear(blk, data)
@@ -782,12 +809,29 @@ class BcToRvsdgIR:
         op = self.region.add_simple_op(
             opname="py.foriter",
             ins=["env", "iter"],
-            outs=["env", "next"],
-            attrs=dict(py=PyAttrs(bcinst=inst), cp=self._top_switch_cp()),
+            outs=["env", "next", "itervalid"],
+            attrs=dict(py=PyAttrs(bcinst=inst)),
         )
         op.ins(env=self.effect, iter=tos)
-        self.replace_effect(op.outs.env)
+
         self.push(op.outs.next)
+
+        negop = self.region.add_simple_op(
+            "rvsdg.negate",
+            ins=["val"],
+            outs=["out"],
+        )
+        negop.ins(val=op.outs.itervalid)
+        cpvar = negop.outs.out
+
+        setcpop = self.region.add_simple_op(
+            "rvsdg.setcpvar",
+            ins=("env", "cp"),
+            outs=["env"],
+            attrs={"cp": self._top_switch_cp()}
+        )
+        setcpop.ins(env=op.outs.env, cp=cpvar)
+        self.replace_effect(setcpop.outs.env)
 
     def _binaryop(self, opname: str, inst: dis.Instruction):
         rhs = self.pop()
@@ -1129,9 +1173,7 @@ class PyOpHandler(BaseInterp):
         self.store_port(indval, op.outs.next)
 
         isvalid = ir.Expr.pair_second(value=pair, loc=self.loc)
-        cp = op.attrs.extras["cp"]
-        pred = self.store(isvalid, cp)
-        self._cpmap[cp] = pred
+        self.store_port(isvalid, op.outs.itervalid)
 
     def py_store(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         # TODO: insert metadata for user debugging
@@ -1156,6 +1198,15 @@ class RvsdgOpHandler(BaseInterp):
         cpname = op.attrs.extras["cp"]
         cpval = self.read_port(op.ins.cp)
         self._cpmap[cpname] = cpval
+
+    def rvsdg_negate(self, op: rvsdgir.SimpleOp):
+        val = self.read_port(op.ins.val)
+        not_fn = ir.Const(operator.not_, loc=self.loc)
+        res = ir.Expr.call(
+            self.store(not_fn, "$not"),
+            (val,), (), loc=self.loc
+        )
+        self.store_port(res, op.outs.out)
 
 
 class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
@@ -1227,16 +1278,15 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
                 label1 = self._region_blockmap[cases[1].subregion]
                 label0 = self._region_blockmap[cases[0].subregion]
                 br = ir.Branch(cpval, truebr=label1, falsebr=label0, loc=self.loc)
-                swt_label = self.blocks[self._region_blockmap[region]]
-                self.append(br, swt_label)
+                swt_label = self._region_blockmap[region]
+                self.append(br, self.blocks[swt_label])
                 # Prepare successor
                 succ_label = self._inject_internal_block()
                 # Emit each case as linear regions
                 for case in cases:
-                    last_block = self._emit_region_call(swt_label, region, case, needs_jump=False)
+                    last_label = self._emit_region_call(swt_label, region, case, needs_jump=False)
                     self.append(ir.Jump(succ_label, loc=self.loc),
-                                self.blocks[last_block])
-
+                                self.blocks[last_label])
                 return succ_label
             else:
                 raise NotImplementedError(f"unknown region.opname == {region.opname!r}")
