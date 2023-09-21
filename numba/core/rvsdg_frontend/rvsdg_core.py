@@ -303,11 +303,22 @@ class PyAttrs:
 
 
 @dataclass(frozen=True)
-class PyStoreAttrs(PyAttrs):
+class PyVarAttrs(PyAttrs):
     varname: str
 
     def __str__(self):
         return f"[{_pretty_bytecode(self.bcinst)} {self.varname!r}]"
+
+
+
+@dataclass(frozen=True)
+class PyStoreAttrs(PyVarAttrs):
+    pass
+
+
+@dataclass(frozen=True)
+class PyLoadAttrs(PyVarAttrs):
+    pass
 
 
 @dataclass(frozen=True)
@@ -797,7 +808,20 @@ class BcToRvsdgIR:
 
     def op_LOAD_FAST(self, inst: dis.Instruction):
         varname = _decorate_varname(inst.argval)
-        self.push(self.load(varname))
+        op = self.region.add_simple_op(
+            "py.load",
+            ins=("env", "val"),
+            outs=("env", "out"),
+            attrs=dict(
+                py=PyLoadAttrs(
+                    varname=inst.argval,
+                    bcinst=inst,
+                )
+            )
+        )
+        op.ins(val=self.load(varname), env=self.effect)
+        self.replace_effect(op.outs.env)
+        self.push(op.outs.out)
 
     def op_LOAD_ATTR(self, inst: dis.Instruction):
         obj = self.pop()
@@ -1106,8 +1130,15 @@ class BaseInterp:
         except KeyError:
             return getattr(builtins, name, ir.UNDEFINED)
 
+    def store_var(self, val, port: rvsdgPort, varname: str) -> ir.Var:
+        # Set redefine=False to match current non-SSA behavior
+        value = self.store(val, varname, redefine=False)
+        self.write_port(self._region, port, value)
+        return value
+
     def store_port(self, val, port: rvsdgPort) -> ir.Var:
-        value = self.store(val, f"${port.portname}")
+        varname = f"${port.portname}"
+        value = self.store(val, varname)
         self.write_port(self._region, port, value)
         return value
 
@@ -1252,10 +1283,16 @@ class PyOpHandler(BaseInterp):
         isvalid = ir.Expr.pair_second(value=pair, loc=self.loc)
         self.store_port(isvalid, op.outs.itervalid)
 
-    def py_store(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
+    def py_load(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
         # TODO: insert metadata for user debugging
         # Otherwise, this is just a passthrough
         self.store_port(self.portdata[op.ins.val], op.outs.out)
+
+    def py_store(self, op: rvsdgir.SimpleOp, attrs: PyStoreAttrs):
+        # TODO: insert metadata for user debugging
+        # Otherwise, this is just a passthrough
+        self.store_var(self.portdata[op.ins.val], op.outs.out,
+                       varname=attrs.varname)
 
     def py_const(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         const = ir.Const(value=attrs.bcinst.argval, loc=self.loc)
