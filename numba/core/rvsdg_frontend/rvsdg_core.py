@@ -2,7 +2,7 @@ import dis
 import operator
 from contextlib import contextmanager
 import builtins
-from typing import Iterator, Sequence, Mapping, Callable, no_type_check
+from typing import Iterator, Sequence, Mapping, Callable, no_type_check, Type, TypeVar, Any
 from functools import reduce, cache
 from dataclasses import dataclass, replace as _dataclass_replace
 import inspect
@@ -256,6 +256,16 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
     return g
 
 
+T = TypeVar("T")
+
+
+def _expect_type(cls: Type[T]):
+    def wrap(obj: Any) -> T:
+        assert isinstance(obj, cls)
+        return obj
+    return wrap
+
+
 def _pretty_bytecode(inst: dis.Instruction) -> str:
     return f"{inst.offset}:{inst.opname}({inst.argval})"
 
@@ -284,6 +294,9 @@ class _ToRvsdgIR_Data:
 
     def __post_init__(self):
         assert isinstance(self.stack, tuple), "stack must be a tuple"
+        # Verify that the stack and the varmap is consistent
+        for k in self.stack:
+            assert k in self.varmap
 
     def replace(self, **kwargs) -> "_ToRvsdgIR_Data":
         return _dataclass_replace(self, **kwargs)
@@ -307,7 +320,7 @@ class _ToRvsdgIR_Data:
         region_op.ins(**imported.varmap)
 
         subregion = region_op.subregion
-        inner_data = self.replace(
+        inner_data = imported.replace(
             region=subregion, varmap=dict(**subregion.args)
         )
 
@@ -523,7 +536,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                 out_varmap = {
                     k: cases_region_op.outs[k] for k in cases_region_op.outs
                 }
-                return inner_data.replace(varmap=dict(**out_varmap))
+                return inner_data.replace(stack=tuple(merged_stack), varmap=dict(**out_varmap))
 
             inner_data = _emit_branches(inner_data)
 
@@ -573,13 +586,21 @@ class BcToRvsdgIR:
         inst = cls(parent, stack, varmap, switch_cp_stack)
         for bc in instlist:
             inst.convert(bc)
+        # terminate live vars there are imported stack
+        dead_inc_stack = []
+        for k in stack:
+            if k in inst.region.args:
+                if inst.region.args[k] == inst.varmap.get(k):
+                    dead_inc_stack.append(k)
+
         # add output ports from live vars
         exported_varmap = {}
         for k, v in inst.varmap.items():
-            if k not in inst.region.results:
-                inst.region.results.add_port(k)
-                inst.region.results.connect(k, v)
-            exported_varmap[k] = inst.region_op.outs[k]
+            if k not in dead_inc_stack:
+                if k not in inst.region.results:
+                    inst.region.results.add_port(k)
+                    inst.region.results.connect(k, v)
+                exported_varmap[k] = inst.region_op.outs[k]
         # add outputs ports from stack vars
         exported_stack = []
         for i, v in enumerate(inst.stack):
@@ -1054,12 +1075,16 @@ class BaseInterp:
         self.write_port(self._region, port, value)
         return value
 
+    def store_phi_port(self, block_prefix, val: ir.Var, port: rvsdgPort) -> ir.Var:
+        value = self.store(val, f"${block_prefix}_{port.portname}", redefine=False)
+        self.write_port(self._region, port, value)
+        return value
+
     def store(self, value, name, *, redefine=True, block=None) -> ir.Var:
         target: ir.Var
         # The following `if` is to reduce the number of assignments
         if isinstance(value, ir.Var) and redefine and name.startswith("$"):
             return value
-
         if redefine:
             target = self.local_scope.redefine(name, loc=self.loc)
         else:
@@ -1266,7 +1291,8 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
                     return label
             elif region.opname == "rvsdg.switch":
                 # The body of the switch must contains "case" regions
-                cases = list(region.body.toposorted_ops())
+                cases = list(map(_expect_type(rvsdgir.RegionOp),
+                                 region.body.toposorted_ops()))
                 assert all(case.opname == "rvsdg.case" for case in cases)
                 # Assume switch(n=2)
                 assert len(cases) == 2
@@ -1352,13 +1378,25 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
         return label
 
     def _emit_region_call(self, label: int, region: rvsdgir.Region, op: rvsdgir.RegionOp, *, needs_jump=True) -> int:
-        # map ins to args
-        for port, argport in zip(
-            op.ins.values(), op.subregion.args.values(), strict=True
-        ):
-            if not _is_env(port):
-                value = self.portdata[port]
-                self.write_port(op.subregion, argport, value)
+        if op.subregion.opname != "rvsdg.loop":
+            # map ins to args
+            for port, argport in zip(
+                op.ins.values(), op.subregion.args.values(), strict=True
+            ):
+                if not _is_env(port):
+                    value = self.portdata[port]
+                    self.write_port(op.subregion, argport, value)
+        else:
+            with self.set_block(label):
+                # map ins to args
+                prefix = f"loop_{label}"
+                for port, argport in zip(
+                    op.ins.values(), op.subregion.args.values(), strict=True
+                ):
+                    if not _is_env(port):
+                        value = self.portdata[port]
+                        var = self.store_phi_port(prefix, value, argport)
+                        self.write_port(op.subregion, argport, var)
 
         if needs_jump:
             with self.set_block(label):
@@ -1367,12 +1405,28 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
         label = self.emit_region(op.subregion)
 
         # map results to outs
-        for resport, port in zip(
-            op.subregion.results.values(), op.outs.values(), strict=True
-        ):
-            if not _is_env(port):
-                value = self.portdata[resport]
-                self.write_port(region, port, value)
+        if region.opname == "rvsdg.switch":
+            assert op.opname == "rvsdg.case", op.opname
+            post_case_label = self._inject_internal_block()
+            with self.set_block(label):
+                self.append(ir.Jump(post_case_label, loc=self.loc))
+            with self.set_block(post_case_label):
+                prefix = "switch_" + str(self._region_blockmap[region])
+                for resport, port in zip(
+                    op.subregion.results.values(), op.outs.values(), strict=True
+                ):
+                    if not _is_env(port):
+                        value = self.portdata[resport]
+                        var = self.store_phi_port(prefix, value, resport)
+                        self.write_port(region, port, var)
+            label = post_case_label
+        else:
+            for resport, port in zip(
+                op.subregion.results.values(), op.outs.values(), strict=True
+            ):
+                if not _is_env(port):
+                    value = self.portdata[resport]
+                    self.write_port(region, port, value)
 
         return label
 
