@@ -302,6 +302,16 @@ class PyAttrs:
         return f"[{_pretty_bytecode(self.bcinst)}]"
 
 
+
+@dataclass(frozen=True)
+class PyBinOpAttrs(PyAttrs):
+    binop: str
+
+    def __str__(self):
+        return f"[{_pretty_bytecode(self.bcinst)}, {self.binop!r}]"
+
+
+
 @dataclass(frozen=True)
 class PyVarAttrs(PyAttrs):
     varname: str
@@ -917,12 +927,16 @@ class BcToRvsdgIR:
     def _binaryop(self, opname: str, inst: dis.Instruction):
         rhs = self.pop()
         lhs = self.pop()
-        op = Op(opname=opname, bc_inst=inst)
-        op.add_input("env", self.effect)
-        op.add_input("lhs", lhs)
-        op.add_input("rhs", rhs)
-        self.replace_effect(op.add_output("env", is_effect=True))
-        self.push(op.add_output("out"))
+        binop = dis._nb_ops[inst.argval][1]
+        op = self.region.add_simple_op(
+            opname="py.binop",
+            ins=["env", "lhs", "rhs"],
+            outs=["env", "out"],
+            attrs=dict(py=PyBinOpAttrs(bcinst=inst, binop=binop)),
+        )
+        op.ins(env=self.effect, lhs=lhs, rhs=rhs)
+        self.replace_effect(op.outs.env)
+        self.push(op.outs.out)
 
     def op_BINARY_OP(self, inst: dis.Instruction):
         self._binaryop("binaryop", inst)
@@ -1301,6 +1315,21 @@ class PyOpHandler(BaseInterp):
     def py_return(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         return_value = self.read_port(op.ins.val)
         self.store_port(return_value, op.outs.res)
+
+    def py_binop(self, op: rvsdgir.SimpleOp, attrs: PyBinOpAttrs):
+        binop = attrs.binop
+        if "=" in binop:
+            self._inplace_binop(binop[:-1], op)
+        else:
+            self._binop(binop, op)
+
+    def _inplace_binop(self, binop: str, op: rvsdgir.SimpleOp):
+        fn_immuop = BINOPS_TO_OPERATORS[binop]
+        fn_op = INPLACE_BINOPS_TO_OPERATORS[binop + '=']
+        lhs = self.read_port(op.ins.lhs)
+        rhs = self.read_port(op.ins.rhs)
+        expr = ir.Expr.inplace_binop(fn_op, fn_immuop, lhs, rhs, loc=self.loc)
+        self.store_port(expr, op.outs.out)
 
 
 class RvsdgOpHandler(BaseInterp):
