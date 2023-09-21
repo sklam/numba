@@ -480,6 +480,12 @@ class BaseNativeLowering(abc.ABC, LoweringPass):
                         else:
                             lower.create_cfunc_wrapper()
 
+                if True:
+                    from numba.core.rvsdg_frontend.rvsdg.regionrenderer import graph_debugger
+                    with graph_debugger() as dbg:
+                        cfg = library.get_function_cfg(fndesc.llvm_func_name).dot
+                        dbg._add_renderable("raw llvm", cfg)
+
                 env = lower.env
                 call_helper = lower.call_helper
                 del lower
@@ -501,7 +507,7 @@ class BaseNativeLowering(abc.ABC, LoweringPass):
                     from numba.core.rvsdg_frontend.rvsdg.regionrenderer import graph_debugger
                     with graph_debugger() as dbg:
                         cfg = library.get_function_cfg(fndesc.llvm_func_name).dot
-                        dbg._add_renderable("llvm", cfg)
+                        dbg._add_renderable("optimized llvm", cfg)
 
             # capture pruning stats
             post_stats = llvm.passmanagers.dump_refprune_stats()
