@@ -267,7 +267,10 @@ class GraphvizRendererBackend(AbstractRendererBackend):
                     raise ValueError(p)
             inports = [f"<in_{x}> {x}" for x in ins]
             outports = [f"<out_{x}> {x}" for x in outs]
-            label = f"{{ {{ {'|'.join(inports)} }} | {node.data['body']} | {{ {'|'.join(outports)} }} }}"
+            def escape(text):
+                return text.replace("{", "\{").replace("}", "\}")
+
+            label = f"{{ {{ {'|'.join(inports)} }} | {escape(node.data['body'])} | {{ {'|'.join(outports)} }} }}"
             self.digraph.node(k, label=label, shape="record")
         elif node.kind == "cfg":
             self.digraph.node(
