@@ -312,6 +312,17 @@ class _ToRvsdgIR_Data:
         stack = tuple(repl(name) for name in self.stack)
         return self.replace(varmap=varmap, stack=stack)
 
+    def exported(self) -> "_ToRvsdgIR_Data":
+        def repl(k: str) -> str:
+            prefix = "import_"
+            if k.startswith(prefix):
+                return f"export_{k[len(prefix):]}"
+            return k
+
+        varmap = {repl(name): port for name, port in self.varmap.items()}
+        stack = tuple(repl(name) for name in self.stack)
+        return self.replace(varmap=varmap, stack=stack)
+
     def nest(self, region_opname, fn, **kwargs) -> "_ToRvsdg_Data":
         imported = self.imported()
         region_op = self.region.add_subregion(
@@ -386,7 +397,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
 
         elif isinstance(block, SyntheticFill):
             # no-op
-            return data
+            return data.exported()
 
         elif isinstance(block, SyntheticAssignment):
             # Add and export control variables
@@ -397,7 +408,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                     "rvsdg.cpvar", ins=(), outs=["cp"], attrs={"cpval": int(v)}
                 )
                 cur_varmap[k] = op.outs.cp
-            return data.replace(varmap=cur_varmap)
+            return data.replace(varmap=cur_varmap).exported()
         elif isinstance(block, SyntheticBranch):
             cur_varmap = data.varmap.copy()
             region = data.region
@@ -1075,10 +1086,13 @@ class BaseInterp:
         self.write_port(self._region, port, value)
         return value
 
-    def store_phi_port(self, block_prefix, val: ir.Var, port: rvsdgPort) -> ir.Var:
-        value = self.store(val, f"${block_prefix}_{port.portname}", redefine=False)
+    def store_phi_port(self, block_prefix: str, val: ir.Var, port: rvsdgPort) -> ir.Var:
+        value = self.store_phi(block_prefix, val, port)
         self.write_port(self._region, port, value)
         return value
+
+    def store_phi(self, block_prefix: str, val: ir.Var, port: rvsdgPort) -> ir.Var:
+        return self.store(val, f"$phi_{block_prefix}_{port.portname}", redefine=False)
 
     def store(self, value, name, *, redefine=True, block=None) -> ir.Var:
         target: ir.Var
@@ -1278,6 +1292,16 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
                 label = self.emit_linear_region(region)
                 assert not self.blocks[label].is_terminated
                 if region.opname == "rvsdg.loop":
+                    with self.set_block(label):
+                        # make phi nodes connection from the end of the loop
+                        prefix = f"loop_{self._region_blockmap[region]}"
+                        for k, resport in region.results.items():
+                            if not _is_env(resport):
+                                k = "import_" + k.split("_", 1)[1] if k.startswith("export_") else k
+                                if k in region.args: # is looping?
+                                    value = self.portdata[resport]
+                                    argport = region.args[k]
+                                    self.store_phi(prefix, value, argport)
                     # Wire up the branch for the loop
                     cpvar = region.attrs.extras["cp"]
                     pred = self._cpmap[cpvar]
@@ -1389,7 +1413,7 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
         else:
             with self.set_block(label):
                 # map ins to args
-                prefix = f"loop_{label}"
+                prefix = f"loop_{self._region_blockmap[op.subregion]}"
                 for port, argport in zip(
                     op.ins.values(), op.subregion.args.values(), strict=True
                 ):
@@ -1406,6 +1430,7 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
 
         # map results to outs
         if region.opname == "rvsdg.switch":
+            # make phi nodes that merge the results from all cases
             assert op.opname == "rvsdg.case", op.opname
             post_case_label = self._inject_internal_block()
             with self.set_block(label):
@@ -1421,13 +1446,13 @@ class RvsdgIRInterp(PyOpHandler, RvsdgOpHandler):
                         self.write_port(region, port, var)
             label = post_case_label
         else:
+            # normal mapping of results to output
             for resport, port in zip(
                 op.subregion.results.values(), op.outs.values(), strict=True
             ):
                 if not _is_env(port):
                     value = self.portdata[resport]
                     self.write_port(region, port, value)
-
         return label
 
 
