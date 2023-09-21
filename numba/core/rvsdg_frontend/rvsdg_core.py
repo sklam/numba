@@ -1331,6 +1331,13 @@ class PyOpHandler(BaseInterp):
         expr = ir.Expr.inplace_binop(fn_op, fn_immuop, lhs, rhs, loc=self.loc)
         self.store_port(expr, op.outs.out)
 
+    def _binop(self, binop: str, op: rvsdgir.SimpleOp):
+        fn_op = BINOPS_TO_OPERATORS[binop]
+        lhs = self.read_port(op.ins.lhs)
+        rhs = self.read_port(op.ins.rhs)
+        expr = ir.Expr.binop(fn_op, lhs, rhs, loc=self.loc)
+        self.store_port(expr, op.outs.out)
+
 
 class RvsdgOpHandler(BaseInterp):
     def rvsdg_cpvar(self, op: rvsdgir.SimpleOp):
