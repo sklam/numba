@@ -41,7 +41,6 @@ def run_frontend(func):
 
     func_id = bytecode.FunctionIdentity.from_function(func)
     func_ir = rvsdg_to_ir(func_id, rvsdg)
-    # raise NotImplementedError
     return func_ir
 
 
@@ -113,20 +112,35 @@ def rvsdg_to_ir(
 
     ir_utils.merge_adjacent_blocks(rvsdg2ir.blocks)
     rvsdg2ir.blocks = ir_utils.rename_labels(rvsdg2ir.blocks)
-    # _simplify_assignments(rvsdg2ir.blocks)
-    defs = ir_utils.build_definitions(rvsdg2ir.blocks)
-    fir = ir.FunctionIR(
-        blocks=rvsdg2ir.blocks,
-        is_generator=False,
-        func_id=func_id,
-        loc=rvsdg2ir.first_loc,
-        definitions=defs,
-        arg_count=len(func_id.arg_names),  # type: ignore
-        arg_names=func_id.arg_names,  # type: ignore
-    )
-    # fir.dump()
     if True:
-        _debug_dot("simplified function IR", fir.render_dot())
+        defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+        fir = ir.FunctionIR(
+            blocks=rvsdg2ir.blocks,
+            is_generator=False,
+            func_id=func_id,
+            loc=rvsdg2ir.first_loc,
+            definitions=defs,
+            arg_count=len(func_id.arg_names),  # type: ignore
+            arg_names=func_id.arg_names,  # type: ignore
+        )
+        _debug_dot("simplified CFG function IR", fir.render_dot())
+
+    from .bcinterp import _simplify_assignments
+    _simplify_assignments(rvsdg2ir.blocks)
+    if True:
+        defs = ir_utils.build_definitions(rvsdg2ir.blocks)
+        fir = ir.FunctionIR(
+            blocks=rvsdg2ir.blocks,
+            is_generator=False,
+            func_id=func_id,
+            loc=rvsdg2ir.first_loc,
+            definitions=defs,
+            arg_count=len(func_id.arg_names),  # type: ignore
+            arg_names=func_id.arg_names,  # type: ignore
+        )
+        _debug_dot("simplified assignments function IR", fir.render_dot())
+
+    # fir.dump()
     return fir
 
 
