@@ -420,7 +420,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
         self._switch_label = 0
 
         # XXX: THIS IS NEEDED BECAUSE numba-rvsdg is not providing a cpvar name
-        self._switch_cp_stack = []
+        self._cp_stack = []
 
     def visit_block(
         self, block: BasicBlock, data: _ToRvsdgIR_Data
@@ -437,7 +437,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                 imported.stack,
                 imported.varmap,
                 instlist,
-                switch_cp_stack=self._switch_cp_stack,
+                switch_cp_stack=self._cp_stack,
             )
             return _ToRvsdgIR_Data(
                 stack=tuple(stack), varmap=varmap, region=data.region
@@ -497,7 +497,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                 # Handle normal switch
                 def _handle_switch(block, region, cpvar):
                     cp = block.variable
-                    self._switch_cp_stack[-1] = block.variable
+                    self._cp_stack[-1] = block.variable
                     return cpvar, cp
                 cpvar, cp = _handle_switch(block, region, cpvar)
 
@@ -539,8 +539,10 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
         def _emit_loop(data):
             return self.visit_linear(region, data)
 
+        cp = self.get_backedge_label()
+        self._cp_stack.append(cp)
         return data.nest(
-            "rvsdg.loop", _emit_loop, attrs={"cp": self.get_backedge_label()}
+            "rvsdg.loop", _emit_loop, attrs={"cp": cp}
         )
 
     def visit_switch(
@@ -570,7 +572,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                     opname="rvsdg.switch",
                     ins=list(imported_inner_data.varmap.keys()),
                     outs=(),
-                    attrs={"cp": self._switch_cp_stack[-1],
+                    attrs={"cp": self._cp_stack[-1],
                            "scfg_name": region.name,
                            "scfg_bvt": bvt},
                 )
@@ -647,11 +649,11 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
             return inner_data
 
         # setup
-        self._switch_cp_stack.append(self.get_switch_label())
+        self._cp_stack.append(self.get_switch_label())
         # emit
         out = _emit_switch_body(data)
         # teardown
-        self._switch_cp_stack.pop()
+        self._cp_stack.pop()
         return out
 
     def get_backedge_label(self) -> str:
@@ -672,7 +674,7 @@ class BcToRvsdgIR:
     varmap: dict[str, rvsdgPort]
     _kw_names: rvsdgPort | None
     region: rvsdgir.Region
-    _switch_cp_stack: Sequence[str]
+    _cp_stack: Sequence[str]
 
     @classmethod
     def run(
@@ -722,7 +724,7 @@ class BcToRvsdgIR:
     ):
         self.varmap = {}
         self._kw_names = None
-        self._switch_cp_stack = switch_cp_stack
+        self._cp_stack = switch_cp_stack
         self.region_op = parent.add_subregion(
             opname="block",
             ins=varmap.keys(),
@@ -788,7 +790,7 @@ class BcToRvsdgIR:
         return res
 
     def _top_switch_cp(self) -> str:
-        return self._switch_cp_stack[-1]
+        return self._cp_stack[-1]
 
     def op_NOP(self, inst: dis.Instruction):
         pass  # no-op
@@ -1164,7 +1166,7 @@ class BcToRvsdgIR:
         pass  # no-op
 
     def _jump_if(self, pred: rvsdgPort):
-        cp = self._switch_cp_stack[-1]
+        cp = self._cp_stack[-1]
         cpop = self.region.add_simple_op(
             "rvsdg.setcpvar",
             ins=["env", "cp"],
