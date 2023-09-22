@@ -36,6 +36,7 @@ from numba_rvsdg.core.datastructures.basic_block import (
     SyntheticAssignment,
     SyntheticFill,
     SyntheticTail,
+    SyntheticReturn,
 )
 from numba_rvsdg.rendering.rendering import ByteFlowRenderer
 from .rvsdg.rvsdgutils import RegionVisitor
@@ -442,7 +443,7 @@ class ToRvsdgIR(RegionVisitor[_ToRvsdgIR_Data]):
                 stack=tuple(stack), varmap=varmap, region=data.region
             )
 
-        elif isinstance(block, (SyntheticFill, SyntheticTail)):
+        elif isinstance(block, (SyntheticFill, SyntheticTail, SyntheticReturn)):
             # no-op
             return data.exported()
 
@@ -906,8 +907,19 @@ class BcToRvsdgIR:
         self.push(op.add_output("out"))
 
     def op_LOAD_DEREF(self, inst: dis.Instruction):
-        op = Op(opname="load_deref", bc_inst=inst)
-        self.push(op.add_output("out"))
+        op = self.region.add_simple_op(
+            "py.deref.load",
+            ins=["env"],
+            outs=["env", "out"],
+            attrs=dict(
+                py=PyLoadAttrs(
+                    varname=inst.argval,
+                    bcinst=inst,
+                )
+            )
+        )
+        self.replace_effect(op.outs.env)
+        self.push(op.outs.out)
 
     def op_PRECALL(self, inst: dis.Instruction):
         pass  # no-op
@@ -1083,6 +1095,13 @@ class BcToRvsdgIR:
             start = tos1
             stop = tos
             step = None
+            op = self.region.add_simple_op(
+                "py.slice2",
+                ins=("start", "stop"),
+                outs=["out"],
+                attrs=dict(py=PyAttrs(bcinst=inst)),
+            )
+            op.ins(start=start, stop=stop)
         elif argc == 3:
             tos = self.pop()
             tos1 = self.pop()
@@ -1090,15 +1109,17 @@ class BcToRvsdgIR:
             start = tos2
             stop = tos1
             step = tos
+            op = self.region.add_simple_op(
+                "py.slice3",
+                ins=("start", "stop", "step"),
+                outs=["out"],
+                attrs=dict(py=PyAttrs(bcinst=inst)),
+            )
+            op.ins(start=start, stop=stop, step=step)
         else:
             raise Exception("unreachable")
 
-        op = Op(opname="build_slice", bc_inst=inst)
-        op.add_input("start", start)
-        op.add_input("stop", stop)
-        if step is not None:
-            op.add_input("step", step)
-        self.push(op.add_output("out"))
+        self.push(op.outs.out)
 
     def op_RETURN_VALUE(self, inst: dis.Instruction):
         tos = self.pop()
@@ -1420,7 +1441,8 @@ class PyOpHandler(BaseInterp):
     def py_store(self, op: rvsdgir.SimpleOp, attrs: PyStoreAttrs):
         # TODO: insert metadata for user debugging
         # Otherwise, this is just a passthrough
-        self.store_var(self.read_port(op.ins.val), op.outs.out,
+        val = self.read_port(op.ins.val)
+        self.store_var(val, op.outs.out,
                        varname=attrs.varname)
 
     def py_const(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
@@ -1475,13 +1497,13 @@ class PyOpHandler(BaseInterp):
         getattr = ir.Expr.getattr(self.read_port(op.ins.val), attrs.varname, loc=self.loc)
         self.store_port(getattr, op.outs.out)
 
-    def py_getitem(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+    def py_getitem(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         index_var = self.read_port(op.ins.index)
         target_var = self.read_port(op.ins.target)
         expr = ir.Expr.getitem(target_var, index=index_var, loc=self.loc)
         self.store_port(expr, op.outs.out)
 
-    def py_setitem(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+    def py_setitem(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         index_var = self.read_port(op.ins.index)
         target_var = self.read_port(op.ins.target)
         value_var = self.read_port(op.ins.value)
@@ -1490,12 +1512,45 @@ class PyOpHandler(BaseInterp):
         )
         self.append(stmt)
 
-    def py_tuple(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+    def py_tuple(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
         items = list(op.ins.values())
         expr = ir.Expr.build_tuple(
             items=[self.read_port(it) for it in items], loc=self.loc
         )
         self.store_port(expr, op.outs.out)
+
+    def py_deref_load(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+        code = self.func_id.code  # type: ignore
+        name = attrs.varname
+        if name in code.co_cellvars:
+            raise NotImplementedError
+            gl = self.get(name)
+        elif name in code.co_freevars:
+            idx = code.co_freevars.index(name)
+            value = self.get_closure_value(idx)
+            gl = ir.FreeVar(idx, name, value, loc=self.loc)
+            self.store_port(gl, op.outs.out)
+
+    def py_slice2(self, op: rvsdgir.SimpleOp, attrs: PyAttrs):
+        args = tuple([self.read_port(v) for v in op.ins.values()])
+        slicegv = ir.Global("slice", slice, loc=self.loc)
+        slicevar = self.store(value=slicegv, name="$slicevar", redefine=True)
+        sliceinst = ir.Expr.call(slicevar, args, (), loc=self.loc)
+        self.store_port(sliceinst, op.outs.out)
+
+    py_slice3 = py_slice2
+
+    def get_closure_value(self, index):
+        """
+        Get a value from the cell contained in this function's closure.
+        If not set, return a ir.UNDEFINED.
+        """
+        cell = self.func_id.func.__closure__[index]
+        try:
+            return cell.cell_contents
+        except ValueError:
+            return ir.UNDEFINED
+
 
 class RvsdgOpHandler(BaseInterp):
     def rvsdg_cpvar(self, op: rvsdgir.SimpleOp):
