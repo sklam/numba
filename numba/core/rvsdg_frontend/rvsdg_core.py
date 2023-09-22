@@ -810,9 +810,11 @@ class BcToRvsdgIR:
         pass  # no-op
 
     def op_PUSH_NULL(self, inst: dis.Instruction):
-        op = Op(opname="push_null", bc_inst=inst)
-        null = op.add_output("null")
-        self.push(null)
+        op = self.region.add_simple_op(
+            "py.null", ins=(), outs=["out"],
+            attrs=dict(py=PyAttrs(bcinst=inst)),
+        )
+        self.push(op.outs.out)
 
     def op_LOAD_GLOBAL(self, inst: dis.Instruction):
         assert isinstance(inst.arg, int)  # for typing
@@ -880,10 +882,20 @@ class BcToRvsdgIR:
 
     def op_LOAD_ATTR(self, inst: dis.Instruction):
         obj = self.pop()
-        attr = inst.argval
-        op = Op(opname=f"load_attr.{attr}", bc_inst=inst)
-        op.add_input("obj", obj)
-        self.push(op.add_output("out"))
+        op = self.region.add_simple_op(
+            "py.attr.load",
+            ins=("env", "val"),
+            outs=("env", "out"),
+            attrs=dict(
+                py=PyLoadAttrs(
+                    varname=inst.argval,
+                    bcinst=inst,
+                )
+            )
+        )
+        op.ins(env=self.effect, val=obj)
+        self.push(op.outs.out)
+        self.replace_effect(op.outs.env)
 
     def op_LOAD_METHOD(self, inst: dis.Instruction):
         obj = self.pop()
@@ -1014,32 +1026,54 @@ class BcToRvsdgIR:
     def op_BINARY_SUBSCR(self, inst: dis.Instruction):
         index = self.pop()
         target = self.pop()
-        op = Op(opname="binary_subscr", bc_inst=inst)
-        op.add_input("env", self.effect)
-        op.add_input("index", index)
-        op.add_input("target", target)
-        self.replace_effect(op.add_output("env", is_effect=True))
-        self.push(op.add_output("out"))
+        op = self.region.add_simple_op(
+            opname="py.getitem",
+            ins=("env", "target", "index"),
+            outs=("env", "out"),
+            attrs=dict(
+                py=PyAttrs(
+                    bcinst=inst,
+                )
+            )
+        )
+        op.ins(env=self.effect, target=target, index=index)
+        self.replace_effect(op.outs.env)
+        self.push(op.outs.out)
 
     def op_STORE_SUBSCR(self, inst: dis.Instruction):
         index = self.pop()
         target = self.pop()
         value = self.pop()
-        op = Op(opname="store_subscr", bc_inst=inst)
-        op.add_input("env", self.effect)
-        op.add_input("index", index)
-        op.add_input("target", target)
-        op.add_input("value", value)
-        self.replace_effect(op.add_output("env", is_effect=True))
+        op = self.region.add_simple_op(
+            opname="py.setitem",
+            ins=("env", "target", "index", "value"),
+            outs=("env",),
+            attrs=dict(
+                py=PyAttrs(
+                    bcinst=inst,
+                )
+            )
+        )
+        op.ins(env=self.effect, target=target, index=index, value=value)
+        self.replace_effect(op.outs.env)
 
     def op_BUILD_TUPLE(self, inst: dis.Instruction):
         count = inst.arg
         assert isinstance(count, int)
         items = list(reversed([self.pop() for _ in range(count)]))
-        op = Op(opname="build_tuple", bc_inst=inst)
-        for i, it in enumerate(items):
-            op.add_input(str(i), it)
-        self.push(op.add_output("out"))
+        names = [f"arg{i}" for i in range(len(items))]
+        op = self.region.add_simple_op(
+            "py.tuple",
+            ins=names,
+            outs=["out"],
+            attrs=dict(
+                py=PyAttrs(
+                    bcinst=inst,
+                )
+            ),
+        )
+        op.ins(**dict(zip(names, items)))
+        self.push(op.outs.out)
 
     def op_BUILD_SLICE(self, inst: dis.Instruction):
         argc = inst.arg
@@ -1437,6 +1471,31 @@ class PyOpHandler(BaseInterp):
         pred = ir.Expr.call(notvar, (val,), (), loc=self.loc)
         self.store_port(pred, op.outs.out)
 
+    def py_attr_load(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+        getattr = ir.Expr.getattr(self.read_port(op.ins.val), attrs.varname, loc=self.loc)
+        self.store_port(getattr, op.outs.out)
+
+    def py_getitem(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+        index_var = self.read_port(op.ins.index)
+        target_var = self.read_port(op.ins.target)
+        expr = ir.Expr.getitem(target_var, index=index_var, loc=self.loc)
+        self.store_port(expr, op.outs.out)
+
+    def py_setitem(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+        index_var = self.read_port(op.ins.index)
+        target_var = self.read_port(op.ins.target)
+        value_var = self.read_port(op.ins.value)
+        stmt = ir.SetItem(
+            target=target_var, index=index_var, value=value_var, loc=self.loc
+        )
+        self.append(stmt)
+
+    def py_tuple(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+        items = list(op.ins.values())
+        expr = ir.Expr.build_tuple(
+            items=[self.read_port(it) for it in items], loc=self.loc
+        )
+        self.store_port(expr, op.outs.out)
 
 class RvsdgOpHandler(BaseInterp):
     def rvsdg_cpvar(self, op: rvsdgir.SimpleOp):
