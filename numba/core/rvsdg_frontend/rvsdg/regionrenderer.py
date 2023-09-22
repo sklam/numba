@@ -268,7 +268,7 @@ class GraphvizRendererBackend(AbstractRendererBackend):
             inports = [f"<in_{x}> {x}" for x in ins]
             outports = [f"<out_{x}> {x}" for x in outs]
             def escape(text):
-                return text.replace("{", "\{").replace("}", "\}")
+                return text.replace("{", "\{").replace("}", "\}").replace("<", "&#60;").replace(">", "&#62;")
 
             label = f"{{ {{ {'|'.join(inports)} }} | {escape(node.data['body'])} | {{ {'|'.join(outports)} }} }}"
             self.digraph.node(k, label=label, shape="record")
