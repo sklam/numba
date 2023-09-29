@@ -294,6 +294,7 @@ class GraphvizRendererBackend(AbstractRendererBackend):
 
     def render_edge(self, edge: GraphEdge):
         attrs = {}
+        attrs["penwidth"] = "2"
         if edge.headlabel is not None:
             attrs["headlabel"] = edge.headlabel
         if edge.taillabel is not None:
@@ -331,9 +332,9 @@ class GraphvizRendererBackend(AbstractRendererBackend):
             if name.startswith("regionouter"):
                 attrs["bgcolor"] = "grey"
             elif name.startswith("loop_"):
-                attrs["color"] = "blue"
+                attrs["bgcolor"] = "lightblue"
             elif name.startswith("switch_"):
-                attrs["color"] = "green"
+                attrs["bgcolor"] = "lightgreen"
 
             subg.attr(**attrs)
             yield type(self)(subg)
@@ -585,6 +586,12 @@ class DebugSession:
 
         with open(filename, "w") as fout:
             print(out, file=fout)
+
+    def write_graph(self, filename_prefix: str, format="svg") -> None:
+        from graphviz import Source
+        name2gv: list[tuple[str, str]] = []
+        for name, gv in self._graphs.items():
+            Source(gv).render(f"{filename_prefix}_{name}", format=format, cleanup=True)
 
 
 @contextmanager
