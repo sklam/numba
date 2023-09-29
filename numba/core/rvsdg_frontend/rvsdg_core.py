@@ -902,11 +902,26 @@ class BcToRvsdgIR:
 
     def op_LOAD_METHOD(self, inst: dis.Instruction):
         obj = self.pop()
-        attr = inst.argval
-        op = Op(opname=f"load_method.{attr}", bc_inst=inst)
-        op.add_input("obj", obj)
-        self.push(op.add_output("null"))
-        self.push(op.add_output("out"))
+        op = self.region.add_simple_op(
+            "py.method.load",
+            ins=("env", "val"),
+            outs=("env", "out"),
+            attrs=dict(py=PyLoadAttrs(
+                varname=inst.argval, # method name
+                bcinst=inst,
+            )))
+        op.ins(env=self.effect, val=obj)
+
+        nullop = self.region.add_simple_op(
+            opname="py.null",
+            ins=(),
+            outs=["out"],
+            attrs=dict(py=PyAttrs(bcinst=inst)),
+        )
+        self.push(nullop.outs.out)
+
+        self.replace_effect(op.outs.env)
+        self.push(op.outs.out)
 
     def op_LOAD_DEREF(self, inst: dis.Instruction):
         op = self.region.add_simple_op(
@@ -1154,10 +1169,14 @@ class BcToRvsdgIR:
             exc = self.pop()
         else:
             raise ValueError("Multiple argument raise is not supported.")
-        op = Op(opname="raise_varargs", bc_inst=inst)
-        op.add_input("env", self.effect)
-        op.add_input("exc", exc)
-        self.replace_effect(op.add_output("env", is_effect=True))
+        op = self.region.add_simple_op(
+            "raise_varargs",
+            ins=("env", "exc"),
+            outs=["env"],
+            attrs=dict(py=PyAttrs(bcinst=inst))
+        )
+        op.ins(env=self.effect, exc=exc)
+        self.replace_effect(op.outs.env)
 
     def op_JUMP_FORWARD(self, inst: dis.Instruction):
         pass  # no-op
@@ -1239,6 +1258,20 @@ class BcToRvsdgIR:
 
         self.push(exitfn)
         self.push(yielded)
+
+    def op_UNPACK_SEQUENCE(self, inst: dis.Instruction):
+        count = inst.argval
+        iterable = self.pop()
+        outs = [f"outs{i}" for i in range(count)]
+        op = self.region.add_simple_op(
+            "py.unpack_seqence",
+            ins=("val",),
+            outs=tuple(outs),
+            attrs=dict(py=PyAttrs(bcinst=inst)),
+        )
+        op.ins(val=iterable)
+        for k in outs:
+            self.push(op.outs[k])
 
 
 class BaseInterp:
@@ -1496,6 +1529,10 @@ class PyOpHandler(BaseInterp):
         self.store_port(pred, op.outs.out)
 
     def py_attr_load(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
+        getattr = ir.Expr.getattr(self.read_port(op.ins.val), attrs.varname, loc=self.loc)
+        self.store_port(getattr, op.outs.out)
+
+    def py_method_load(self, op: rvsdgir.SimpleOp, attrs: PyLoadAttrs):
         getattr = ir.Expr.getattr(self.read_port(op.ins.val), attrs.varname, loc=self.loc)
         self.store_port(getattr, op.outs.out)
 
