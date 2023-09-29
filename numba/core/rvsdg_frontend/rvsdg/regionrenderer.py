@@ -229,6 +229,8 @@ class GraphvizRendererBackend(AbstractRendererBackend):
         from graphviz import Digraph
 
         self.digraph = Digraph() if g is None else g
+        self.digraph.graph_attr["ranksep"] = "1.5"
+        # self.digraph.graph_attr["nodesep"] = ".9"
 
     def render_node(self, k: str, node: GraphNode):
         if node.kind == "valuestate":
@@ -303,6 +305,11 @@ class GraphvizRendererBackend(AbstractRendererBackend):
         if edge.kind is not None:
             if edge.kind == "effect":
                 attrs["style"] = "dotted"
+            elif edge.kind == "loopvalue":
+                attrs["style"] = "dashed"
+                attrs["color"] = "yellow"
+                attrs["penwidth"] = "1"
+                attrs["constraint"] = "false"
             elif edge.kind == "meta":
                 attrs["style"] = "invis"
             elif edge.kind == "cfg":

@@ -245,6 +245,20 @@ def render_rvsdgir_region(g, maker, ir: rvsdgir.Region):
                     dst_port=k,
                 )
 
+            if op.opname == "rvsdg.loop":
+                # find matching looping ports
+                for k in op.outs:
+                    if k in op.ins:
+                        src = op.outs[k]
+                        dst = op.ins[k]
+                        g.add_edge(
+                            src="outputs" + ident(op._ref),
+                            dst="inputs" + ident(op._ref),
+                            src_port=k,
+                            dst_port=k,
+                            kind="loopvalue",
+                        )
+
         else:
             g.add_node(
                 ident(op._ref),
