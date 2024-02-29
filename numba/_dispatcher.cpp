@@ -1306,11 +1306,63 @@ static PyObject *set_use_tls_target_stack(PyObject *self, PyObject *args)
     }
 }
 
+
+static PyObject *dict_watcher = NULL;
+static int dict_watcher_id = -1;
+
+int _PyDict_WatchCallback_trampoline(PyDict_WatchEvent event, PyObject *dict, PyObject *key, PyObject *new_value) 
+{
+    const int event_int = event;
+    PyObject *event_obj = PyLong_FromLong(event_int);
+    if (key == NULL) {
+        key = Py_None;
+        Py_INCREF(key);
+    }
+    if (new_value == NULL) {
+        new_value = Py_None;
+        Py_INCREF(new_value);
+    }
+
+    PyObject *result = PyObject_CallFunctionObjArgs(dict_watcher, event_obj, dict, key, new_value, NULL);
+    if (!result) {
+        return -1;
+    }
+    return 0;
+}
+
+
+static PyObject *initialize_dict_watcher_once(PyObject *self, PyObject *args) 
+{
+    // int (*PyDict_WatchCallback)(PyDict_WatchEvent event, PyObject *dict, PyObject *key, PyObject *new_value);
+    PyObject *callback, *target_dict;
+    if (!PyArg_ParseTuple(args, "OO", &callback, &target_dict))
+        return NULL;
+    if (dict_watcher == NULL) {
+        // register the trampoline
+        dict_watcher_id = PyDict_AddWatcher(_PyDict_WatchCallback_trampoline);
+        if (dict_watcher_id == -1) {
+            // PyErr_SetString(PyExc_SystemError, "PyDict_AddWatcher() failed");
+            return NULL;    
+        }
+        Py_INCREF(callback);
+        dict_watcher = callback;
+    }    
+
+    const int watch_status = PyDict_Watch(dict_watcher_id, target_dict);
+    if (watch_status == -1) {
+        // PyErr_SetString(PyExc_SystemError, "PyDict_Watch() failed");
+        return NULL;
+    }
+    Py_RETURN_NONE;
+}
+
 static PyMethodDef ext_methods[] = {
 #define declmethod(func) { #func , ( PyCFunction )func , METH_VARARGS , NULL }
     declmethod(typeof_init),
     declmethod(compute_fingerprint),
     declmethod(set_use_tls_target_stack),
+    // Dict watcher API
+    declmethod(initialize_dict_watcher_once),
     { NULL },
 #undef declmethod
 };
