@@ -484,6 +484,20 @@ class BaseNativeLowering(abc.ABC, LoweringPass):
 
                 env = lower.env
                 call_helper = lower.call_helper
+
+                # ---lower.referenced_globals---
+                referenced_globals = defaultdict(set)
+                for mod, key, ty in lower.referenced_globals:
+                    if ty in lower.referenced_functions:
+                        signatures = tuple(lower.referenced_functions[ty])
+                    else:
+                        signatures = ()
+                    referenced_globals[mod].add((key, ty, signatures))
+
+                metadata['referenced_globals'] = {
+                    k: frozenset(v) for k, v in referenced_globals.items()
+                }
+
                 del lower
 
             from numba.core.compiler import _LowerResult  # TODO: move this

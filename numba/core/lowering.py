@@ -1,3 +1,4 @@
+import sys
 from collections import namedtuple, defaultdict
 import operator
 import warnings
@@ -34,7 +35,8 @@ class BaseLower(object):
         self.generator_info = func_ir.generator_info
         self.metadata = metadata
         self.flags = targetconfig.ConfigStack.top_or_none()
-
+        self.referenced_globals = set()
+        self.referenced_functions = {}
         # Initialize LLVM
         self.module = self.library.create_ir_module(self.fndesc.unique_name)
 
@@ -654,6 +656,9 @@ class Lower(BaseLower):
             res = self.context.get_constant_generic(self.builder, ty,
                                                     value.value)
             self.incref(ty, res)
+            if isinstance(value, ir.Global):
+                mod = sys.modules[self.fndesc.modname]
+                self.add_referenced_globals(mod, value.name, ty)
             return res
 
         elif isinstance(value, ir.Expr):
@@ -904,6 +909,8 @@ class Lower(BaseLower):
             return self.context.get_dummy_value()
 
         fnty = self.typeof(expr.func.name)
+        if fnty in self.referenced_functions:
+            self.referenced_functions[fnty].add(signature)
 
         if isinstance(fnty, types.ObjModeDispatcher):
             res = self._lower_call_ObjModeDispatcher(fnty, expr, signature)
@@ -1284,6 +1291,11 @@ class Lower(BaseLower):
                 return res
             else:
                 impl = self.context.get_getattr(ty, expr.attr)
+                if isinstance(ty, types.Module):
+                    nonconst = self.context.nonconst_module_attrs
+                    if (ty, expr.attr) not in nonconst:
+                        self.add_referenced_globals(ty.pymod, expr.attr, resty)
+
                 attrty = self.context.typing_context.resolve_getattr(ty,
                                                                      expr.attr)
 
@@ -1408,6 +1420,11 @@ class Lower(BaseLower):
             return res
 
         raise NotImplementedError(expr)
+
+    def add_referenced_globals(self, module, attr: str, gty: types.Type):
+        self.referenced_globals.add((module, attr, gty))
+        if isinstance(gty, types.Callable):
+            self.referenced_functions.setdefault(gty, set())
 
     def _alloca_var(self, name, fetype):
         """

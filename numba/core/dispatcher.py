@@ -759,6 +759,25 @@ class _DispatcherBase(_dispatcher.Dispatcher):
         return self._callback_add_timer(duration, cres,
                                         lock_name="llvm_lock")
 
+    def get_referenced_globals(self, sig):
+        def merge(target, source):
+            for k, vs in source.items():
+                target[k] |= vs
+
+        md = self.get_metadata()
+        refglbs = md[sig]["referenced_globals"]
+
+        output = collections.defaultdict(set)
+        for mod, attrlist in refglbs.items():
+            for attr, ty, sigs in attrlist:
+                v = getattr(mod, attr)
+                output[mod.__name__, attr].add((ty, sigs))
+                if isinstance(ty, types.Dispatcher):
+                    for sig in sigs:
+                        merge(output, v.get_referenced_globals(sig.args))
+
+        return output
+
 
 class _MemoMixin:
     __uuid = None
