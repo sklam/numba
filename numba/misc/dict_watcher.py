@@ -1,3 +1,4 @@
+import sys
 from enum import IntEnum
 from typing import Any
 from collections import defaultdict
@@ -167,6 +168,9 @@ class DictWatcherManager:
 
     def __init__(self):
         self._watchers = defaultdict(list)
+        # Get hold of the function because sys module can be deleted before
+        # this watcher manager is gone.
+        self._is_finalizing = sys.is_finalizing
 
     def __init_subclass__(cls) -> None:
         raise TypeError("cannot subclass DictWatcherManager")
@@ -181,6 +185,8 @@ class DictWatcherManager:
         """
         Invoked by the callback for PyDict_AddWatcher().
         """
+        if self._is_finalizing():
+            return
         event = DictWatchEvent(event)
         for user_cb in self._watchers[id(dct)]:
             user_cb(event, dct, key, new_value)
