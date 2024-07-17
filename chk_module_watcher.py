@@ -8,19 +8,19 @@ from numba.misc.dict_watcher import ChangeWatcher, DictWatcherManager
 
 import typing
 
-import chk_module_watcher  # which is this file
+import chk_module_watcher as chk  # which is this file
 
 
 CONSTANT_A = 1
 CONSTANT_B = True
 CONSTANT_C = False
 
+
 @jit
 def bar():
     a = chk.CONSTANT_A
     b = chk.CONSTANT_C
     return a, b, np.arange(3), np.arange(0, 4, dtype=np.float32)
-
 
 
 @jit
@@ -37,10 +37,9 @@ class Entry(typing.NamedTuple):
 
 
 def install_watchers(mod_consts):
-
     class PrintChange(ChangeWatcher):
         def on_change(self, key, value):
-            print('... changing', key, 'to', value)
+            print("... changing", key, "to", value)
 
     dct_attrs = defaultdict(list)
     for mod, attr in mod_consts:
@@ -70,9 +69,6 @@ def test():
     @jit
     def bar():
         return 123456
-
-
-
 
 
 if __name__ == "__main__":
