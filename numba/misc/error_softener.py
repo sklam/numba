@@ -63,7 +63,6 @@ def soften_trace(fn):
     @wraps(fn)
     def wrapped(*args, **kwargs):
         global _IS_TRACING
-
         if not _IS_TRACING:
             _IS_TRACING = True
             sys.settrace(_trace_func)
@@ -79,17 +78,22 @@ def soften_trace(fn):
 
 
 def _trace_func(frame, event, arg):
-    if event == "call":
-        co = frame.f_code
-        filename = co.co_filename
-        lineno = frame.f_lineno
-        key = filename, lineno
-        if filename.startswith(NUMBA_ROOT) and key not in _processed_functions:
-            # Check ignored files
-            relfile = filename[len(NUMBA_ROOT) + 1 :]
-            # only trace into Numba source code
-            _run_analysis(frame, co, relfile)
-            _processed_functions.add(key)
+    try:
+        if event == "call":
+            co = frame.f_code
+            filename = co.co_filename
+            lineno = frame.f_lineno
+            key = filename, lineno
+            if filename.startswith(NUMBA_ROOT):
+                if key not in _processed_functions:
+                    # Check ignored files
+                    relfile = filename[len(NUMBA_ROOT) + 1 :]
+                    # only trace into Numba source code
+                    _run_analysis(frame, co, relfile)
+                    _processed_functions.add(key)
+
+    except Exception:
+        _logger.exception("error raised in _trace_func ")
 
 
 def _run_analysis(frame, co, relpath):
