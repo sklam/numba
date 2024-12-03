@@ -791,7 +791,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
             # problems
             raise TypingError(str(e)) from e
         else:
-            ovf_result = self._overload_func(*args, **kws)
+            ovf_result = soften_trace(self._overload_func)(*args, **kws)
 
         if ovf_result is None:
             # No implementation => fail typing
@@ -894,7 +894,6 @@ def make_overload_template(func, overload_func, jit_options, strict,
     func_name = getattr(func, '__name__', str(func))
     name = "OverloadTemplate_%s" % (func_name,)
     base = _OverloadFunctionTemplate
-    overload_func = soften_trace(overload_func)
     dct = dict(key=func, _overload_func=staticmethod(overload_func),
                _impl_cache={}, _compiled_overloads={}, _jit_options=jit_options,
                _strict=strict, _inline=staticmethod(InlineOptions(inline)),
@@ -1194,7 +1193,7 @@ def make_overload_method_template(typ, attr, overload_func, inline,
     *overload_func*.
     """
     return make_overload_attribute_template(
-        typ, attr, soften_trace(overload_func), inline=inline,
+        typ, attr, overload_func, inline=inline,
         base=_OverloadMethodTemplate, prefer_literal=prefer_literal,
         **kwargs,
     )
