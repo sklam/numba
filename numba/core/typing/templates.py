@@ -18,7 +18,6 @@ from numba.core.errors import (
     InternalError,
 )
 from numba.core.cpu_options import InlineOptions
-from numba.misc.error_softener import soften_trace
 
 # info store for inliner callback functions e.g. cost model
 _inline_info = namedtuple('inline_info',
@@ -356,7 +355,7 @@ class AbstractTemplate(FunctionTemplate):
 
     def apply(self, args, kws):
         generic = getattr(self, "generic")
-        sig = soften_trace(generic)(args, kws)
+        sig = generic(args, kws)
         # Enforce that *generic()* must return None or Signature
         if sig is not None:
             if not isinstance(sig, Signature):
@@ -791,7 +790,7 @@ class _OverloadFunctionTemplate(AbstractTemplate):
             # problems
             raise TypingError(str(e)) from e
         else:
-            ovf_result = soften_trace(self._overload_func)(*args, **kws)
+            ovf_result = self._overload_func(*args, **kws)
 
         if ovf_result is None:
             # No implementation => fail typing

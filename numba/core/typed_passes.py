@@ -90,7 +90,9 @@ def type_inference_stage(typingctx, targetctx, interp, args, return_type,
 
         infer.build_constraint()
         # return errors in case of partial typing
-        errs = infer.propagate(raise_errors=raise_errors)
+        from numba.misc.error_softener import start_tracing
+        with start_tracing():
+            errs = infer.propagate(raise_errors=raise_errors)
         typemap, restype, calltypes = infer.unify(raise_errors=raise_errors)
 
     return _TypingResults(typemap, restype, calltypes, errs)

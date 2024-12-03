@@ -3,8 +3,8 @@ import dis
 import os
 import os.path
 
-from functools import wraps
 import logging
+from contextlib import contextmanager
 
 import numba
 from numba.core import errors
@@ -41,6 +41,15 @@ IGNORE_LIST = {
     "core/typing/typeof.py",
     "core/untyped_passes.py",
     "core/utils.py",
+    "core/callconv.py",
+    "cloudpickle/cloudpickle.py",
+    "core/types/abstract.py",
+    "core/pythonapi.py",
+    "core/codegen.py",
+    "core/datamodel/old_models.py",
+    "core/itanium_mangler.py",
+    "core/typeconv/typeconv.py",
+    "core/ir_utils.py",
 }
 
 
@@ -49,32 +58,32 @@ _processed_functions = set()
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.INFO)
-handler = logging.FileHandler(f"numba_errors_{os.getpid()}.log")
-_logger.addHandler(handler)
+_logger.addHandler(logging.FileHandler(f"numba_errors_{os.getpid()}.log"))
 
 
-_IS_TRACING = False
+@contextmanager
+def pause_tracing():
+    try:
+        fn = sys.gettrace()
+        sys.settrace(None)
+        yield
+    finally:
+        sys.settrace(fn)
 
 
-def soften_trace(fn):
-    """Intercept function in typing phase"""
+@contextmanager
+def start_tracing():
     assert sys.version_info[:2] == (3, 13), "only works on 3.13"
 
-    @wraps(fn)
-    def wrapped(*args, **kwargs):
-        global _IS_TRACING
-        if not _IS_TRACING:
-            _IS_TRACING = True
-            sys.settrace(_trace_func)
-            try:
-                return fn(*args, **kwargs)
-            finally:
-                sys.settrace(None)
-                _IS_TRACING = False
-        else:
-            return fn(*args, **kwargs)
-
-    return wrapped
+    fn = sys.gettrace()
+    if fn is None:
+        sys.settrace(_trace_func)
+        try:
+            yield
+        finally:
+            sys.settrace(None)
+    else:
+        yield
 
 
 def _trace_func(frame, event, arg):
@@ -86,7 +95,6 @@ def _trace_func(frame, event, arg):
             key = filename, lineno
             if filename.startswith(NUMBA_ROOT):
                 if key not in _processed_functions:
-                    # Check ignored files
                     relfile = filename[len(NUMBA_ROOT) + 1 :]
                     # only trace into Numba source code
                     _run_analysis(frame, co, relfile)
@@ -152,7 +160,12 @@ def filter_unique_files(files):
     for fp in files:
         with open(fp, "r") as fin:
             combined.update(filter(bool, map(strip, fin)))
+
     for ln in sorted(combined):
+        _, filepath_and_line = ln.split("|")
+        filepath, line = filepath_and_line.split(":")
+        if filepath.strip() in IGNORE_LIST:
+            continue
         print(ln)
 
 

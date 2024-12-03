@@ -457,7 +457,8 @@ class CompilerBase(object):
         """
         Populate and run compiler pipeline
         """
-        with ConfigStack().enter(self.state.flags.copy()):
+        from numba.misc.error_softener import pause_tracing
+        with ConfigStack().enter(self.state.flags.copy()), pause_tracing():
             pms = self.define_pipelines()
             for pm in pms:
                 pipeline_name = pm.pipeline_name
