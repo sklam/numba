@@ -18,6 +18,7 @@ from numba.core.errors import (
     InternalError,
 )
 from numba.core.cpu_options import InlineOptions
+from numba.misc.error_softener import soften_trace
 
 # info store for inliner callback functions e.g. cost model
 _inline_info = namedtuple('inline_info',
@@ -355,7 +356,7 @@ class AbstractTemplate(FunctionTemplate):
 
     def apply(self, args, kws):
         generic = getattr(self, "generic")
-        sig = generic(args, kws)
+        sig = soften_trace(generic)(args, kws)
         # Enforce that *generic()* must return None or Signature
         if sig is not None:
             if not isinstance(sig, Signature):
@@ -893,6 +894,7 @@ def make_overload_template(func, overload_func, jit_options, strict,
     func_name = getattr(func, '__name__', str(func))
     name = "OverloadTemplate_%s" % (func_name,)
     base = _OverloadFunctionTemplate
+    overload_func = soften_trace(overload_func)
     dct = dict(key=func, _overload_func=staticmethod(overload_func),
                _impl_cache={}, _compiled_overloads={}, _jit_options=jit_options,
                _strict=strict, _inline=staticmethod(InlineOptions(inline)),
@@ -1192,7 +1194,7 @@ def make_overload_method_template(typ, attr, overload_func, inline,
     *overload_func*.
     """
     return make_overload_attribute_template(
-        typ, attr, overload_func, inline=inline,
+        typ, attr, soften_trace(overload_func), inline=inline,
         base=_OverloadMethodTemplate, prefer_literal=prefer_literal,
         **kwargs,
     )
