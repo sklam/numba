@@ -84,11 +84,11 @@ class _ScalarHelper(object):
         return self.val
 
     def store_data(self, indices, val):
-        self.builder.store(val, self._ptr)
+        self.context.pack_value(self.builder, self.base_type, val, self._ptr)
 
     @property
     def return_val(self):
-        return self.builder.load(self._ptr)
+        return self.context.unpack_value(self.builder, self.base_type, self._ptr)
 
 
 class _ArrayIndexingHelper(namedtuple('_ArrayIndexingHelper',
@@ -320,7 +320,7 @@ def _prepare_argument(ctxt, bld, inp, tyinp, where='input operand'):
         return _ArrayHelper(ctxt, bld, shape, strides, ary.data,
                             tyinp.layout, tyinp.dtype, tyinp.ndim, inp)
     elif (types.unliteral(tyinp) in types.number_domain | {types.boolean}
-          or isinstance(tyinp, types.scalars._NPDatetimeBase)):
+          or isinstance(tyinp, types.scalars._NPDatetimeBase) or isinstance(tyinp, types.Record)):
         return _ScalarHelper(ctxt, bld, inp, tyinp)
     else:
         raise NotImplementedError('unsupported type for {0}: {1}'.format(where,
