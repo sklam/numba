@@ -2239,7 +2239,8 @@ class TestNumbaInternalOverloads(TestCase):
         # Walk the registries and check each function that is an overload
         regs = tyctx._registries
         for k, v in regs.items():
-            for item in k.functions:
+            for ent in k.view_functions():
+                item = ent.value
                 if getattr(item, '_overload_func', False):
                     checker(item.key, item._overload_func)
 

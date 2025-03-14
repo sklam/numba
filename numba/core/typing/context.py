@@ -188,11 +188,13 @@ class LazyRegistry:
         self._last_checkpoints = defaultdict(int)
         self._cached = defaultdict(list)
         self._ctor = ctor
+        self._viewer = f'view_{kind}'
 
     def _sychronize(self):
         for reg in self._registries:
             chkpt = self._last_checkpoints[reg]
-            new_chkpt, iterator = reg.view_functions().get_updates(chkpt)
+            viewer = getattr(reg, self._viewer)
+            new_chkpt, iterator = viewer().get_updates(chkpt)
             self._last_checkpoints[reg] = new_chkpt
             for ent in iterator:
                 v = self._ctor(ent.value)
@@ -225,7 +227,9 @@ class BaseContext(object):
         self._functions = LazyRegistry(kind="functions",
                                        registries=self._registries,
                                        ctor=ctor)
-        self._attributes = ContextRegistry(kind="attributes")
+        self._attributes = LazyRegistry(kind="attributes",
+                                        registries=self._registries,
+                                        ctor=ctor)
         self._globals = ContextRegistry(kind="globals", enforce_unique=True)
         self.tm = rules.default_type_manager
         self.callstack = CallStack()
@@ -543,12 +547,6 @@ class BaseContext(object):
             loader = templates.RegistryLoader(registry)
             self._registries[registry] = loader
 
-        is_for_this_target = self._is_for_this_target
-
-        for ftcls in loader.new_registrations('attributes'):
-            if not is_for_this_target(ftcls):
-                continue
-            self.insert_attributes(ftcls(self))
         for gv, gty in loader.new_registrations('globals'):
             existing = self._lookup_global(gv)
             if existing is None:
@@ -604,13 +602,13 @@ class BaseContext(object):
     def insert_global(self, gv, gty):
         self._insert_global(gv, gty)
 
-    def insert_attributes(self, at):
-        key = at.key
-        self._attributes.insert(key, at)
+    # def insert_attributes(self, at):
+    #     key = at.key
+    #     self._attributes.insert(key, at)
 
-    def insert_function(self, ft):
-        key = ft.key
-        self._functions.insert(key, ft)
+    # def insert_function(self, ft):
+    #     key = ft.key
+    #     self._functions.insert(key, ft)
 
     def insert_user_function(self, fn, ft):
         """Insert a user function.

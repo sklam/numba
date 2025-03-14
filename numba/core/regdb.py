@@ -10,10 +10,11 @@ class _Entry:
 
     def match(self, attrs: Mapping) -> bool:
         for k in attrs:
-            if k in self.attributes:
-                if self.attributes[k] == attrs[k]:
-                    return True
-        return False
+            if k not in self.attributes:
+                return False
+            if self.attributes[k] != attrs[k]:
+                return False
+        return True
 
 
 class RegDB:
@@ -62,10 +63,13 @@ class DBListView:
         self._lastpos = 0
 
     def _synchronize(self) -> int:
-        iterator = self._db.filter_by_attrs(self._attrs, startpos=self._lastpos)
+        pos = self._lastpos
+        iterator = self._db.filter_by_attrs(self._attrs, startpos=pos)
+        delta = 0
         for pos, ent in iterator:
             self._view.append(ent)
-            self._size += 1
+            delta += 1
+        self._size += delta
         self._lastpos = pos
         return self.checkpoint()
 

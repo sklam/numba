@@ -1247,11 +1247,16 @@ class Registry(object):
         self._functions = regdb.get_list_view(
             module=mod, registry_for="functions"
         )
-        self.attributes = []
+        self._attributes = regdb.get_list_view(
+            module=mod, registry_for="attributes"
+        )
         self.globals = []
 
     def view_functions(self):
         return self._functions
+
+    def view_attributes(self):
+        return self._attributes
 
     def __repr__(self) -> str:
         klass = self.__class__.__name__
@@ -1266,7 +1271,7 @@ class Registry(object):
 
     def register_attr(self, item):
         assert issubclass(item, AttributeTemplate)
-        self.attributes.append(item)
+        self._attributes.append(item.key, item)
         return item
 
     def register_global(self, val=None, typ=None, **kwargs):
@@ -1343,7 +1348,7 @@ class RegistryLoader(BaseRegistryLoader):
     """
     An incremental loader for a typing registry.
     """
-    registry_items = ('attributes', 'globals')
+    registry_items = ('globals',)
 
 
 builtin_registry = Registry()
