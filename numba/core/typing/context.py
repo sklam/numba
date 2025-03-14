@@ -5,6 +5,7 @@ import weakref
 import threading
 import contextlib
 import operator
+from typing import Callable, Any
 
 from numba.core import types, errors
 from numba.core.typeconv import Conversion, rules
@@ -127,6 +128,86 @@ class CallFrame(object):
             raise errors.TypingError(m)
 
 
+class ContextRegistry:
+    _kind: str
+    _data: dict
+    _enforce_unique: bool
+
+    def __init__(self, kind: str, *, enforce_unique: bool = False):
+        self._kind = kind
+        self._data = {}
+        self._enforce_unique = enforce_unique
+
+    def lookup(self, key) -> tuple:
+        out = self.maybe_lookup(key)
+        if out is None:
+            raise KeyError(key)
+        return out
+
+    def maybe_lookup(self, key, default=None) -> tuple:
+        out = self._data.get(key, default)
+        if out is not default:
+            return tuple(out)
+        else:
+            return out
+
+    def getone(self, key, default=None):
+        """Get one element
+        """
+        out = self.maybe_lookup(key, default)
+        if out is default:
+            return default
+        else:
+            [the_one] = out
+            return the_one
+
+    def remove_entry(self, key):
+        self._data.pop(key)
+
+    def insert(self, key: str, entry):
+        lst = self._data.setdefault(key, [])
+        if self._enforce_unique and lst:
+            raise AssertionError(f"key already in dictionary: {key!r}")
+        lst.append(entry)
+        return lst
+
+    def __contains__(self, key) -> bool:
+        return key in self._data
+
+
+class LazyRegistry:
+    _kind: str
+    _registries: dict
+    _last_checkpoints: defaultdict[Any, int]
+    _cached: defaultdict[Any, list]
+    _ctor: Callable[[], Any]
+
+    def __init__(self, kind: str, registries: dict, ctor: Callable[[], Any]):
+        self._kind = kind
+        self._registries = registries
+        self._last_checkpoints = defaultdict(int)
+        self._cached = defaultdict(list)
+        self._ctor = ctor
+
+    def _sychronize(self):
+        for reg in self._registries:
+            chkpt = self._last_checkpoints[reg]
+            new_chkpt, iterator = reg.view_functions().get_updates(chkpt)
+            self._last_checkpoints[reg] = new_chkpt
+            for ent in iterator:
+                v = self._ctor(ent.value)
+                if v is not None:
+                    self._cached[v.key].append(v)
+
+    def __contains__(self, key):
+        self._sychronize()
+        return key in self._cached
+
+    def lookup(self, key):
+        self._sychronize()
+        return self._cached[key]
+
+
 class BaseContext(object):
     """A typing context for storing function typing constrain template.
     """
@@ -135,9 +216,17 @@ class BaseContext(object):
         # A list of installed registries
         self._registries = {}
         # Typing declarations extracted from the registries or other sources
-        self._functions = defaultdict(list)
-        self._attributes = defaultdict(list)
-        self._globals = utils.UniqueDict()
+
+        def ctor(fcls):
+            if not self._is_for_this_target(fcls):
+                return None
+            return fcls(self)
+
+        self._functions = LazyRegistry(kind="functions",
+                                       registries=self._registries,
+                                       ctor=ctor)
+        self._attributes = ContextRegistry(kind="attributes")
+        self._globals = ContextRegistry(kind="globals", enforce_unique=True)
         self.tm = rules.default_type_manager
         self.callstack = CallStack()
 
@@ -170,7 +259,7 @@ class BaseContext(object):
             defns.extend(sigs)
 
         elif func in self._functions:
-            for tpl in self._functions[func]:
+            for tpl in self._functions.lookup(func):
                 param = param or hasattr(tpl, 'generic')
                 defns.extend(getattr(tpl, 'cases', []))
 
@@ -218,7 +307,7 @@ class BaseContext(object):
         if func in self._functions:
             # Note: Duplicating code with types.Function.get_call_type().
             #       *defns* are CallTemplates.
-            defns = self._functions[func]
+            defns = self._functions.lookup(func)
             for defn in defns:
                 for support_literals in [True, False]:
                     if support_literals:
@@ -251,12 +340,12 @@ class BaseContext(object):
         Get matching AttributeTemplates for the Numba type.
         """
         if typ in self._attributes:
-            for attrinfo in self._attributes[typ]:
+            for attrinfo in self._attributes.lookup(typ):
                 yield attrinfo
         else:
             for cls in type(typ).__mro__:
                 if cls in self._attributes:
-                    for attrinfo in self._attributes[cls]:
+                    for attrinfo in self._attributes.lookup(cls):
                         yield attrinfo
 
     def resolve_getattr(self, typ, attr):
@@ -404,6 +493,45 @@ class BaseContext(object):
         Load target-specific registries.  Can be overridden by subclasses.
         """
 
+    def _is_for_this_target(self, ftcls):
+        from numba.core.target_extension import (get_local_target,
+                                                 resolve_target_str)
+        current_target = get_local_target(self)
+
+        metadata = getattr(ftcls, 'metadata', None)
+        if metadata is None:
+            return True
+
+        target_str = metadata.get('target')
+        if target_str is None:
+            return True
+
+        # There may be pending registrations for nonexistent targets.
+        # Ideally it would be impossible to leave a registration pending
+        # for an invalid target, but in practice this is exceedingly
+        # difficult to guard against - many things are registered at import
+        # time, and eagerly reporting an error when registering for invalid
+        # targets would require that all target registration code is
+        # executed prior to all typing registrations during the import
+        # process; attempting to enforce this would impose constraints on
+        # execution order during import that would be very difficult to
+        # resolve and maintain in the presence of typical code maintenance.
+        # Furthermore, these constraints would be imposed not only on
+        # Numba internals, but also on its dependents.
+        #
+        # Instead of that enforcement, we simply catch any occurrences of
+        # registrations for targets that don't exist, and report that
+        # they're not for this target. They will then not be encountered
+        # again during future typing context refreshes (because the
+        # loader's new registrations are a stream_list that doesn't yield
+        # previously-yielded items).
+        try:
+            ft_target = resolve_target_str(target_str)
+        except errors.NonexistentTargetError:
+            return False
+
+        return current_target.inherits_from(ft_target)
+
     def install_registry(self, registry):
         """
         Install a *registry* (a templates.Registry instance) of function,
@@ -415,49 +543,8 @@ class BaseContext(object):
             loader = templates.RegistryLoader(registry)
             self._registries[registry] = loader
 
-        from numba.core.target_extension import (get_local_target,
-                                                 resolve_target_str)
-        current_target = get_local_target(self)
+        is_for_this_target = self._is_for_this_target
 
-        def is_for_this_target(ftcls):
-            metadata = getattr(ftcls, 'metadata', None)
-            if metadata is None:
-                return True
-
-            target_str = metadata.get('target')
-            if target_str is None:
-                return True
-
-            # There may be pending registrations for nonexistent targets.
-            # Ideally it would be impossible to leave a registration pending
-            # for an invalid target, but in practice this is exceedingly
-            # difficult to guard against - many things are registered at import
-            # time, and eagerly reporting an error when registering for invalid
-            # targets would require that all target registration code is
-            # executed prior to all typing registrations during the import
-            # process; attempting to enforce this would impose constraints on
-            # execution order during import that would be very difficult to
-            # resolve and maintain in the presence of typical code maintenance.
-            # Furthermore, these constraints would be imposed not only on
-            # Numba internals, but also on its dependents.
-            #
-            # Instead of that enforcement, we simply catch any occurrences of
-            # registrations for targets that don't exist, and report that
-            # they're not for this target. They will then not be encountered
-            # again during future typing context refreshes (because the
-            # loader's new registrations are a stream_list that doesn't yield
-            # previously-yielded items).
-            try:
-                ft_target = resolve_target_str(target_str)
-            except errors.NonexistentTargetError:
-                return False
-
-            return current_target.inherits_from(ft_target)
-
-        for ftcls in loader.new_registrations('functions'):
-            if not is_for_this_target(ftcls):
-                continue
-            self.insert_function(ftcls(self))
         for ftcls in loader.new_registrations('attributes'):
             if not is_for_this_target(ftcls):
                 continue
@@ -484,7 +571,7 @@ class BaseContext(object):
         except TypeError:
             pass
         try:
-            return self._globals.get(gv, None)
+            return self._globals.getone(gv)
         except TypeError:
             # Unhashable type
             return None
@@ -494,15 +581,15 @@ class BaseContext(object):
         Register type *gty* for value *gv*.  Only a weak reference
         to *gv* is kept, if possible.
         """
-        def on_disposal(wr, pop=self._globals.pop):
-            # pop() is pre-looked up to avoid a crash late at shutdown on 3.5
-            # (https://bugs.python.org/issue25217)
+        def on_disposal(wr, pop=self._globals.remove_entry):
+            # remove_entry() is pre-looked up to avoid a crash late at shutdown
+            # on 3.5 (https://bugs.python.org/issue25217)
             pop(wr)
         try:
             gv = weakref.ref(gv, on_disposal)
         except TypeError:
             pass
-        self._globals[gv] = gty
+        self._globals.insert(gv, gty)
 
     def _remove_global(self, gv):
         """
@@ -512,18 +599,18 @@ class BaseContext(object):
             gv = weakref.ref(gv)
         except TypeError:
             pass
-        del self._globals[gv]
+        self._globals.remove_entry(gv)
 
     def insert_global(self, gv, gty):
         self._insert_global(gv, gty)
 
     def insert_attributes(self, at):
         key = at.key
-        self._attributes[key].append(at)
+        self._attributes.insert(key, at)
 
     def insert_function(self, ft):
         key = ft.key
-        self._functions[key].append(ft)
+        self._functions.insert(key, ft)
 
     def insert_user_function(self, fn, ft):
         """Insert a user function.

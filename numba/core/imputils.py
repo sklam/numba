@@ -2,6 +2,7 @@
 Utilities to simplify the boilerplate for native lowering.
 """
 
+import sys
 
 import collections
 import contextlib
@@ -118,7 +119,7 @@ class Registry(object):
         return decorate
 
     def __repr__(self):
-        return f"Lowering Registry<{self.name}>"
+        return f"Lowering Registry {self.name}>"
 
 
 class RegistryLoader(BaseRegistryLoader):

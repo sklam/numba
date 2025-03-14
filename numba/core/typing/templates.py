@@ -18,6 +18,7 @@ from numba.core.errors import (
     InternalError,
 )
 from numba.core.cpu_options import InlineOptions
+from numba.core import regdb
 
 # info store for inliner callback functions e.g. cost model
 _inline_info = namedtuple('inline_info',
@@ -1241,13 +1242,26 @@ class Registry(object):
     """
 
     def __init__(self):
-        self.functions = []
+        mod = sys._getframe(1).f_globals["__name__"]
+        self._mod = mod
+        self._functions = regdb.get_list_view(
+            module=mod, registry_for="functions"
+        )
         self.attributes = []
         self.globals = []
 
+    def view_functions(self):
+        return self._functions
+
+    def __repr__(self) -> str:
+        klass = self.__class__.__name__
+        name = self._mod
+        ident = hex(id(self))
+        return f"<{klass} {name} {ident}>"
+
     def register(self, item):
         assert issubclass(item, FunctionTemplate)
-        self.functions.append(item)
+        self._functions.append(item.key, item)
         return item
 
     def register_attr(self, item):
@@ -1315,6 +1329,7 @@ class BaseRegistryLoader(object):
     """
 
     def __init__(self, registry):
+        self._registry = registry
         self._registrations = dict(
             (name, utils.stream_list(getattr(registry, name)))
             for name in self.registry_items)
@@ -1328,7 +1343,7 @@ class RegistryLoader(BaseRegistryLoader):
     """
     An incremental loader for a typing registry.
     """
-    registry_items = ('functions', 'attributes', 'globals')
+    registry_items = ('attributes', 'globals')
 
 
 builtin_registry = Registry()
