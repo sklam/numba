@@ -26,41 +26,55 @@ The following events are built in:
     - ``"module"``: module name of the function being compiled.
     - ``"flags"``: compilation flags.
     - ``"args"``: argument types.
-    - ``"return_type"`` return type.
+    - ``"return_type"``: return type.
+
+- ``"numba:annotate"`` is broadcast for any custom annotation. Events of
+  this kind have ``data`` defined to be a ``dict`` with at least the following
+  key-values:
+
+    - ``"name"``: annotation name.
 
 Applications can register callbacks that are listening for specific events using
 ``register(kind: str, listener: Listener)``, where ``listener`` is an instance
 of ``Listener`` that defines custom actions on occurrence of the specific event.
+
 """
 
-import os
-import json
-import atexit
 import abc
+import atexit
+import dataclasses as _dc
 import enum
-import time
+import json
+import os
 import threading
-from timeit import default_timer as timer
-from contextlib import contextmanager, ExitStack
+import time
+import traceback
 from collections import defaultdict
+from contextlib import ExitStack, contextmanager
+from timeit import default_timer as timer
+from typing import Any
 
 from numba.core import config, utils
+from numba.misc.memoryutils import _MemoryCounter, get_memory_usage
 
 
 class EventStatus(enum.Enum):
-    """Status of an event.
-    """
+    """Status of an event."""
+
     START = enum.auto()
     END = enum.auto()
 
 
 # Builtin event kinds.
-_builtin_kinds = frozenset([
-    "numba:compiler_lock",
-    "numba:compile",
-    "numba:llvm_lock",
-    "numba:run_pass",
-])
+_builtin_kinds = frozenset(
+    [
+        "numba:compiler_lock",
+        "numba:compile",
+        "numba:llvm_lock",
+        "numba:run_pass",
+        "numba:annotate",
+    ]
+)
 
 
 def _guard_kind(kind):
@@ -79,61 +93,55 @@ def _guard_kind(kind):
     res : str
     """
     if kind.startswith("numba:") and kind not in _builtin_kinds:
-        msg = (f"{kind} is not a valid event kind, "
-               "it starts with the reserved prefix 'numba:'")
+        msg = (
+            f"{kind} is not a valid event kind, "
+            "it starts with the reserved prefix 'numba:'"
+        )
         raise ValueError(msg)
     return kind
 
 
+def _format_exception(exc, excval=None, tb=None) -> str | None:
+    if exc is None:
+        return None
+    return "".join(
+        traceback.format_exception(exc, excval, tb, limit=0, chain=False)
+    )
+
+
+def _get_memory_counter():
+    return get_memory_usage()
+
+
+@_dc.dataclass(frozen=True, kw_only=True)
 class Event:
-    """An event.
+    """Represents a compiler event with associated metadata.
 
     Parameters
     ----------
     kind : str
+        The event type identifier (e.g., "numba:compile", "numba:run_pass").
     status : EventStatus
-    data : any; optional
-        Additional data for the event.
-    exc_details : 3-tuple; optional
-        Same 3-tuple for ``__exit__``.
+        Whether this is a START or END event.
+    data : any, optional
+        Event-specific data payload.
+    error_traceback : str | None, optional
+        Exception traceback if the event represents an error.
+    pid : int | None, optional
+        Process ID where the event occurred.
+    tid : int | None, optional
+        Thread ID where the event occurred.
     """
-    def __init__(self, kind, status, data=None, exc_details=None):
-        self._kind = _guard_kind(kind)
-        self._status = status
-        self._data = data
-        self._exc_details = (None
-                             if exc_details is None or exc_details[0] is None
-                             else exc_details)
 
-    @property
-    def kind(self):
-        """Event kind
+    kind: str
+    status: EventStatus
+    data: Any
+    error_traceback: str | None = None
+    pid: int | None = _dc.field(default_factory=os.getpid)
+    tid: int | None = _dc.field(default_factory=threading.get_native_id)
 
-        Returns
-        -------
-        res : str
-        """
-        return self._kind
-
-    @property
-    def status(self):
-        """Event status
-
-        Returns
-        -------
-        res : EventStatus
-        """
-        return self._status
-
-    @property
-    def data(self):
-        """Event data
-
-        Returns
-        -------
-        res : object
-        """
-        return self._data
+    def __post_init__(self):
+        _guard_kind(self.kind)
 
     @property
     def is_start(self):
@@ -143,7 +151,7 @@ class Event:
         -------
         res : bool
         """
-        return self._status == EventStatus.START
+        return self.status == EventStatus.START
 
     @property
     def is_end(self):
@@ -153,7 +161,7 @@ class Event:
         -------
         res : bool
         """
-        return self._status == EventStatus.END
+        return self.status == EventStatus.END
 
     @property
     def is_failed(self):
@@ -169,9 +177,12 @@ class Event:
         return self._exc_details is None
 
     def __str__(self):
-        data = (f"{type(self.data).__qualname__}"
-                if self.data is not None else "None")
-        return f"Event({self._kind}, {self._status}, data: {data})"
+        data = (
+            f"{type(self.data).__qualname__}"
+            if self.data is not None
+            else "None"
+        )
+        return f"Event({self.kind}, {self.status}, data: {data})"
 
     __repr__ = __str__
 
@@ -218,8 +229,8 @@ def broadcast(event):
 
 
 class Listener(abc.ABC):
-    """Base class for all event listeners.
-    """
+    """Base class for all event listeners."""
+
     @abc.abstractmethod
     def on_start(self, event):
         """Called when there is a *START* event.
@@ -259,6 +270,7 @@ class TimingListener(Listener):
     """A listener that measures the total time spent between *START* and
     *END* events during the time this listener is active.
     """
+
     def __init__(self):
         self._depth = 0
 
@@ -299,6 +311,9 @@ class RecordingListener(Listener):
     is the time the event occurred as returned by ``time.time()`` and the second
     element is the event.
     """
+
+    buffer: list[tuple[float, Event]]
+
     def __init__(self):
         self.buffer = []
 
@@ -307,6 +322,40 @@ class RecordingListener(Listener):
 
     def on_end(self, event):
         self.buffer.append((time.time(), event))
+
+
+class RecordingListenerWithMemoryTracking(RecordingListener):
+    """Records events and periodically samples memory usage."""
+
+    memory_counters: list[tuple[float, _MemoryCounter]]
+    _last_time: float  # unit: seconds
+    _interval: float  # unit: seconds
+
+    def __init__(self, interval: float = 0.5):
+        """Initialize the memory recorder.
+
+        Args:
+            interval: minimum time interval in seconds for periodic memory
+                      sampling.
+        """
+        super().__init__()
+        self.memory_counters = []
+        self._last_time = 0
+        self._interval = interval
+
+    def on_start(self, event):
+        super().on_start(event)
+        self._add_memory_counter()
+
+    def on_end(self, event):
+        super().on_end(event)
+        self._add_memory_counter()
+
+    def _add_memory_counter(self):
+        ts = time.time()
+        if ts - self._last_time >= self._interval:
+            self.memory_counters.append((time.time(), get_memory_usage()))
+            self._last_time = ts
 
 
 @contextmanager
@@ -413,8 +462,12 @@ def end_event(kind, data=None, exc_details=None):
     exc_details : 3-tuple; optional
         Same 3-tuple for ``__exit__``. Or, ``None`` if no error.
     """
+    error_traceback = _format_exception(*exc_details) if exc_details else None
     evt = Event(
-        kind=kind, status=EventStatus.END, data=data, exc_details=exc_details,
+        kind=kind,
+        status=EventStatus.END,
+        data=data,
+        error_traceback=error_traceback,
     )
     broadcast(evt)
 
@@ -433,6 +486,7 @@ def trigger_event(kind, data=None):
         Extra event data.
     """
     with ExitStack() as scope:
+
         @scope.push
         def on_exit(*exc_details):
             end_event(kind, data=data, exc_details=exc_details)
@@ -441,37 +495,79 @@ def trigger_event(kind, data=None):
         yield
 
 
+_TS_SCALE_FACTOR = 1_000_000  # scale to microseconds
+
+
 def _prepare_chrome_trace_data(listener: RecordingListener):
-    """Prepare events in `listener` for serializing as chrome trace data.
-    """
+    """Prepare events in `listener` for serializing as chrome trace data."""
     # The spec for the trace event format can be found at:
     # https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit   # noqa
     # This code only uses the JSON Array Format for simplicity.
-    pid = os.getpid()
-    tid = threading.get_native_id()
     evs = []
     for ts, rec in listener.buffer:
         data = rec.data
         cat = str(rec.kind)
-        ts_scaled = ts * 1_000_000   # scale to microseconds
-        ph = 'B' if rec.is_start else 'E'
-        name = data['name']
+        ts_scaled = ts * _TS_SCALE_FACTOR
+        ph = "B" if rec.is_start else "E"
+        name = data["name"]
+        if rec.error_traceback is not None:
+            data["error_traceback"] = rec.error_traceback
         args = data
+        pid = rec.pid
+        tid = rec.tid
+        # Add the current event
         ev = dict(
-            cat=cat, pid=pid, tid=tid, ts=ts_scaled, ph=ph, name=name,
+            cat=cat,
+            pid=pid,
+            tid=tid,
+            ts=ts_scaled,
+            ph=ph,
+            name=name,
             args=args,
         )
         evs.append(ev)
+
+    if isinstance(listener, RecordingListenerWithMemoryTracking):
+        # Add memory counter
+        for ts, meminfo in listener.memory_counters:
+            ts_scaled = ts * _TS_SCALE_FACTOR  # scale to microseconds
+            if meminfo["rss"] is not None:
+                evs.append(
+                    dict(
+                        cat="memory",
+                        pid=pid,
+                        tid=0,  # zero means process-wide
+                        ts=ts_scaled,
+                        ph="C",
+                        name="Memory.RSS",
+                        args=dict(value=meminfo["rss"]),
+                    )
+                )
+
+            if meminfo["available"] is not None:
+                evs.append(
+                    dict(
+                        cat="memory",
+                        pid=0,  # zero means system-wide
+                        tid=0,  # zero means process-wide
+                        ts=ts_scaled,
+                        ph="C",
+                        name="Memory.Available",
+                        args=dict(value=meminfo["available"]),
+                    )
+                )
+
     return evs
 
 
 def _setup_chrome_trace_exit_handler():
-    """Setup a RecordingListener and an exit handler to write the captured
-    events to file.
+    """Setup a RecordingListenerWithMemoryTracking and an exit handler to write
+    the captured events to file.
     """
-    listener = RecordingListener()
+    listener = RecordingListenerWithMemoryTracking()
     register("numba:run_pass", listener)
-    filename = config.CHROME_TRACE
+    register("numba:annotate", listener)
+    filename = config.CHROME_TRACE.apply()
 
     @atexit.register
     def _write_chrome_trace():
@@ -479,6 +575,8 @@ def _setup_chrome_trace_exit_handler():
         evs = _prepare_chrome_trace_data(listener)
         with open(filename, "w") as out:
             json.dump(evs, out, cls=utils._LazyJSONEncoder)
+
+    return _write_chrome_trace
 
 
 if config.CHROME_TRACE:

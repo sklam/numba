@@ -5,6 +5,7 @@ import re
 import shutil
 import warnings
 import traceback
+from numba.misc.chrome_trace import ChromeTraceConfig
 
 # YAML needed to use file based Numba config
 try:
@@ -292,7 +293,8 @@ class _EnvReloader(object):
         TRACE = _readenv("NUMBA_TRACE", int, 0)
 
         # Enable chrome tracing support
-        CHROME_TRACE = _readenv("NUMBA_CHROME_TRACE", str, "")
+        CHROME_TRACE = _readenv("NUMBA_CHROME_TRACE",
+                                ChromeTraceConfig.parse, "")
 
         # Enable debugging of type inference
         DEBUG_TYPEINFER = _readenv("NUMBA_DEBUG_TYPEINFER", int, 0)

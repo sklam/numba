@@ -12,7 +12,7 @@ from __future__ import annotations
 import os
 import contextlib
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, TypedDict
 
 
 try:
@@ -44,7 +44,12 @@ def get_available_memory() -> Optional[int]:
     return None
 
 
-def get_memory_usage() -> Dict[str, Optional[int]]:
+class _MemoryCounter(TypedDict):
+    rss: int | None
+    available: int | None
+
+
+def get_memory_usage() -> _MemoryCounter:
     """
     Get memory usage information needed for monitoring.
 
@@ -68,7 +73,6 @@ def get_memory_usage() -> Dict[str, Optional[int]]:
             # Get system available memory
             sys_mem = psutil.virtual_memory()
             memory_info["available"] = sys_mem.available
-
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
 

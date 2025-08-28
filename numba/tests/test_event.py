@@ -11,14 +11,20 @@ from numba.core.utils import _lazy_pformat
 
 class TestEvent(TestCase):
 
+    def _count_registered_listeners(self):
+        """Helper to count total number of registered listeners across all
+        event kinds."""
+        return sum(len(listeners) for listeners in ev._registered.values())
+
     def setUp(self):
         # Trigger compilation to ensure all listeners are initialized
         njit(lambda: None)()
-        self.__registered_listeners = len(ev._registered)
+        self.__registered_listeners = self._count_registered_listeners()
 
     def tearDown(self):
         # Check there is no lingering listeners
-        self.assertEqual(len(ev._registered), self.__registered_listeners)
+        self.assertEqual(self._count_registered_listeners(),
+                         self.__registered_listeners)
 
     def test_recording_listener(self):
         @njit
@@ -212,6 +218,23 @@ class TestEvent(TestCase):
                         foo_timers['compiler_lock'])
         self.assertLess(bar_timers['llvm_lock'],
                         bar_timers['compiler_lock'])
+
+    def test_recording_listener_with_memory_tracking(self):
+        listener = ev.RecordingListenerWithMemoryTracking()
+        # Check that memory counters are initially empty
+        self.assertEqual(len(listener.memory_counters), 0)
+
+        with ev.install_listener("numba:annotate", listener):
+            # Manually trigger events to test memory tracking
+            ev.start_event("numba:annotate", {"name": "test"})
+            ev.start_event("numba:annotate", {"name": "test2"})
+            ev.end_event("numba:annotate", {"name": "test2"})
+            ev.end_event("numba:annotate", {"name": "test"})
+
+        # Check that events are recorded
+        self.assertGreater(len(listener.buffer), 0)
+        # Check that memory counters are populated
+        self.assertGreater(len(listener.memory_counters), 0)
 
 
 if __name__ == "__main__":
