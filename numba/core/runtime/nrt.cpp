@@ -1,6 +1,8 @@
 /* MSVC C99 doesn't have <stdatomic.h>, else this could be written in easily
  * in C */
 #include <atomic>
+#include <unordered_set>
+#include <mutex>
 
 #ifdef _MSC_VER
 #include <inttypes.h>
@@ -61,6 +63,12 @@ struct NRT_MemSys {
         NRT_realloc_func realloc;
         NRT_free_func free;
     } allocator;
+    /* MemInfo tracking for debugging */
+    struct {
+        std::unordered_set<NRT_MemInfo*> live_objects;
+        std::mutex mutex;
+        bool enabled;
+    } tracking;
 };
 
 
@@ -80,9 +88,23 @@ extern "C" void NRT_MemSys_init(void) {
     TheMSys.allocator.malloc = malloc;
     TheMSys.allocator.realloc = realloc;
     TheMSys.allocator.free = free;
+    /* Initialize tracking */
+    TheMSys.tracking.live_objects.clear();
+    TheMSys.tracking.enabled = true;  // Enable by default for debugging
 }
 
 extern "C" void NRT_MemSys_shutdown(void) {
+    printf("SHUTDOWN\n");
+    if (TheMSys.tracking.enabled) {
+        std::lock_guard<std::mutex> lock(TheMSys.tracking.mutex);
+        printf("=== LIVE MEMINFO OBJECTS AT SHUTDOWN ===\n");
+        printf("Total live objects: %zu\n", TheMSys.tracking.live_objects.size());
+        for (NRT_MemInfo* mi : TheMSys.tracking.live_objects) {
+            printf("Live MemInfo: %p, refct=%zu, data=%p, size=%zu\n",
+                   mi, mi->refct.load(), mi->data, mi->size);
+        }
+        printf("========================================\n");
+    }
     TheMSys.shutting = 1;
 }
 
@@ -173,6 +195,11 @@ extern "C" void NRT_MemInfo_init(NRT_MemInfo *mi,void *data, size_t size,
     mi->size = size;
     mi->external_allocator = external_allocator;
     NRT_Debug(nrt_debug_print("NRT_MemInfo_init mi=%p external_allocator=%p\n", mi, external_allocator));
+    /* Add to tracking */
+    if (TheMSys.tracking.enabled) {
+        std::lock_guard<std::mutex> lock(TheMSys.tracking.mutex);
+        TheMSys.tracking.live_objects.insert(mi);
+    }
     /* Update stats */
     if (TheMSys.stats.enabled)
     {
@@ -380,6 +407,11 @@ extern "C" void NRT_dealloc(NRT_MemInfo *mi) {
 }
 
 extern "C" void NRT_MemInfo_destroy(NRT_MemInfo *mi) {
+    /* Remove from tracking */
+    if (TheMSys.tracking.enabled) {
+        std::lock_guard<std::mutex> lock(TheMSys.tracking.mutex);
+        TheMSys.tracking.live_objects.erase(mi);
+    }
     NRT_dealloc(mi);
     if (TheMSys.stats.enabled)
     {
