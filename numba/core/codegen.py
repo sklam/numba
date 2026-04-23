@@ -15,7 +15,7 @@ from numba.core.llvm_bindings import create_pass_builder
 from numba.core.runtime.nrtopt import remove_redundant_nrt_refct
 from numba.core.runtime import rtsys
 from numba.core.compiler_lock import require_global_compiler_lock
-from numba.core.errors import NumbaInvalidConfigWarning
+from numba.core.errors import NumbaInvalidConfigWarning, NumbaError
 from numba.misc.inspection import disassemble_elf_to_cfg
 from numba.misc.llvm_pass_timings import PassTimingsCollection
 
@@ -941,6 +941,7 @@ class CPUCodeLibrary(CodeLibrary):
         if kind == 'bitcode':
             # No need to re-run optimizations, just make the module ready
             self._final_module = ll.parse_bitcode(data)
+
             self._finalize_final_module()
             return self
         elif kind == 'object':
@@ -950,7 +951,10 @@ class CPUCodeLibrary(CodeLibrary):
             self._shared_module = ll.parse_bitcode(shared_bitcode)
             self._finalize_final_module()
             # Load symbols from cache
+
             self._codegen._engine._load_defined_symbols(self._shared_module)
+            # from numba.core.bytecode import FunctionIdentity
+            # next(FunctionIdentity._unique_ids)
             return self
         else:
             raise ValueError("unsupported serialization kind %r" % (kind,))
@@ -1089,6 +1093,7 @@ class JitEngine(object):
         # exists and will not cause the `EE` symbol lookup to `exit(1)`
         # when symbol-not-found.
         self._defined_symbols = set()
+        self._defined_symbol_types = {}
 
     def is_symbol_defined(self, name):
         """Is the symbol defined in this session?
@@ -1096,11 +1101,46 @@ class JitEngine(object):
         return name in self._defined_symbols
 
     def _load_defined_symbols(self, mod):
-        """Extract symbols from the module
+        """Extract symbols from the module.
+
+        Raises NumbaError if any incoming symbol is already defined in this
+        session, which would otherwise cause an opaque LLVM-level redefinition
+        error.  The most common cause is a fork-child's cached compilation
+        whose embedded UID collides with a freshly compiled function in the
+        parent process (os.fork() causes both processes to inherit the same
+        FunctionIdentity._unique_ids counter state).
         """
         for gsets in (mod.functions, mod.global_variables):
-            self._defined_symbols |= {gv.name for gv in gsets
-                                      if not gv.is_declaration}
+            sym_map = {gv.name: gv for gv in gsets if not gv.is_declaration}
+            collisions = frozenset(sym_map) & self._defined_symbols
+            if collisions:
+                for k in collisions:
+                    gv = sym_map[k]
+                    linkage = gv.linkage
+                    if linkage not in {ll.Linkage.internal, ll.Linkage.common}:
+                        fnty =  gv.global_value_type.as_ir(ll.get_global_context())
+                        expected_ty = self._defined_symbol_types[k]
+                        if fnty != expected_ty:
+                            warnings.warn(f"colliding symbol {k} {linkage!r}")
+                        # if '8__main__2fn' in k:
+                        #     print('=---', k)
+
+                        #     print('-fnty', fnty)
+                        #     print('---expected', self._defined_symbol_types[k])
+                # raise NumbaError(
+                #     "LLVM symbol redefinition detected. The following symbols "
+                #     "are already defined in this compilation session: "
+                #     f"{sorted(collisions)}. "
+                #     "This is likely caused by a fork-child's cached "
+                #     "compilation overlapping with a freshly compiled function "
+                #     "in the parent process (UID counter collision after "
+                #     "os.fork())."
+                # )
+            self._defined_symbols.update(sym_map.keys())
+            for k, gv in sym_map.items():
+                self._defined_symbol_types[k] = gv.global_value_type.as_ir(ll.get_global_context())
+
+
 
     def add_module(self, module):
         """Override ExecutionEngine.add_module
@@ -1114,6 +1154,8 @@ class JitEngine(object):
         to keep info about defined symbols.
         """
         self._defined_symbols.add(gv.name)
+        fnty = gv.global_value_type.as_ir(ll.get_global_context())
+        self._defined_symbol_types[gv.name] = fnty
         return self._ee.add_global_mapping(gv, addr)
 
     #

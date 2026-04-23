@@ -64,13 +64,16 @@ class FunctionDescriptor(object):
         # The mangled name *must* be unique, else the wrong function can
         # be chosen at link time.
         qualprefix = qualifying_prefix(self.modname, self.qualname)
+        if uid is not None and typemap is not None:
+            typemap_hash = hash(tuple(hash((k, v)) for k, v in typemap.items()))
+            uid ^= typemap_hash
         self.uid = uid
         self.mangled_name = mangler(
-            qualprefix, self.argtypes, abi_tags=abi_tags, uid=uid,
+            qualprefix, self.argtypes, abi_tags=abi_tags, uid=self.uid,
         )
         if env_name is None:
             env_name = mangler(".NumbaEnv.{}".format(qualprefix),
-                               self.argtypes, abi_tags=abi_tags, uid=uid)
+                               self.argtypes, abi_tags=abi_tags, uid=self.uid)
         self.env_name = env_name
         self.inline = inline
         self.noalias = noalias

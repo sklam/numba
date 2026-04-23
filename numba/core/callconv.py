@@ -864,7 +864,7 @@ class CPUCallConv(BaseCallConv):
         retty = self.get_return_type(resty).pointee
         actual_retty = self._get_return_argument(callee.function_type).pointee
         if retty != actual_retty:
-            m = f"Function type returns {actual_retty} but resty={retty}"
+            m = f"Function type returns {actual_retty} but resty={retty}: {callee.name}"
             raise ValueError(m)
 
         retvaltmp = cgutils.alloca_once(builder, retty)
