@@ -1024,6 +1024,11 @@ class RuntimeLinker(object):
         self._unresolved = utils.UniqueDict()
         self._defined = set()
         self._resolved = []
+        # Maps canonical (pre-typemap-XOR) name -> actual (XOR'd) mangled name.
+        # Recursive callers emit unresolved refs using the canonical name (the
+        # raw FunctionIdentity uid stored during type inference), while the
+        # compiled symbol uses the XOR'd name.  This alias table bridges the gap.
+        self._aliases = {}
 
     def scan_unresolved_symbols(self, module, engine):
         """
@@ -1044,6 +1049,13 @@ class RuntimeLinker(object):
                 engine.add_global_mapping(gv, ctypes.addressof(ptr))
                 self._unresolved[sym] = ptr
 
+    def add_alias(self, canonical_name, actual_name):
+        """Register that *canonical_name* (used in unresolved refs emitted for
+        recursive calls) should resolve to the address of *actual_name* (the
+        symbol compiled with a typemap-hash XOR'd uid).
+        """
+        self._aliases[canonical_name] = actual_name
+
     def scan_defined_symbols(self, module):
         """
         Scan and track all defined symbols.
@@ -1056,18 +1068,30 @@ class RuntimeLinker(object):
         """
         Fix unresolved symbols if they are defined.
         """
-        # An iterator to get all unresolved but available symbols
+        # Direct: unresolved name matches a defined symbol name exactly.
         pending = [name for name in self._unresolved if name in self._defined]
-        # Resolve pending symbols
         for name in pending:
-            # Get runtime address
             fnptr = engine.get_function_address(name)
-            # Fix all usage
             ptr = self._unresolved[name]
             ptr.value = fnptr
             self._resolved.append((name, ptr))   # keep ptr alive
-            # Delete resolved
             del self._unresolved[name]
+
+        # Alias: unresolved canonical name maps to a different actual name.
+        # This handles the case where a recursive caller emitted an unresolved
+        # ref using the pre-typemap-XOR canonical name while the compiled
+        # symbol uses the XOR'd name.
+        pending_aliases = [
+            (uname, self._aliases[uname])
+            for uname in list(self._unresolved)
+            if uname in self._aliases and self._aliases[uname] in self._defined
+        ]
+        for uname, actual_name in pending_aliases:
+            fnptr = engine.get_function_address(actual_name)
+            ptr = self._unresolved[uname]
+            ptr.value = fnptr
+            self._resolved.append((uname, ptr))   # keep ptr alive
+            del self._unresolved[uname]
 
 def _proxy(old):
     @functools.wraps(old)
@@ -1118,15 +1142,17 @@ class JitEngine(object):
                     gv = sym_map[k]
                     linkage = gv.linkage
                     if linkage not in {ll.Linkage.internal, ll.Linkage.common}:
-                        fnty =  gv.global_value_type.as_ir(ll.get_global_context())
-                        expected_ty = self._defined_symbol_types[k]
-                        if fnty != expected_ty:
+                        try:
+                            fnty = gv.global_value_type.as_ir(
+                                ll.get_global_context())
+                            expected_ty = self._defined_symbol_types.get(k)
+                        except AttributeError:
+                            # as_ir() may fail for identified struct types
+                            # (e.g. jitclass structs) on GlobalContextRef.
+                            # Skip the type comparison in that case.
+                            fnty = expected_ty = None
+                        if fnty is not None and fnty != expected_ty:
                             warnings.warn(f"colliding symbol {k} {linkage!r}")
-                        # if '8__main__2fn' in k:
-                        #     print('=---', k)
-
-                        #     print('-fnty', fnty)
-                        #     print('---expected', self._defined_symbol_types[k])
                 # raise NumbaError(
                 #     "LLVM symbol redefinition detected. The following symbols "
                 #     "are already defined in this compilation session: "
@@ -1138,7 +1164,13 @@ class JitEngine(object):
                 # )
             self._defined_symbols.update(sym_map.keys())
             for k, gv in sym_map.items():
-                self._defined_symbol_types[k] = gv.global_value_type.as_ir(ll.get_global_context())
+                try:
+                    self._defined_symbol_types[k] = \
+                        gv.global_value_type.as_ir(ll.get_global_context())
+                except AttributeError:
+                    # as_ir() may fail for identified struct types; store None
+                    # so the key exists but type comparisons are skipped.
+                    self._defined_symbol_types[k] = None
 
 
 
@@ -1154,7 +1186,10 @@ class JitEngine(object):
         to keep info about defined symbols.
         """
         self._defined_symbols.add(gv.name)
-        fnty = gv.global_value_type.as_ir(ll.get_global_context())
+        try:
+            fnty = gv.global_value_type.as_ir(ll.get_global_context())
+        except AttributeError:
+            fnty = None
         self._defined_symbol_types[gv.name] = fnty
         return self._ee.add_global_mapping(gv, addr)
 
@@ -1343,6 +1378,13 @@ class CPUCodegen(Codegen):
         """
         return (self._llvm_module.triple, self._get_host_cpu_name(),
                 self._tm_features)
+
+    def register_mangled_name_alias(self, canonical_name, actual_name):
+        """Tell the runtime linker that *canonical_name* (the pre-typemap-XOR
+        mangled name used by recursive callers) resolves to *actual_name* (the
+        XOR'd name the symbol was actually compiled under).
+        """
+        self._rtlinker.add_alias(canonical_name, actual_name)
 
     def _scan_and_fix_unresolved_refs(self, module):
         self._rtlinker.scan_unresolved_symbols(module, self._engine)

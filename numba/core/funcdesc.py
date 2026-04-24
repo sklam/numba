@@ -32,7 +32,8 @@ class FunctionDescriptor(object):
     """
     __slots__ = ('native', 'modname', 'qualname', 'doc', 'typemap',
                  'calltypes', 'args', 'kws', 'restype', 'argtypes',
-                 'mangled_name', 'unique_name', 'env_name', 'global_dict',
+                 'mangled_name', 'canonical_mangled_name',
+                 'unique_name', 'env_name', 'global_dict',
                  'inline', 'noalias', 'abi_tags', 'uid')
 
     def __init__(self, native, modname, qualname, unique_name, doc,
@@ -66,7 +67,16 @@ class FunctionDescriptor(object):
         qualprefix = qualifying_prefix(self.modname, self.qualname)
         if uid is not None and typemap is not None:
             typemap_hash = hash(tuple(hash((k, v)) for k, v in typemap.items()))
+            # Store the pre-XOR "canonical" name.  Recursive callers reference
+            # the callee by the raw FunctionIdentity uid (stored during type
+            # inference before the XOR is known), so we need an alias mapping
+            # canonical_mangled_name -> mangled_name in the runtime linker.
+            self.canonical_mangled_name = mangler(
+                qualprefix, self.argtypes, abi_tags=abi_tags, uid=uid,
+            )
             uid ^= typemap_hash
+        else:
+            self.canonical_mangled_name = None
         self.uid = uid
         self.mangled_name = mangler(
             qualprefix, self.argtypes, abi_tags=abi_tags, uid=self.uid,

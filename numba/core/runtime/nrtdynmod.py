@@ -189,6 +189,11 @@ def _define_nrt_unresolved_abort(ctx, module):
     fn = ir.Function(module, fnty, name="nrt_unresolved_abort")
     bb = fn.append_basic_block()
     builder = ir.IRBuilder(bb)
+
+    # Call C abort
+    fn = cgutils.get_or_insert_function(module, ir.FunctionType(ir.VoidType(), ()), "abort")
+    builder.call(fn, ())
+
     msg = "numba jitted function aborted due to unresolved symbol"
     ctx.call_conv.return_user_exc(builder, RuntimeError, (msg,))
     return fn

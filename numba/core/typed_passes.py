@@ -466,6 +466,13 @@ class BaseNativeLowering(abc.ABC, LoweringPass):
                     mangler=targetctx.mangler, inline=flags.forceinline,
                     noalias=flags.noalias, abi_tags=[flags.get_mangle_string()])
 
+            # If the typemap XOR shifted the uid, register a canonical-name
+            # alias so that recursive callers (which emit unresolved refs using
+            # the pre-XOR name) can still be resolved by the runtime linker.
+            if fndesc.canonical_mangled_name is not None:
+                targetctx.codegen().register_mangled_name_alias(
+                    fndesc.canonical_mangled_name, fndesc.mangled_name)
+
             with targetctx.push_code_library(library):
                 lower = self.lowering_class(targetctx, library, fndesc, interp,
                                             metadata=metadata)
