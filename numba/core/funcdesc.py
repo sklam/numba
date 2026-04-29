@@ -4,6 +4,7 @@ Function descriptors.
 
 from collections import defaultdict
 import importlib
+import uuid
 
 from numba.core import types, itanium_mangler
 from numba.core.utils import _dynamic_modname, _dynamic_module
@@ -39,7 +40,7 @@ class FunctionDescriptor(object):
     def __init__(self, native, modname, qualname, unique_name, doc,
                  typemap, restype, calltypes, args, kws, mangler=None,
                  argtypes=None, inline=False, noalias=False, env_name=None,
-                 global_dict=None, abi_tags=(), uid=None):
+                 global_dict=None, abi_tags=(), uid=None, code=None):
         self.native = native
         self.modname = modname
         self.global_dict = global_dict
@@ -69,12 +70,21 @@ class FunctionDescriptor(object):
             typemap_hash = hash(tuple(hash((k, v)) for k, v in typemap.items()))
             # Store the pre-hash "canonical" name.  Recursive callers reference
             # the callee by the raw FunctionIdentity uid (stored during type
-            # inference before the typemap hash is known), so we need an alias
-            # mapping canonical_mangled_name -> mangled_name in the runtime linker.
+            # inference before the code+typemap hash is known), so we need an
+            # alias mapping canonical_mangled_name -> mangled_name in the
+            # runtime linker.
             self.canonical_mangled_name = mangler(
                 qualprefix, self.argtypes, abi_tags=abi_tags, uid=uid,
             )
-            uid = typemap_hash
+            code_hash = hash(code) if code is not None else 0
+            if global_dict is not None:
+                # Dynamic (exec'd) functions: caching is disabled for these.
+                # Two exec'd functions can share identical bytecode (same
+                # code_hash) yet be semantically different (different globals).
+                # Mix in a UUID4 to guarantee per-compilation uniqueness.
+                uid = uuid.uuid4().int ^ code_hash ^ typemap_hash
+            else:
+                uid = code_hash ^ typemap_hash
         else:
             self.canonical_mangled_name = None
         self.uid = uid
@@ -187,7 +197,8 @@ class FunctionDescriptor(object):
                    typemap, restype, calltypes,
                    args, kws, mangler=mangler, inline=inline, noalias=noalias,
                    global_dict=global_dict, abi_tags=abi_tags,
-                   uid=func_ir.func_id.unique_id)
+                   uid=func_ir.func_id.unique_id,
+                   code=func_ir.func_id.code)
         return self
 
 
