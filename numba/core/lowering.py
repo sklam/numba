@@ -1090,10 +1090,10 @@ class Lower(BaseLower):
                                abi_tags=abi_tags, uid=rec_ov.uid)
         # special case self recursion.
         # rec_ov.uid is the raw FunctionIdentity uid for active-frame recursive
-        # calls (typeinfer stores fnid.unique_id before any typemap-hash XOR is
+        # calls (typeinfer stores fnid.unique_id before any typemap-hash is
         # applied by FunctionDescriptor).  Fall back to a uid comparison so that
         # the self-recursion path is taken even when the mangled names diverge
-        # due to the typemap-hash XOR.
+        # due to the typemap-hash.
         is_self_recursive = (
             self.builder.function.name.startswith(mangled_name)
             or rec_ov.uid == self.func_ir.func_id.unique_id

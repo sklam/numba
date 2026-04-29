@@ -67,14 +67,14 @@ class FunctionDescriptor(object):
         qualprefix = qualifying_prefix(self.modname, self.qualname)
         if uid is not None and typemap is not None:
             typemap_hash = hash(tuple(hash((k, v)) for k, v in typemap.items()))
-            # Store the pre-XOR "canonical" name.  Recursive callers reference
+            # Store the pre-hash "canonical" name.  Recursive callers reference
             # the callee by the raw FunctionIdentity uid (stored during type
-            # inference before the XOR is known), so we need an alias mapping
-            # canonical_mangled_name -> mangled_name in the runtime linker.
+            # inference before the typemap hash is known), so we need an alias
+            # mapping canonical_mangled_name -> mangled_name in the runtime linker.
             self.canonical_mangled_name = mangler(
                 qualprefix, self.argtypes, abi_tags=abi_tags, uid=uid,
             )
-            uid ^= typemap_hash
+            uid = typemap_hash
         else:
             self.canonical_mangled_name = None
         self.uid = uid

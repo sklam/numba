@@ -1024,10 +1024,11 @@ class RuntimeLinker(object):
         self._unresolved = utils.UniqueDict()
         self._defined = set()
         self._resolved = []
-        # Maps canonical (pre-typemap-XOR) name -> actual (XOR'd) mangled name.
+        # Maps canonical (pre-typemap-hash) name -> actual (hash'd) mangled name.
         # Recursive callers emit unresolved refs using the canonical name (the
         # raw FunctionIdentity uid stored during type inference), while the
-        # compiled symbol uses the XOR'd name.  This alias table bridges the gap.
+        # compiled symbol uses the typemap-hash-based name.  This alias table
+        # bridges the gap.
         self._aliases = {}
 
     def scan_unresolved_symbols(self, module, engine):
@@ -1052,7 +1053,7 @@ class RuntimeLinker(object):
     def add_alias(self, canonical_name, actual_name):
         """Register that *canonical_name* (used in unresolved refs emitted for
         recursive calls) should resolve to the address of *actual_name* (the
-        symbol compiled with a typemap-hash XOR'd uid).
+        symbol compiled with a typemap-hash-based uid).
         """
         self._aliases[canonical_name] = actual_name
 
@@ -1079,8 +1080,8 @@ class RuntimeLinker(object):
 
         # Alias: unresolved canonical name maps to a different actual name.
         # This handles the case where a recursive caller emitted an unresolved
-        # ref using the pre-typemap-XOR canonical name while the compiled
-        # symbol uses the XOR'd name.
+        # ref using the pre-typemap-hash canonical name while the compiled
+        # symbol uses the hash-based name.
         pending_aliases = [
             (uname, self._aliases[uname])
             for uname in list(self._unresolved)
@@ -1380,9 +1381,9 @@ class CPUCodegen(Codegen):
                 self._tm_features)
 
     def register_mangled_name_alias(self, canonical_name, actual_name):
-        """Tell the runtime linker that *canonical_name* (the pre-typemap-XOR
+        """Tell the runtime linker that *canonical_name* (the pre-typemap-hash
         mangled name used by recursive callers) resolves to *actual_name* (the
-        XOR'd name the symbol was actually compiled under).
+        hash-based name the symbol was actually compiled under).
         """
         self._rtlinker.add_alias(canonical_name, actual_name)
 
