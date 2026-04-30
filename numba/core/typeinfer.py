@@ -1547,12 +1547,12 @@ https://numba.readthedocs.io/en/stable/user/troubleshoot.html#my-code-has-an-unt
                                                          pos_args, kw_args)
                 fndesc = disp.overloads[args].fndesc
                 qual = qualifying_prefix(fndesc.modname, fndesc.qualname)
-                fnty.add_overloads(args, qual, fndesc.uid)
+                fnty.add_overloads(args, qual, fndesc.uid, disp.py_func)
                 return sig
 
             fnid = frame.func_id
             qual = qualifying_prefix(fnid.modname, fnid.func_qualname)
-            fnty.add_overloads(args, qual, fnid.unique_id)
+            fnty.add_overloads(args, qual, fnid.unique_id, fnid.func)
             # Resume propagation in parent frame
             return_type = frame.typeinfer.return_types_from_partial()
             # No known return type

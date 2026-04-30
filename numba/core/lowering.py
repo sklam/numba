@@ -1088,15 +1088,13 @@ class Lower(BaseLower):
         abi_tags = self.fndesc.abi_tags
         mangled_name = mangler(rec_ov.qualname, signature.args,
                                abi_tags=abi_tags, uid=rec_ov.uid)
-        # special case self recursion.
-        # rec_ov.uid is the raw FunctionIdentity uid for active-frame recursive
-        # calls (typeinfer stores fnid.unique_id before the code-hash^typemap-hash
-        # is applied by FunctionDescriptor).  Fall back to a uid comparison so
-        # that the self-recursion path is taken even when the mangled names
-        # diverge due to the code-hash^typemap-hash mixing.
+        # Special-case self-recursion: the callee is the same Python function
+        # object as the one currently being compiled AND the argument types match
+        # this specialisation.  Using object identity avoids any dependence on
+        # uid values (which are implementation details subject to hash-mixing).
         is_self_recursive = (
-            self.builder.function.name.startswith(mangled_name)
-            or rec_ov.uid == self.func_ir.func_id.unique_id
+            rec_ov.func is self.func_ir.func_id.func
+            and signature.args == self.fndesc.argtypes
         )
         if is_self_recursive:
             res = self.context.call_internal(

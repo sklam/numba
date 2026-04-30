@@ -703,7 +703,8 @@ class NumberClass(Callable, DTypeSpec, Opaque):
         return self.instance_type
 
 
-_RecursiveCallOverloads = namedtuple("_RecursiveCallOverloads", "qualname,uid")
+_RecursiveCallOverloads = namedtuple("_RecursiveCallOverloads",
+                                     "qualname,uid,func")
 
 
 class RecursiveCall(Opaque):
@@ -721,7 +722,7 @@ class RecursiveCall(Opaque):
         if self._overloads is None:
             self._overloads = {}
 
-    def add_overloads(self, args, qualname, uid):
+    def add_overloads(self, args, qualname, uid, func):
         """Add an overload of the function.
 
         Parameters
@@ -732,8 +733,11 @@ class RecursiveCall(Opaque):
             function qualifying name
         uid :
             unique id
+        func :
+            the Python function object (used for identity-based self-recursion
+            detection in the lowering stage)
         """
-        self._overloads[args] = _RecursiveCallOverloads(qualname, uid)
+        self._overloads[args] = _RecursiveCallOverloads(qualname, uid, func)
 
     def get_overloads(self, args):
         """Get the qualifying name and unique id for the overload given the
