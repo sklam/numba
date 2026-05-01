@@ -3,7 +3,9 @@ Function descriptors.
 """
 
 from collections import defaultdict
+import hashlib
 import importlib
+import struct
 import uuid
 
 from numba.core import types, itanium_mangler
@@ -67,24 +69,27 @@ class FunctionDescriptor(object):
         # be chosen at link time.
         qualprefix = qualifying_prefix(self.modname, self.qualname)
         if uid is not None and typemap is not None:
-            typemap_hash = hash(tuple(hash((k, v)) for k, v in typemap.items()))
-            # Store the pre-hash "canonical" name.  Recursive callers reference
-            # the callee by the raw FunctionIdentity uid (stored during type
-            # inference before the code+typemap hash is known), so we need an
-            # alias mapping canonical_mangled_name -> mangled_name in the
-            # runtime linker.
+            # canonical name uses the raw counter uid so that recursive callers
+            # (which stored that uid during type inference) can still be resolved.
             self.canonical_mangled_name = mangler(
                 qualprefix, self.argtypes, abi_tags=abi_tags, uid=uid,
             )
-            code_hash = hash(code) if code is not None else 0
+            # Build a stable content hash using SHA-256.
+            # hashlib.sha256 is NOT affected by PYTHONHASHSEED.
+            h = hashlib.sha256()
+            if code is not None:
+                h.update(code.co_code)          # raw bytecode bytes — stable
+            # Feed each (varname, type_str) pair in sorted order for determinism.
+            for k in sorted(typemap):
+                h.update(k.encode())
+                h.update(str(typemap[k]).encode())
+            content_hash = struct.unpack_from("<q", h.digest())[0]   # 64-bit signed
             if global_dict is not None:
-                # Dynamic (exec'd) functions: caching is disabled for these.
-                # Two exec'd functions can share identical bytecode (same
-                # code_hash) yet be semantically different (different globals).
+                # Dynamic (exec'd) functions: caching is already disabled for these.
                 # Mix in a UUID4 to guarantee per-compilation uniqueness.
-                uid = uuid.uuid4().int ^ code_hash ^ typemap_hash
+                uid = uuid.uuid4().int ^ content_hash
             else:
-                uid = code_hash ^ typemap_hash
+                uid = content_hash
         else:
             self.canonical_mangled_name = None
         self.uid = uid
