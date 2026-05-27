@@ -7,10 +7,13 @@ import hashlib
 import importlib
 import struct
 import uuid
+import warnings
 
 from numba.core import types, itanium_mangler
+from numba.core.errors import NumbaWarning
 from numba.core.utils import _dynamic_modname, _dynamic_module
 
+import numpy as np
 
 def default_mangler(name, argtypes, *, abi_tags=(), uid=None):
     return itanium_mangler.mangle(name, argtypes, abi_tags=abi_tags, uid=uid)
@@ -42,7 +45,8 @@ class FunctionDescriptor(object):
     def __init__(self, native, modname, qualname, unique_name, doc,
                  typemap, restype, calltypes, args, kws, mangler=None,
                  argtypes=None, inline=False, noalias=False, env_name=None,
-                 global_dict=None, abi_tags=(), uid=None, code=None):
+                 global_dict=None, abi_tags=(), uid=None, code=None,
+                 closure=None):
         self.native = native
         self.modname = modname
         self.global_dict = global_dict
@@ -63,7 +67,7 @@ class FunctionDescriptor(object):
         else:
             # Get argument types from the type inference result
             # (note the "arg.FOO" convention as used in typeinfer
-            self.argtypes = tuple(self.typemap['arg.' + a] for a in args)
+            self.argtypes = tuple(self.typemap["arg." + a] for a in args)
         mangler = default_mangler if mangler is None else mangler
         # The mangled name *must* be unique, else the wrong function can
         # be chosen at link time.
@@ -72,33 +76,35 @@ class FunctionDescriptor(object):
             # canonical name uses the raw counter uid so that recursive callers
             # (which stored that uid during type inference) can still be resolved.
             self.canonical_mangled_name = mangler(
-                qualprefix, self.argtypes, abi_tags=abi_tags, uid=uid,
+                qualprefix,
+                self.argtypes,
+                abi_tags=abi_tags,
+                uid=uid,
             )
-            # Build a stable content hash using SHA-256.
-            # hashlib.sha256 is NOT affected by PYTHONHASHSEED.
-            h = hashlib.sha256()
-            if code is not None:
-                h.update(code.co_code)          # raw bytecode bytes — stable
-            # Feed each (varname, type_str) pair in sorted order for determinism.
-            for k in sorted(typemap):
-                h.update(k.encode())
-                h.update(str(typemap[k]).encode())
-            content_hash = struct.unpack_from("<q", h.digest())[0]   # 64-bit signed
-            if global_dict is not None:
-                # Dynamic (exec'd) functions: caching is already disabled for these.
-                # Mix in a UUID4 to guarantee per-compilation uniqueness.
-                uid = uuid.uuid4().int ^ content_hash
-            else:
-                uid = content_hash
+            uid = _FunctionHasher().compute_uid(
+                uid,
+                typemap,
+                code,
+                closure,
+                qualname,
+                global_dict,
+            )
         else:
             self.canonical_mangled_name = None
         self.uid = uid
         self.mangled_name = mangler(
-            qualprefix, self.argtypes, abi_tags=abi_tags, uid=self.uid,
+            qualprefix,
+            self.argtypes,
+            abi_tags=abi_tags,
+            uid=self.uid,
         )
         if env_name is None:
-            env_name = mangler(".NumbaEnv.{}".format(qualprefix),
-                               self.argtypes, abi_tags=abi_tags, uid=self.uid)
+            env_name = mangler(
+                ".NumbaEnv.{}".format(qualprefix),
+                self.argtypes,
+                abi_tags=abi_tags,
+                uid=self.uid,
+            )
         self.env_name = env_name
         self.inline = inline
         self.noalias = noalias
@@ -203,7 +209,8 @@ class FunctionDescriptor(object):
                    args, kws, mangler=mangler, inline=inline, noalias=noalias,
                    global_dict=global_dict, abi_tags=abi_tags,
                    uid=func_ir.func_id.unique_id,
-                   code=func_ir.func_id.code)
+                   code=func_ir.func_id.code,
+                   closure=getattr(func_ir.func_id.func, '__closure__', None))
         return self
 
 
@@ -257,3 +264,81 @@ class ExternalFunctionDescriptor(FunctionDescriptor):
                          kws=None,
                          mangler=mangler,
                          argtypes=argtypes)
+
+
+class _FunctionHasher:
+    """Stable content hash logic used by FunctionDescriptor."""
+
+    def __init__(self):
+        self._h = hashlib.sha256()
+
+    def update(self, data):
+        self._h.update(data)
+
+    def hash_closure_cells(self, closure, code, qualname):
+        """Feed each closure cell's value into the hasher.
+
+        Returns True if any cell could not be stably hashed (unhashable,
+        non-ndarray value), False otherwise.
+        """
+
+        has_unstable_cell = False
+        freevars = code.co_freevars if code is not None else ()
+        for i, cell in enumerate(closure):
+            if i < len(freevars):
+                self.update(freevars[i].encode())
+            try:
+                val = cell.cell_contents
+            except ValueError:
+                # Empty cell (unbound free variable) — stable sentinel.
+                self.update("empty_cell".encode())
+                continue
+            try:
+                cell_hash = hash(val)
+            except TypeError:
+                if isinstance(val, np.ndarray):
+                    # numpy arrays are not hashable but are treated as frozen
+                    # constants in JIT closures.
+                    self.update("ndarray".encode())
+                    self.update(val.dtype.str.encode())
+                    self.update(str(val.shape).encode())
+                    self.update(val.tobytes())
+                else:
+                    freevar_name = freevars[i] if i < len(freevars) else str(i)
+                    warnings.warn(
+                        NumbaWarning(
+                            f"Cannot obtain a stable hash for closure "
+                            f"variable {freevar_name!r} of {qualname!r} "
+                            f"(type: {type(val).__name__!r}). The LLVM "
+                            f"symbol name will not be stable across Python "
+                            f"runs; on-disk caching is disabled for this "
+                            f"function."
+                        )
+                    )
+                    self.update(np.uint64(id(val)) & (2**64 - 1))
+                    has_unstable_cell = True
+            else:
+                self.update(np.uint64(cell_hash & (2**64 - 1)))
+        return has_unstable_cell
+
+    def compute_uid(
+        self, uid, typemap, code, closure, qualname, global_dict
+    ) -> str:
+        """Compute and return a stable content-hash uid."""
+        NHEXCHAR = 16  # 64-bit is plenty
+        if code is not None:
+            self.update(code.co_code)  # raw bytecode bytes — stable
+        # Feed each (varname, type_str) pair in sorted order for determinism.
+        for k in sorted(typemap):
+            self.update(k.encode())
+            self.update(str(typemap[k]).encode())
+        has_unstable_cell = (
+            self.hash_closure_cells(closure, code, qualname)
+            if closure is not None
+            else False
+        )
+        if global_dict is not None or has_unstable_cell:
+            # Use a UUID4 to guarantee per-compilation uniqueness for
+            # dynamic function s(no global_dict) or functions with unstable cell
+            return uuid.uuid4().hex[:NHEXCHAR]
+        return self._h.hexdigest()[:NHEXCHAR]

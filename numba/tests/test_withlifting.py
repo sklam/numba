@@ -585,8 +585,12 @@ class TestLiftObj(MemoryLeak, TestCase):
 
         x = np.array([1, 2, 3])
         cfoo = njit(foo)
-        with self.assertRaises(KeyError) as raises:
-            cfoo(x)
+        # The dict closure variable is unhashable; expect a NumbaWarning about
+        # the unstable LLVM symbol name (overrides the setUp error filter).
+        with warnings.catch_warnings():
+            warnings.simplefilter('always', errors.NumbaWarning)
+            with self.assertRaises(KeyError) as raises:
+                cfoo(x)
         self.assertEqual(str(raises.exception), "'2'")
 
     def test_case09_explicit_raise(self):
