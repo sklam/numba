@@ -195,9 +195,9 @@ class ParametrizedType(types.Type):
     BUT type name is the same for all n"""
 
     def __init__(self, value):
-        super(ParametrizedType, self).__init__('ParametrizedType')
         self.dtype = types.unicode_type
         self.n = len(value)
+        super(ParametrizedType, self).__init__(f'ParametrizedType({self.dtype}, {self.n})')
 
     @property
     def key(self):
