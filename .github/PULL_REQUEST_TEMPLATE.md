@@ -14,7 +14,7 @@ post to the Numba forum https://numba.discourse.group/.
 
 ## Related Issue
 
-<!-- If this closes an issue, use a closing keyword, e.g. "Closes #1234" -->
+<!-- If this closes an issue, use a closing keyword e.g. "Closes #1234" -->
 <!-- See: https://help.github.com/articles/closing-issues-using-keywords/ -->
 
 ## AI Tool Use Declaration
@@ -26,7 +26,7 @@ contain substantial amounts of tool-generated content.
 -->
 
 - I have read Numba's [AI tool use policy](https://numba.readthedocs.io/en/stable/reference/ai_tools_policy.html)
-- AI usage disclosure: <!-- mention: YES / NO; if yes, explain -->
+- AI usage disclosure: <!-- mention: YES / NO; if YES, explain -->
 
 
 ## Other Notes
@@ -34,7 +34,7 @@ contain substantial amounts of tool-generated content.
 <!--
 Please review the following before requesting review:
 
-- I have added/updated unit tests for the changes made (if not, please explain why)
+- I have added/updated unit tests for the changes made (if not, please explain why).
 - Not ready for review yet? Click the arrow next to "Create Pull Request" and
   choose "Create Draft Pull Request" so CI still runs. Click "Ready for review"
   when it's done.
