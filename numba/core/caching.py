@@ -10,7 +10,6 @@ import functools
 import hashlib
 import importlib
 import inspect
-import itertools
 import os
 import pickle
 import sys
@@ -561,102 +560,118 @@ class CodeLibraryCacheImpl(CacheImpl):
 
 class IndexDataCacheFile(object):
     """
-    Implements the logic for the index file and data file used by a cache.
+    Implements the logic for the data files used by a cache.
+
+    There is no index file.  Each entry is a self-describing data file
+    whose name is derived from a hash of its key, so concurrent writers
+    for distinct keys cannot collide, and no read-modify-write over a
+    shared file is needed.
     """
     def __init__(self, cache_path, filename_base, source_stamp):
         self._cache_path = cache_path
-        self._index_name = '%s.nbi' % (filename_base,)
-        self._index_path = os.path.join(self._cache_path, self._index_name)
-        self._data_name_pattern = '%s.{number:d}.nbc' % (filename_base,)
+        self._data_name_pattern = '%s.{digest}.nbc' % (filename_base,)
         self._source_stamp = source_stamp
         self._version = numba.__version__
 
     def flush(self):
-        self._save_index({})
+        try:
+            names = os.listdir(self._cache_path)
+        except FileNotFoundError:
+            return
+        for name in names:
+            if self._is_data_name(name):
+                try:
+                    os.unlink(os.path.join(self._cache_path, name))
+                except FileNotFoundError:
+                    pass
 
     def save(self, key, data):
         """
         Save a new cache entry with *key* and *data*.
         """
-        overloads = self._load_index()
-        try:
-            # If key already exists, we will overwrite the file
-            data_name = overloads[key]
-        except KeyError:
-            # Find an available name for the data file
-            existing = set(overloads.values())
-            for i in itertools.count(1):
-                data_name = self._data_name(i)
-                if data_name not in existing:
-                    break
-            overloads[key] = data_name
-            self._save_index(overloads)
-        self._save_data(data_name, data)
+        data_name = self._data_name(key)
+        path = self._data_path(data_name)
+        with self._open_for_write(path) as f:
+            pickle.dump(self._version, f, protocol=-1)
+            f.write(self._dump((self._source_stamp, key)))
+            f.write(self._dump(data))
+        _cache_log("[cache] data saved to %r", path)
 
     def load(self, key):
         """
         Load a cache entry with *key*.
         """
-        overloads = self._load_index()
-        data_name = overloads.get(key)
-        if data_name is None:
-            return
+        data_name = self._data_name(key)
+        path = self._data_path(data_name)
         try:
-            return self._load_data(data_name)
+            with open(path, "rb") as f:
+                header = self._read_header(f)
+                if header is None:
+                    return None
+                stamp, stored_key = header
+                if stored_key != key:
+                    # Hash collision in the data file name
+                    return None
+                data = pickle.load(f)
         except OSError:
-            # File could have been removed while the index still refers it.
-            return
+            # File could have been removed concurrently.
+            return None
+        _cache_log("[cache] data loaded from %r", path)
+        return data
 
-    def _load_index(self):
+    def _inspect_entries(self):
         """
-        Load the cache index and return it as a dictionary (possibly
-        empty if cache is empty or obsolete).
+        Return a dict mapping stored keys to data file names for all
+        data files passing the version and source stamp checks.
         """
+        entries = {}
         try:
-            with open(self._index_path, "rb") as f:
-                version = pickle.load(f)
-                data = f.read()
+            names = os.listdir(self._cache_path)
         except FileNotFoundError:
-            # Index doesn't exist yet?
-            return {}
+            return entries
+        for name in names:
+            if not self._is_data_name(name):
+                continue
+            path = os.path.join(self._cache_path, name)
+            try:
+                with open(path, "rb") as f:
+                    header = self._read_header(f)
+            except (OSError, EOFError, pickle.UnpicklingError):
+                # Concurrently removed or partially replaced file
+                continue
+            if header is None:
+                continue
+            stamp, stored_key = header
+            entries[stored_key] = name
+        return entries
+
+    def _read_header(self, f):
+        """
+        Read and validate the version and (source stamp, key) header
+        objects from an open data file.  Return the header tuple, or
+        None if the file is stale or from another Numba version.
+        """
+        version = pickle.load(f)
         if version != self._version:
             # This is another version.  Avoid trying to unpickling the
             # rest of the stream, as that may fail.
-            return {}
-        stamp, overloads = pickle.loads(data)
-        _cache_log("[cache] index loaded from %r", self._index_path)
+            return None
+        stamp, stored_key = pickle.load(f)
         if stamp != self._source_stamp:
-            # Cache is not fresh.  Stale data files will be eventually
-            # overwritten, since they are numbered in incrementing order.
-            return {}
-        else:
-            return overloads
+            # Cache is not fresh.
+            return None
+        return stamp, stored_key
 
-    def _save_index(self, overloads):
-        data = self._source_stamp, overloads
-        data = self._dump(data)
-        with self._open_for_write(self._index_path) as f:
-            pickle.dump(self._version, f, protocol=-1)
-            f.write(data)
-        _cache_log("[cache] index saved to %r", self._index_path)
+    def _is_data_name(self, name):
+        prefix = self._data_name_pattern.split('{digest}')[0]
+        return name.startswith(prefix) and name.endswith('.nbc')
 
-    def _load_data(self, name):
-        path = self._data_path(name)
-        with open(path, "rb") as f:
-            data = f.read()
-        tup = pickle.loads(data)
-        _cache_log("[cache] data loaded from %r", path)
-        return tup
-
-    def _save_data(self, name, data):
-        data = self._dump(data)
-        path = self._data_path(name)
-        with self._open_for_write(path) as f:
-            f.write(data)
-        _cache_log("[cache] data saved to %r", path)
-
-    def _data_name(self, number):
-        return self._data_name_pattern.format(number=number)
+    def _data_name(self, key):
+        # NOTES: use repr() rather than dumps(): pickled numba type
+        # objects embed process-dependent internal identifiers, so the
+        # pickled bytes are not stable across processes.
+        digest = hashlib.sha256(repr(key).encode()).hexdigest()
+        return self._data_name_pattern.format(digest=digest)
 
     def _data_path(self, name):
         return os.path.join(self._cache_path, name)
@@ -688,18 +703,16 @@ class IndexDataCacheFile(object):
 class Cache(_Cache):
     """
     A per-function compilation cache.  The cache saves data in separate
-    data files and maintains information in an index file.
+    self-describing data files; there is no index file.
 
-    There is one index file per function and Python version
-    ("function_name-<lineno>.pyXY.nbi") which contains a mapping of
-    signatures and architectures to data files.
-    It is prefixed by a versioning key and a timestamp of the Python source
-    file containing the function.
+    There is one data file
+    ("function_name-<lineno>.pyXY.<key-hash>.nbc") per function,
+    function signature, target architecture and Python version.  Each
+    data file is prefixed by a versioning key, a timestamp of the Python
+    source file containing the function, and the cache key, so it can be
+    validated without an index.
 
-    There is one data file ("function_name-<lineno>.pyXY.<number>.nbc")
-    per function, function signature, target architecture and Python version.
-
-    Separate index and data files per Python version avoid pickle
+    Separate data files per Python version avoid pickle
     compatibility problems.
 
     Note:

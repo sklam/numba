@@ -3,6 +3,7 @@ import inspect
 import hashlib
 import multiprocessing
 import os
+import pickle
 import shutil
 import stat
 import subprocess
@@ -20,6 +21,7 @@ import numpy as np
 from numba import njit
 from numba.core import codegen
 from numba.core.caching import (
+    IndexDataCacheFile,
     UserWideCacheLocator,
     ZipCacheLocator,
     FunctionCache,
@@ -328,16 +330,16 @@ class TestCache(DispatcherCacheUsecasesTest):
 
         f = mod.add_usecase
         self.assertPreciseEqual(f(2, 3), 6)
-        self.check_pycache(2)  # 1 index, 1 data
+        self.check_pycache(1)  # 1 data
         self.assertPreciseEqual(f(2.5, 3), 6.5)
-        self.check_pycache(3)  # 1 index, 2 data
+        self.check_pycache(2)  # 2 data
         self.check_hits(f, 0, 2)
 
         f = mod.add_objmode_usecase
         self.assertPreciseEqual(f(2, 3), 6)
-        self.check_pycache(5)  # 2 index, 3 data
+        self.check_pycache(3)  # 3 data
         self.assertPreciseEqual(f(2.5, 3), 6.5)
-        self.check_pycache(6)  # 2 index, 4 data
+        self.check_pycache(4)  # 4 data
         self.check_hits(f, 0, 2)
 
         f = mod.record_return
@@ -345,7 +347,7 @@ class TestCache(DispatcherCacheUsecasesTest):
         self.assertPreciseEqual(tuple(rec), (2, 43.5))
         rec = f(mod.packed_arr, 1)
         self.assertPreciseEqual(tuple(rec), (2, 43.5))
-        self.check_pycache(9)  # 3 index, 6 data
+        self.check_pycache(6)  # 6 data
         self.check_hits(f, 0, 2)
 
         # Check the code runs ok from another process
@@ -358,45 +360,45 @@ class TestCache(DispatcherCacheUsecasesTest):
 
         f = mod.add_usecase
         self.assertPreciseEqual(f(2, 3), 6)
-        self.check_pycache(2)  # 1 index, 1 data
+        self.check_pycache(1)  # 1 data
         # NRT pruning may affect cache
         self.assertPreciseEqual(f(2, np.arange(3)), 2 + np.arange(3) + 1)
-        self.check_pycache(3)  # 1 index, 2 data
+        self.check_pycache(2)  # 2 data
         self.check_hits(f, 0, 2)
 
     def test_inner_then_outer(self):
         # Caching inner then outer function is ok
         mod = self.import_module()
         self.assertPreciseEqual(mod.inner(3, 2), 6)
-        self.check_pycache(2)  # 1 index, 1 data
+        self.check_pycache(1)  # 1 data
         # Uncached outer function shouldn't fail (issue #1603)
         f = mod.outer_uncached
         self.assertPreciseEqual(f(3, 2), 2)
-        self.check_pycache(2)  # 1 index, 1 data
+        self.check_pycache(1)  # 1 data
         mod = self.import_module()
         f = mod.outer_uncached
         self.assertPreciseEqual(f(3, 2), 2)
-        self.check_pycache(2)  # 1 index, 1 data
+        self.check_pycache(1)  # 1 data
         # Cached outer will create new cache entries
         f = mod.outer
         self.assertPreciseEqual(f(3, 2), 2)
-        self.check_pycache(4)  # 2 index, 2 data
+        self.check_pycache(2)  # 2 data
         self.assertPreciseEqual(f(3.5, 2), 2.5)
-        self.check_pycache(6)  # 2 index, 4 data
+        self.check_pycache(4)  # 4 data
 
     def test_outer_then_inner(self):
         # Caching outer then inner function is ok
         mod = self.import_module()
         self.assertPreciseEqual(mod.outer(3, 2), 2)
-        self.check_pycache(4)  # 2 index, 2 data
+        self.check_pycache(2)  # 2 data
         self.assertPreciseEqual(mod.outer_uncached(3, 2), 2)
-        self.check_pycache(4)  # same
+        self.check_pycache(2)  # same
         mod = self.import_module()
         f = mod.inner
         self.assertPreciseEqual(f(3, 2), 6)
-        self.check_pycache(4)  # same
+        self.check_pycache(2)  # same
         self.assertPreciseEqual(f(3.5, 2), 6.5)
-        self.check_pycache(5)  # 2 index, 3 data
+        self.check_pycache(3)  # 3 data
 
     def test_no_caching(self):
         mod = self.import_module()
@@ -466,7 +468,7 @@ class TestCache(DispatcherCacheUsecasesTest):
             self.assertPreciseEqual(f(3), 10) # 3 + 7 = 10
             f = mod.closure4
             self.assertPreciseEqual(f(3), 12) # 3 + 9 = 12
-            self.check_pycache(5) # 1 nbi, 4 nbc
+            self.check_pycache(4) # 4 nbc
 
     def test_first_class_function(self):
         mod = self.import_module()
@@ -475,9 +477,9 @@ class TestCache(DispatcherCacheUsecasesTest):
         self.assertEqual(f(mod.first_class_function_mul, 10), 100)
         self.assertEqual(f(mod.first_class_function_add, 1), 2)
         self.assertEqual(f(mod.first_class_function_add, 10), 20)
-        # 1 + 1 + 1 nbi, 1 + 1 + 2 nbc - a separate cache for each call to `f`
+        # 4 nbc total - a separate cache for each call to `f`
         # with a different callback.
-        self.check_pycache(7)
+        self.check_pycache(4)
 
     def test_cache_reuse(self):
         mod = self.import_module()
@@ -598,21 +600,25 @@ class TestCache(DispatcherCacheUsecasesTest):
         # wouldn't be met)
         self.check_pycache(0)
 
-    def test_nbi_reproducible_after_touch(self):
-        def nbi_hashes():
-            return {
-                fn: hashlib.md5(
-                    open(os.path.join(self.cache_dir, fn), "rb").read()
-                ).hexdigest()
-                for fn in self.cache_contents()
-                if fn.endswith(".nbi")
-            }
+    def test_nbc_stamp_reproducible_after_touch(self):
+        def nbc_stamps():
+            # Read the embedded source stamps of the data files.  The
+            # payload bytes are not reproducible (serialized numba types
+            # embed process-dependent identifiers), so compare stamps.
+            stamps = set()
+            for fn in self.cache_contents():
+                if fn.endswith(".nbc"):
+                    with open(os.path.join(self.cache_dir, fn), "rb") as f:
+                        pickle.load(f)  # numba version
+                        stamp, _key = pickle.load(f)
+                    stamps.add(stamp)
+            return stamps
 
         # Compile and cache
         mod = self.import_module()
         mod.add_usecase(2, 3)
-        h1 = nbi_hashes()
-        self.assertTrue(h1, "No .nbi files found after compilation")
+        s1 = nbc_stamps()
+        self.assertTrue(s1, "No .nbc files found after compilation")
 
         # Touch source file (mtime changes, content unchanged), clear cache
         time.sleep(1)
@@ -622,11 +628,11 @@ class TestCache(DispatcherCacheUsecasesTest):
         # Recompile — same source content, new mtime
         mod = self.import_module()
         mod.add_usecase(2, 3)
-        h2 = nbi_hashes()
+        s2 = nbc_stamps()
 
         self.assertEqual(
-            h1, h2,
-            ".nbi file differs after touch with unchanged content — "
+            s1, s2,
+            ".nbc source stamp differs after touch with unchanged content — "
             "source stamp embeds mtime instead of content hash"
         )
 
@@ -872,7 +878,7 @@ class TestSequentialParForsCache(DispatcherCacheUsecasesTest):
         dynamic_globals = [cres.library.has_dynamic_globals
                            for cres in f.overloads.values()]
         self.assertEqual(dynamic_globals, [False])
-        self.check_pycache(2)  # 1 index, 1 data
+        self.check_pycache(1)  # 1 data
 
 
 class TestCacheWithCpuSetting(DispatcherCacheUsecasesTest):
@@ -909,13 +915,13 @@ class TestCacheWithCpuSetting(DispatcherCacheUsecasesTest):
 
         self.check_later_mtimes(mtimes)
         self.assertGreater(len(self.cache_contents()), cache_size)
-        # Check cache index
+        # Check cache entries
         mod = self.import_module()
         cache = mod.add_usecase._cache
         cache_file = cache._cache_file
-        cache_index = cache_file._load_index()
-        self.assertEqual(len(cache_index), 2)
-        [key_a, key_b] = cache_index.keys()
+        cache_entries = cache_file._inspect_entries()
+        self.assertEqual(len(cache_entries), 2)
+        [key_a, key_b] = cache_entries.keys()
         if key_a[1][1] == 'generic':
             key_generic, key_host = key_a, key_b
         else:
@@ -948,13 +954,13 @@ class TestCacheWithCpuSetting(DispatcherCacheUsecasesTest):
         )
         self.check_later_mtimes(mtimes)
         self.assertGreater(len(self.cache_contents()), cache_size)
-        # Check cache index
+        # Check cache entries
         mod = self.import_module()
         cache = mod.add_usecase._cache
         cache_file = cache._cache_file
-        cache_index = cache_file._load_index()
-        self.assertEqual(len(cache_index), 2)
-        [key_a, key_b] = cache_index.keys()
+        cache_entries = cache_file._inspect_entries()
+        self.assertEqual(len(cache_entries), 2)
+        [key_a, key_b] = cache_entries.keys()
 
         if key_a[1][2] == my_cpu_features:
             key_modified, key_host = key_a, key_b
@@ -977,6 +983,49 @@ class TestMultiprocessCache(BaseCacheTest):
     usecases_file = os.path.join(here, "cache_usecases.py")
     modname = "dispatcher_caching_test_fodder"
 
+    @unittest.skipUnless(hasattr(multiprocessing, 'get_context'),
+                         'Test requires multiprocessing.get_context')
+    def test_concurrent_saves_no_cross_key_data(self):
+        # Regression test for unlocked read-modify-write over a shared
+        # index: concurrent saves of distinct keys must never make a key
+        # load another key's data.
+        n_procs = 8
+        stamp = ("proof", 1)
+        base = "collision_probe"
+        for _round in range(3):
+            cache_dir = temp_directory('test_mp_collision')
+            try:
+                try:
+                    ctx = multiprocessing.get_context('forkserver')
+                except ValueError:
+                    ctx = multiprocessing.get_context('spawn')
+                barrier = ctx.Barrier(n_procs)
+                with ctx.Pool(
+                    n_procs,
+                    initializer=_concurrent_save_init,
+                    initargs=(barrier,),
+                ) as pool:
+                    pool.map(
+                        _concurrent_save_worker,
+                        [(i, cache_dir, base, stamp)
+                         for i in range(n_procs)],
+                    )
+
+                # A fresh reader, as a later process would be
+                verifier = IndexDataCacheFile(
+                    cache_path=cache_dir, filename_base=base,
+                    source_stamp=stamp,
+                )
+                for i in range(n_procs):
+                    key = 'k%d' % i
+                    got = verifier.load(key)
+                    # A miss is benign (it just recompiles), but the
+                    # wrong payload is never acceptable.
+                    self.assertIn(got, (None, 'payload-%d' % i),
+                                  "key %r loaded %r" % (key, got))
+            finally:
+                shutil.rmtree(cache_dir, ignore_errors=True)
+
     def test_multiprocessing(self):
         # Check caching works from multiple processes at once (#2028)
         mod = self.import_module()
@@ -994,6 +1043,23 @@ class TestMultiprocessCache(BaseCacheTest):
         finally:
             pool.close()
         self.assertEqual(res, n * (n - 1) // 2)
+
+
+_mp_save_barrier = None
+
+
+def _concurrent_save_init(barrier):
+    global _mp_save_barrier
+    _mp_save_barrier = barrier
+
+
+def _concurrent_save_worker(args):
+    idx, cache_dir, base, stamp = args
+    cache = IndexDataCacheFile(
+        cache_path=cache_dir, filename_base=base, source_stamp=stamp,
+    )
+    _mp_save_barrier.wait()  # make the saves overlap
+    cache.save('k%d' % idx, 'payload-%d' % idx)
 
 
 @skip_if_typeguard
@@ -1045,11 +1111,11 @@ def bar():
         bar1 = self.import_bar1()
         bar2 = self.import_bar2()
         # Check that the cache file is named correctly
-        idxname1 = bar1._cache._cache_file._index_name
-        idxname2 = bar2._cache._cache_file._index_name
-        self.assertNotEqual(idxname1, idxname2)
-        self.assertTrue(idxname1.startswith("__init__.bar-3.py"))
-        self.assertTrue(idxname2.startswith("foo.bar-3.py"))
+        pattern1 = bar1._cache._cache_file._data_name_pattern
+        pattern2 = bar2._cache._cache_file._data_name_pattern
+        self.assertNotEqual(pattern1, pattern2)
+        self.assertTrue(pattern1.startswith("__init__.bar-3.py"))
+        self.assertTrue(pattern2.startswith("foo.bar-3.py"))
 
     @unittest.skipUnless(hasattr(multiprocessing, 'get_context'),
                          'Test requires multiprocessing.get_context')
@@ -1059,18 +1125,14 @@ def bar():
         with capture_cache_log() as buf:
             res1 = bar1()
         cachelog = buf.getvalue()
-        # bar1 should save new index and data
-        self.assertEqual(cachelog.count('index saved'), 1)
+        # bar1 should save new data
         self.assertEqual(cachelog.count('data saved'), 1)
-        self.assertEqual(cachelog.count('index loaded'), 0)
         self.assertEqual(cachelog.count('data loaded'), 0)
         with capture_cache_log() as buf:
             res2 = bar2()
         cachelog = buf.getvalue()
-        # bar2 should save new index and data
-        self.assertEqual(cachelog.count('index saved'), 1)
+        # bar2 should save new data
         self.assertEqual(cachelog.count('data saved'), 1)
-        self.assertEqual(cachelog.count('index loaded'), 0)
         self.assertEqual(cachelog.count('data loaded'), 0)
         self.assertNotEqual(res1, res2)
 
@@ -1101,15 +1163,11 @@ def bar():
         self.assertEqual(got2, res2)
 
         # The remote should have loaded bar1 from cache
-        self.assertEqual(log1.count('index saved'), 0)
         self.assertEqual(log1.count('data saved'), 0)
-        self.assertEqual(log1.count('index loaded'), 1)
         self.assertEqual(log1.count('data loaded'), 1)
 
         # The remote should have loaded bar2 from cache
-        self.assertEqual(log2.count('index saved'), 0)
         self.assertEqual(log2.count('data saved'), 0)
-        self.assertEqual(log2.count('index loaded'), 1)
         self.assertEqual(log2.count('data loaded'), 1)
 
 
@@ -1215,7 +1273,7 @@ class TestCFuncCache(BaseCacheTest):
     def test_caching(self):
         self.check_pycache(0)
         mod = self.import_module()
-        self.check_pycache(6)  # 3 index, 3 data
+        self.check_pycache(3)  # 3 data
 
         self.assertEqual(mod.add_usecase.cache_hits, 0)
         self.assertEqual(mod.outer.cache_hits, 0)
@@ -1225,7 +1283,7 @@ class TestCFuncCache(BaseCacheTest):
 
         # Reload module to hit the cache
         mod = self.import_module()
-        self.check_pycache(6)  # 3 index, 3 data
+        self.check_pycache(3)  # 3 data
 
         self.assertEqual(mod.add_usecase.cache_hits, 1)
         self.assertEqual(mod.outer.cache_hits, 1)
@@ -1234,6 +1292,94 @@ class TestCFuncCache(BaseCacheTest):
         self.check_module(mod)
 
         self.run_in_separate_process()
+
+
+class TestIndexDataCacheFile(TestCase):
+    # Direct tests of the self-describing data file format; no
+    # compilation needed, plain picklable stand-ins for keys/payloads.
+
+    def setUp(self):
+        self.tempdir = temp_directory('test_index_data_cache_file')
+        self.cache = IndexDataCacheFile(
+            cache_path=self.tempdir, filename_base='base',
+            source_stamp=('stamp', 1),
+        )
+
+    def tearDown(self):
+        shutil.rmtree(self.tempdir, ignore_errors=True)
+
+    def test_stale_stamp_is_a_miss(self):
+        self.cache.save('k', 'payload')
+        stale = IndexDataCacheFile(
+            cache_path=self.tempdir, filename_base='base',
+            source_stamp=('stamp', 2),
+        )
+        self.assertIsNone(stale.load('k'))
+        self.assertEqual(stale._inspect_entries(), {})
+        # The entry is untouched and still loads for the fresh stamp
+        self.assertEqual(self.cache.load('k'), 'payload')
+
+    def test_embedded_key_mismatch_is_a_miss(self):
+        # Simulate a data-name hash collision: a file whose embedded
+        # key differs from the requested key.
+        attacker = IndexDataCacheFile(
+            cache_path=self.tempdir, filename_base='base',
+            source_stamp=('stamp', 1),
+        )
+        attacker.save('attacker-key', 'attacker-payload')
+        victim_name = self.cache._data_name('victim-key')
+        attacker_path = os.path.join(
+            self.tempdir, attacker._data_name('attacker-key'))
+        os.replace(attacker_path, os.path.join(self.tempdir, victim_name))
+        self.assertIsNone(self.cache.load('victim-key'))
+
+    def test_wrong_version_never_unpickles_payload(self):
+        # Hand-craft a file with a foreign version and an invalid
+        # payload; load must return None without touching the payload.
+        import numba
+        name = self.cache._data_name('k')
+        path = os.path.join(self.tempdir, name)
+        with open(path, 'wb') as f:
+            pickle.dump(numba.__version__ + '-other', f, protocol=-1)
+            f.write(pickle.dumps((('stamp', 1), 'k')))
+            f.write(b'\xff')  # invalid pickle; raises if ever read
+        self.assertIsNone(self.cache.load('k'))
+
+    def test_flush(self):
+        self.cache.save('k1', 'p1')
+        self.cache.save('k2', 'p2')
+        other = os.path.join(self.tempdir, 'other.txt')
+        with open(other, 'w') as f:
+            f.write('x')
+        self.cache.flush()
+        self.assertEqual(self.cache.load('k1'), None)
+        self.assertEqual(sorted(os.listdir(self.tempdir)), ['other.txt'])
+        # Flushing a missing directory is a no-op
+        missing = IndexDataCacheFile(
+            cache_path=os.path.join(self.tempdir, 'nope'),
+            filename_base='base', source_stamp=('stamp', 1),
+        )
+        missing.flush()
+
+    def test_data_name_stable_across_processes(self):
+        key = (('float64',), ('arch', 'cpu'), ('abc', 'def'))
+        expected = self.cache._data_name(key)
+        code = (
+            "from numba.core.caching import IndexDataCacheFile\n"
+            "cache = IndexDataCacheFile(cache_path=%r, filename_base=%r,"
+            " source_stamp=%r)\n"
+            "print(cache._data_name(%r))\n"
+            % (self.tempdir, 'base', ('stamp', 1), key)
+        )
+        for _ in range(2):
+            popen = subprocess.Popen(
+                [sys.executable, '-c', code],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            )
+            out, err = popen.communicate()
+            msg = "stderr follows\n%s" % err.decode()
+            self.assertEqual(popen.returncode, 0, msg=msg)
+            self.assertEqual(out.decode().strip(), expected)
 
 
 class TestLocator(InTreeCacheLocator):
