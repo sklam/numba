@@ -10,7 +10,6 @@ import functools
 import hashlib
 import importlib
 import inspect
-import itertools
 import os
 import pickle
 import sys
@@ -562,12 +561,19 @@ class CodeLibraryCacheImpl(CacheImpl):
 class IndexDataCacheFile(object):
     """
     Implements the logic for the index file and data file used by a cache.
+
+    Data file names are derived from a hash of the key, so concurrent
+    writers for distinct keys can never select the same data file, and
+    the data file is always written before the index entry that names
+    it.  Races between writers can therefore lose index entries (a
+    benign recompile) but can never make a key point at another key's
+    data.
     """
     def __init__(self, cache_path, filename_base, source_stamp):
         self._cache_path = cache_path
         self._index_name = '%s.nbi' % (filename_base,)
         self._index_path = os.path.join(self._cache_path, self._index_name)
-        self._data_name_pattern = '%s.{number:d}.nbc' % (filename_base,)
+        self._data_name_pattern = '%s.{digest}.nbc' % (filename_base,)
         self._source_stamp = source_stamp
         self._version = numba.__version__
 
@@ -579,19 +585,16 @@ class IndexDataCacheFile(object):
         Save a new cache entry with *key* and *data*.
         """
         overloads = self._load_index()
-        try:
-            # If key already exists, we will overwrite the file
-            data_name = overloads[key]
-        except KeyError:
-            # Find an available name for the data file
-            existing = set(overloads.values())
-            for i in itertools.count(1):
-                data_name = self._data_name(i)
-                if data_name not in existing:
-                    break
+        data_name = overloads.get(key)
+        if data_name is None:
+            data_name = self._data_name(key)
+        # Write the data file first, then publish the index entry, so
+        # the index never points at a file that does not exist yet.
+        # If key already exists, we will overwrite the file.
+        self._save_data(data_name, data)
+        if overloads.get(key) != data_name:
             overloads[key] = data_name
             self._save_index(overloads)
-        self._save_data(data_name, data)
 
     def load(self, key):
         """
@@ -626,8 +629,8 @@ class IndexDataCacheFile(object):
         stamp, overloads = pickle.loads(data)
         _cache_log("[cache] index loaded from %r", self._index_path)
         if stamp != self._source_stamp:
-            # Cache is not fresh.  Stale data files will be eventually
-            # overwritten, since they are numbered in incrementing order.
+            # Cache is not fresh.  Stale data files are ignored and left
+            # as garbage on disk.
             return {}
         else:
             return overloads
@@ -655,8 +658,12 @@ class IndexDataCacheFile(object):
             f.write(data)
         _cache_log("[cache] data saved to %r", path)
 
-    def _data_name(self, number):
-        return self._data_name_pattern.format(number=number)
+    def _data_name(self, key):
+        # NOTES: use repr() rather than dumps(): pickled numba type
+        # objects embed process-dependent internal identifiers, so the
+        # pickled bytes are not stable across processes.
+        digest = hashlib.sha256(repr(key).encode()).hexdigest()
+        return self._data_name_pattern.format(digest=digest)
 
     def _data_path(self, name):
         return os.path.join(self._cache_path, name)
@@ -696,7 +703,7 @@ class Cache(_Cache):
     It is prefixed by a versioning key and a timestamp of the Python source
     file containing the function.
 
-    There is one data file ("function_name-<lineno>.pyXY.<number>.nbc")
+    There is one data file ("function_name-<lineno>.pyXY.<key-hash>.nbc")
     per function, function signature, target architecture and Python version.
 
     Separate index and data files per Python version avoid pickle

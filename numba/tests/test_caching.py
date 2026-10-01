@@ -20,6 +20,7 @@ import numpy as np
 from numba import njit
 from numba.core import codegen
 from numba.core.caching import (
+    IndexDataCacheFile,
     UserWideCacheLocator,
     ZipCacheLocator,
     FunctionCache,
@@ -977,6 +978,55 @@ class TestMultiprocessCache(BaseCacheTest):
     usecases_file = os.path.join(here, "cache_usecases.py")
     modname = "dispatcher_caching_test_fodder"
 
+    @unittest.skipUnless(hasattr(multiprocessing, 'get_context'),
+                         'Test requires multiprocessing.get_context')
+    def test_concurrent_saves_no_cross_key_data(self):
+        # Regression test for unlocked read-modify-write over a shared
+        # index: concurrent saves of distinct keys must never make a key
+        # load another key's data.  With the index retained, lost index
+        # entries (misses) remain possible and are benign; the data-file
+        # count must still equal the number of distinct keys.
+        n_procs = 8
+        stamp = ("proof", 1)
+        base = "collision_probe"
+        for _round in range(3):
+            cache_dir = temp_directory('test_mp_collision')
+            try:
+                try:
+                    ctx = multiprocessing.get_context('forkserver')
+                except ValueError:
+                    ctx = multiprocessing.get_context('spawn')
+                barrier = ctx.Barrier(n_procs)
+                with ctx.Pool(
+                    n_procs,
+                    initializer=_concurrent_save_init,
+                    initargs=(barrier,),
+                ) as pool:
+                    pool.map(
+                        _concurrent_save_worker,
+                        [(i, cache_dir, base, stamp)
+                         for i in range(n_procs)],
+                    )
+
+                # A fresh reader, as a later process would be
+                verifier = IndexDataCacheFile(
+                    cache_path=cache_dir, filename_base=base,
+                    source_stamp=stamp,
+                )
+                for i in range(n_procs):
+                    key = 'k%d' % i
+                    got = verifier.load(key)
+                    self.assertIn(got, (None, 'payload-%d' % i),
+                                  "key %r loaded %r" % (key, got))
+                nbc = [fn for fn in os.listdir(cache_dir)
+                       if fn.endswith('.nbc')]
+                self.assertEqual(
+                    len(nbc), n_procs,
+                    "data-file count collapsed: %d files for %d keys"
+                    % (len(nbc), n_procs))
+            finally:
+                shutil.rmtree(cache_dir, ignore_errors=True)
+
     def test_multiprocessing(self):
         # Check caching works from multiple processes at once (#2028)
         mod = self.import_module()
@@ -994,6 +1044,23 @@ class TestMultiprocessCache(BaseCacheTest):
         finally:
             pool.close()
         self.assertEqual(res, n * (n - 1) // 2)
+
+
+_mp_save_barrier = None
+
+
+def _concurrent_save_init(barrier):
+    global _mp_save_barrier
+    _mp_save_barrier = barrier
+
+
+def _concurrent_save_worker(args):
+    idx, cache_dir, base, stamp = args
+    cache = IndexDataCacheFile(
+        cache_path=cache_dir, filename_base=base, source_stamp=stamp,
+    )
+    _mp_save_barrier.wait()  # make the saves overlap
+    cache.save('k%d' % idx, 'payload-%d' % idx)
 
 
 @skip_if_typeguard
@@ -1234,6 +1301,88 @@ class TestCFuncCache(BaseCacheTest):
         self.check_module(mod)
 
         self.run_in_separate_process()
+
+
+class TestIndexDataCacheFile(TestCase):
+    # Direct tests of the hash-named data files with retained index;
+    # no compilation needed, plain picklable stand-ins for keys/payloads.
+
+    def setUp(self):
+        self.tempdir = temp_directory('test_index_data_cache_file')
+        self.cache = IndexDataCacheFile(
+            cache_path=self.tempdir, filename_base='base',
+            source_stamp=('stamp', 1),
+        )
+
+    def tearDown(self):
+        shutil.rmtree(self.tempdir, ignore_errors=True)
+
+    def test_data_name_stable_across_processes(self):
+        key = (('float64',), ('arch', 'cpu'), ('abc', 'def'))
+        expected = self.cache._data_name(key)
+        code = (
+            "from numba.core.caching import IndexDataCacheFile\n"
+            "cache = IndexDataCacheFile(cache_path=%r, filename_base=%r,"
+            " source_stamp=%r)\n"
+            "print(cache._data_name(%r))\n"
+            % (self.tempdir, 'base', ('stamp', 1), key)
+        )
+        for _ in range(2):
+            popen = subprocess.Popen(
+                [sys.executable, '-c', code],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            )
+            out, err = popen.communicate()
+            msg = "stderr follows\n%s" % err.decode()
+            self.assertEqual(popen.returncode, 0, msg=msg)
+            self.assertEqual(out.decode().strip(), expected)
+
+    def test_index_written_after_data(self):
+        # If the data write fails, the index must not be published.
+        cache = self.cache
+
+        def boom(name, data):
+            raise RuntimeError("simulated data write failure")
+
+        orig_save_data = cache._save_data
+        cache._save_data = boom
+        try:
+            with self.assertRaises(RuntimeError):
+                cache.save('k', 'payload')
+        finally:
+            cache._save_data = orig_save_data
+        self.assertEqual(cache._load_index(), {})
+        self.assertEqual(
+            [fn for fn in os.listdir(self.tempdir)
+             if not fn.endswith('.tmp')], [])
+        self.assertIsNone(cache.load('k'))
+
+    def test_same_key_overwrite_is_idempotent(self):
+        self.cache.save('k', 'payload-1')
+        name1 = self.cache._load_index()['k']
+        self.cache.save('k', 'payload-2')
+        name2 = self.cache._load_index()['k']
+        # Same data file name, one file, newest payload
+        self.assertEqual(name1, name2)
+        self.assertEqual(self.cache.load('k'), 'payload-2')
+        nbc = [fn for fn in os.listdir(self.tempdir)
+               if fn.endswith('.nbc')]
+        self.assertEqual(len(nbc), 1)
+
+    def test_legacy_numbered_index_entry_kept(self):
+        # An index written by the old format names numbered data files;
+        # such entries must keep working and not be renamed.
+        overloads = self.cache._load_index()
+        overloads['legacy'] = 'base.3.nbc'
+        self.cache._save_index(overloads)
+        self.cache.save('legacy', 'legacy-payload')
+        self.assertEqual(self.cache._load_index()['legacy'],
+                         'base.3.nbc')
+        self.assertEqual(self.cache.load('legacy'), 'legacy-payload')
+        # A new key gets a hash-named file
+        self.cache.save('new', 'new-payload')
+        self.assertNotEqual(self.cache._load_index()['new'],
+                            'base.1.nbc')
 
 
 class TestLocator(InTreeCacheLocator):
